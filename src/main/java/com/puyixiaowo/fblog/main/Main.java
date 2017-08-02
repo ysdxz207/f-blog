@@ -1,6 +1,9 @@
 package com.puyixiaowo.fblog.main;
 
-import static spark.Spark.get;
+import com.puyixiaowo.fblog.Routes;
+import com.puyixiaowo.fblog.error.ErrorHandler;
+
+import static spark.Spark.notFound;
 import static spark.Spark.port;
 
 /**
@@ -10,6 +13,7 @@ import static spark.Spark.port;
 public class Main {
     public static void main(String[] args) {
         port(2333);
-        get("/", (request, response) -> "Hello World!");
+        notFound((request, response) -> ErrorHandler.init());
+        Routes.init();
     }
 }
