@@ -5,7 +5,7 @@ import org.junit.Test;
  * @author Moses
  * @date 2017-08-03 13:26
  */
-public class TestRedisService {
+public class TestRedisUtils {
 
     @Test
     public void testGet(){
