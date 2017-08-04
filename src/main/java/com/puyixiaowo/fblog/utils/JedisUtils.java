@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import redis.clients.jedis.Jedis;
 import spark.utils.StringUtils;
 
-import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -15,22 +14,13 @@ public class JedisUtils {
     private static Jedis jedis;
 
     static {
-        try {
-            InputStream io = JedisUtils.class.getClassLoader().getResourceAsStream("redis.properties");
+        Properties properties = ResourceUtils.load("redis.properties");
 
-            if (io == null) {
-                throw new RuntimeException("Can not find file redis.properties");
-            }
-            Properties properties = new Properties();
-            properties.load(io);
-            String host = properties.getProperty("redis.host");
-            Integer port = Integer.valueOf(properties.getProperty("redis.port"));
-            String auth = properties.getProperty("redis.password");
-            jedis = new Jedis(host, port);
-            jedis.auth(auth);
-        } catch (Exception e) {
-           e.printStackTrace();
-        }
+        String host = properties.getProperty("redis.host");
+        Integer port = Integer.valueOf(properties.getProperty("redis.port"));
+        String auth = properties.getProperty("redis.password");
+        jedis = new Jedis(host, port);
+        jedis.auth(auth);
     }
 
     public static String get(String key){

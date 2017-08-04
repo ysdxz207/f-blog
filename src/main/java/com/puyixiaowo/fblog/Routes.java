@@ -13,6 +13,8 @@ public class Routes {
 
         //后台管理
         get("/admin", ((request, response) -> MainController.index(request, response)));
+        get("/admin/login", ((request, response) ->
+                MainController.login(request, response)));
 
     }
 }
