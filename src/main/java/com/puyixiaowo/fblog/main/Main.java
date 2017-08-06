@@ -13,8 +13,8 @@ import static spark.Spark.port;
  */
 public class Main {
     public static void main(String[] args) {
-        port(2333);
-        notFound((request, response) -> ErrorHandler.init());
+        port(8003);
+        notFound((request, response) -> ErrorHandler.handle404());
 
         DBUtils.initDB();
         Routes.init();

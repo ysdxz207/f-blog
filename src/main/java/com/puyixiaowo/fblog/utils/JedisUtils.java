@@ -34,4 +34,8 @@ public class JedisUtils {
         }
         return JSONObject.parseObject(str, clazz);
     }
+
+    public static void set(String key, String value) {
+        jedis.set(key, value);
+    }
 }

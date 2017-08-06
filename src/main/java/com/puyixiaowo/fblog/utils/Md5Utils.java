@@ -38,6 +38,6 @@ public final class Md5Utils {
 	}
 	public static void main(String[] args) {
 		String str = "123456";
-		System.out.println(Md5Utils.md5(str));
+		System.out.println(Md5Utils.md5Password(str));
 	}
 }

@@ -11,7 +11,7 @@ import java.util.Properties;
 public class ResourceUtils {
     private static  Properties properties;
 
-    public static Properties load(String path) {
+    public static InputStream readFile(String path) {
         InputStream inputStream = ResourceUtils.class
                 .getClassLoader().getResourceAsStream(path);
 
@@ -19,9 +19,15 @@ public class ResourceUtils {
             throw new RuntimeException("Can not find file " + path);
         }
 
+
+        return inputStream;
+    }
+
+    public static Properties load(String path) {
+
         properties = new Properties();
         try {
-            properties.load(inputStream);
+            properties.load(readFile(path));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -35,5 +41,9 @@ public class ResourceUtils {
         }
 
         return (String)properties.get(key);
+    }
+
+    public static String getResourcePath() {
+        return ResourceUtils.class.getResource("").getPath();
     }
 }
