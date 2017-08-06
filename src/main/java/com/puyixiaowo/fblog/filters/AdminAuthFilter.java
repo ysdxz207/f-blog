@@ -27,7 +27,7 @@ public class AdminAuthFilter {
             if (uri.startsWith("/admin")
                     && !isIgnorePath(uri)
                     && (request.session().attribute(Constants.SESSION_USER_KEY) == null))
-                response.redirect("/admin/login");
+                response.redirect("/admin/loginPage");
         });
     }
 
