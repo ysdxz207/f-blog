@@ -6,6 +6,7 @@ import com.puyixiaowo.fblog.filters.AdminAuthFilter;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 
 import static spark.Spark.get;
+import static spark.Spark.path;
 import static spark.Spark.post;
 
 public class Routes {
@@ -14,15 +15,17 @@ public class Routes {
         //前台
         get("/", ((request, response) -> IndexController.index(request, response)));
 
-
-        AdminAuthFilter.init();
         //后台管理
-        get("/admin", ((request, response) -> LoginController.index(request, response)));
-        get("/admin/loginPage", ((request, response) ->
-                        LoginController.loginPage(request, response)),
-                new FreeMarkerTemplateEngine());
-        post("/admin/login", ((request, response) ->
-                LoginController.doLogin(request, response)));
+        AdminAuthFilter.init();
+        path("/admin", () -> {
+            get("/", ((request, response) -> LoginController.index(request, response)));
+            get("/loginPage", ((request, response) ->
+                            LoginController.loginPage(request, response)),
+                    new FreeMarkerTemplateEngine());
+            post("/login", ((request, response) ->
+                    LoginController.doLogin(request, response)));
+        });
+
 
     }
 }
