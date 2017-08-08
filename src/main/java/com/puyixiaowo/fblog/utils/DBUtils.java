@@ -57,8 +57,7 @@ public class DBUtils {
                 }
             }
 
-            List<E> list = query.executeAndFetch(clazz);
-            return list;
+            return query.executeAndFetch(clazz);
         }
     }
 }

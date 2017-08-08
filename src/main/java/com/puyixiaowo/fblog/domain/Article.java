@@ -9,6 +9,8 @@ import java.util.Date;
  */
 public class Article implements Serializable{
     private static final long serialVersionUID = 2731755468046157537L;
+
+    private String id;
     private String creator;
     private String title;
     private String context;
@@ -19,6 +21,14 @@ public class Article implements Serializable{
     private Integer status;
     private Boolean isDel;
 
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCreator() {
         return creator;
