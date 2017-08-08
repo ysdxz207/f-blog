@@ -38,4 +38,25 @@ public class ArticleController extends BaseController {
 
         return JSON.toJSONString(articleList);
     }
+
+    /**
+     * 添加文章
+     * @param request
+     * @param response
+     * @return
+     */
+    public static Object addOrUpdateArticle(Request request, Response response) {
+
+        String update_sql = "update article set creator=:creator,title=:title," +
+                "";
+        String sql = "insert into artile values " +
+                "(:creator,:title,:context,:category,:tagIds," +
+                ":createDate,:lastUpdateDate,:status,:isDel) " +
+                "on duplicate key update b=values(b),c=values(c)";
+
+        String sql2 = "insert or replace into `artile` values ('feihong','我的第一篇文章','我的第一篇文章内容...','11111','测试','2017-08-08 14:36',null,1) on duplicate key update title='我的第一篇文章修改',context='我的第一篇文章内容修改'";
+        return null;
+    }
+
+
 }

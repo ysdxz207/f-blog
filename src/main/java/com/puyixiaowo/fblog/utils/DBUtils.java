@@ -14,6 +14,9 @@ import java.util.Map;
  */
 public class DBUtils {
 
+    private static final int SQL_TYPE_INSERT = 1;//添加
+    private static final int SQL_TYPE_UPDATE = 2;//更新
+
     private static Sql2o sql2o;
 
     public static void initDB() {
@@ -59,5 +62,43 @@ public class DBUtils {
 
             return query.executeAndFetch(clazz);
         }
+    }
+
+    public static void insertOrUpdate(String tableName,
+                                      Map<String, Object> params){
+        String sql_update = "";
+        String sql_insert = "";
+
+
+    }
+
+    private static String assembleSql(int sqlType,
+                                      String tableName,
+                                      Map<String, Object> params){
+        StringBuilder sb_sql = new StringBuilder();
+        String sql_update = "";
+        String sql_insert = "";
+        switch (sqlType) {
+            case SQL_TYPE_INSERT:
+                //insert sql
+                sb_sql.append("insert into ");
+                sb_sql.append(tableName);
+                sb_sql.append("(`id`,`creator`,`title`,`context`,`category`,`tagIds`,`createDate`,`lastUpdateDate`,`status`,`isDel`)");
+                sb_sql.append("values(");
+                sb_sql.append(tableName);
+                sb_sql.append(tableName);
+                sb_sql.append(tableName);
+
+                break;
+            case SQL_TYPE_UPDATE:
+                //update sql
+
+                break;
+            default:
+                //insert sql
+
+        }
+
+        return sb_sql.toString();
     }
 }
