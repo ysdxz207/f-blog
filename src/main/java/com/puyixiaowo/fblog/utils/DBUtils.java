@@ -1,10 +1,14 @@
 package com.puyixiaowo.fblog.utils;
 
+import com.puyixiaowo.fblog.domain.User;
+import com.puyixiaowo.fblog.exception.DBSqlException;
+import com.sun.deploy.util.ReflectionUtil;
 import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
 import spark.utils.StringUtils;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -65,33 +69,117 @@ public class DBUtils {
     }
 
     public static void insertOrUpdate(String tableName,
-                                      Map<String, Object> params){
-        String sql_update = "";
+                                      Object obj) {
+        String sql_update = assembleSql(SQL_TYPE_INSERT, tableName, obj);
         String sql_insert = "";
 
 
     }
 
+
     private static String assembleSql(int sqlType,
                                       String tableName,
-                                      Map<String, Object> params){
+                                      Object obj) {
+
+        Field[] filelds = obj.getClass().getDeclaredFields();
+
         StringBuilder sb_sql = new StringBuilder();
-        String sql_update = "";
-        String sql_insert = "";
+        StringBuilder sb1 = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+        String sql_1 = "";
+        String sql_2 = "";
+        Object id = null;
+        try {
+            id = ReflectionUtil.invoke(obj, "getId", null, null);
+        } catch (Exception e) {
+            throw new DBSqlException("Can not invoke getId() method.");
+        }
         switch (sqlType) {
             case SQL_TYPE_INSERT:
+
                 //insert sql
                 sb_sql.append("insert into ");
                 sb_sql.append(tableName);
-                sb_sql.append("(`id`,`creator`,`title`,`context`,`category`,`tagIds`,`createDate`,`lastUpdateDate`,`status`,`isDel`)");
+                sb_sql.append("(");
+
+
+                for (int i = 0; i < filelds.length; i++) {
+                    Field field = filelds[i];
+                    field.setAccessible(true);
+                    String fieldName = field.getName();
+                    Object fieldValue = "";
+                    try {
+                        fieldValue = field.get(obj);
+                    } catch (IllegalAccessException e) {
+                    }
+                    if ("serialVersionUID".equals(fieldName) ||
+                            fieldValue == null ||
+                            StringUtils.isBlank(fieldValue.toString())) {
+                        continue;
+                    }
+                    sb1.append("`");
+                    sb1.append(fieldName);
+                    sb1.append("`");
+                    sb1.append(",");
+
+                    //
+                    sb2.append("'");
+                    sb2.append(fieldValue);
+                    sb2.append("'");
+                    sb2.append(",");
+
+                }
+                sql_1 = sb1.toString();
+                sb_sql.append(sql_1.substring(0, sql_1.length() - 1));
+
+                sb_sql.append(") ");
+
                 sb_sql.append("values(");
-                sb_sql.append(tableName);
-                sb_sql.append(tableName);
-                sb_sql.append(tableName);
+                sql_2 = sb2.toString();
+                sb_sql.append(sql_2.substring(0, sql_2.length() - 1));
+                sb_sql.append(") ");
 
                 break;
             case SQL_TYPE_UPDATE:
+                if (id == null) {
+                    throw new DBSqlException("Update table error:id is null");
+                }
                 //update sql
+                sb_sql.append("update ");
+                sb_sql.append(tableName);
+                sb_sql.append(" set ");
+
+
+                for (int i = 0; i < filelds.length; i++) {
+                    Field field = filelds[i];
+                    field.setAccessible(true);
+                    String fieldName = field.getName();
+                    Object fieldValue = "";
+                    try {
+                        fieldValue = field.get(obj);
+                    } catch (IllegalAccessException e) {
+                    }
+                    if ("serialVersionUID".equals(fieldName) ||
+                            fieldValue == null ||
+                            StringUtils.isBlank(fieldValue.toString())) {
+                        continue;
+                    }
+                    sb1.append("`");
+                    sb1.append(fieldName);
+                    sb1.append("`");
+                    sb1.append("=");
+                    sb1.append("'");
+                    sb1.append(fieldValue);
+                    sb1.append("'");
+                    sb1.append(",");
+
+                }
+                sql_1 = sb1.toString();
+                sb_sql.append(sql_1.substring(0, sql_1.length() - 1));
+                sb_sql.append(" where id=");
+                sb_sql.append("'");
+                sb_sql.append(id);
+                sb_sql.append("'");
 
                 break;
             default:
@@ -100,5 +188,14 @@ public class DBUtils {
         }
 
         return sb_sql.toString();
+    }
+
+    public static void main(String[] args) throws Exception {
+        User user = new User();
+        user.setId("111");
+        user.setPassword("113331");
+        user.setUsername("444");
+        System.out.println(assembleSql(SQL_TYPE_UPDATE, "user", user));
+
     }
 }
