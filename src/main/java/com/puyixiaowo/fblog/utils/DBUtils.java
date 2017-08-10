@@ -1,6 +1,7 @@
 package com.puyixiaowo.fblog.utils;
 
 import com.puyixiaowo.fblog.domain.User;
+import com.puyixiaowo.fblog.exception.DBException;
 import com.puyixiaowo.fblog.exception.DBSqlException;
 import com.sun.deploy.util.ReflectionUtil;
 import org.sql2o.Connection;
@@ -24,18 +25,22 @@ public class DBUtils {
     private static Sql2o sql2o;
 
     public static void initDB() {
-
-        String dbHost = (String) ResourceUtils.load("jdbc.properties").get("sqlite3.host");
+        initDB(null);
+    }
+    private static void initDB(String dbHost) {
+        if (StringUtils.isBlank(dbHost)) {
+            dbHost = (String) ResourceUtils.load("jdbc.properties").get("sqlite3.host");
+        }
 
         if (StringUtils.isBlank(dbHost)) {
-            throw new RuntimeException("There is no db host found.");
+            throw new DBException("There is no db host found.");
         }
 
 
         sql2o = new Sql2o("jdbc:sqlite:" + dbHost, null, null);
 
         if (sql2o == null) {
-            throw new RuntimeException("Can not find db " + dbHost);
+            throw new DBException("Can not find db " + dbHost);
         }
 
     }
@@ -49,11 +54,6 @@ public class DBUtils {
                                          Map<String, Object> params) {
 
 
-        try {
-            Class.forName("org.sqlite.JDBC");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         try (Connection conn = sql2o.open()) {
             Query query = conn.createQuery(sql).throwOnMappingFailure(false);
 
@@ -68,12 +68,32 @@ public class DBUtils {
         }
     }
 
-    public static void insertOrUpdate(String tableName,
-                                      Object obj) {
-        String sql_update = assembleSql(SQL_TYPE_INSERT, tableName, obj);
-        String sql_insert = "";
+    /**
+     * insert or update
+     * @param tableName
+     * @param obj
+     *          The object to insert or update.
+     * @return
+     */
+    public static Object insertOrUpdate(Object obj) {
 
+        String tableName = CamelCaseUtils.toUnderlineName(obj.getClass().getSimpleName().toLowerCase());
 
+        String sql_update = assembleSql(SQL_TYPE_UPDATE, tableName, obj);
+        String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, obj);
+
+        try (Connection conn = sql2o.open()) {
+            Query queryUpdate = conn.createQuery(sql_update).throwOnMappingFailure(false);
+            Object primaryKey = queryUpdate.executeUpdate().getKey();
+
+            Query queryInsert= conn.createQuery(sql_insert).throwOnMappingFailure(false);
+            int lines = queryInsert.executeUpdate().getResult();
+
+            if (primaryKey != null) {
+                return primaryKey;
+            }
+            return lines;
+        }
     }
 
 
@@ -191,11 +211,12 @@ public class DBUtils {
     }
 
     public static void main(String[] args) throws Exception {
+
         User user = new User();
         user.setId("111");
         user.setPassword("113331");
         user.setUsername("444");
-        System.out.println(assembleSql(SQL_TYPE_UPDATE, "user", user));
 
+        insertOrUpdate(user);
     }
 }

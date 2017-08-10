@@ -4,9 +4,9 @@ package com.puyixiaowo.fblog.exception;
  * @author feihong
  * @date 2017-08-09 22:15
  */
-public class DBSqlException extends DBException {
+public class DBException extends RuntimeException {
 
-    public DBSqlException(String message) {
+    public DBException(String message) {
         super(message);
     }
 }

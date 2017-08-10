@@ -1,5 +1,6 @@
 package com.puyixiaowo.fblog;
 
+import com.puyixiaowo.fblog.Controller.admin.AdminController;
 import com.puyixiaowo.fblog.Controller.admin.ArticleController;
 import com.puyixiaowo.fblog.Controller.admin.LoginController;
 import com.puyixiaowo.fblog.Controller.admin.MainController;
@@ -26,6 +27,8 @@ public class Routes {
                     new FreeMarkerTemplateEngine());
             post("/login", ((request, response) ->
                     LoginController.doLogin(request, response)));
+            get("/user/add", (request, response) ->
+                    AdminController.editUser(request, response));
             post("/article/list", ((request, response) ->
                     ArticleController.selectArticleList(request, response)));
         });
