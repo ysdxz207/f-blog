@@ -1,25 +1,30 @@
 package com.puyixiaowo.fblog.domain;
 
+import com.puyixiaowo.fblog.annotation.NotNull;
+import com.puyixiaowo.fblog.core.entity.Validatable;
+
 import java.io.Serializable;
 
 /**
  * @author Moses
  * @date 2017-08-04 9:32
  */
-public class User implements Serializable{
+public class User extends Validatable implements Serializable{
 
     private static final long serialVersionUID = -6467427077007818085L;
 
-    private String id;
+    private Long id;
+    @NotNull(fieldName = "username", message = "用户名不可为空")
     private String username;
+    @NotNull(fieldName = "password", message = "密码不可为空")
     private String password;
     private String nickname;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -70,7 +70,6 @@ public class DBUtils {
 
     /**
      * insert or update
-     * @param tableName
      * @param obj
      *          The object to insert or update.
      * @return
@@ -213,7 +212,7 @@ public class DBUtils {
     public static void main(String[] args) throws Exception {
 
         User user = new User();
-        user.setId("111");
+        user.setId(IdUtils.generateId());
         user.setPassword("113331");
         user.setUsername("444");
 

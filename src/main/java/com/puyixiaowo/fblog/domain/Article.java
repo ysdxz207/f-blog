@@ -1,5 +1,7 @@
 package com.puyixiaowo.fblog.domain;
 
+import com.puyixiaowo.fblog.core.entity.Validatable;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,10 +9,10 @@ import java.util.Date;
  * @author feihong
  * @date 2017-08-07 23:26
  */
-public class Article implements Serializable{
+public class Article extends Validatable implements Serializable{
     private static final long serialVersionUID = 2731755468046157537L;
 
-    private String id;
+    private Long id;
     private String creator;
     private String title;
     private String context;
@@ -22,11 +24,11 @@ public class Article implements Serializable{
     private Boolean isDel;
 
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
