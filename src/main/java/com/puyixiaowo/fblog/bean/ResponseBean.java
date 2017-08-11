@@ -24,6 +24,10 @@ public class ResponseBean {
         this.success = false;
     }
 
+    public void success(){
+        success("成功");
+    }
+
     public void success(String message){
         this.status = HttpStatus.OK_200;
         this.message = message;

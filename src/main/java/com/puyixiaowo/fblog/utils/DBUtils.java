@@ -1,15 +1,16 @@
 package com.puyixiaowo.fblog.utils;
 
+import com.puyixiaowo.fblog.annotation.Id;
 import com.puyixiaowo.fblog.domain.User;
 import com.puyixiaowo.fblog.exception.DBException;
 import com.puyixiaowo.fblog.exception.DBSqlException;
-import com.sun.deploy.util.ReflectionUtil;
 import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
 import spark.utils.StringUtils;
 
 import java.lang.reflect.Field;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -81,6 +82,8 @@ public class DBUtils {
         String sql_update = assembleSql(SQL_TYPE_UPDATE, tableName, obj);
         String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, obj);
 
+        System.out.println(sql_update);
+
         try (Connection conn = sql2o.open()) {
             Query queryUpdate = conn.createQuery(sql_update).throwOnMappingFailure(false);
             Object primaryKey = queryUpdate.executeUpdate().getKey();
@@ -107,12 +110,8 @@ public class DBUtils {
         StringBuilder sb2 = new StringBuilder();
         String sql_1 = "";
         String sql_2 = "";
-        Object id = null;
-        try {
-            id = ReflectionUtil.invoke(obj, "getId", null, null);
-        } catch (Exception e) {
-            throw new DBSqlException("Can not invoke getId() method.");
-        }
+
+
         switch (sqlType) {
             case SQL_TYPE_INSERT:
 
@@ -160,9 +159,8 @@ public class DBUtils {
 
                 break;
             case SQL_TYPE_UPDATE:
-                if (id == null) {
-                    throw new DBSqlException("Update table error:id is null");
-                }
+                Map<String, Object> primaryKeyValueMap = ReflectionUtils.getPrimaryKeyValues(obj);
+
                 //update sql
                 sb_sql.append("update ");
                 sb_sql.append(tableName);
@@ -180,7 +178,8 @@ public class DBUtils {
                     }
                     if ("serialVersionUID".equals(fieldName) ||
                             fieldValue == null ||
-                            StringUtils.isBlank(fieldValue.toString())) {
+                            StringUtils.isBlank(fieldValue.toString()) ||
+                            field.getAnnotation(Id.class) != null) {
                         continue;
                     }
                     sb1.append("`");
@@ -195,10 +194,25 @@ public class DBUtils {
                 }
                 sql_1 = sb1.toString();
                 sb_sql.append(sql_1.substring(0, sql_1.length() - 1));
-                sb_sql.append(" where id=");
-                sb_sql.append("'");
-                sb_sql.append(id);
-                sb_sql.append("'");
+                sb_sql.append(" where ");
+
+                Iterator<Map.Entry<String, Object>> it = primaryKeyValueMap.entrySet().iterator();
+
+                while (it.hasNext()) {
+                    Map.Entry entry = it.next();
+                    Object name = entry.getKey();
+                    Object id = entry.getValue();
+                    if (id == null) {
+                        throw new DBSqlException("Update table error: primary key [" + name + "] is null");
+                    }
+                    sb_sql.append(name);
+                    sb_sql.append("=");
+                    sb_sql.append("'");
+                    sb_sql.append(id);
+                    sb_sql.append("'");
+                    if (it.hasNext())
+                    sb_sql.append(" and ");
+                }
 
                 break;
             default:
@@ -217,5 +231,12 @@ public class DBUtils {
         user.setUsername("444");
 
         insertOrUpdate(user);
+    }
+
+    public static int count(String sql, Object paramObj) {
+        try (Connection conn = sql2o.open()) {
+            Query query = conn.createQuery(sql).throwOnMappingFailure(false).bind(paramObj);
+            return query.executeScalar(Integer.class);
+        }
     }
 }

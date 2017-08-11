@@ -1,7 +1,7 @@
 package com.puyixiaowo.core.entity;
 
 import com.alibaba.fastjson.JSON;
-import com.puyixiaowo.core.exceptions.ValidateException;
+import com.puyixiaowo.core.exceptions.ValidationException;
 import com.puyixiaowo.fblog.annotation.NotNull;
 import com.puyixiaowo.fblog.utils.StringUtils;
 
@@ -14,7 +14,7 @@ import java.util.LinkedHashMap;
  */
 public abstract class Validatable {
 
-    public void validate(){
+    public void validate() throws ValidationException {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
 
         Field [] fields = this.getClass().getDeclaredFields();
@@ -24,7 +24,6 @@ public abstract class Validatable {
             if (notnull == null) {
                 continue;
             }
-            String fieldName = notnull.fieldName();
             String message = notnull.message();
 
             try {
@@ -38,6 +37,6 @@ public abstract class Validatable {
 
         }
         if (!map.isEmpty())
-        throw new ValidateException(JSON.toJSONString(map));
+        throw new ValidationException(JSON.toJSONString(map));
     }
 }

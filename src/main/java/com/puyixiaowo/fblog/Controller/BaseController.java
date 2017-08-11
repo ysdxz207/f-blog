@@ -1,5 +1,7 @@
 package com.puyixiaowo.fblog.Controller;
 
+import com.puyixiaowo.core.entity.Validatable;
+import com.puyixiaowo.core.exceptions.ValidationException;
 import org.apache.commons.beanutils.BeanUtils;
 import spark.Request;
 
@@ -8,7 +10,18 @@ import java.util.Map;
 
 public class BaseController {
 
-    public static <T> T getParamEntity(Request request, Class clazz){
+    /**
+     *
+     * @param request
+     * @param clazz
+     * @param validate
+     *          是否校验参数
+     * @param <T>
+     * @return
+     */
+    public static <T extends Validatable> T getParamEntity(Request request,
+                                                           Class clazz,
+                                                           boolean validate) throws ValidationException {
         Map<String, String[]> map = request.queryMap().toMap();
         T obj = null;
         try {
@@ -23,6 +36,7 @@ public class BaseController {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+        obj.validate();
         return obj;
     }
 }
