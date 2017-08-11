@@ -1,30 +1,32 @@
 package com.puyixiaowo.fblog.Controller.admin;
 
+import com.puyixiaowo.core.exceptions.ValidateException;
+import com.puyixiaowo.fblog.Controller.BaseController;
+import com.puyixiaowo.fblog.bean.ResponseBean;
 import com.puyixiaowo.fblog.domain.User;
-import com.puyixiaowo.fblog.utils.DBUtils;
-import com.puyixiaowo.fblog.utils.IdUtils;
-import com.puyixiaowo.fblog.utils.Md5Utils;
 import spark.Request;
-import spark.Response; /**
+import spark.Response;
+
+/**
  * @author Moses
  * @date 2017-08-10 9:57
  */
-public class AdminController {
+public class AdminController extends BaseController{
 
 
     public static Object editUser(Request request, Response response) {
-        String username = request.queryParams("uname");
-        String password = request.queryParams("upass");
-        String nickname = request.queryParams("nname");
+        ResponseBean responseBean = new ResponseBean();
 
-        
 
-        User user = new User();
-        user.setId(IdUtils.generateId());
-        user.setPassword(Md5Utils.md5Password(password));
-        user.setUsername(username);
-        user.setNickname(nickname);
+        User user = getParamEntity(request, User.class);
 
-        return DBUtils.insertOrUpdate(user);
+        try {
+            user.validate();
+        } catch (ValidateException e) {
+            responseBean.error(e.getMessage());
+        }
+
+//        return DBUtils.insertOrUpdate(user);
+        return responseBean.toString();
     }
 }

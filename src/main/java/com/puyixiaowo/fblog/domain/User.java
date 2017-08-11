@@ -1,7 +1,7 @@
 package com.puyixiaowo.fblog.domain;
 
 import com.puyixiaowo.fblog.annotation.NotNull;
-import com.puyixiaowo.fblog.core.entity.Validatable;
+import com.puyixiaowo.core.entity.Validatable;
 
 import java.io.Serializable;
 

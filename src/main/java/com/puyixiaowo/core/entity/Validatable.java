@@ -1,5 +1,7 @@
-package com.puyixiaowo.fblog.core.entity;
+package com.puyixiaowo.core.entity;
 
+import com.alibaba.fastjson.JSON;
+import com.puyixiaowo.core.exceptions.ValidateException;
 import com.puyixiaowo.fblog.annotation.NotNull;
 import com.puyixiaowo.fblog.utils.StringUtils;
 
@@ -19,17 +21,23 @@ public abstract class Validatable {
         for (Field field : fields) {
             field.setAccessible(true);
             NotNull notnull = field.getAnnotation(NotNull.class);
+            if (notnull == null) {
+                continue;
+            }
             String fieldName = notnull.fieldName();
             String message = notnull.message();
 
             try {
                 if (StringUtils.isBlank(field.get(this))) {
-
+                    map.put(field.getName(), message);
                 }
             } catch (IllegalAccessException e) {
+
 
             }
 
         }
+        if (!map.isEmpty())
+        throw new ValidateException(JSON.toJSONString(map));
     }
 }
