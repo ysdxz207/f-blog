@@ -3,6 +3,7 @@ package com.puyixiaowo.fblog.freemarker;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateModelException;
 import spark.ModelAndView;
 import spark.TemplateEngine;
 
@@ -35,6 +36,11 @@ public class FreeMarkerTemplateEngine extends TemplateEngine {
 
     private Configuration createFreemarkerConfiguration() {
         Configuration retVal = new Configuration();
+        try {
+            retVal.setSharedVariable("base", "");
+        } catch (TemplateModelException e) {
+            e.printStackTrace();
+        }
         retVal.setClassForTemplateLoading(FreeMarkerTemplateEngine.class, "/page");
         return retVal;
     }

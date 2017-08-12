@@ -1,76 +1,133 @@
+/**
+ *
+ */
 package com.puyixiaowo.fblog.bean;
 
 import com.alibaba.fastjson.JSON;
-import org.eclipse.jetty.http.HttpStatus;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.puyixiaowo.fblog.Constants.Constants;
+
+import java.io.Serializable;
 
 /**
- * @author feihong
- * @date 2017-08-06 21:48
+ * @author huangfeihong
+ * @date 2016年12月6日 下午9:24:25
  */
-public class ResponseBean {
-    private Integer status;
-    private String message;
-    private Boolean success;
-    private Object data;
+public class ResponseBean implements Serializable {
+
+	private static final long serialVersionUID = -5266170746828998914L;
+	private int statusCode = Constants.RESPONSE_STATUS_CODE_SUCCESS;
+	private String errorCode = null;
+	private String message = Constants.RESPONSE_SUCCESS_MESSAGE;
+	private Object data;
+
+	//////////
+	private boolean closeCurrent = true;//默认关闭当前对话框
+	private String tabid;
+	private String forward;
+	private String forwardConfirm;
 
 
-    public ResponseBean() {
-        error("失败");
-    }
+	public String getErrorCode() {
+		return errorCode;
+	}
 
-    public void error(String message){
-        this.status = HttpStatus.MULTIPLE_CHOICES_300;
-        this.message = message;
-        this.success = false;
-    }
+	public void setErrorCode(String errorCode) {
+		this.errorCode = errorCode;
+	}
 
-    public void success(){
-        success("成功");
-    }
+	public int getStatusCode() {
+		return statusCode;
+	}
 
-    public void success(String message){
-        this.status = HttpStatus.OK_200;
-        this.message = message;
-        this.success = true;
-    }
+	public void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
+	}
 
-    @Override
-    public String toString() {
-        return JSON.toJSONString(this);
-    }
+	public String getMessage() {
+		return message;
+	}
 
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
-    //////////////////////////////
+	public Object getData() {
+		return data;
+	}
 
-    public Integer getStatus() {
-        return status;
-    }
+	public void setData(Object data) {
+		this.data = data;
+	}
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+	public boolean isCloseCurrent() {
+		return closeCurrent;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public void setCloseCurrent(boolean closeCurrent) {
+		this.closeCurrent = closeCurrent;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public String getTabid() {
+		return tabid;
+	}
 
-    public Boolean getSuccess() {
-        return success;
-    }
+	public void setTabid(String tabid) {
+		this.tabid = tabid;
+	}
 
-    public void setSuccess(Boolean success) {
-        this.success = success;
-    }
+	public String getForward() {
+		return forward;
+	}
 
-    public Object getData() {
-        return data;
-    }
+	public void setForward(String forward) {
+		this.forward = forward;
+	}
 
-    public void setData(Object data) {
-        this.data = data;
-    }
+	public String getForwardConfirm() {
+		return forwardConfirm;
+	}
+
+	public void setForwardConfirm(String forwardConfirm) {
+		this.forwardConfirm = forwardConfirm;
+	}
+
+	//////////////////////////////
+
+	/**
+	 * 序列化
+	 *
+	 * @param data
+	 */
+	public void setSerializeData(Object data) {
+		this.data = JSONObject.parse(JSON.toJSONString(data, SerializerFeature.DisableCircularReferenceDetect));
+	}
+
+	public ResponseBean errorMessage(String message) {
+		errorMessage("ERROR", message);
+		return this;
+	}
+
+	public ResponseBean errorMessage(String errorCode, String message) {
+		this.statusCode = Constants.RESPONSE_STATUS_CODE_ERROR;
+		this.errorCode = errorCode;
+		this.message = message;
+		return this;
+	}
+
+	public ResponseBean error(Exception e) {
+		errorMessage(e.getMessage(), e.getCause().getMessage());
+		return this;
+	}
+
+	/**
+	 * 序列化
+	 *
+	 * @return
+	 */
+	public String serialize() {
+		return JSON.toJSONString(this, SerializerFeature.DisableCircularReferenceDetect);
+	}
+
 }

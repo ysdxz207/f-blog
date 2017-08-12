@@ -2,6 +2,7 @@ package com.puyixiaowo.fblog.main;
 
 import com.puyixiaowo.fblog.Routes;
 import com.puyixiaowo.fblog.error.ErrorHandler;
+import com.puyixiaowo.fblog.utils.ConfigUtils;
 import com.puyixiaowo.fblog.utils.DBUtils;
 
 import static spark.Spark.notFound;
@@ -16,6 +17,7 @@ public class Main {
         port(8003);
         notFound((request, response) -> ErrorHandler.handle404());
 
+        ConfigUtils.init();
         DBUtils.initDB();
         Routes.init();
     }

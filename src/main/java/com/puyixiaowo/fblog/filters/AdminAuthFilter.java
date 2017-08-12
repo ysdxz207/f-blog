@@ -1,14 +1,16 @@
 package com.puyixiaowo.fblog.filters;
 
+import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.Constants.Constants;
-import com.puyixiaowo.fblog.utils.ResourceUtils;
-import org.yaml.snakeyaml.Yaml;
+import com.puyixiaowo.fblog.enums.EnumsRedisKey;
+import com.puyixiaowo.fblog.utils.JedisUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
 
 import java.util.List;
-import java.util.Map;
-
 
 import static spark.Spark.before;
+import static spark.Spark.halt;
+
 /**
  *
  * @author feihong
@@ -17,36 +19,30 @@ import static spark.Spark.before;
  */
 public class AdminAuthFilter {
 
-    private static final String ADMIN_CONFIG_FILE = "conf/admin_auth.yaml";
-    private static final String IGNORE_LIST = "ignore_list";
+
 
     public static void init() {
         //后台管理
-        before((request, response) -> {
+        before("/admin/*", (request, response) -> {
             String uri = request.uri();
-            if (uri.startsWith("/admin")
-                    && !isIgnorePath(uri)
-                    && (request.session().attribute(Constants.SESSION_USER_KEY) == null))
+            if (!isIgnorePath(uri)
+                    && (request.session().attribute(Constants.SESSION_USER_KEY) == null)) {
+
                 response.redirect("/admin/loginPage");
+                halt();
+            }
         });
     }
 
     private static boolean isIgnorePath(String uri) {
 
+        String str = JedisUtils.get(EnumsRedisKey.REDIS_KEY_IGNORE_CONF_KEY.key);
 
-        Yaml yaml = new Yaml();
-        Object obj = yaml.load(ResourceUtils.readFile(ADMIN_CONFIG_FILE));
-
-        if (!(obj instanceof Map)) {
-            throw new RuntimeException("后台用户权限配置不正确");
+        if (StringUtils.isBlank(str)) {
+            throw new RuntimeException("缓存中无忽略路径配置");
         }
-        Map<String, List> map = (Map) obj;
 
-        List<String> ignores = map.get(IGNORE_LIST);
-
-        if (ignores == null) {
-            throw new RuntimeException("后台用户权限配置不正确");
-        }
+        List<String> ignores = JSON.parseArray(str, String.class);
 
         for (String path : ignores) {
             if (removeFirstSeparator(path).equals(removeFirstSeparator(uri))) {

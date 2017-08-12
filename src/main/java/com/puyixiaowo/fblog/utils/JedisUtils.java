@@ -38,4 +38,5 @@ public class JedisUtils {
     public static void set(String key, String value) {
         jedis.set(key, value);
     }
+
 }

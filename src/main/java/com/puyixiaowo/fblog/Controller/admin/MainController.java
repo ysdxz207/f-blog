@@ -1,9 +1,14 @@
 package com.puyixiaowo.fblog.Controller.admin;
 
+import com.puyixiaowo.fblog.Constants.Constants;
 import com.puyixiaowo.fblog.Controller.BaseController;
+import com.puyixiaowo.fblog.domain.User;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -21,6 +26,9 @@ public class MainController extends BaseController {
      */
     public static ModelAndView index(Request request, Response response) {
 
-        return new ModelAndView(null, "index.ftl");
+        Map<String ,Object> model = new HashMap<>();
+        User user = request.session().attribute(Constants.SESSION_USER_KEY);
+        model.put("user", user);
+        return new ModelAndView(user, "index.ftl");
     }
 }
