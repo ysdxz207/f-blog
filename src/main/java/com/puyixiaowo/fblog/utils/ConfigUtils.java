@@ -31,6 +31,6 @@ public class ConfigUtils {
             throw new RuntimeException("后台用户权限配置不正确");
         }
 
-        JedisUtils.set(EnumsRedisKey.REDIS_KEY_IGNORE_CONF_KEY.key, JSON.toJSONString(ignores));
+        JedisUtils.set(EnumsRedisKey.REDIS_KEY_IGNORE_CONF.key, JSON.toJSONString(ignores));
     }
 }

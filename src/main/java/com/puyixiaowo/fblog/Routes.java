@@ -1,10 +1,11 @@
 package com.puyixiaowo.fblog;
 
+import com.puyixiaowo.fblog.Controller.admin.MenuController;
 import com.puyixiaowo.fblog.Controller.admin.UserController;
-import com.puyixiaowo.fblog.Controller.admin.ArticleController;
+import com.puyixiaowo.fblog.Controller.fblog.ArticleController;
 import com.puyixiaowo.fblog.Controller.admin.LoginController;
 import com.puyixiaowo.fblog.Controller.admin.MainController;
-import com.puyixiaowo.fblog.Controller.front.IndexController;
+import com.puyixiaowo.fblog.Controller.fblog.IndexController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import spark.Spark;
@@ -34,6 +35,13 @@ public class Routes {
                     UserController.editUser(request, response));
             post("/article/list", ((request, response) ->
                     ArticleController.selectArticleList(request, response)));
+
+            get("/main", ((request, response) ->
+                            MainController.main(request, response)),
+                    new FreeMarkerTemplateEngine());
+
+            get("/menus/:type", ((request, response) ->
+                            MenuController.menus(request, response)));
         });
 
 

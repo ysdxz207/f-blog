@@ -29,6 +29,11 @@ public class MainController extends BaseController {
         Map<String ,Object> model = new HashMap<>();
         User user = request.session().attribute(Constants.SESSION_USER_KEY);
         model.put("user", user);
-        return new ModelAndView(user, "index.ftl");
+        return new ModelAndView(model, "index.ftl");
+    }
+
+    public static ModelAndView main(Request request, Response response) {
+
+        return new ModelAndView(null, "main.ftl");
     }
 }

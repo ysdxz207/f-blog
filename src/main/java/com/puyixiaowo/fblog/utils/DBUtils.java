@@ -1,6 +1,7 @@
 package com.puyixiaowo.fblog.utils;
 
 import com.puyixiaowo.fblog.annotation.Id;
+import com.puyixiaowo.fblog.annotation.Transient;
 import com.puyixiaowo.fblog.domain.User;
 import com.puyixiaowo.fblog.exception.DBException;
 import com.puyixiaowo.fblog.exception.DBSqlException;
@@ -10,6 +11,7 @@ import org.sql2o.Sql2o;
 import spark.utils.StringUtils;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -50,11 +52,22 @@ public class DBUtils {
         return sql2o;
     }
 
+    public static <T> T selectOne(Class clazz,
+                                   String sql,
+                                   Map<String, Object> params) {
+
+        List<T> list = selectList(clazz, sql, params);
+        if (list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
+
     public static <E> List<E> selectList(Class clazz,
                                          String sql,
                                          Map<String, Object> params) {
 
-
+        setCamelMapping(clazz);
         try (Connection conn = sql2o.open()) {
             Query query = conn.createQuery(sql).throwOnMappingFailure(false);
 
@@ -67,6 +80,25 @@ public class DBUtils {
 
             return query.executeAndFetch(clazz);
         }
+    }
+
+    /**
+     * 下划线映射为驼峰
+     * @param clazz
+     */
+    private static void setCamelMapping(Class clazz) {
+
+        Field [] fields = ReflectionUtils.getFieldListByClass(clazz);
+        Map<String, String> mapping = new HashMap<>();
+        for (Field field:
+                fields) {
+
+            if (!"serialVersionUID".equals(field.getName())
+                    && CamelCaseUtils.checkIsCamelCase(field.getName())){
+                mapping.put(CamelCaseUtils.toUnderlineName(field.getName()), field.getName());
+            }
+        }
+        sql2o.setDefaultColumnMappings(mapping);
     }
 
     /**
@@ -123,8 +155,11 @@ public class DBUtils {
 
                 for (int i = 0; i < filelds.length; i++) {
                     Field field = filelds[i];
+                    if (field.getAnnotation(Transient.class) != null) {
+                        continue;
+                    }
                     field.setAccessible(true);
-                    String fieldName = field.getName();
+                    String fieldName = ReflectionUtils.getFieldColumnName(field);
                     Object fieldValue = "";
                     try {
                         fieldValue = field.get(obj);
@@ -169,8 +204,11 @@ public class DBUtils {
 
                 for (int i = 0; i < filelds.length; i++) {
                     Field field = filelds[i];
+                    if (field.getAnnotation(Transient.class) != null) {
+                        continue;
+                    }
                     field.setAccessible(true);
-                    String fieldName = field.getName();
+                    String fieldName = ReflectionUtils.getFieldColumnName(field);
                     Object fieldValue = "";
                     try {
                         fieldValue = field.get(obj);
@@ -223,12 +261,13 @@ public class DBUtils {
         return sb_sql.toString();
     }
 
+
     public static void main(String[] args) throws Exception {
 
         User user = new User();
         user.setId(IdUtils.generateId());
         user.setPassword("113331");
-        user.setUsername("444");
+        user.setLoginname("444");
 
         insertOrUpdate(user);
     }

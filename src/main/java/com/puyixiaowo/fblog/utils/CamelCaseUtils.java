@@ -73,7 +73,7 @@ public class CamelCaseUtils {
     }
 
     public static boolean checkIsCamelCase(String str){
-        return str.indexOf("_") == -1;
+        return toUnderlineName(str).indexOf("_") != -1;
     }
  
     public static void main(String[] args) {
@@ -83,5 +83,6 @@ public class CamelCaseUtils {
         System.out.println(CamelCaseUtils.toCamelCase("iso_certified_staff"));
         System.out.println(CamelCaseUtils.toCamelCase("certified_staff"));
         System.out.println(CamelCaseUtils.toCamelCase("testUser_id"));
+        System.out.println(checkIsCamelCase("adeEdn"));
     }
 }

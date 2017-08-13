@@ -14,14 +14,15 @@ public class LoginService {
 
     public static User login(Map<String ,Object> params){
         List<User> userList = DBUtils.selectList(User.class,
-                "select username, nickname from user " +
-                        "where username =:username and password=:password",
+                "select * from user " +
+                        "where loginname =:loginname and password=:password",
                 params);
 
+        User user = null;
         if (!userList.isEmpty()
                 && userList.get(0) != null) {
-            return userList.get(0);
+            user = userList.get(0);
         }
-        return null;
+        return user;
     }
 }

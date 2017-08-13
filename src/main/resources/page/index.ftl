@@ -146,7 +146,6 @@ function bjui_index_exchange() {
     <!--[if lte IE 7]>
         <div id="errorie"><div>您还在使用老掉牙的IE，正常使用系统前请升级您的浏览器到 IE8以上版本 <a target="_blank" href="http://windows.microsoft.com/zh-cn/internet-explorer/ie-8-worldwide-languages">点击升级</a>&nbsp;&nbsp;强烈建议您更改换浏览器：<a href="http://down.tech.sina.com.cn/content/40975.html" target="_blank">谷歌 Chrome</a></div></div>
     <![endif]-->
-    <input type="hidden" value="${base!}" id="base" />
     <div id="bjui-top" class="bjui-header">
         <div class="container_fluid">
             <div class="navbar-header">
@@ -160,13 +159,13 @@ function bjui_index_exchange() {
             <nav class="collapse navbar-collapse" id="bjui-top-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="datetime"><a><span id="bjui-date">0000/00/00</span> <span id="bjui-clock">00:00:00</span></a></li>
-                    <li><a href="/user/edit/false?id=${user.id}&type=info" data-toggle="dialog" data-id="sys_user_changepass"
+                    <li><a href="/admin/user/edit/false?id=${user.id}&type=info" data-toggle="dialog" data-id="sys_user_changepass"
                            data-mask="true" data-width="300" data-height="200">
                         账号：${user.nickname!}
                         </a>
                     </li>
                     <li><a href="#">角色：${user.roleName!}</a></li>
-                    <li><a href="/user/edit/false?id=${user.id}&type=pass" data-toggle="dialog" data-id="sys_user_changepass" data-mask="true" data-width="400" data-height="300">修改密码</a></li>
+                    <li><a href="/admin/user/edit/false?id=${user.id}&type=pass" data-toggle="dialog" data-id="sys_user_changepass" data-mask="true" data-width="400" data-height="300">修改密码</a></li>
                     <li><a href="/logout" style="font-weight:bold;">&nbsp;<i class="fa fa-power-off"></i> 注销登陆</a></li>
                     <li class="dropdown"><a href="#" class="dropdown-toggle bjui-fonts-tit" data-toggle="dropdown" title="更改字号"><i class="fa fa-font"></i> 大</a>
                         <ul class="dropdown-menu" role="menu" id="bjui-fonts">
@@ -203,13 +202,13 @@ function bjui_index_exchange() {
             <nav class="collapse navbar-collapse" id="bjui-navbar-collapse">
                 <ul class="nav navbar-nav navbar-right" id="bjui-hnav-navbar">
                     <li>
-                        <a href="/menu/menus/3" data-toggle="sidenav" data-id-key="targetid">字典管理</a>
+                        <a href="/admin/menu/menus/3" data-toggle="sidenav" data-id-key="targetid">字典管理</a>
                     </li>
                     <li class="active">
-                        <a href="/menu/menus/2" data-toggle="sidenav" data-id-key="targetid">新闻管理</a>
+                        <a href="/admin/menu/menus/2" data-toggle="sidenav" data-id-key="targetid">新闻管理</a>
                     </li>
                     <li>
-                        <a href="/menu/menus/1" data-toggle="sidenav" data-id-key="targetid">权限管理</a>
+                        <a href="/admin/menu/menus/1" data-toggle="sidenav" data-id-key="targetid">权限管理</a>
                     </li>
                 </ul>
             </nav>
@@ -234,7 +233,7 @@ function bjui_index_exchange() {
                 <div class="tabsPageHeader">
                     <div class="tabsPageHeaderContent">
                         <ul class="navtab-tab nav nav-tabs">
-                            <li data-url="/main"><a href="javascript:"><span><i class="fa fa-home"></i> #maintab#</span></a></li>
+                            <li data-url="/admin/main"><a href="javascript:"><span><i class="fa fa-home"></i> #maintab#</span></a></li>
                         </ul>
                     </div>
                     <div class="tabsLeft"><i class="fa fa-angle-double-left"></i></div>

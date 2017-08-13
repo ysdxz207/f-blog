@@ -29,7 +29,7 @@ public class JedisUtils {
 
     public static <T> T get(String key, Class<T> clazz){
         String str = jedis.get(key);
-        if (StringUtils.isBlank(str)) {
+         if (StringUtils.isBlank(str)) {
             return null;
         }
         return JSONObject.parseObject(str, clazz);
@@ -38,5 +38,4 @@ public class JedisUtils {
     public static void set(String key, String value) {
         jedis.set(key, value);
     }
-
 }

@@ -1,10 +1,8 @@
 package com.puyixiaowo.fblog.filters;
 
-import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.Constants.Constants;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.utils.JedisUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
 
 import java.util.List;
 
@@ -36,13 +34,8 @@ public class AdminAuthFilter {
 
     private static boolean isIgnorePath(String uri) {
 
-        String str = JedisUtils.get(EnumsRedisKey.REDIS_KEY_IGNORE_CONF_KEY.key);
-
-        if (StringUtils.isBlank(str)) {
-            throw new RuntimeException("缓存中无忽略路径配置");
-        }
-
-        List<String> ignores = JSON.parseArray(str, String.class);
+        List<String> ignores = JedisUtils.get(EnumsRedisKey.REDIS_KEY_IGNORE_CONF.key,
+                List.class);
 
         for (String path : ignores) {
             if (removeFirstSeparator(path).equals(removeFirstSeparator(uri))) {

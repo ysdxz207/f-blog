@@ -66,4 +66,28 @@ public class ReflectionUtils {
         return map;
     }
 
+    /**
+     * 获取注解字段对应数据库表的列名
+     * @param field
+     * @return
+     */
+    public static String getFieldColumnName(Field field){
+        com.puyixiaowo.fblog.annotation.Field f = field.getAnnotation(com.puyixiaowo.fblog.annotation.Field.class);
+
+        if (f == null) {
+
+            return CamelCaseUtils.toCamelCase((field.getName()));
+        }
+        return f.value();
+    }
+
+
+    public static Field[] getFieldListByClass(Class clazz) {
+        try {
+            return Class.forName(clazz.getName()).getDeclaredFields();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return new Field[0];
+    }
 }
