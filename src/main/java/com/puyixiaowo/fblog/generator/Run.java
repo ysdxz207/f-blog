@@ -1,11 +1,16 @@
 package com.puyixiaowo.fblog.generator;
 
 
+import com.puyixiaowo.fblog.generator.enums.TypeEnums;
+import com.puyixiaowo.fblog.generator.model.GField;
+import com.puyixiaowo.fblog.generator.utils.FileUtils;
+import com.puyixiaowo.fblog.utils.CamelCaseUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -14,12 +19,12 @@ import java.util.Map;
  */
 public class Run {
     public static void main(String[] args) {
-        String tableName = "user";
+        String tableName = "permission";
         String src = "src/main/java";
         String domainPackage = "com.puyixiaowo.fblog.domain";
 
 
-        Map<String, String> tables = new HashMap<>();
+        List<GField> fieldList = new ArrayList<>();
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
@@ -36,8 +41,10 @@ public class Run {
 
                 while (resultSet.next()) {
                     String columnName = resultSet.getString("name");
-                    String type = resultSet.getString("type");
-                    tables.put(columnName, type);
+                    String jdbcType = resultSet.getString("type");
+
+                    String javaType = TypeEnums.getJavaType(jdbcType);
+                    fieldList.add(new GField(columnName, javaType, jdbcType));
                 }
 
 
@@ -46,16 +53,25 @@ public class Run {
                 String domainPath = basePath + "/"
                         + src.replaceAll("\\\\",
                         "/") + "/" + domainPackage
-                        .replaceAll("\\.", "/");
+                        .replaceAll("\\.", "/") + "/";
 
-                File file = new File(domainPath);
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                String filename = domainPath + tableName + ".java";
+                File file = new File(filename);
+
+                file.createNewFile();
+
+                for (GField gField :
+                        fieldList) {
+                    String str = "private "
+                            + gField.getJavaType() + " "
+                            + CamelCaseUtils.toCamelCase(gField.getName())
+                            + ";\n";
+
+                    FileUtils.appendToFile(filename, str);
                 }
 
-
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         } catch (SQLException e) {
