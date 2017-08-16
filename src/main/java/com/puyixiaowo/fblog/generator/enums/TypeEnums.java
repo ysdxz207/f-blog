@@ -20,7 +20,6 @@ public enum TypeEnums {
 
     public static String getJavaType(String jdbcType){
         jdbcType = jdbcType.substring(0, jdbcType.indexOf("("));
-        System.out.println(jdbcType);
         for (TypeEnums typeEnums : TypeEnums.values()) {
             if (jdbcType.equalsIgnoreCase(typeEnums.jdbcType)) {
                 return typeEnums.javaType;

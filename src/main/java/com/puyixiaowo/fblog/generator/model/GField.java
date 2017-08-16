@@ -6,12 +6,14 @@ package com.puyixiaowo.fblog.generator.model;
  */
 public class GField {
     private String name;
+    private String columnName;
     private String javaType;
     private String jdbcType;
 
 
-    public GField(String name, String javaType, String jdbcType) {
+    public GField(String name, String columnName, String javaType, String jdbcType) {
         this.name = name;
+        this.columnName = columnName;
         this.javaType = javaType;
         this.jdbcType = jdbcType;
     }
@@ -22,6 +24,14 @@ public class GField {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
     }
 
     public String getJavaType() {
