@@ -1,41 +1,38 @@
 package com.puyixiaowo.fblog.domain;
 
-import com.puyixiaowo.core.entity.Validatable;
-
 import java.io.Serializable;
 
-/**
- * @author feihong
- * @date 2017-08-13 12:15
- */
-public class Role extends Validatable implements Serializable{
-    private static final long serialVersionUID = 1228159077219494748L;
+import com.puyixiaowo.core.entity.Validatable;
 
-    private Long id;
-    private String roleName;
-    private String code;
+public class Role extends Validatable implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-    public Long getId() {
-        return id;
-    }
+	private Long id;
+	private String roleName;
+	private String code;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public String getRoleName() {
-        return roleName;
-    }
+	public Long getId (){
+		return id;
+	}
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
+	public void setId (Long id){
+		id = id;
+	}
 
-    public String getCode() {
-        return code;
-    }
+	public String getRoleName (){
+		return roleName;
+	}
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+	public void setRoleName (String roleName){
+		roleName = roleName;
+	}
+
+	public String getCode (){
+		return code;
+	}
+
+	public void setCode (String code){
+		code = code;
+	}
 }

@@ -8,7 +8,8 @@ package com.puyixiaowo.fblog.generator;
 public class Run {
     public static void main(String[] args) {
         String dbhost = "f_blog.db";
-        String tables= "permission";
+        String tables= "user,role,user_role,permission,role_permission" +
+                ",menu,article";
         String src = "src/main/java";
         String domainPackage = "com.puyixiaowo.fblog.domain";
 

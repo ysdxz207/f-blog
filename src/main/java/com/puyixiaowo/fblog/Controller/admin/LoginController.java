@@ -2,10 +2,8 @@ package com.puyixiaowo.fblog.Controller.admin;
 
 import com.puyixiaowo.fblog.Constants.Constants;
 import com.puyixiaowo.fblog.Controller.BaseController;
-import com.puyixiaowo.fblog.domain.Role;
-import com.puyixiaowo.fblog.domain.User;
+import com.puyixiaowo.fblog.bean.sys.UserBean;
 import com.puyixiaowo.fblog.service.LoginService;
-import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.Md5Utils;
 import spark.ModelAndView;
 import spark.Request;
@@ -50,23 +48,15 @@ public class LoginController extends BaseController {
         params.put("loginname", request.queryParams("uname"));
         params.put("password", Md5Utils.md5Password(request.queryParams("upass")));
 
-        User user = null;
+        UserBean userBean = null;
 
         try {
-            user = LoginService.login(params);
-            if (user == null) {
+            userBean = LoginService.login(params);
+            if (userBean == null) {
                 model.put("message", "用户名或密码不正确");
             } else {
-                params.clear();
-                params.put("userId", user.getId());
-                Role role = DBUtils.selectOne(Role.class, "select * from role r " +
-                        "left join user_role ur on r.id=ur.role_id where " +
-                        "ur.user_id = :userId",
-                        params);
 
-                user.setRoleId(role.getId());
-                user.setRoleName(role.getRoleName());
-                request.session().attribute(Constants.SESSION_USER_KEY, user);
+                request.session().attribute(Constants.SESSION_USER_KEY, userBean);
                 response.redirect("/admin/");
                 Spark.halt();
             }

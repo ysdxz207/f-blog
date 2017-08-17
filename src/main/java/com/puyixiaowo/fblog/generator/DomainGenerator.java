@@ -98,10 +98,11 @@ public class DomainGenerator {
                         + domainPackage + ";\n\n");
                 //import
                 FileUtils.appendToFile(filename, "import java.io.Serializable;\n\n");
+                FileUtils.appendToFile(filename, "import com.puyixiaowo.core.entity.Validatable;\n\n");
 
                 //class
                 FileUtils.appendToFile(filename, "public class "
-                        + className + " implements Serializable {\n");
+                        + className + " extends Validatable implements Serializable {\n");
 
                 FileUtils.appendToFile(filename,
                         "\tprivate static final long serialVersionUID = 1L;\n\n");

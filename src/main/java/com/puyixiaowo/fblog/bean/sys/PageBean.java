@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.puyixiaowo.fblog.bean;
+package com.puyixiaowo.fblog.bean.sys;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

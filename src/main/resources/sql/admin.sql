@@ -4,7 +4,7 @@
 -- ----------------------------
 DROP TABLE IF EXISTS `permission`;
 CREATE TABLE `permission` (
-  `id` varchar(64) NOT NULL,
+  `id` int(20) NOT NULL,
   `menu_id` varchar(64) NOT NULL,
   `permission_name` varchar(128) NOT NULL,
   `permission` varchar(128) DEFAULT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE `permission` (
 -- ----------------------------
 DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu` (
-  `id` varchar(64) NOT NULL,
+  `id` int(20) NOT NULL,
   `menu_name` varchar(128) NOT NULL,
   `icon` varchar(64) DEFAULT NULL,
   `sort` varchar(64) DEFAULT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE `menu` (
 -- ----------------------------
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
-  `id` varchar(64) NOT NULL,
+  `id` int(20) NOT NULL,
   `role_name` varchar(20) NOT NULL,
   `code` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
@@ -48,7 +48,7 @@ CREATE TABLE `role` (
 -- ----------------------------
 DROP TABLE IF EXISTS `role_permission`;
 CREATE TABLE `role_permission` (
-  `id` varchar(64) NOT NULL,
+  `id` int(20) NOT NULL,
   `role_id` varchar(64) NOT NULL,
   `permission_id` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
@@ -60,7 +60,7 @@ CREATE TABLE `role_permission` (
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id` varchar(64) NOT NULL,
+  `id` int(20) NOT NULL,
   `loginname` varchar(64) NOT NULL,
   `nickname` varchar(20) NOT NULL,
   `password` varchar(64) NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE `user` (
 -- ----------------------------
 DROP TABLE IF EXISTS `user_role`;
 CREATE TABLE `user_role` (
-  `id` varchar(64) NOT NULL,
+  `id` int(20) NOT NULL,
   `user_id` varchar(64) NOT NULL,
   `role_id` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)

@@ -1,6 +1,7 @@
 package com.puyixiaowo.fblog.service;
 
-import com.puyixiaowo.fblog.domain.User;
+import com.puyixiaowo.fblog.bean.sys.UserBean;
+import com.puyixiaowo.fblog.domain.Role;
 import com.puyixiaowo.fblog.utils.DBUtils;
 
 import java.util.List;
@@ -12,17 +13,29 @@ import java.util.Map;
  */
 public class LoginService {
 
-    public static User login(Map<String ,Object> params){
-        List<User> userList = DBUtils.selectList(User.class,
+    public static UserBean login(Map<String ,Object> params){
+        List<UserBean> userList = DBUtils.selectList(UserBean.class,
                 "select * from user " +
                         "where loginname =:loginname and password=:password",
                 params);
 
-        User user = null;
+        UserBean userBean = null;
         if (!userList.isEmpty()
                 && userList.get(0) != null) {
-            user = userList.get(0);
+            userBean= userList.get(0);
+
+            params.clear();
+            params.put("userId", userBean.getId());
+            Role role = DBUtils.selectOne(Role.class, "select * from role r " +
+                            "left join user_role ur on r.id=ur.role_id where " +
+                            "ur.user_id = :userId",
+                    params);
+
+            userBean.setRoleId(role.getId());
+            userBean.setRoleName(role.getRoleName());
+
         }
-        return user;
+
+        return userBean;
     }
 }

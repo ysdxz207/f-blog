@@ -1,7 +1,7 @@
 package com.puyixiaowo.fblog.Controller.admin;
 
 import com.puyixiaowo.fblog.Controller.BaseController;
-import com.puyixiaowo.fblog.bean.ResponseBean;
+import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.domain.User;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.IdUtils;

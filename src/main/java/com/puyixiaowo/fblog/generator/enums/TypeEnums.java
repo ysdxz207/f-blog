@@ -1,5 +1,7 @@
 package com.puyixiaowo.fblog.generator.enums;
 
+import com.puyixiaowo.fblog.utils.StringUtils;
+
 /**
  * @author Moses
  * @date 2017-08-15 23:28
@@ -7,9 +9,12 @@ package com.puyixiaowo.fblog.generator.enums;
 public enum TypeEnums {
 
     INTEGER("INTEGER", "Integer"),
+    INT("INT", "Integer"),
     REAL("REAL", "Double"),
     TEXT("TEXT", "String"),
     VARCHAR("VARCHAR", "String"),
+    DATETIME("DATETIME", "Date"),
+    BOOLEAN("BOOLEAN", "Boolean"),
     BLOB("BLOB", "String");
 
 
@@ -19,7 +24,15 @@ public enum TypeEnums {
     }
 
     public static String getJavaType(String jdbcType){
-        jdbcType = jdbcType.substring(0, jdbcType.indexOf("("));
+        if (jdbcType.indexOf("(") != -1) {
+            Integer length = StringUtils.parseInteger(jdbcType);
+            jdbcType = jdbcType.substring(0, jdbcType.indexOf("("));
+            if ((jdbcType.equalsIgnoreCase(TypeEnums.INT.jdbcType)
+                    || jdbcType.equalsIgnoreCase(TypeEnums.INTEGER.jdbcType))
+                    && length > 4) {
+                return "Long";
+            }
+        }
         for (TypeEnums typeEnums : TypeEnums.values()) {
             if (jdbcType.equalsIgnoreCase(typeEnums.jdbcType)) {
                 return typeEnums.javaType;
