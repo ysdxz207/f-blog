@@ -25,7 +25,7 @@ public class Menu extends Validatable implements Serializable {
 	}
 
 	public void setId (Long id){
-		id = id;
+		this.id = id;
 	}
 
 	public String getMenuName (){
@@ -33,7 +33,7 @@ public class Menu extends Validatable implements Serializable {
 	}
 
 	public void setMenuName (String menuName){
-		menuName = menuName;
+		this.menuName = menuName;
 	}
 
 	public String getIcon (){
@@ -41,7 +41,7 @@ public class Menu extends Validatable implements Serializable {
 	}
 
 	public void setIcon (String icon){
-		icon = icon;
+		this.icon = icon;
 	}
 
 	public String getSort (){
@@ -49,7 +49,7 @@ public class Menu extends Validatable implements Serializable {
 	}
 
 	public void setSort (String sort){
-		sort = sort;
+		this.sort = sort;
 	}
 
 	public String getHref (){
@@ -57,7 +57,7 @@ public class Menu extends Validatable implements Serializable {
 	}
 
 	public void setHref (String href){
-		href = href;
+		this.href = href;
 	}
 
 	public Boolean getStatus (){
@@ -65,7 +65,7 @@ public class Menu extends Validatable implements Serializable {
 	}
 
 	public void setStatus (Boolean status){
-		status = status;
+		this.status = status;
 	}
 
 	public String getRemark (){
@@ -73,7 +73,7 @@ public class Menu extends Validatable implements Serializable {
 	}
 
 	public void setRemark (String remark){
-		remark = remark;
+		this.remark = remark;
 	}
 
 	public Integer getType (){
@@ -81,7 +81,7 @@ public class Menu extends Validatable implements Serializable {
 	}
 
 	public void setType (Integer type){
-		type = type;
+		this.type = type;
 	}
 
 	public String getCode (){
@@ -89,7 +89,7 @@ public class Menu extends Validatable implements Serializable {
 	}
 
 	public void setCode (String code){
-		code = code;
+		this.code = code;
 	}
 
 	public String getPid (){
@@ -97,7 +97,7 @@ public class Menu extends Validatable implements Serializable {
 	}
 
 	public void setPid (String pid){
-		pid = pid;
+		this.pid = pid;
 	}
 
 	public Boolean getExpand (){
@@ -105,6 +105,6 @@ public class Menu extends Validatable implements Serializable {
 	}
 
 	public void setExpand (Boolean expand){
-		expand = expand;
+		this.expand = expand;
 	}
 }

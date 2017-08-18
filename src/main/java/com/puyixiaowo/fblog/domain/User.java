@@ -21,7 +21,7 @@ public class User extends Validatable implements Serializable {
 	}
 
 	public void setId (Long id){
-		id = id;
+		this.id = id;
 	}
 
 	public String getLoginname (){
@@ -29,7 +29,7 @@ public class User extends Validatable implements Serializable {
 	}
 
 	public void setLoginname (String loginname){
-		loginname = loginname;
+		this.loginname = loginname;
 	}
 
 	public String getNickname (){
@@ -37,7 +37,7 @@ public class User extends Validatable implements Serializable {
 	}
 
 	public void setNickname (String nickname){
-		nickname = nickname;
+		this.nickname = nickname;
 	}
 
 	public String getPassword (){
@@ -45,7 +45,7 @@ public class User extends Validatable implements Serializable {
 	}
 
 	public void setPassword (String password){
-		password = password;
+		this.password = password;
 	}
 
 	public Long getCreateTime (){
@@ -53,7 +53,7 @@ public class User extends Validatable implements Serializable {
 	}
 
 	public void setCreateTime (Long createTime){
-		createTime = createTime;
+		this.createTime = createTime;
 	}
 
 	public Long getLastLoginTime (){
@@ -61,7 +61,7 @@ public class User extends Validatable implements Serializable {
 	}
 
 	public void setLastLoginTime (Long lastLoginTime){
-		lastLoginTime = lastLoginTime;
+		this.lastLoginTime = lastLoginTime;
 	}
 
 	public Boolean getStatus (){
@@ -69,6 +69,6 @@ public class User extends Validatable implements Serializable {
 	}
 
 	public void setStatus (Boolean status){
-		status = status;
+		this.status = status;
 	}
 }

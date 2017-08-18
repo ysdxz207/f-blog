@@ -17,7 +17,7 @@ public class Role extends Validatable implements Serializable {
 	}
 
 	public void setId (Long id){
-		id = id;
+		this.id = id;
 	}
 
 	public String getRoleName (){
@@ -25,7 +25,7 @@ public class Role extends Validatable implements Serializable {
 	}
 
 	public void setRoleName (String roleName){
-		roleName = roleName;
+		this.roleName = roleName;
 	}
 
 	public String getCode (){
@@ -33,6 +33,6 @@ public class Role extends Validatable implements Serializable {
 	}
 
 	public void setCode (String code){
-		code = code;
+		this.code = code;
 	}
 }

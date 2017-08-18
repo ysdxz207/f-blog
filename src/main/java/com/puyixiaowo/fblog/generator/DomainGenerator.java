@@ -130,7 +130,7 @@ public class DomainGenerator {
                     String setter = "\n\n\tpublic void set"
                             + NameUtils.firstToUpperCase(field.getName())
                             + " (" + field.getJavaType() + " " + field.getName()
-                            + "){\n\t\t" + field.getName() + " = "
+                            + "){\n\t\tthis." + field.getName() + " = "
                             + field.getName() + ";\n\t}";
 
                     FileUtils.appendToFile(filename, getter + setter);

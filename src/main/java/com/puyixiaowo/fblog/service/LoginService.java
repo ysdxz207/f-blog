@@ -16,7 +16,9 @@ public class LoginService {
     public static UserBean login(Map<String ,Object> params){
         List<UserBean> userList = DBUtils.selectList(UserBean.class,
                 "select * from user " +
-                        "where loginname =:loginname and password=:password",
+                        "where loginname =:loginname " +
+                        "and password=:password " +
+                        "and status = 1",
                 params);
 
         UserBean userBean = null;

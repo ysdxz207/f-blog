@@ -67,7 +67,7 @@ public class DBUtils {
                                          String sql,
                                          Map<String, Object> params) {
 
-        setCamelMapping(clazz);
+//        setCamelMapping(clazz);
         try (Connection conn = sql2o.open()) {
             Query query = conn.createQuery(sql).throwOnMappingFailure(false);
 
@@ -264,12 +264,16 @@ public class DBUtils {
 
     public static void main(String[] args) throws Exception {
 
-        User user = new User();
-        user.setId(IdUtils.generateId());
-        user.setPassword("113331");
-        user.setLoginname("444");
-
-        insertOrUpdate(user);
+        DBUtils.initDB("D:\\workspace\\idea\\f-blog\\f_blog.db");
+        List<User> userList = DBUtils.selectList(User.class,
+                "select * from user " +
+                        "where loginname =:loginname",
+                new HashMap<String, Object>(){
+                    {
+                        put("loginname", "feihong");
+                    }
+                });
+        System.out.println(userList.get(0).getId());
     }
 
     public static int count(String sql, Object paramObj) {

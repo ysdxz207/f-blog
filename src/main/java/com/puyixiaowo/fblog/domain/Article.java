@@ -1,8 +1,8 @@
 package com.puyixiaowo.fblog.domain;
 
-import java.io.Serializable;
-
 import com.puyixiaowo.core.entity.Validatable;
+
+import java.io.Serializable;
 
 public class Article extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -24,7 +24,7 @@ public class Article extends Validatable implements Serializable {
 	}
 
 	public void setId (Long id){
-		id = id;
+		this.id = id;
 	}
 
 	public String getCreator (){
@@ -32,7 +32,7 @@ public class Article extends Validatable implements Serializable {
 	}
 
 	public void setCreator (String creator){
-		creator = creator;
+		this.creator = creator;
 	}
 
 	public String getTitle (){
@@ -40,7 +40,7 @@ public class Article extends Validatable implements Serializable {
 	}
 
 	public void setTitle (String title){
-		title = title;
+		this.title = title;
 	}
 
 	public String getContext (){
@@ -48,7 +48,7 @@ public class Article extends Validatable implements Serializable {
 	}
 
 	public void setContext (String context){
-		context = context;
+		this.context = context;
 	}
 
 	public String getCategory (){
@@ -56,7 +56,7 @@ public class Article extends Validatable implements Serializable {
 	}
 
 	public void setCategory (String category){
-		category = category;
+		this.category = category;
 	}
 
 	public String getTagIds (){
@@ -64,7 +64,7 @@ public class Article extends Validatable implements Serializable {
 	}
 
 	public void setTagIds (String tagIds){
-		tagIds = tagIds;
+		this.tagIds = tagIds;
 	}
 
 	public Long getCreateDate (){
@@ -72,7 +72,7 @@ public class Article extends Validatable implements Serializable {
 	}
 
 	public void setCreateDate (Long createDate){
-		createDate = createDate;
+		this.createDate = createDate;
 	}
 
 	public Long getLastUpdateDate (){
@@ -80,7 +80,7 @@ public class Article extends Validatable implements Serializable {
 	}
 
 	public void setLastUpdateDate (Long lastUpdateDate){
-		lastUpdateDate = lastUpdateDate;
+		this.lastUpdateDate = lastUpdateDate;
 	}
 
 	public Integer getStatus (){
@@ -88,7 +88,7 @@ public class Article extends Validatable implements Serializable {
 	}
 
 	public void setStatus (Integer status){
-		status = status;
+		this.status = status;
 	}
 
 	public Boolean getIsDel (){
@@ -96,6 +96,6 @@ public class Article extends Validatable implements Serializable {
 	}
 
 	public void setIsDel (Boolean isDel){
-		isDel = isDel;
+		this.isDel = isDel;
 	}
 }
