@@ -2,7 +2,7 @@ package com.puyixiaowo.fblog.Controller.admin;
 
 import com.puyixiaowo.fblog.Controller.BaseController;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
-import com.puyixiaowo.fblog.domain.User;
+import com.puyixiaowo.fblog.bean.sys.UserBean;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.IdUtils;
 import com.puyixiaowo.fblog.utils.Md5Utils;
@@ -25,9 +25,9 @@ public class UserController extends BaseController{
      */
     public static Object editUser(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
-        User user = null;
+        UserBean user = null;
         try {
-            user = getParamEntity(request, User.class, true);
+            user = getParamEntity(request, UserBean.class, true);
             //是否已存在用户
             int count = DBUtils.count("select count(*) from user where `username` = :username", user);
             if (count > 0) {
