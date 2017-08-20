@@ -1,12 +1,17 @@
 package com.puyixiaowo.fblog.Controller.admin;
 
+import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.Controller.BaseController;
+import com.puyixiaowo.fblog.bean.admin.MenuBean;
+import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
-import com.puyixiaowo.fblog.bean.sys.UserBean;
+import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
+import com.puyixiaowo.fblog.service.UserService;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.IdUtils;
 import com.puyixiaowo.fblog.utils.Md5Utils;
 import com.puyixiaowo.fblog.utils.StringUtils;
+import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
@@ -17,8 +22,21 @@ import spark.Response;
 public class UserController extends BaseController{
 
 
+    public static Object users(Request request,
+                                       Response response){
+        Boolean data = Boolean.valueOf(request.params(":data"));
+
+        if (!data) {
+            return new FreeMarkerTemplateEngine()
+                    .render(new ModelAndView(null,
+                            "rbac/user/user_list.html"));
+        }
+        return JSON.toJSONString(
+                UserService.selectUserList(
+                        getParamsEntity(request, MenuBean.class, false)));
+    }
     /**
-     * 注册或修改用户
+     * 添加或修改用户
      * @param request
      * @param response
      * @return
@@ -27,7 +45,7 @@ public class UserController extends BaseController{
         ResponseBean responseBean = new ResponseBean();
         UserBean user = null;
         try {
-            user = getParamEntity(request, UserBean.class, true);
+            user = getParamsEntity(request, UserBean.class, true);
             //是否已存在用户
             int count = DBUtils.count("select count(*) from user where `username` = :username", user);
             if (count > 0) {

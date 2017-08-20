@@ -2,9 +2,7 @@ package com.puyixiaowo.fblog.domain;
 
 import java.io.Serializable;
 
-import com.puyixiaowo.core.entity.Validatable;
-
-public class Menu extends Validatable implements Serializable {
+public class Menu implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
@@ -16,7 +14,7 @@ public class Menu extends Validatable implements Serializable {
 	private String remark;
 	private Integer type;
 	private String code;
-	private String pid;
+	private Long pid;
 	private Boolean expand;
 
 
@@ -92,11 +90,11 @@ public class Menu extends Validatable implements Serializable {
 		this.code = code;
 	}
 
-	public String getPid (){
+	public Long getPid (){
 		return pid;
 	}
 
-	public void setPid (String pid){
+	public void setPid (Long pid){
 		this.pid = pid;
 	}
 

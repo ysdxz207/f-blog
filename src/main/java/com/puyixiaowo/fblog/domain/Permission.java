@@ -1,14 +1,12 @@
 package com.puyixiaowo.fblog.domain;
 
-import com.puyixiaowo.core.entity.Validatable;
-
 import java.io.Serializable;
 
-public class Permission extends Validatable implements Serializable {
+public class Permission implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-	private String menuId;
+	private Long menuId;
 	private String permissionName;
 	private String permission;
 
@@ -21,11 +19,11 @@ public class Permission extends Validatable implements Serializable {
 		this.id = id;
 	}
 
-	public String getMenuId (){
+	public Long getMenuId (){
 		return menuId;
 	}
 
-	public void setMenuId (String menuId){
+	public void setMenuId (Long menuId){
 		this.menuId = menuId;
 	}
 

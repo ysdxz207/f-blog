@@ -2,7 +2,7 @@ package com.puyixiaowo.fblog.filters;
 
 import com.puyixiaowo.fblog.Constants.Constants;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
-import com.puyixiaowo.fblog.utils.JedisUtils;
+import com.puyixiaowo.fblog.utils.RedisUtils;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class AdminAuthFilter {
 
     private static boolean isIgnorePath(String uri) {
 
-        List<String> ignores = JedisUtils.get(EnumsRedisKey.REDIS_KEY_IGNORE_CONF.key,
+        List<String> ignores = RedisUtils.get(EnumsRedisKey.REDIS_KEY_IGNORE_CONF.key,
                 List.class);
 
         for (String path : ignores) {

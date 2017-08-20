@@ -1,5 +1,6 @@
 package com.puyixiaowo.fblog.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.annotation.Id;
 import com.puyixiaowo.fblog.annotation.Transient;
 import com.puyixiaowo.fblog.domain.User;
@@ -11,10 +12,7 @@ import org.sql2o.Sql2o;
 import spark.utils.StringUtils;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Moses
@@ -67,19 +65,37 @@ public class DBUtils {
                                          String sql,
                                          Map<String, Object> params) {
 
-//        setCamelMapping(clazz);
+        setCamelMapping(clazz);
         try (Connection conn = sql2o.open()) {
             Query query = conn.createQuery(sql).throwOnMappingFailure(false);
 
-            if (params != null) {
-                for (Map.Entry<String, Object> entry :
-                        params.entrySet()) {
-                    query.addParameter(entry.getKey(), entry.getValue());
+            try {
+                if (params != null) {
+                    for (Map.Entry<String, Object> entry :
+                            params.entrySet()) {
+                        query.addParameter(entry.getKey(), entry.getValue());
+                    }
                 }
+            } catch (Exception e) {
+                throw new DBSqlException("Add parameter :[" +
+                sql + "],error:" + e.getMessage());
             }
 
-            return query.executeAndFetch(clazz);
+            List<E> list = new ArrayList<>();
+            try {
+                list = query.executeAndFetch(clazz);
+            } catch (Exception e) {
+                throw new DBSqlException("Execute sql:[" + sql + "],error:" + e.getMessage());
+            }
+            return list;
         }
+    }
+
+    public static <E> List<E> selectList(Class clazz,
+                                         String sql,
+                                         Object params){
+        Map<String, Object> map =  JSON.toJavaObject(JSON.parseObject(JSON.toJSONString(params)), Map.class);
+        return selectList(clazz, sql, map);
     }
 
     /**

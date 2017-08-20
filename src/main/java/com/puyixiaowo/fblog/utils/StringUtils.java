@@ -24,6 +24,23 @@ public class StringUtils {
         return Integer.valueOf(m.replaceAll("").trim());
     }
 
+    /**
+     * 首字母转大写
+     * @param name
+     * @return
+     */
+    public static String firstToUpperCase(String name) {
+        return StringUtils.isBlank(name) ? "" : name.substring(0, 1).toUpperCase() + name.substring(1);
+    }
+
+    /**
+     * 首字母转小写
+     * @param name
+     * @return
+     */
+    public static String firstToLowerCase(String name) {
+        return StringUtils.isBlank(name) ? "" : name.substring(0, 1).toLowerCase() + name.substring(1);
+    }
     public static void main(String[] args) {
         String str = "int(12)";
         System.out.println(parseInteger(str));

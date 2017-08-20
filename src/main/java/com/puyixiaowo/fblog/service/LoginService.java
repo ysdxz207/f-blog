@@ -1,6 +1,6 @@
 package com.puyixiaowo.fblog.service;
 
-import com.puyixiaowo.fblog.bean.sys.UserBean;
+import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.domain.Role;
 import com.puyixiaowo.fblog.utils.DBUtils;
 

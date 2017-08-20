@@ -2,14 +2,12 @@ package com.puyixiaowo.fblog.domain;
 
 import java.io.Serializable;
 
-import com.puyixiaowo.core.entity.Validatable;
-
-public class RolePermission extends Validatable implements Serializable {
+public class RolePermission implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-	private String roleId;
-	private String permissionId;
+	private Long roleId;
+	private Long permissionId;
 
 
 	public Long getId (){
@@ -20,19 +18,19 @@ public class RolePermission extends Validatable implements Serializable {
 		this.id = id;
 	}
 
-	public String getRoleId (){
+	public Long getRoleId (){
 		return roleId;
 	}
 
-	public void setRoleId (String roleId){
+	public void setRoleId (Long roleId){
 		this.roleId = roleId;
 	}
 
-	public String getPermissionId (){
+	public Long getPermissionId (){
 		return permissionId;
 	}
 
-	public void setPermissionId (String permissionId){
+	public void setPermissionId (Long permissionId){
 		this.permissionId = permissionId;
 	}
 }

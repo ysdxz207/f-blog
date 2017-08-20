@@ -1,6 +1,7 @@
 package com.puyixiaowo.fblog.utils;
 
 import com.puyixiaowo.fblog.annotation.Id;
+import com.puyixiaowo.fblog.annotation.Table;
 import com.puyixiaowo.fblog.exception.DBSqlException;
 import com.sun.deploy.util.ReflectionUtil;
 import spark.utils.Assert;
@@ -89,5 +90,27 @@ public class ReflectionUtils {
             e.printStackTrace();
         }
         return new Field[0];
+    }
+
+    public static String getTableNameByClass(Class clazz) {
+        String className = null;
+        String tableName = null;
+
+
+        try {
+            Class cl = Class.forName(clazz.getName());
+
+            Table table = (Table) cl.getAnnotation(Table.class);
+            if (table != null) {
+                tableName = table.value();
+            }
+            if (StringUtils.isBlank(tableName)) {
+                className = cl.getSimpleName();
+                tableName = StringUtils.firstToLowerCase(className);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return tableName;
     }
 }

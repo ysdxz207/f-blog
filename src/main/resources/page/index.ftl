@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>推他新闻后台管理系统</title>
-<meta name="Keywords" content=",Bootstrap,jquery,ui,前端,框架,开源,OSC,开源框架,knaan"/>
-<meta name="Description" content="(Best jQuery UI)前端管理框架。轻松开发，专注您的业务，从开始！"/>
+<title>飞鸿管理</title>
+<meta name="Keywords" content=",飞鸿"/>
+<meta name="Description" content="飞鸿管理"/>
 <!-- bootstrap - css -->
 <link href="/themes/css/bootstrap.css" rel="stylesheet">
 <!-- core - css -->
@@ -80,7 +80,7 @@ $(function() {
     BJUI.init({
         JSPATH       : '/',         //[可选]框架路径
         PLUGINPATH   : '/plugins/', //[可选]插件路径
-        loginInfo    : {url:'/login', title:'登录', width:440, height:240}, // 会话超时后弹出登录对话框
+        loginInfo    : {url:'/admin/login', title:'登录', width:440, height:240}, // 会话超时后弹出登录对话框
         statusCode   : {ok:200, error:300, timeout:301}, //[可选]
         ajaxTimeout  : 300000, //[可选]全局Ajax请求超时时间(毫秒)
         alertTimeout : 3000,  //[可选]信息提示[info/correct]自动关闭延时(毫秒)

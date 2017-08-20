@@ -2,9 +2,7 @@ package com.puyixiaowo.fblog.domain;
 
 import java.io.Serializable;
 
-import com.puyixiaowo.core.entity.Validatable;
-
-public class Role extends Validatable implements Serializable {
+public class Role implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;

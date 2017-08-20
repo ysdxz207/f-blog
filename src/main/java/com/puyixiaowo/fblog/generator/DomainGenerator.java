@@ -3,8 +3,8 @@ package com.puyixiaowo.fblog.generator;
 import com.puyixiaowo.fblog.generator.enums.TypeEnums;
 import com.puyixiaowo.fblog.generator.model.GField;
 import com.puyixiaowo.fblog.generator.utils.FileUtils;
-import com.puyixiaowo.fblog.generator.utils.NameUtils;
 import com.puyixiaowo.fblog.utils.CamelCaseUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,7 +84,7 @@ public class DomainGenerator {
                         "/") + "/" + domainPackage
                         .replaceAll("\\.", "/") + "/";
 
-                String className = NameUtils.firstToUpperCase(CamelCaseUtils.toCamelCase(tableName));
+                String className = StringUtils.firstToUpperCase(CamelCaseUtils.toCamelCase(tableName));
                 String filename = domainPath + className + ".java";
                 File file = new File(filename);
 
@@ -98,11 +98,11 @@ public class DomainGenerator {
                         + domainPackage + ";\n\n");
                 //import
                 FileUtils.appendToFile(filename, "import java.io.Serializable;\n\n");
-                FileUtils.appendToFile(filename, "import com.puyixiaowo.core.entity.Validatable;\n\n");
+//                FileUtils.appendToFile(filename, "import com.puyixiaowo.core.entity.Validatable;\n\n");
 
                 //class
                 FileUtils.appendToFile(filename, "public class "
-                        + className + " extends Validatable implements Serializable {\n");
+                        + className + " implements Serializable {\n");
 
                 FileUtils.appendToFile(filename,
                         "\tprivate static final long serialVersionUID = 1L;\n\n");
@@ -124,11 +124,11 @@ public class DomainGenerator {
                 for (GField field :
                         fieldList) {
                     String getter = "\n\n\tpublic " + field.getJavaType() + " get"
-                            + NameUtils.firstToUpperCase(field.getName())
+                            + StringUtils.firstToUpperCase(field.getName())
                             + " (){\n\t\treturn " + field.getName() + ";\n\t}";
 
                     String setter = "\n\n\tpublic void set"
-                            + NameUtils.firstToUpperCase(field.getName())
+                            + StringUtils.firstToUpperCase(field.getName())
                             + " (" + field.getJavaType() + " " + field.getName()
                             + "){\n\t\tthis." + field.getName() + " = "
                             + field.getName() + ";\n\t}";

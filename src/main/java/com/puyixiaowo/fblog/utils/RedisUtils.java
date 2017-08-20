@@ -10,7 +10,7 @@ import java.util.Properties;
  * @author Moses
  * @date 2017-08-03 9:29
  */
-public class JedisUtils {
+public class RedisUtils {
     private static Jedis jedis;
 
     static {

@@ -2,6 +2,7 @@ package com.puyixiaowo.fblog.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -45,5 +46,9 @@ public class ResourceUtils {
 
     public static String getResourcePath() {
         return ResourceUtils.class.getResource("").getPath();
+    }
+
+    public static URL getResource(String filepath) {
+        return ResourceUtils.class.getClass().getResource(filepath);
     }
 }

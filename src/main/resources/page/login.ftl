@@ -119,6 +119,7 @@ function choose_bg() {
                     <input type="password" class="form-control" id="j_password" name="upass" placeholder="登录密码" aria-describedby="sizing-addon-password">
                 </div>
             </div>
+            <!--
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon" id="sizing-addon-password"><span class="glyphicon glyphicon-exclamation-sign"></span></span>
@@ -126,6 +127,7 @@ function choose_bg() {
                     <span class="input-group-addon code" id="basic-addon-code"><img id="captcha_img" src="/captcha.jpg" alt="点击更换" title="点击更换" class="m"></span>
                 </div>
             </div>
+            -->
             <div class="form-group">
                 <div class="checkbox">
                     <label for="j_remember" class="m"><input id="j_remember" type="checkbox" name="rememberMe" value="true">&nbsp;记住登陆账号!</label>

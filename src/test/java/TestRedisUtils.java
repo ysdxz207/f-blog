@@ -1,4 +1,4 @@
-import com.puyixiaowo.fblog.utils.JedisUtils;
+import com.puyixiaowo.fblog.utils.RedisUtils;
 import org.junit.Test;
 
 /**
@@ -9,6 +9,6 @@ public class TestRedisUtils {
 
     @Test
     public void testGet(){
-        System.out.println(JedisUtils.get("aa", Integer.class) == 123);
+        System.out.println(RedisUtils.get("aa", Integer.class) == 123);
     }
 }

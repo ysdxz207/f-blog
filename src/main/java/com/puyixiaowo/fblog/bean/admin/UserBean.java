@@ -1,4 +1,4 @@
-package com.puyixiaowo.fblog.bean.sys;
+package com.puyixiaowo.fblog.bean.admin;
 
 import com.puyixiaowo.core.entity.Validatable;
 import com.puyixiaowo.fblog.annotation.NotNull;

@@ -15,7 +15,7 @@ import static spark.Spark.port;
 public class Main {
     public static void main(String[] args) {
         port(8003);
-        notFound((request, response) -> ErrorHandler.handle404());
+        notFound(ErrorHandler.handle404());
 
         ConfigUtils.init();
         DBUtils.initDB();

@@ -1,10 +1,7 @@
 package com.puyixiaowo.fblog;
 
-import com.puyixiaowo.fblog.Controller.admin.MenuController;
-import com.puyixiaowo.fblog.Controller.admin.UserController;
+import com.puyixiaowo.fblog.Controller.admin.*;
 import com.puyixiaowo.fblog.Controller.fblog.ArticleController;
-import com.puyixiaowo.fblog.Controller.admin.LoginController;
-import com.puyixiaowo.fblog.Controller.admin.MainController;
 import com.puyixiaowo.fblog.Controller.fblog.IndexController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
@@ -40,10 +37,36 @@ public class Routes {
                             MainController.main(request, response)),
                     new FreeMarkerTemplateEngine());
 
-            get("/menus/:type", ((request, response) ->
-                            MenuController.menus(request, response)));
+            /*
+             * 菜单组
+             */
+            path("/menu", () -> {
+                get("/menus/:type", ((request, response) ->
+                        MenuController.navMenus(request, response)));
+                post("/menus/:type", ((request, response) ->
+                        MenuController.navMenus(request, response)));
+
+                get("/:data", ((request, response) ->
+                        MenuController.menus(request, response)));
+                get("/all/array", ((request, response) ->
+                        MenuController.allArray()));
+            });
+            /*
+             * 用户组
+             */
+            path("/user", () -> {
+
+                get("/:data", ((request, response) ->
+                        UserController.users(request, response)));
+            });
+            /*
+             * 权限组
+             */
+            path("/permission", () -> {
+
+                get("/:data", ((request, response) ->
+                        PermissionController.permissions(request, response)));
+            });
         });
-
-
     }
 }
