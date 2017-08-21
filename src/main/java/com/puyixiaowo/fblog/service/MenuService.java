@@ -84,13 +84,16 @@ public class MenuService {
         if (menuBean.getPid() != null) {
             sbSql.append("and pid = :pid ");
         }
-        if (menuBean.getPid() != null) {
+        if (menuBean.getType() != null) {
             sbSql.append("and type = :type ");
         }
         if (menuBean.getPid() != null) {
-            sbSql.append("and menu_name like %:menuName% ");
+            sbSql.append("and menu_name like '%");
+            sbSql.append(menuBean.getMenuName());
+            sbSql.append("%' ");
+            menuBean.setMenuName(null);
         }
-        if (menuBean.getPid() != null) {
+        if (menuBean.getStatus() != null) {
             sbSql.append("and status = :status ");
         }
     }

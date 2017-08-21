@@ -15,13 +15,16 @@ public class UserService {
         StringBuilder sbSql = new StringBuilder("select * from user where 1 = 1 ");
 
         if (userBean.getLoginname() != null) {
-            sbSql.append("and pid = :pid ");
+            sbSql.append("and loginname = :loginname ");
         }
         if (userBean.getNickname() != null) {
-            sbSql.append("and type = :type ");
+            sbSql.append("and nickname like '%");
+            sbSql.append(userBean.getNickname());
+            sbSql.append("%' ");
+            userBean.setNickname(null);
         }
         if (userBean.getCreateTime() != null) {
-            sbSql.append("and menu_name like %:menuName% ");
+            sbSql.append("and creat_time = :createTime ");
         }
 
 

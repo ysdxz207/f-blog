@@ -15,6 +15,7 @@ public class PermissionService {
 
     public static List<PermissionBean> selectPermissionList(PermissionBean permissionBean,
                                                       PageBean pageBean) {
+
         StringBuilder sbSql = new StringBuilder("select * from permission where 1 = 1 ");
 
         buildSqlParams(sbSql, permissionBean);
@@ -38,8 +39,17 @@ public class PermissionService {
         if (permissionBean.getMenuId() != null) {
             sbSql.append("and menu_id = :menuId ");
         }
+        if (permissionBean.getPermission() != null) {
+            sbSql.append("and permission like '%");
+            sbSql.append(permissionBean.getPermission());
+            sbSql.append("%' ");
+            permissionBean.setPermission(null);
+        }
         if (permissionBean.getPermissionName() != null) {
-            sbSql.append("and permission_name like '%':permissionName'%' ");
+            sbSql.append("and permission_name like '%");
+            sbSql.append(permissionBean.getPermissionName());
+            sbSql.append("%' ");
+            permissionBean.setPermissionName(null);
         }
     }
 }

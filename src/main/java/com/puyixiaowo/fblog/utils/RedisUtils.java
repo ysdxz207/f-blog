@@ -20,7 +20,9 @@ public class RedisUtils {
         Integer port = Integer.valueOf(properties.getProperty("redis.port"));
         String auth = properties.getProperty("redis.password");
         jedis = new Jedis(host, port);
-        jedis.auth(auth);
+        if (StringUtils.isNotBlank(auth)) {
+            jedis.auth(auth);
+        }
     }
 
     public static String get(String key){
