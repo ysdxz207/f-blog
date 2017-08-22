@@ -205,7 +205,7 @@ function bjui_index_exchange() {
                         <a href="/admin/menu/menus/3" data-toggle="sidenav" data-id-key="targetid">字典管理</a>
                     </li>
                     <li class="active">
-                        <a href="/admin/menu/menus/2" data-toggle="sidenav" data-id-key="targetid">新闻管理</a>
+                        <a href="/admin/menu/menus/2" data-toggle="sidenav" data-id-key="targetid">博客管理</a>
                     </li>
                     <li>
                         <a href="/admin/menu/menus/1" data-toggle="sidenav" data-id-key="targetid">权限管理</a>

@@ -3,16 +3,13 @@
 -- ----------------------------
 -- Records of menu
 -- ----------------------------
-INSERT INTO `menu` VALUES ('1', '新闻管理', null, '1', null, '1', '新闻管理', '2', 'news_manage', '0', '0');
+INSERT INTO `menu` VALUES ('1', '博客管理', null, '1', null, '1', '博客管理', '2', 'blog_manage', '0', '0');
 INSERT INTO `menu` VALUES ('2', '权限管理', null, '2', null, '1', '权限管理', '1', 'role_manage', '0', '0');
-INSERT INTO `menu` VALUES ('3', '新闻信息', null, '3', 'news/false', '1', '新闻信息', '2', 'news', '1', '0');
+INSERT INTO `menu` VALUES ('3', '文章列表', null, '3', 'article/false', '1', '文章列表', '2', 'article', '1', '0');
 INSERT INTO `menu` VALUES ('4', '用户信息', null, '4', 'user/false', '1', '用户信息', '1', 'user', '2', '0');
 INSERT INTO `menu` VALUES ('5', '角色信息', null, '5', 'role/false', '1', '角色信息', '1', 'role', '2', '0');
 INSERT INTO `menu` VALUES ('6', '菜单信息', null, '6', 'menu/false', '1', '菜单信息', '1', 'menu', '2', '0');
 INSERT INTO `menu` VALUES ('7', '权限信息', null, '7', 'permission/false', '1', '权限信息', '1', 'permission', '2', '0');
-INSERT INTO `menu` VALUES ('8', '新闻频道', null, '8', 'news/channel/false', '1', '新闻频道', '2', 'news_channel', '1', '0');
-INSERT INTO `menu` VALUES ('9', '字典管理', null, '9', null, '1', '字典管理', '3', 'dictionary_manage', '0', '0');
-INSERT INTO `menu` VALUES ('10', '字典信息', null, '10', 'dictionary/false', '1', '字典信息', '3', 'dictionary', '9', '0');
 
 
 -- ----------------------------
@@ -35,18 +32,10 @@ INSERT INTO `permission` VALUES ('14', '7', '查看权限', 'permission:view');
 INSERT INTO `permission` VALUES ('15', '7', '添加权限', 'permission:add');
 INSERT INTO `permission` VALUES ('16', '7', '编辑权限', 'permission:edit');
 INSERT INTO `permission` VALUES ('17', '7', '删除权限', 'permission:delete');
-INSERT INTO `permission` VALUES ('18', '3', '查看新闻', 'news:view');
-INSERT INTO `permission` VALUES ('19', '3', '添加新闻', 'news:add');
-INSERT INTO `permission` VALUES ('20', '3', '编辑新闻', 'news:edit');
-INSERT INTO `permission` VALUES ('21', '3', '删除新闻', 'news:delete');
-INSERT INTO `permission` VALUES ('22', '8', '查看新闻频道', 'news:channel:view');
-INSERT INTO `permission` VALUES ('23', '8', '添加新闻频道', 'news:channel:add');
-INSERT INTO `permission` VALUES ('24', '8', '编辑新闻频道', 'news:channel:edit');
-INSERT INTO `permission` VALUES ('25', '8', '删除新闻频道', 'news:channel:delete');
-INSERT INTO `permission` VALUES ('26', '10', '查看字典', 'dictionary:view');
-INSERT INTO `permission` VALUES ('27', '10', '添加字典', 'dictionary:add');
-INSERT INTO `permission` VALUES ('28', '10', '编辑字典', 'dictionary:edit');
-INSERT INTO `permission` VALUES ('29', '10', '删除字典', 'dictionary:delete');
+INSERT INTO `permission` VALUES ('18', '3', '查看文章', 'article:view');
+INSERT INTO `permission` VALUES ('19', '3', '添加文章', 'article:add');
+INSERT INTO `permission` VALUES ('20', '3', '编辑文章', 'article:edit');
+INSERT INTO `permission` VALUES ('21', '3', '删除文章', 'article:delete');
 
 
 
@@ -81,14 +70,6 @@ INSERT INTO `role_permission` VALUES ('18', '20151106', '18');
 INSERT INTO `role_permission` VALUES ('19', '20151106', '19');
 INSERT INTO `role_permission` VALUES ('20', '20151106', '20');
 INSERT INTO `role_permission` VALUES ('21', '20151106', '21');
-INSERT INTO `role_permission` VALUES ('22', '20151106', '22');
-INSERT INTO `role_permission` VALUES ('23', '20151106', '23');
-INSERT INTO `role_permission` VALUES ('24', '20151106', '24');
-INSERT INTO `role_permission` VALUES ('25', '20151106', '25');
-INSERT INTO `role_permission` VALUES ('26', '20151106', '26');
-INSERT INTO `role_permission` VALUES ('27', '20151106', '27');
-INSERT INTO `role_permission` VALUES ('28', '20151106', '28');
-INSERT INTO `role_permission` VALUES ('29', '20151106', '29');
 
 
 

@@ -18,10 +18,8 @@ public class UserService {
             sbSql.append("and loginname = :loginname ");
         }
         if (userBean.getNickname() != null) {
-            sbSql.append("and nickname like '%");
-            sbSql.append(userBean.getNickname());
-            sbSql.append("%' ");
-            userBean.setNickname(null);
+            sbSql.append("and nickname like :nickname");
+            userBean.setNickname("%" + userBean.getNickname() + "%");
         }
         if (userBean.getCreateTime() != null) {
             sbSql.append("and creat_time = :createTime ");

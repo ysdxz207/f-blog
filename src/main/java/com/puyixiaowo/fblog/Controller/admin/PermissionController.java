@@ -3,8 +3,10 @@ package com.puyixiaowo.fblog.Controller.admin;
 import com.puyixiaowo.fblog.Controller.BaseController;
 import com.puyixiaowo.fblog.bean.admin.PermissionBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
+import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.PermissionService;
+import com.puyixiaowo.fblog.utils.DBUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -36,5 +38,20 @@ public class PermissionController extends BaseController {
         return pageBean.serialize();
     }
 
+
+    public static Object edit(Request request, Response response){
+        ResponseBean responseBean = new ResponseBean();
+        List<PermissionBean> permissionBeanList = getParamsEntityJson(request, PermissionBean.class, true);
+        try {
+
+            for (PermissionBean permissionBean :
+                    permissionBeanList) {
+                DBUtils.insertOrUpdate(permissionBean);
+            }
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+        return responseBean.serialize();
+    }
 
 }

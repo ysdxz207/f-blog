@@ -125,19 +125,21 @@ public class DBUtils {
      */
     public static Object insertOrUpdate(Object obj) {
 
-        String tableName = CamelCaseUtils.toUnderlineName(obj.getClass().getSimpleName().toLowerCase());
-
-        String sql_update = assembleSql(SQL_TYPE_UPDATE, tableName, obj);
-        String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, obj);
-
-        System.out.println(sql_update);
+        String tableName = ReflectionUtils.getTableNameByClass(obj.getClass());
 
         try (Connection conn = sql2o.open()) {
-            Query queryUpdate = conn.createQuery(sql_update).throwOnMappingFailure(false);
-            Object primaryKey = queryUpdate.executeUpdate().getKey();
-
-            Query queryInsert= conn.createQuery(sql_insert).throwOnMappingFailure(false);
-            int lines = queryInsert.executeUpdate().getResult();
+            Object primaryKey = null;
+            int lines = 0;
+            try {
+                String sql_update = assembleSql(SQL_TYPE_UPDATE, tableName, obj);
+                Query queryUpdate = conn.createQuery(sql_update).throwOnMappingFailure(false);
+                primaryKey = queryUpdate.executeUpdate().getKey();
+            } catch (Exception e) {
+                ReflectionUtils.setId(obj);
+                String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, obj);
+                Query queryInsert= conn.createQuery(sql_insert).throwOnMappingFailure(false);
+                lines = queryInsert.executeUpdate().getResult();
+            }
 
             if (primaryKey != null) {
                 return primaryKey;
@@ -233,7 +235,8 @@ public class DBUtils {
                     if ("serialVersionUID".equals(fieldName) ||
                             fieldValue == null ||
                             StringUtils.isBlank(fieldValue.toString()) ||
-                            field.getAnnotation(Id.class) != null) {
+                            field.getAnnotation(Id.class) != null ||
+                            "id".equalsIgnoreCase(fieldName)) {
                         continue;
                     }
                     sb1.append("`");

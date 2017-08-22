@@ -2,11 +2,14 @@ package com.puyixiaowo.fblog.utils;
 
 import com.puyixiaowo.fblog.annotation.Id;
 import com.puyixiaowo.fblog.annotation.Table;
+import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.exception.DBSqlException;
 import com.sun.deploy.util.ReflectionUtil;
 import spark.utils.Assert;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,11 +76,14 @@ public class ReflectionUtils {
      * @return
      */
     public static String getFieldColumnName(Field field){
+        if ("serialVersionUID".equals(field.getName())) {
+            return field.getName();
+        }
         com.puyixiaowo.fblog.annotation.Field f = field.getAnnotation(com.puyixiaowo.fblog.annotation.Field.class);
 
         if (f == null) {
 
-            return CamelCaseUtils.toCamelCase((field.getName()));
+            return CamelCaseUtils.toUnderlineName((field.getName()));
         }
         return f.value();
     }
@@ -112,5 +118,28 @@ public class ReflectionUtils {
             e.printStackTrace();
         }
         return tableName;
+    }
+
+    public static void setId(Object obj) {
+        Class cls = obj.getClass();
+        Method setMethod = null;
+        try {
+            setMethod = cls.getDeclaredMethod("setId", Long.class);
+            try {
+                setMethod.invoke(obj, IdUtils.generateId());
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        UserBean userBean = new UserBean();
+        setId(userBean);
+        System.out.println(userBean.getId());
     }
 }

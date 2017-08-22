@@ -88,10 +88,8 @@ public class MenuService {
             sbSql.append("and type = :type ");
         }
         if (menuBean.getPid() != null) {
-            sbSql.append("and menu_name like '%");
-            sbSql.append(menuBean.getMenuName());
-            sbSql.append("%' ");
-            menuBean.setMenuName(null);
+            sbSql.append("and menu_name like :menuName");
+            menuBean.setMenuName("%" + menuBean.getMenuName() + "%");
         }
         if (menuBean.getStatus() != null) {
             sbSql.append("and status = :status ");

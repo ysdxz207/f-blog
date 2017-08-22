@@ -1,6 +1,7 @@
 package com.puyixiaowo.fblog.Controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.core.entity.Validatable;
 import com.puyixiaowo.core.exceptions.ValidationException;
@@ -19,22 +20,21 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 
 public class BaseController {
 
     /**
-     *
      * @param request
      * @param clazz
-     * @param validate
-     *          是否校验参数
+     * @param validate 是否校验参数
      * @param <T>
      * @return
      */
     public static <T extends Validatable> T getParamsEntity(Request request,
-                                                           Class clazz,
-                                                           boolean validate) throws ValidationException {
+                                                            Class clazz,
+                                                            boolean validate) throws ValidationException {
         Map<String, String[]> map = request.queryMap().toMap();
         T obj = null;
         try {
@@ -49,12 +49,23 @@ public class BaseController {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-        obj.validate();
+        if (validate) {
+            obj.validate();
+        }
         return obj;
     }
 
+    public static <T> List<T> getParamsEntityJson(Request request,
+                                                  Class clazz,
+                                                  boolean validate) {
+        String json = request.queryParams("json");
+        JSONArray jsonArray = JSON.parseArray(json);
+
+        return jsonArray.toJavaList(clazz);
+    }
+
     public static JSONObject getParamsJSON(Request request,
-                                           Class clazz){
+                                           Class clazz) {
         Object t = getParamsEntity(request, clazz, false);
         return JSON.parseObject(JSON.toJSONString(t));
     }

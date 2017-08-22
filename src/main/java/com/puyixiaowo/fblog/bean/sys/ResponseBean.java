@@ -105,19 +105,13 @@ public class ResponseBean implements Serializable {
 	}
 
 	public ResponseBean errorMessage(String message) {
-		errorMessage("ERROR", message);
-		return this;
-	}
-
-	public ResponseBean errorMessage(String errorCode, String message) {
-		this.statusCode = Constants.RESPONSE_STATUS_CODE_ERROR;
-		this.errorCode = errorCode;
 		this.message = message;
+		this.statusCode = Constants.RESPONSE_STATUS_CODE_ERROR;
 		return this;
 	}
 
 	public ResponseBean error(Exception e) {
-		errorMessage(e.getMessage(), e.getCause().getMessage());
+		errorMessage(e.getMessage());
 		return this;
 	}
 

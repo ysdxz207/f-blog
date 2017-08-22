@@ -8,7 +8,6 @@ import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.UserService;
 import com.puyixiaowo.fblog.utils.DBUtils;
-import com.puyixiaowo.fblog.utils.IdUtils;
 import com.puyixiaowo.fblog.utils.Md5Utils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import spark.ModelAndView;
@@ -56,9 +55,7 @@ public class UserController extends BaseController{
             if (StringUtils.isBlank(user.getNickname())) {
                 user.setNickname("大帅比");
             }
-            if (user.getId() == null) {
-                user.setId(IdUtils.generateId());
-            }
+
             user.setPassword(Md5Utils.md5Password(user.getPassword()));
 
             DBUtils.insertOrUpdate(user);

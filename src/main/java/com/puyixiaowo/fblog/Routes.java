@@ -66,6 +66,9 @@ public class Routes {
 
                 get("/:data", ((request, response) ->
                         PermissionController.permissions(request, response)));
+
+                post("/edit", ((request, response) ->
+                        PermissionController.edit(request, response)));
             });
         });
     }
