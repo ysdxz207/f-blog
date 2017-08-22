@@ -40,16 +40,12 @@ public class PermissionService {
             sbSql.append("and menu_id = :menuId ");
         }
         if (permissionBean.getPermission() != null) {
-            sbSql.append("and permission like '%");
-            sbSql.append(permissionBean.getPermission());
-            sbSql.append("%' ");
-            permissionBean.setPermission(null);
+            sbSql.append("and permission like :permission");
+            permissionBean.setPermission("%" + permissionBean.getPermission() + "%");
         }
         if (permissionBean.getPermissionName() != null) {
-            sbSql.append("and permission_name like '%");
-            sbSql.append(permissionBean.getPermissionName());
-            sbSql.append("%' ");
-            permissionBean.setPermissionName(null);
+            sbSql.append("and permission_name like :permissionName ");
+            permissionBean.setPermissionName("%" + permissionBean.getPermissionName() + "%");
         }
     }
 }
