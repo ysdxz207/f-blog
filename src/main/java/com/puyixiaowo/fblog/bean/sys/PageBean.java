@@ -138,6 +138,7 @@ public class PageBean extends ResponseBean{
 
 	@Override
 	public String serialize() {
+
 		return JSON.toJSONString(this);
 	}
 }

@@ -5,37 +5,26 @@ import java.io.Serializable;
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
-	private String loginname;
-	private String nickname;
+	private String id;
+	private String username;
 	private String password;
-	private Long createTime;
-	private Long lastLoginTime;
-	private Boolean status;
+	private String nickname;
 
 
-	public Long getId (){
+	public String getId (){
 		return id;
 	}
 
-	public void setId (Long id){
+	public void setId (String id){
 		this.id = id;
 	}
 
-	public String getLoginname (){
-		return loginname;
+	public String getUsername (){
+		return username;
 	}
 
-	public void setLoginname (String loginname){
-		this.loginname = loginname;
-	}
-
-	public String getNickname (){
-		return nickname;
-	}
-
-	public void setNickname (String nickname){
-		this.nickname = nickname;
+	public void setUsername (String username){
+		this.username = username;
 	}
 
 	public String getPassword (){
@@ -46,27 +35,11 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public Long getCreateTime (){
-		return createTime;
+	public String getNickname (){
+		return nickname;
 	}
 
-	public void setCreateTime (Long createTime){
-		this.createTime = createTime;
-	}
-
-	public Long getLastLoginTime (){
-		return lastLoginTime;
-	}
-
-	public void setLastLoginTime (Long lastLoginTime){
-		this.lastLoginTime = lastLoginTime;
-	}
-
-	public Boolean getStatus (){
-		return status;
-	}
-
-	public void setStatus (Boolean status){
-		this.status = status;
+	public void setNickname (String nickname){
+		this.nickname = nickname;
 	}
 }
