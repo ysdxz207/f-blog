@@ -69,6 +69,9 @@ public class Routes {
 
                 post("/edit", ((request, response) ->
                         PermissionController.edit(request, response)));
+
+                post("/delete", ((request, response) ->
+                        PermissionController.delete(request, response)));
             });
         });
     }

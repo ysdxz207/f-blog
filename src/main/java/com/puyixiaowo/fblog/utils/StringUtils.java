@@ -45,4 +45,17 @@ public class StringUtils {
         String str = "int(12)";
         System.out.println(parseInteger(str));
     }
+
+    public static String join(Object[] strAry, String join){
+        StringBuffer sb=new StringBuffer();
+        for(int i=0;i<strAry.length;i++){
+            if(i==(strAry.length-1)){
+                sb.append(strAry[i]);
+            }else{
+                sb.append(strAry[i]).append(join);
+            }
+        }
+
+        return new String(sb);
+    }
 }

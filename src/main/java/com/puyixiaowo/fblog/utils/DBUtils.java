@@ -9,7 +9,6 @@ import com.puyixiaowo.fblog.exception.DBSqlException;
 import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
-import spark.utils.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -28,6 +27,7 @@ public class DBUtils {
     public static void initDB() {
         initDB(null);
     }
+
     private static void initDB(String dbHost) {
         if (StringUtils.isBlank(dbHost)) {
             dbHost = (String) ResourceUtils.load("jdbc.properties").get("sqlite3.host");
@@ -51,8 +51,8 @@ public class DBUtils {
     }
 
     public static <T> T selectOne(Class clazz,
-                                   String sql,
-                                   Map<String, Object> params) {
+                                  String sql,
+                                  Map<String, Object> params) {
 
         List<T> list = selectList(clazz, sql, params);
         if (list.isEmpty()) {
@@ -78,7 +78,7 @@ public class DBUtils {
                 }
             } catch (Exception e) {
                 throw new DBSqlException("Add parameter :[" +
-                sql + "],error:" + e.getMessage());
+                        sql + "],error:" + e.getMessage());
             }
 
             List<E> list = new ArrayList<>();
@@ -93,24 +93,25 @@ public class DBUtils {
 
     public static <E> List<E> selectList(Class clazz,
                                          String sql,
-                                         Object params){
-        Map<String, Object> map =  JSON.toJavaObject(JSON.parseObject(JSON.toJSONString(params)), Map.class);
+                                         Object params) {
+        Map<String, Object> map = JSON.toJavaObject(JSON.parseObject(JSON.toJSONString(params)), Map.class);
         return selectList(clazz, sql, map);
     }
 
     /**
      * 下划线映射为驼峰
+     *
      * @param clazz
      */
     private static void setCamelMapping(Class clazz) {
 
-        Field [] fields = ReflectionUtils.getFieldListByClass(clazz);
+        Field[] fields = ORMUtils.getFieldListByClass(clazz);
         Map<String, String> mapping = new HashMap<>();
-        for (Field field:
+        for (Field field :
                 fields) {
 
             if (!"serialVersionUID".equals(field.getName())
-                    && CamelCaseUtils.checkIsCamelCase(field.getName())){
+                    && CamelCaseUtils.checkIsCamelCase(field.getName())) {
                 mapping.put(CamelCaseUtils.toUnderlineName(field.getName()), field.getName());
             }
         }
@@ -119,13 +120,13 @@ public class DBUtils {
 
     /**
      * insert or update
-     * @param obj
-     *          The object to insert or update.
+     *
+     * @param obj The object to insert or update.
      * @return
      */
     public static Object insertOrUpdate(Object obj) {
 
-        String tableName = ReflectionUtils.getTableNameByClass(obj.getClass());
+        String tableName = ORMUtils.getTableNameByClass(obj.getClass());
 
         try (Connection conn = sql2o.open()) {
             Object primaryKey = null;
@@ -135,9 +136,9 @@ public class DBUtils {
                 Query queryUpdate = conn.createQuery(sql_update).throwOnMappingFailure(false);
                 primaryKey = queryUpdate.executeUpdate().getKey();
             } catch (Exception e) {
-                ReflectionUtils.setId(obj);
+                ORMUtils.setId(obj);
                 String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, obj);
-                Query queryInsert= conn.createQuery(sql_insert).throwOnMappingFailure(false);
+                Query queryInsert = conn.createQuery(sql_insert).throwOnMappingFailure(false);
                 lines = queryInsert.executeUpdate().getResult();
             }
 
@@ -177,7 +178,7 @@ public class DBUtils {
                         continue;
                     }
                     field.setAccessible(true);
-                    String fieldName = ReflectionUtils.getFieldColumnName(field);
+                    String fieldName = ORMUtils.getFieldColumnName(field);
                     Object fieldValue = "";
                     try {
                         fieldValue = field.get(obj);
@@ -212,7 +213,7 @@ public class DBUtils {
 
                 break;
             case SQL_TYPE_UPDATE:
-                Map<String, Object> primaryKeyValueMap = ReflectionUtils.getPrimaryKeyValues(obj);
+                Map<String, Object> primaryKeyValueMap = ORMUtils.getPrimaryKeyValues(obj);
 
                 //update sql
                 sb_sql.append("update ");
@@ -226,7 +227,7 @@ public class DBUtils {
                         continue;
                     }
                     field.setAccessible(true);
-                    String fieldName = ReflectionUtils.getFieldColumnName(field);
+                    String fieldName = ORMUtils.getFieldColumnName(field);
                     Object fieldValue = "";
                     try {
                         fieldValue = field.get(obj);
@@ -268,7 +269,7 @@ public class DBUtils {
                     sb_sql.append(id);
                     sb_sql.append("'");
                     if (it.hasNext())
-                    sb_sql.append(" and ");
+                        sb_sql.append(" and ");
                 }
 
                 break;
@@ -287,7 +288,7 @@ public class DBUtils {
         List<User> userList = DBUtils.selectList(User.class,
                 "select * from user " +
                         "where loginname =:loginname",
-                new HashMap<String, Object>(){
+                new HashMap<String, Object>() {
                     {
                         put("loginname", "feihong");
                     }
@@ -299,6 +300,44 @@ public class DBUtils {
         try (Connection conn = sql2o.open()) {
             Query query = conn.createQuery(sql).throwOnMappingFailure(false).bind(paramObj);
             return query.executeScalar(Integer.class);
+        }
+    }
+
+    public static Integer deleteByIds(Class clazz, String ids) {
+        if (StringUtils.isBlank(ids)) {
+            return 0;
+        }
+        List<String> list = Arrays.asList(ids.split(","));
+        if (list == null
+                || list.isEmpty()
+                || list.get(0) == null) {
+            return 0;
+        }
+
+        StringBuilder sb_del_sql = new StringBuilder("delete from ");
+        String tableName = ORMUtils.getTableNameByClass(clazz);
+
+        sb_del_sql.append("`");
+        sb_del_sql.append(tableName);
+        sb_del_sql.append("` where id in(");
+
+
+        Iterator<String> it = list.iterator();
+        while (it.hasNext()) {
+            sb_del_sql.append("'");
+            sb_del_sql.append(it.next());
+            sb_del_sql.append("'");
+            if (it.hasNext())
+                sb_del_sql.append(", ");
+        }
+
+        sb_del_sql.append(")");
+
+        System.out.println(sb_del_sql.toString());
+        try (Connection conn = sql2o.open()) {
+            Query query = conn.createQuery(sb_del_sql.toString()).throwOnMappingFailure(false);
+
+            return query.executeUpdate().getResult();
         }
     }
 }

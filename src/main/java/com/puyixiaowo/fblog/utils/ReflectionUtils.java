@@ -1,145 +1,182 @@
 package com.puyixiaowo.fblog.utils;
 
-import com.puyixiaowo.fblog.annotation.Id;
-import com.puyixiaowo.fblog.annotation.Table;
-import com.puyixiaowo.fblog.bean.admin.UserBean;
-import com.puyixiaowo.fblog.exception.DBSqlException;
-import com.sun.deploy.util.ReflectionUtil;
-import spark.utils.Assert;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
- * @author feihong
- * @date 2017-08-11 23:51
+ * 反射的Utils函数集合. 提供访问私有变量,获取泛型类型Class,提取集合中元素的属性等Utils函数.
+ * 
+ * @author lei
  */
 public class ReflectionUtils {
-
-    public static List<String> getPrimaryKeyGetterList(Object obj) {
-        Assert.notNull(obj, "Object should not be null.");
-
-        List<String> primaryKeyGetterList = new ArrayList<>();
-
-        Field [] fields = obj.getClass().getDeclaredFields();
-        String defaultPrimaryKeyGetter = "getId";
-
-        for (Field field :
-                fields) {
-            Id id = field.getAnnotation(Id.class);
-            if (id == null) {
-                continue;
-            }
-
-            String fieldName = field.getName();
-            String primaryKeyGetter = "get" + fieldName.substring(0, 1)
-                    .toUpperCase() + fieldName.substring(1);
-            primaryKeyGetterList.add(primaryKeyGetter);
-        }
-
-        if (primaryKeyGetterList.isEmpty()) {
-            primaryKeyGetterList.add(defaultPrimaryKeyGetter);
-        }
-
-        return primaryKeyGetterList;
+ 
+    private static Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
+ 
+    private ReflectionUtils() {
     }
-
-    public static Map<String, Object> getPrimaryKeyValues(Object obj){
-        Assert.notNull(obj, "Object should not be null.");
-        Map<String ,Object> map = new HashMap<>();
-        List<String> primaryKeyGetterList = getPrimaryKeyGetterList(obj);
-
-        for (String primaryKeyGetter :
-                primaryKeyGetterList) {
-            try {
-                Object id = ReflectionUtil.invoke(obj, primaryKeyGetter, null, null);
-
-                map.put(primaryKeyGetter.substring(3).
-                        substring(0, 1).toLowerCase()
-                        + primaryKeyGetter.substring(4), id);
-            } catch (Exception e) {
-                throw new DBSqlException("Can not invoke " + primaryKeyGetter + " method.");
-            }
-        }
-
-        return map;
-    }
-
+ 
     /**
-     * 获取注解字段对应数据库表的列名
-     * @param field
-     * @return
+     * 直接读取对象属性值,无视private/protected修饰符,不经过getter函数.
      */
-    public static String getFieldColumnName(Field field){
-        if ("serialVersionUID".equals(field.getName())) {
-            return field.getName();
-        }
-        com.puyixiaowo.fblog.annotation.Field f = field.getAnnotation(com.puyixiaowo.fblog.annotation.Field.class);
-
-        if (f == null) {
-
-            return CamelCaseUtils.toUnderlineName((field.getName()));
-        }
-        return f.value();
-    }
-
-
-    public static Field[] getFieldListByClass(Class clazz) {
+    public static Object getFieldValue(final Object object, final String fieldName) {
+        Field field = getDeclaredField(object, fieldName);
+ 
+        if (field == null)
+            throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + object + "]");
+ 
+        makeAccessible(field);
+ 
+        Object result = null;
         try {
-            return Class.forName(clazz.getName()).getDeclaredFields();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            result = field.get(object);
+        } catch (IllegalAccessException e) {
+            logger.error("不可能抛出的异常{}", e.getMessage());
         }
-        return new Field[0];
+        return result;
     }
-
-    public static String getTableNameByClass(Class clazz) {
-        String className = null;
-        String tableName = null;
-
-
+ 
+    /**
+     * 直接设置对象属性值,无视private/protected修饰符,不经过setter函数.
+     */
+    public static void setFieldValue(final Object object, final String fieldName, final Object value) {
+        Field field = getDeclaredField(object, fieldName);
+ 
+        if (field == null)
+            throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + object + "]");
+ 
+        makeAccessible(field);
+ 
         try {
-            Class cl = Class.forName(clazz.getName());
-
-            Table table = (Table) cl.getAnnotation(Table.class);
-            if (table != null) {
-                tableName = table.value();
-            }
-            if (StringUtils.isBlank(tableName)) {
-                className = cl.getSimpleName();
-                tableName = StringUtils.firstToLowerCase(className);
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            field.set(object, value);
+        } catch (IllegalAccessException e) {
+            logger.error("不可能抛出的异常:{}", e.getMessage());
         }
-        return tableName;
     }
-
-    public static void setId(Object obj) {
-        Class cls = obj.getClass();
-        Method setMethod = null;
-        try {
-            setMethod = cls.getDeclaredMethod("setId", Long.class);
+ 
+    /**
+     * 循环向上转型,获取对象的DeclaredField.
+     */
+    protected static Field getDeclaredField(final Object object, final String fieldName) {
+        Assert.notNull(object, "object不能为空");
+        return getDeclaredField(object.getClass(), fieldName);
+    }
+ 
+    /**
+     * 循环向上转型,获取类的DeclaredField.
+     */
+    @SuppressWarnings("unchecked")
+    protected static Field getDeclaredField(final Class clazz, final String fieldName) {
+        Assert.notNull(clazz, "clazz不能为空");
+        Assert.hasText(fieldName, "fieldName");
+        for (Class superClass = clazz; superClass != Object.class; superClass = superClass.getSuperclass()) {
             try {
-                setMethod.invoke(obj, IdUtils.generateId());
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                return superClass.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                // Field不在当前类定义,继续向上转型
             }
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+        }
+        return null;
+    }
+ 
+    /**
+     * 强制转换fileld可访问.
+     */
+    protected static void makeAccessible(final Field field) {
+        if (!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers())) {
+            field.setAccessible(true);
         }
     }
-
-    public static void main(String[] args) {
-        UserBean userBean = new UserBean();
-        setId(userBean);
-        System.out.println(userBean.getId());
+ 
+    /**
+     * 通过反射,获得定义Class时声明的父类的泛型参数的类型. 如public UserDao extends HibernateDao<User>
+     * 
+     * @param clazz
+     *            The class to introspect
+     * @return the first generic declaration, or Object.class if cannot be
+     *         determined
+     */
+    @SuppressWarnings("unchecked")
+    public static Class getSuperClassGenricType(final Class clazz) {
+        return getSuperClassGenricType(clazz, 0);
+    }
+ 
+    /**
+     * 通过反射,获得定义Class时声明的父类的泛型参数的类型. 如public UserDao extends
+     * HibernateDao<User,Long>
+     * 
+     * @param clazz
+     *            clazz The class to introspect
+     * @param index
+     *            the Index of the generic ddeclaration,start from 0.
+     * @return the index generic declaration, or Object.class if cannot be
+     *         determined
+     */
+ 
+    @SuppressWarnings("unchecked")
+    public static Class getSuperClassGenricType(final Class clazz, final int index) {
+ 
+        Type genType = clazz.getGenericSuperclass();
+ 
+        if (!(genType instanceof ParameterizedType)) {
+            logger.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");
+            return Object.class;
+        }
+ 
+        Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
+ 
+        if (index >= params.length || index < 0) {
+            logger.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length);
+            return Object.class;
+        }
+        if (!(params[index] instanceof Class)) {
+            logger.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
+            return Object.class;
+        }
+        return (Class) params[index];
+    }
+ 
+    /**
+     * 提取集合中的对象的属性,组合成List.
+     * 
+     * @param collection
+     *            来源集合.
+     * @param propertyName
+     *            要提取的属性名.
+     */
+    @SuppressWarnings("unchecked")
+    public static List fetchElementPropertyToList(final Collection collection, final String propertyName) throws Exception {
+ 
+        List list = new ArrayList();
+ 
+        for (Object obj : collection) {
+            list.add(PropertyUtils.getProperty(obj, propertyName));
+        }
+ 
+        return list;
+    }
+ 
+    /**
+     * 提取集合中的对象的属性,组合成由分割符分隔的字符串.
+     * 
+     * @param collection
+     *            来源集合.
+     * @param propertyName
+     *            要提取的属性名.
+     * @param separator
+     *            分隔符.
+     */
+    @SuppressWarnings("unchecked")
+    public static String fetchElementPropertyToString(final Collection collection, final String propertyName, final String separator) throws Exception {
+        List list = fetchElementPropertyToList(collection, propertyName);
+        return StringUtils.join(list.toArray(), separator);
     }
 }

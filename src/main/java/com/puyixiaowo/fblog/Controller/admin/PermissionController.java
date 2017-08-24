@@ -54,4 +54,17 @@ public class PermissionController extends BaseController {
         return responseBean.serialize();
     }
 
+    public static Object delete(Request request, Response response){
+        ResponseBean responseBean = new ResponseBean();
+
+        try {
+            DBUtils.deleteByIds(PermissionBean.class,
+                    request.queryParams("id"));
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+
+        return responseBean.serialize();
+    }
+
 }

@@ -1,0 +1,18 @@
+package com.puyixiaowo.fblog.utils;
+
+/**
+ * @author Moses
+ * @date 2017-08-24 22:54
+ */
+public class Assert {
+    public static void notNull(Object object, String message) {
+        if (object == null) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+    public static void hasText(Object object, String message) {
+        if (StringUtils.isBlank(object)) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+}
