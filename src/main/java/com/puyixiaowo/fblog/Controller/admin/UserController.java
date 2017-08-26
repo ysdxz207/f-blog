@@ -2,14 +2,15 @@ package com.puyixiaowo.fblog.Controller.admin;
 
 import com.puyixiaowo.fblog.Controller.BaseController;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
+import com.puyixiaowo.fblog.bean.admin.UserRoleBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
-import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
+import com.puyixiaowo.fblog.service.RolePermissionService;
+import com.puyixiaowo.fblog.service.UserRoleService;
 import com.puyixiaowo.fblog.service.UserService;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.DesUtils;
-import com.puyixiaowo.fblog.utils.RedisUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import spark.ModelAndView;
 import spark.Request;
@@ -83,6 +84,11 @@ public class UserController extends BaseController{
                 userBean.setPassword(DesUtils.encrypt(userBean.getPassword()));
 
                 DBUtils.insertOrUpdate(userBean);
+                //用户角色
+                UserRoleBean userRoleBean = new UserRoleBean();
+                userRoleBean.setRoleId(userBean.getRoleId());
+                userRoleBean.setUserId(userBean.getId());
+                DBUtils.insertOrUpdate(userRoleBean);
             }
         } catch (Exception e) {
             responseBean.errorMessage(e.getMessage());
@@ -95,11 +101,14 @@ public class UserController extends BaseController{
         ResponseBean responseBean = new ResponseBean();
 
         try {
+            String ids = request.queryParams("id");
             DBUtils.deleteByIds(UserBean.class,
-                    request.queryParams("id"));
-            //删除缓存，下次刷新
-            RedisUtils.delete(EnumsRedisKey.REDIS_KEY_MENU_LIST.key + "*");
-            responseBean.setMessage("操作成功，请手动刷新页面。");
+                    ids);
+
+            //删除user_role
+            UserRoleService.deleteByUserIds(ids);
+            //删除role_permission
+            RolePermissionService.deleteByUserIds(ids);
         } catch (Exception e) {
             responseBean.error(e);
         }

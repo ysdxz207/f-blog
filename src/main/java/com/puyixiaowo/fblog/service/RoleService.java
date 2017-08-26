@@ -1,9 +1,13 @@
 package com.puyixiaowo.fblog.service;
 
 import com.puyixiaowo.fblog.bean.admin.RoleBean;
+import com.puyixiaowo.fblog.bean.admin.RolePermissionBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
+import com.puyixiaowo.fblog.utils.ArrayUtils;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -45,5 +49,35 @@ public class RoleService {
             roleBean.setCode("%" + roleBean.getCode() + "%");
         }
 
+    }
+
+    public static RoleBean selectByPrimaryKey(Object roleId) {
+
+        return DBUtils.selectOne(RoleBean.class, "select * from role where id=:id",
+                new HashMap<String, Object>(){
+                    {
+                        put("id", roleId);
+                    }
+                });
+    }
+
+    public static void setPermission(Long roleId, String permissionIds) {
+
+        if (StringUtils.isBlank(permissionIds)) {
+            return;
+        }
+
+        //删除角色权限
+        RolePermissionService.deleteByRoleIds(roleId.toString());
+
+        long [] ids = ArrayUtils.parseToLongArray(permissionIds);
+
+        //添加角色权限
+        for (Long permissionId : ids) {
+            RolePermissionBean bean = new RolePermissionBean();
+            bean.setRoleId(roleId);
+            bean.setPermissionId(permissionId);
+            DBUtils.insertOrUpdate(bean);
+        }
     }
 }

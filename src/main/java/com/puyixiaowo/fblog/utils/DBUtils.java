@@ -278,19 +278,7 @@ public class DBUtils {
     }
 
 
-    public static void main(String[] args) throws Exception {
 
-        DBUtils.initDB("D:\\workspace\\idea\\f-blog\\f_blog.db");
-        List<User> userList = DBUtils.selectList(User.class,
-                "select * from user " +
-                        "where loginname =:loginname",
-                new HashMap<String, Object>() {
-                    {
-                        put("loginname", "feihong");
-                    }
-                });
-        System.out.println(userList.get(0).getId());
-    }
 
     public static int count(String sql, Object paramObj) {
         try (Connection conn = sql2o.open()) {
@@ -335,5 +323,33 @@ public class DBUtils {
 
             return query.executeUpdate().getResult();
         }
+    }
+
+    public static Object executeSql(String sql, Map<String, Object> params) {
+        try (Connection conn = sql2o.open()) {
+            Query query = conn.createQuery(sql).throwOnMappingFailure(false);
+
+            if (params != null) {
+                for (Map.Entry<String, Object> entry :
+                        params.entrySet()) {
+                    query.addParameter(entry.getKey(), entry.getValue());
+                }
+            }
+            return query.executeUpdate().getResult();
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        DBUtils.initDB("D:\\workspace\\idea\\f-blog\\f_blog.db");
+        List<User> userList = DBUtils.selectList(User.class,
+                "select * from user " +
+                        "where loginname =:loginname",
+                new HashMap<String, Object>() {
+                    {
+                        put("loginname", "feihong");
+                    }
+                });
+        System.out.println(userList.get(0).getId());
     }
 }

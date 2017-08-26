@@ -28,6 +28,10 @@ public class Routes {
             post("/login", ((request, response) ->
                     LoginController.doLogin(request, response)),
                     new FreeMarkerTemplateEngine());
+
+            get("/logout", ((request, response) ->
+                            LoginController.logout(request, response)));
+
             post("/article/list", ((request, response) ->
                     ArticleController.selectArticleList(request, response)));
 
@@ -88,6 +92,18 @@ public class Routes {
              * 角色组
              */
             path("/role", () -> {
+                get("/:data", ((request, response) ->
+                        RoleController.roles(request, response)));
+
+                post("/edit", ((request, response) ->
+                        RoleController.edit(request, response)));
+
+                post("/delete", ((request, response) ->
+                        RoleController.delete(request, response)));
+
+                get("/setPermission/:data", ((request, response) ->
+                        RoleController.setPermission(request, response)));
+
                 get("/all/array", (request, response) ->
                 RoleController.allArray());
             });

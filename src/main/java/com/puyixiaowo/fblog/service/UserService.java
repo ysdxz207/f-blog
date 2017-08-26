@@ -13,7 +13,7 @@ public class UserService {
 
     public static List<UserBean> selectUserList(UserBean userBean){
         StringBuilder sbSql = new StringBuilder("select u.*,ur.role_id " +
-                "from user u left join user_role ur on u.id=ur.user_id where 1 = 1 ");
+                "from user u left join user_role ur on u.id=ur.user_id where loginname<>'feihong' ");
 
         buildSqlParams(sbSql, userBean);
         sbSql.append(" order by id asc");
@@ -22,7 +22,7 @@ public class UserService {
 
     public static int selectCount(UserBean userBean) {
         StringBuilder sbSql = new StringBuilder("select count(*) " +
-                "from user u left join user_role ur on u.id=ur.user_id where 1 = 1 ");
+                "from user u left join user_role ur on u.id=ur.user_id where loginname<>'feihong' ");
 
         buildSqlParams(sbSql, userBean);
         return DBUtils.count(sbSql.toString(), userBean);

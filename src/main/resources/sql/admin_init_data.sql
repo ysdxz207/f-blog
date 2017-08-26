@@ -49,27 +49,27 @@ INSERT INTO `role` VALUES ('1', '管理员', 'admin');
 -- ----------------------------
 -- Records of role_permission
 -- ----------------------------
-INSERT INTO `role_permission` VALUES ('1', '20151106', '1');
-INSERT INTO `role_permission` VALUES ('2', '20151106', '2');
-INSERT INTO `role_permission` VALUES ('3', '20151106', '3');
-INSERT INTO `role_permission` VALUES ('4', '20151106', '4');
-INSERT INTO `role_permission` VALUES ('5', '20151106', '5');
-INSERT INTO `role_permission` VALUES ('6', '20151106', '6');
-INSERT INTO `role_permission` VALUES ('7', '20151106', '7');
-INSERT INTO `role_permission` VALUES ('8', '20151106', '8');
-INSERT INTO `role_permission` VALUES ('9', '20151106', '9');
-INSERT INTO `role_permission` VALUES ('10', '20151106', '10');
-INSERT INTO `role_permission` VALUES ('11', '20151106', '11');
-INSERT INTO `role_permission` VALUES ('12', '20151106', '12');
-INSERT INTO `role_permission` VALUES ('13', '20151106', '13');
-INSERT INTO `role_permission` VALUES ('14', '20151106', '14');
-INSERT INTO `role_permission` VALUES ('15', '20151106', '15');
-INSERT INTO `role_permission` VALUES ('16', '20151106', '16');
-INSERT INTO `role_permission` VALUES ('17', '20151106', '17');
-INSERT INTO `role_permission` VALUES ('18', '20151106', '18');
-INSERT INTO `role_permission` VALUES ('19', '20151106', '19');
-INSERT INTO `role_permission` VALUES ('20', '20151106', '20');
-INSERT INTO `role_permission` VALUES ('21', '20151106', '21');
+INSERT INTO `role_permission` VALUES ('1', '1', '1');
+INSERT INTO `role_permission` VALUES ('2', '1', '2');
+INSERT INTO `role_permission` VALUES ('3', '1', '3');
+INSERT INTO `role_permission` VALUES ('4', '1', '4');
+INSERT INTO `role_permission` VALUES ('5', '1', '5');
+INSERT INTO `role_permission` VALUES ('6', '1', '6');
+INSERT INTO `role_permission` VALUES ('7', '1', '7');
+INSERT INTO `role_permission` VALUES ('8', '1', '8');
+INSERT INTO `role_permission` VALUES ('9', '1', '9');
+INSERT INTO `role_permission` VALUES ('10', '1', '10');
+INSERT INTO `role_permission` VALUES ('11', '1', '11');
+INSERT INTO `role_permission` VALUES ('12', '1', '12');
+INSERT INTO `role_permission` VALUES ('13', '1', '13');
+INSERT INTO `role_permission` VALUES ('14', '1', '14');
+INSERT INTO `role_permission` VALUES ('15', '1', '15');
+INSERT INTO `role_permission` VALUES ('16', '1', '16');
+INSERT INTO `role_permission` VALUES ('17', '1', '17');
+INSERT INTO `role_permission` VALUES ('18', '1', '18');
+INSERT INTO `role_permission` VALUES ('19', '1', '19');
+INSERT INTO `role_permission` VALUES ('20', '1', '20');
+INSERT INTO `role_permission` VALUES ('21', '1', '21');
 
 
 

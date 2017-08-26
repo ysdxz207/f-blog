@@ -2,6 +2,7 @@ package com.puyixiaowo.fblog.service;
 
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.bean.admin.MenuBean;
+import com.puyixiaowo.fblog.bean.admin.other.MenuPermissionBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.utils.DBUtils;
@@ -113,4 +114,47 @@ public class MenuService {
         }
     }
 
+    public static List<MenuPermissionBean> selectValidMenuPermissions(Long roleId) {
+
+        String sql = "SELECT *\n" +
+                "FROM (\n" +
+                "       SELECT\n" +
+                "         'm_' || id  AS id,\n" +
+                "         menu_name,\n" +
+                "         NULL        AS permission,\n" +
+                "         'm_' || pid AS pid,\n" +
+                "         0           AS is_checked\n" +
+                "       FROM menu\n" +
+                "       WHERE `status` = 1\n" +
+                "       UNION\n" +
+                "       SELECT\n" +
+                "         id,\n" +
+                "         permission_name,\n" +
+                "         permission,\n" +
+                "         'm_' || menu_id AS pid,\n" +
+                "         CASE WHEN (id IN (\n" +
+                "\n" +
+                "           SELECT permission_id\n" +
+                "           FROM\n" +
+                "             permission mp\n" +
+                "             LEFT JOIN role_permission mrp\n" +
+                "               ON mp.id = mrp.permission_id\n" +
+                "           WHERE mrp.role_id = :roleId\n" +
+                "         ))\n" +
+                "           THEN 'true'\n" +
+                "         ELSE 'false' END    AS is_checked\n" +
+                "       FROM permission\n" +
+                "\n" +
+                "       ORDER BY id\n" +
+                "         ASC\n" +
+                "     ) t;\n" +
+                "\n";
+
+        return DBUtils.selectList(MenuPermissionBean.class, sql,
+                new HashMap<String, Object>(){
+                    {
+                        put("roleId", roleId);
+                    }
+                });
+    }
 }

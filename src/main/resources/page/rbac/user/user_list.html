@@ -29,8 +29,8 @@
                     name:'password',
                     align:'center',
                     quickfilter:false,
-                    render: function(value, data){
-                        return '<a class=\'btn\' onclick=\'javascript:$(this).parent().text(' + value + ')\'>显示密码</a>';
+                    render: function(value, data) {
+                        return showPassword(value, data);
                     }
 
                 }">密码</th>
@@ -43,3 +43,8 @@
         </thead>
     </table>
 </div>
+<script type="text/javascript">
+    function showPassword(value, data){
+        return '<a class="btn" onclick="javascript:$(this).parent().text(\'' + value + '\')">显示密码</a>';
+    }
+</script>

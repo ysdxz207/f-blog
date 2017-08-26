@@ -3,16 +3,20 @@ package com.puyixiaowo.fblog.Controller.admin;
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.Controller.BaseController;
 import com.puyixiaowo.fblog.bean.admin.RoleBean;
+import com.puyixiaowo.fblog.bean.admin.other.MenuPermissionBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
+import com.puyixiaowo.fblog.service.MenuService;
 import com.puyixiaowo.fblog.service.RoleService;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -22,7 +26,7 @@ import java.util.List;
  */
 public class RoleController extends BaseController {
 
-    public static Object roles(Request request, Response response) {
+    public static String roles(Request request, Response response) {
         Boolean data = Boolean.valueOf(request.params(":data"));
 
         if (!data) {
@@ -67,6 +71,35 @@ public class RoleController extends BaseController {
             responseBean.error(e);
         }
 
+        return responseBean.serialize();
+    }
+
+    public static Object setPermission(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
+
+        Long roleId = Long.parseLong(request.queryParams("roleId"));
+        String permissionIds = request.queryParams("permissionIds");
+
+        Boolean data = Boolean.valueOf(request.params(":data"));
+
+        if (!data) {
+            Map<String, Object> model = new HashMap<>();
+            model.put("model", RoleService.selectByPrimaryKey(roleId));
+            //权限列表
+            List<MenuPermissionBean> menuList = MenuService.selectValidMenuPermissions(roleId);
+            model.put("menuList", menuList);
+
+            return new FreeMarkerTemplateEngine()
+                    .render(new ModelAndView(model,
+                            "rbac/role/role_permission_edit.html"));
+        }
+
+        try {
+            RoleService.setPermission(roleId, permissionIds);
+
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
         return responseBean.serialize();
     }
 

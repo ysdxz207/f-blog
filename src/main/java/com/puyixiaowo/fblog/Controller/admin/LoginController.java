@@ -8,6 +8,7 @@ import com.puyixiaowo.fblog.utils.DesUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import spark.Spark;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,9 +75,12 @@ public class LoginController extends BaseController {
      * @param response
      * @return
      */
-    public static ModelAndView logout(Request request, Response response) {
+    public static Object logout(Request request, Response response) {
         request.session().removeAttribute(Constants.SESSION_USER_KEY);
-        return new ModelAndView(null, "login.ftl");
+
+        response.redirect("/admin/loginPage");
+        Spark.halt();
+        return null;
     }
 
 }

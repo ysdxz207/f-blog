@@ -1,16 +1,15 @@
-<#assign base=request.contextPath />
 <div class="bjui-pageContent">
     <table class="table table-bordered" id="datagrid_permission_list" data-toggle="datagrid" data-options="{
         height: '100%',
         gridTitle : '角色列表',
         showToolbar: true,
         toolbarItem: 'add,save,cancel,edit,del',
-        loadType: 'POST',
-        dataUrl: '${base}/role/true',
+        loadType: 'GET',
+        dataUrl: '${base}/admin/role/true',
         dataType: 'json',
-        editUrl: '${base}/role/edit/true',
+        editUrl: '${base}/admin/role/edit',
         delType: 'POST',
-        delUrl: '${base}/role/delete',
+        delUrl: '${base}/admin/role/delete',
         delPK: 'id',
         local: 'remote',
         filterAll: true,
@@ -21,7 +20,7 @@
         	$trs.closest('table').datagrid('refresh', true);
         },
         toolbarCustom: function(){
-        	var url = '${base}/role/setPermission/false';
+        	var url = '${base}/admin/role/setPermission/false';
         	return role.btnSetPermissions(url);
         }
     }">
