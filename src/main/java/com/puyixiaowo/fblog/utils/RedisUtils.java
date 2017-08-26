@@ -2,9 +2,9 @@ package com.puyixiaowo.fblog.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import redis.clients.jedis.Jedis;
-import spark.utils.StringUtils;
 
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author Moses
@@ -39,5 +39,29 @@ public class RedisUtils {
 
     public static void set(String key, String value) {
         jedis.set(key, value);
+    }
+
+    public static Long delete(String... keys) {
+        return jedis.del(keys);
+    }
+
+    public static Long delete(String pattern) {
+        Set<String> keysSet = RedisUtils.keys(pattern);
+        String [] keys = keysSet.toArray(new String[keysSet.size()]);
+        if (keys.length == 0) {
+            return 0L;
+        }
+        return RedisUtils.delete(keys);
+    }
+    public static Set<String> keys(String pattern){
+        return jedis.keys(pattern);
+    }
+
+    public static <T> T getDefault(String key, Class<T> clazz, T defaultValue) {
+        String str = jedis.get(key);
+        if (StringUtils.isBlank(str)) {
+            return defaultValue;
+        }
+        return JSONObject.parseObject(str, clazz);
     }
 }

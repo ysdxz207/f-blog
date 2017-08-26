@@ -6,10 +6,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fblog.Controller.BaseController;
 import com.puyixiaowo.fblog.bean.admin.MenuBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
+import com.puyixiaowo.fblog.bean.sys.ResponseBean;
+import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.exception.MenuException;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.MenuService;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.RedisUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import spark.ModelAndView;
 import spark.Request;
@@ -31,6 +34,7 @@ public class MenuController extends BaseController {
         Integer type = Integer.parseInt(typeStr);
 
         List<MenuBean> menuBeanList = MenuService.selectNavMenuList(type);
+
         return buildMenus(menuBeanList);
     }
 
@@ -63,7 +67,7 @@ public class MenuController extends BaseController {
         return result;
     }
 
-    public static Object menus(Request request, Response response) {
+    public static String menus(Request request, Response response) {
         Boolean data = Boolean.valueOf(request.params(":data"));
 
         if (!data) {
@@ -72,20 +76,70 @@ public class MenuController extends BaseController {
                             "rbac/menu/menu_list.html"));
         }
         PageBean pageBean = getPageBean(request);
-        MenuBean menuBean = getParamsEntity(request, MenuBean.class, false);
-        List<MenuBean> list = MenuService.selectMenuList(menuBean,
-                pageBean);
-        pageBean.setList(list);
+        try {
+            MenuBean menuBean = getParamsEntity(request, MenuBean.class, false);
+            List<MenuBean> list = MenuService.selectMenuList(menuBean,
+                    pageBean);
+            pageBean.setList(list);
 
-        int count = MenuService.selectCount(menuBean);
-        pageBean.setTotalCount(count);
+            int count = MenuService.selectCount(menuBean);
+            pageBean.setTotalCount(count);
+        } catch (Exception e) {
+            pageBean.error(e);
+        }
         return pageBean.serialize();
     }
 
-    public static Object allArray() {
-        return JSON.toJSONString(DBUtils.selectList(MenuBean.class,
-                "select * from menu where pid > 0",
-                null));
+    public static String edit(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
+        List<MenuBean> menuBeanList = getParamsEntityJson(request, MenuBean.class, true);
+        try {
+
+            for (MenuBean menuBean :
+                    menuBeanList) {
+                DBUtils.insertOrUpdate(menuBean);
+            }
+            //删除缓存，下次刷新
+            RedisUtils.delete(EnumsRedisKey.REDIS_KEY_MENU_LIST.key + "*");
+            responseBean.setMessage("操作成功，请手动刷新页面。");
+
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+        return responseBean.serialize();
+    }
+
+    public static String delete(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
+
+        try {
+            DBUtils.deleteByIds(MenuBean.class,
+                    request.queryParams("id"));
+            //删除缓存，下次刷新
+            RedisUtils.delete(EnumsRedisKey.REDIS_KEY_MENU_LIST.key + "*");
+            responseBean.setMessage("操作成功，请手动刷新页面。");
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+
+        return responseBean.serialize();
+    }
+
+    public static String allArray(Request request, Response response) {
+        boolean parent = "yes".equals(request.params(":parent"));
+        List<MenuBean> list = DBUtils.selectList(MenuBean.class,
+                "select * from menu where pid "
+                        + (parent ? " = 0" : " > 0"),
+                null);
+
+        if (parent) {
+            MenuBean bean = new MenuBean();
+            bean.setId(0L);
+            bean.setMenuName("无");
+            list.add(0, bean);
+        }
+
+        return JSON.toJSONString(list);
     }
 
 

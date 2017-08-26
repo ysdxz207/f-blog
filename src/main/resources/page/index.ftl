@@ -38,7 +38,7 @@
 <script src="/other/jquery.iframe-transport.js"></script>
 <![endif]-->
 <!--  -->
-<script src="/js/bjui-all.js"></script>
+<script src="/js/bjui-all.min.js"></script>
 <!-- plugins -->
 <!-- swfupload for kindeditor -->
 <script src="/plugins/swfupload/swfupload.js"></script>

@@ -10,7 +10,7 @@ import java.security.SecureRandom;
 /**
  * 字符串加密工具
  */
-public class DesUtil {
+public class DesUtils {
 	/**
 	 * 秘钥
 	 */
@@ -90,13 +90,13 @@ public class DesUtil {
 	/**
 	 * 加密
 	 * 
-	 * @param password
+	 * @param str
 	 * @return
 	 * @throws Exception
 	 */
-	public final static String encrypt2(String password, String key) {
+	public final static String encrypt2(String str, String key) {
 		try {
-			return byte2hex(encrypt(password.getBytes(), key.getBytes()));
+			return byte2hex(encrypt(str.getBytes(), key.getBytes()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -124,13 +124,13 @@ public class DesUtil {
 	/**
 	 * 加密
 	 * 
-	 * @param password
+	 * @param str
 	 * @return
 	 * @throws Exception
 	 */
-	public final static String encrypt(String password) {
+	public final static String encrypt(String str) {
 		try {
-			return byte2hex(encrypt(password.getBytes(), PASSWORD_CRYPT_KEY
+			return byte2hex(encrypt(str.getBytes(), PASSWORD_CRYPT_KEY
 					.getBytes()));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -176,6 +176,6 @@ public class DesUtil {
 	
 	
 	public static void main(String[] args) {
-
+		System.out.println(encrypt("123456"));
 	}
 }

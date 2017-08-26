@@ -82,11 +82,7 @@ public class DBUtils {
             }
 
             List<E> list = new ArrayList<>();
-            try {
                 list = query.executeAndFetch(clazz);
-            } catch (Exception e) {
-                throw new DBSqlException("Execute sql:[" + sql + "],error:" + e.getMessage());
-            }
             return list;
         }
     }

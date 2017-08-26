@@ -17,14 +17,15 @@ import java.util.List;
  */
 public class MenuService {
 
-    private static List<MenuBean> selectMenuListRedis(long pid,  int type) {
+    public static List<MenuBean> selectMenuListRedis(long pid,
+                                                      int type) {
+
         //redis
-        String menuListStr = RedisUtils.get(EnumsRedisKey.REDIS_KEY_MENU_LIST_.key);
+        String menuListStr = RedisUtils.get(EnumsRedisKey.REDIS_KEY_MENU_LIST.key + pid + "_" + type);
 
         if (StringUtils.isNotBlank(menuListStr)) {
             return JSON.parseArray(menuListStr, MenuBean.class);
         }
-
         String sql = "select * from menu " +
                 "where pid = :pid " +
                 "and type = :type and status = 1 " +
@@ -36,6 +37,11 @@ public class MenuService {
                 put("type", type);
             }
         });
+
+        if (!menuBeanList.isEmpty()) {
+            //更新redis
+            RedisUtils.set(EnumsRedisKey.REDIS_KEY_MENU_LIST.key + pid + "_" + type, JSON.toJSONString(menuBeanList));
+        }
 
         return menuBeanList;
     }
@@ -87,12 +93,24 @@ public class MenuService {
         if (menuBean.getType() != null) {
             sbSql.append("and type = :type ");
         }
-        if (menuBean.getPid() != null) {
+        if (menuBean.getMenuName() != null) {
             sbSql.append("and menu_name like :menuName");
             menuBean.setMenuName("%" + menuBean.getMenuName() + "%");
+        }
+        if (menuBean.getRemark() != null) {
+            sbSql.append("and remark like :remark");
+            menuBean.setRemark("%" + menuBean.getRemark() + "%");
+        }
+        if (menuBean.getCode() != null) {
+            sbSql.append("and code like :code");
+            menuBean.setCode("%" + menuBean.getCode() + "%");
         }
         if (menuBean.getStatus() != null) {
             sbSql.append("and status = :status ");
         }
+        if (menuBean.getExpand() != null) {
+            sbSql.append("and expand = :expand ");
+        }
     }
+
 }

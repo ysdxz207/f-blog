@@ -1,24 +1,31 @@
 package com.puyixiaowo.fblog.bean.admin;
 
 import com.puyixiaowo.core.entity.Validatable;
+import com.puyixiaowo.fblog.annotation.NotNull;
+import com.puyixiaowo.fblog.annotation.Table;
 
 import java.io.Serializable;
 import java.util.List;
 
+@Table("menu")
 public class MenuBean extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	@NotNull
 	private String menuName;
 	private String icon;
 	private String sort;
+	@NotNull
 	private String href;
-	private Boolean status;
+	private Integer status;
 	private String remark;
 	private Integer type;
+	@NotNull
 	private String code;
+	@NotNull
 	private String pid;
-	private Boolean expand;
+	private Integer expand;
 
 	///////////////////
 	private List<MenuBean> menuBeanList;
@@ -64,11 +71,11 @@ public class MenuBean extends Validatable implements Serializable {
 		this.href = href;
 	}
 
-	public Boolean getStatus (){
+	public Integer getStatus (){
 		return status;
 	}
 
-	public void setStatus (Boolean status){
+	public void setStatus (Integer status){
 		this.status = status;
 	}
 
@@ -104,11 +111,11 @@ public class MenuBean extends Validatable implements Serializable {
 		this.pid = pid;
 	}
 
-	public Boolean getExpand (){
+	public Integer getExpand (){
 		return expand;
 	}
 
-	public void setExpand (Boolean expand){
+	public void setExpand (Integer expand){
 		this.expand = expand;
 	}
 

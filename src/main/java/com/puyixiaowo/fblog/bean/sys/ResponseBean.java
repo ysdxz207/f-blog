@@ -124,4 +124,8 @@ public class ResponseBean implements Serializable {
 		return JSON.toJSONString(this, SerializerFeature.DisableCircularReferenceDetect);
 	}
 
+	@Override
+	public String toString() {
+		return serialize();
+	}
 }

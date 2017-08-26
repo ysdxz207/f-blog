@@ -28,8 +28,6 @@ public class Routes {
             post("/login", ((request, response) ->
                     LoginController.doLogin(request, response)),
                     new FreeMarkerTemplateEngine());
-            get("/user/add", (request, response) ->
-                    UserController.editUser(request, response));
             post("/article/list", ((request, response) ->
                     ArticleController.selectArticleList(request, response)));
 
@@ -48,8 +46,14 @@ public class Routes {
 
                 get("/:data", ((request, response) ->
                         MenuController.menus(request, response)));
-                get("/all/array", ((request, response) ->
-                        MenuController.allArray()));
+                get("/all/array/:parent", ((request, response) ->
+                        MenuController.allArray(request, response)));
+
+                post("/edit", ((request, response) ->
+                        MenuController.edit(request, response)));
+
+                post("/delete", ((request, response) ->
+                        MenuController.delete(request, response)));
             });
             /*
              * 用户组
@@ -58,6 +62,12 @@ public class Routes {
 
                 get("/:data", ((request, response) ->
                         UserController.users(request, response)));
+
+                post("/edit", ((request, response) ->
+                        UserController.edit(request, response)));
+
+                post("/delete", ((request, response) ->
+                        UserController.delete(request, response)));
             });
             /*
              * 权限组
@@ -72,6 +82,14 @@ public class Routes {
 
                 post("/delete", ((request, response) ->
                         PermissionController.delete(request, response)));
+            });
+
+            /*
+             * 角色组
+             */
+            path("/role", () -> {
+                get("/all/array", (request, response) ->
+                RoleController.allArray());
             });
         });
     }

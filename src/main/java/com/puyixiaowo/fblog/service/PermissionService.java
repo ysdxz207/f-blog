@@ -40,7 +40,7 @@ public class PermissionService {
             sbSql.append("and menu_id = :menuId ");
         }
         if (permissionBean.getPermission() != null) {
-            sbSql.append("and permission like :permission");
+            sbSql.append("and permission like :permission ");
             permissionBean.setPermission("%" + permissionBean.getPermission() + "%");
         }
         if (permissionBean.getPermissionName() != null) {

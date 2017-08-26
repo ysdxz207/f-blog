@@ -2,9 +2,12 @@ package com.puyixiaowo.fblog.bean.admin;
 
 import com.puyixiaowo.core.entity.Validatable;
 import com.puyixiaowo.fblog.annotation.NotNull;
+import com.puyixiaowo.fblog.annotation.Table;
+import com.puyixiaowo.fblog.annotation.Transient;
 
 import java.io.Serializable;
 
+@Table("user")
 public class UserBean extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -16,8 +19,9 @@ public class UserBean extends Validatable implements Serializable {
 	private String password;
 	private Long createTime;
 	private Long lastLoginTime;
-	private Boolean status;
+	private Integer status;
 	//////////////////////
+	@Transient
 	private Long roleId;
 	private String roleName;
 
@@ -69,11 +73,11 @@ public class UserBean extends Validatable implements Serializable {
 		this.lastLoginTime = lastLoginTime;
 	}
 
-	public Boolean getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(Boolean status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 

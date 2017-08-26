@@ -37,6 +37,8 @@ public abstract class Validatable {
 
         }
         if (!map.isEmpty())
-        throw new ValidationException(JSON.toJSONString(map));
+        throw new ValidationException(JSON.
+                toJSONString(StringUtils.join(map.values().
+                        toArray(), ",")));
     }
 }

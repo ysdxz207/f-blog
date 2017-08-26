@@ -18,7 +18,7 @@ CREATE TABLE `article` (
   `createDate`     INTEGER(13)  NOT NULL,
   `lastUpdateDate` INTEGER(13)           DEFAULT 0,
   `status`         INTEGER(4)   NULL,
-  `isDel`          BOOLEAN      NOT NULL DEFAULT 0,
+  `isDel`          INTEGER      NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 );
 

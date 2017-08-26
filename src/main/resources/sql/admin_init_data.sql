@@ -76,7 +76,7 @@ INSERT INTO `role_permission` VALUES ('21', '20151106', '21');
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ("20151106", "feihong", "飞鸿", "31B8F3F489C3DB90CB6DCBCA3B7B3F50", "1502610564000", null, 1);
+INSERT INTO `user` VALUES ("20151106", "feihong", "飞鸿", "57BA5C80AFEE75C5", "1502610564000", null, 1);
 
 
 -- ----------------------------

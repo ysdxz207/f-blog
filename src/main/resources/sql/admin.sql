@@ -20,12 +20,12 @@ CREATE TABLE `menu` (
   `icon`      VARCHAR(64)           DEFAULT NULL,
   `sort`      VARCHAR(64)           DEFAULT NULL,
   `href`      VARCHAR(2000)         DEFAULT NULL,
-  `status`    BOOLEAN(1)            DEFAULT '1',
+  `status`    INTEGER(1)            DEFAULT '1',
   `remark`    VARCHAR(256)          DEFAULT NULL,
   `type`      INTEGER(4)   NOT NULL DEFAULT '2',
   `code`      VARCHAR(128)          DEFAULT NULL,
   `pid`       INTEGER(20)  NOT NULL DEFAULT '0',
-  `expand`    BOOLEAN(1)            DEFAULT '0',
+  `expand`    INTEGER(1)            DEFAULT '0',
   PRIMARY KEY (`id`)
 );
 
@@ -62,7 +62,7 @@ CREATE TABLE `user` (
   `password`        VARCHAR(64) NOT NULL,
   `create_time`     INTEGER(13) DEFAULT '0',
   `last_login_time` INTEGER(13) DEFAULT '0',
-  `status`          BOOLEAN(1)  DEFAULT '1',
+  `status`          INTEGER(1)  DEFAULT '1',
   PRIMARY KEY (`id`)
 );
 

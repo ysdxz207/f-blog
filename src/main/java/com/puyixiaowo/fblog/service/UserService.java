@@ -12,21 +12,42 @@ import java.util.List;
 public class UserService {
 
     public static List<UserBean> selectUserList(UserBean userBean){
-        StringBuilder sbSql = new StringBuilder("select * from user where 1 = 1 ");
+        StringBuilder sbSql = new StringBuilder("select u.*,ur.role_id " +
+                "from user u left join user_role ur on u.id=ur.user_id where 1 = 1 ");
 
+        buildSqlParams(sbSql, userBean);
+        sbSql.append(" order by id asc");
+        return DBUtils.selectList(UserBean.class, sbSql.toString(), userBean);
+    }
+
+    public static int selectCount(UserBean userBean) {
+        StringBuilder sbSql = new StringBuilder("select count(*) " +
+                "from user u left join user_role ur on u.id=ur.user_id where 1 = 1 ");
+
+        buildSqlParams(sbSql, userBean);
+        return DBUtils.count(sbSql.toString(), userBean);
+    }
+
+
+    public static void buildSqlParams(StringBuilder sbSql,
+                                      UserBean userBean) {
         if (userBean.getLoginname() != null) {
-            sbSql.append("and loginname = :loginname ");
+            sbSql.append("and loginname like :loginname ");
+            userBean.setLoginname("%" + userBean.getLoginname() + "%");
         }
         if (userBean.getNickname() != null) {
-            sbSql.append("and nickname like :nickname");
+            sbSql.append("and nickname like :nickname ");
             userBean.setNickname("%" + userBean.getNickname() + "%");
         }
         if (userBean.getCreateTime() != null) {
             sbSql.append("and creat_time = :createTime ");
         }
-
-
-        sbSql.append(" order by sort asc");
-        return DBUtils.selectList(UserBean.class, sbSql.toString(), userBean);
+        if (userBean.getStatus() != null) {
+            sbSql.append("and status = :status ");
+        }
+        ///
+        if (userBean.getRoleId() != null) {
+            sbSql.append("and role_id = :roleId ");
+        }
     }
 }

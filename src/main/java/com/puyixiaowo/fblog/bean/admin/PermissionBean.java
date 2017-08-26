@@ -11,9 +11,11 @@ public class PermissionBean extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	@NotNull(message = "需选择所属菜单")
 	private String menuId;
 	@NotNull(message = "权限名不能为空")
 	private String permissionName;
+	@NotNull(message = "权限不能为空")
 	private String permission;
 
 

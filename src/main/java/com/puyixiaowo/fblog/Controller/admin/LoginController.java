@@ -4,7 +4,7 @@ import com.puyixiaowo.fblog.Constants.Constants;
 import com.puyixiaowo.fblog.Controller.BaseController;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.service.LoginService;
-import com.puyixiaowo.fblog.utils.Md5Utils;
+import com.puyixiaowo.fblog.utils.DesUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -45,7 +45,7 @@ public class LoginController extends BaseController {
         Map<String, Object> params = new HashMap<>();
 
         params.put("loginname", request.queryParams("uname"));
-        params.put("password", Md5Utils.md5Password(request.queryParams("upass")));
+        params.put("password", DesUtils.encrypt(request.queryParams("upass")));
 
         UserBean userBean = null;
 
