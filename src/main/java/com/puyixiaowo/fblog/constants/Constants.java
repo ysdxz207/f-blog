@@ -1,4 +1,4 @@
-package com.puyixiaowo.fblog.Constants;
+package com.puyixiaowo.fblog.constants;
 
 public class Constants {
     /*

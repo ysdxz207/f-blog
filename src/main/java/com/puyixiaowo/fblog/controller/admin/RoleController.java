@@ -1,7 +1,7 @@
-package com.puyixiaowo.fblog.Controller.admin;
+package com.puyixiaowo.fblog.controller.admin;
 
 import com.alibaba.fastjson.JSON;
-import com.puyixiaowo.fblog.Controller.BaseController;
+import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.bean.admin.RoleBean;
 import com.puyixiaowo.fblog.bean.admin.other.MenuPermissionBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;

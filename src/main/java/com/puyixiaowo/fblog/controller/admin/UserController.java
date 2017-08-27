@@ -1,6 +1,7 @@
-package com.puyixiaowo.fblog.Controller.admin;
+package com.puyixiaowo.fblog.controller.admin;
 
-import com.puyixiaowo.fblog.Controller.BaseController;
+import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
+import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.admin.UserRoleBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
@@ -25,6 +26,7 @@ import java.util.List;
 public class UserController extends BaseController{
 
 
+    @RequiresPermissions("")
     public static String users(Request request,
                                        Response response){
 

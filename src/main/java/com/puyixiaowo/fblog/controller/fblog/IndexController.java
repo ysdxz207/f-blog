@@ -1,4 +1,4 @@
-package com.puyixiaowo.fblog.Controller.fblog;
+package com.puyixiaowo.fblog.controller.fblog;
 
 import spark.Request;
 import spark.Response;

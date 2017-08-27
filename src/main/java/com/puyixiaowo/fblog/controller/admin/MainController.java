@@ -1,7 +1,7 @@
-package com.puyixiaowo.fblog.Controller.admin;
+package com.puyixiaowo.fblog.controller.admin;
 
-import com.puyixiaowo.fblog.Constants.Constants;
-import com.puyixiaowo.fblog.Controller.BaseController;
+import com.puyixiaowo.fblog.constants.Constants;
+import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import spark.ModelAndView;
 import spark.Request;

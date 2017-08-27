@@ -6,7 +6,7 @@ package com.puyixiaowo.fblog.bean.sys;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.core.entity.RowBounds;
-import com.puyixiaowo.fblog.Constants.Constants;
+import com.puyixiaowo.fblog.constants.Constants;
 
 import java.util.ArrayList;
 import java.util.List;

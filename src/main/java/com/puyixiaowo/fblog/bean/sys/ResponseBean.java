@@ -6,7 +6,7 @@ package com.puyixiaowo.fblog.bean.sys;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.puyixiaowo.fblog.Constants.Constants;
+import com.puyixiaowo.fblog.constants.Constants;
 
 import java.io.Serializable;
 

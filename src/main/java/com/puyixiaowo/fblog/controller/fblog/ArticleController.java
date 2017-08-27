@@ -1,7 +1,7 @@
-package com.puyixiaowo.fblog.Controller.fblog;
+package com.puyixiaowo.fblog.controller.fblog;
 
 import com.alibaba.fastjson.JSON;
-import com.puyixiaowo.fblog.Controller.BaseController;
+import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.domain.Article;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import spark.Request;

@@ -1,9 +1,10 @@
 package com.puyixiaowo.fblog;
 
-import com.puyixiaowo.fblog.Controller.admin.*;
-import com.puyixiaowo.fblog.Controller.fblog.ArticleController;
-import com.puyixiaowo.fblog.Controller.fblog.IndexController;
+import com.puyixiaowo.fblog.controller.admin.*;
+import com.puyixiaowo.fblog.controller.fblog.ArticleController;
+import com.puyixiaowo.fblog.controller.fblog.IndexController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
+import com.puyixiaowo.fblog.filters.AdminPermissionsFilter;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import spark.Spark;
 
@@ -18,6 +19,8 @@ public class Routes {
 
         //后台管理
         AdminAuthFilter.init();
+        //权限控制
+        AdminPermissionsFilter.init();
         path("/admin", () -> {
             get("/", ((request, response) ->
                     MainController.index(request, response)),

@@ -21,7 +21,7 @@ public class ConfigUtils {
         Object obj = yaml.load(ResourceUtils.readFile(ADMIN_CONFIG_FILE));
 
         if (!(obj instanceof Map)) {
-            throw new RuntimeException("后台用户权限配置不正确");
+            throw new RuntimeException("后台用户登录链接配置不正确");
         }
         Map<String, List> map = (Map) obj;
 

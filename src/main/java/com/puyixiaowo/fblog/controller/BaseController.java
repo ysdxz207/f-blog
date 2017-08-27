@@ -1,11 +1,11 @@
-package com.puyixiaowo.fblog.Controller;
+package com.puyixiaowo.fblog.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.core.entity.Validatable;
 import com.puyixiaowo.core.exceptions.ValidationException;
-import com.puyixiaowo.fblog.Constants.Constants;
+import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.utils.ResourceUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
