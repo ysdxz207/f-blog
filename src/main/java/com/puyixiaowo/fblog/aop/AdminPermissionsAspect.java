@@ -11,8 +11,9 @@ import org.aspectj.lang.annotation.Aspect;
 @Aspect
 public class AdminPermissionsAspect {
     @Around("execution(* *(..)) && @annotation(com.puyixiaowo.fblog.annotation.admin.RequiresPermissions)")
-    void execute(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    public Object execute(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 
         System.out.println(proceedingJoinPoint.getTarget());
+        return proceedingJoinPoint.proceed();
     }
 }

@@ -77,16 +77,25 @@
             </plugin>
 
             <plugin>
-                <groupId>com.jcabi</groupId>
-                <artifactId>jcabi-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.10</version>
+                <configuration>
+                    <complianceLevel>1.8</complianceLevel>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>ajc</goal>
+                            <goal>compile</goal>
                         </goals>
+                        <configuration>
+                            <source>1.8</source>
+                            <target>1.8</target>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 
@@ -173,11 +182,6 @@
             <artifactId>aopalliance</artifactId>
             <version>1.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-aspects</artifactId>
-            <version>0.22.6</version>
-        </dependency>
 
         <dependency>
             <groupId>org.aspectj</groupId>
@@ -185,7 +189,17 @@
             <version>1.8.10</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.10</version>
+        </dependency>
 
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.2.5</version>
+        </dependency>
 
 
     </dependencies>
