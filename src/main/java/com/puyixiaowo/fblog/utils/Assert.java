@@ -15,4 +15,10 @@ public class Assert {
             throw new IllegalArgumentException(message);
         }
     }
+
+    public static void equals(Object obj1, Object obj2, String message) {
+        if (!obj1.equals(obj2)) {
+            throw new IllegalArgumentException(message);
+        }
+    }
 }

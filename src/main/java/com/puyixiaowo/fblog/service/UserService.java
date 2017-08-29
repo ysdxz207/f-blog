@@ -1,7 +1,9 @@
 package com.puyixiaowo.fblog.service;
 
 import com.puyixiaowo.fblog.bean.admin.UserBean;
+import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import spark.Request;
 
 import java.util.List;
 
@@ -49,5 +51,16 @@ public class UserService {
         if (userBean.getRoleId() != null) {
             sbSql.append("and role_id = :roleId ");
         }
+    }
+
+    public static boolean currentUserHasPermissions(Request request, String[] permissions) {
+        UserBean userBean = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
+
+        if (userBean == null) {
+            return false;
+        }
+
+
+
     }
 }

@@ -26,7 +26,7 @@ import java.util.List;
 public class UserController extends BaseController{
 
 
-    @RequiresPermissions("")
+    @RequiresPermissions("user:view")
     public static String users(Request request,
                                        Response response){
 
