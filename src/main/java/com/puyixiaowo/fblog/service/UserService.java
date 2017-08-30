@@ -5,6 +5,8 @@ import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import spark.Request;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -53,6 +55,12 @@ public class UserService {
         }
     }
 
+    /**
+     * 判断当前登录用户是否拥有权限
+     * @param request
+     * @param permissions
+     * @return
+     */
     public static boolean currentUserHasPermissions(Request request, String[] permissions) {
         UserBean userBean = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
 
@@ -60,7 +68,17 @@ public class UserService {
             return false;
         }
 
+        String sql = "select p.permission from role_permission rp " +
+                "right join permission p " +
+                "on rp.permission_id = r.id where role_id = :roleId";
 
+        List<String> permissionList = DBUtils.selectList(String.class, sql,
+                new HashMap<String, Object>(){
+                    {
+                        put("roleId", userBean.getRoleId());
+                    }
+                });
 
+        return permissionList.containsAll(Arrays.asList(permissions));
     }
 }
