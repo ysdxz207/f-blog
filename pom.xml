@@ -36,8 +36,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                     <encoding>utf8</encoding>
                 </configuration>
             </plugin>
@@ -78,7 +78,7 @@
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>aspectj-maven-plugin</artifactId>
+                    <artifactId>aspectj-maven-plugin</artifactId>
                 <version>1.10</version>
                 <configuration>
                     <complianceLevel>1.8</complianceLevel>
@@ -89,13 +89,12 @@
                             <goal>compile</goal>
                         </goals>
                         <configuration>
-                            <source>1.8</source>
-                            <target>1.8</target>
+                            <source>${maven.compiler.target}</source>
+                            <target>${maven.compiler.target}</target>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 
@@ -194,13 +193,6 @@
             <artifactId>aspectjweaver</artifactId>
             <version>1.8.10</version>
         </dependency>
-
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-            <version>3.2.5</version>
-        </dependency>
-
 
     </dependencies>
 </project>

@@ -81,8 +81,7 @@ public class DBUtils {
                         sql + "],error:" + e.getMessage());
             }
 
-            List<E> list = new ArrayList<>();
-                list = query.executeAndFetch(clazz);
+            List<E> list = query.executeAndFetch(clazz);
             return list;
         }
     }
@@ -101,6 +100,9 @@ public class DBUtils {
      */
     private static void setCamelMapping(Class clazz) {
 
+        if (String.class.equals(clazz)) {
+            return;
+        }
         Field[] fields = ORMUtils.getFieldListByClass(clazz);
         Map<String, String> mapping = new HashMap<>();
         for (Field field :

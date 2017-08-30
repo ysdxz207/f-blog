@@ -1,8 +1,10 @@
 package com.puyixiaowo.fblog.service;
 
+import com.puyixiaowo.fblog.annotation.admin.Logical;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.ListUtils;
 import spark.Request;
 
 import java.util.Arrays;
@@ -61,16 +63,18 @@ public class UserService {
      * @param permissions
      * @return
      */
-    public static boolean currentUserHasPermissions(Request request, String[] permissions) {
-        UserBean userBean = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
+    public static boolean currentUserHasPermissions(Request request,
+                                                    String[] permissions,
+                                                    Logical logical) {
+        UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
 
         if (userBean == null) {
             return false;
         }
 
         String sql = "select p.permission from role_permission rp " +
-                "right join permission p " +
-                "on rp.permission_id = r.id where role_id = :roleId";
+                "left join permission p " +
+                "on rp.permission_id = p.id where role_id = :roleId";
 
         List<String> permissionList = DBUtils.selectList(String.class, sql,
                 new HashMap<String, Object>(){
@@ -79,6 +83,11 @@ public class UserService {
                     }
                 });
 
-        return permissionList.containsAll(Arrays.asList(permissions));
+        if (Logical.AND.equals(logical)) {
+
+            return permissionList.containsAll(Arrays.asList(permissions));
+        }
+
+        return ListUtils.containsAny(permissionList, Arrays.asList(permissions));
     }
 }

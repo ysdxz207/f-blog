@@ -5,9 +5,9 @@ import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.exception.NoPermissionsException;
 import com.puyixiaowo.fblog.service.UserService;
 import com.puyixiaowo.fblog.utils.Assert;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import spark.Request;
 
@@ -19,14 +19,14 @@ import java.lang.reflect.Method;
  */
 @Aspect
 public class AdminPermissionsAspect {
-    @Around("execution(* *(..)) && @annotation(com.puyixiaowo.fblog.annotation.admin.RequiresPermissions)")
-    public Object execute(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    @Before("execution(* com.puyixiaowo.fblog.controller.*.*(..)) && @annotation(com.puyixiaowo.fblog.annotation.admin.RequiresPermissions)")
+    public void execute(JoinPoint joinPoint) throws Throwable {
 
-        Object[] args = proceedingJoinPoint.getArgs();
+        Object[] args = joinPoint.getArgs();
 
         Request request = null;
         for (Object object : args) {
-            if (object.getClass().equals(Request.class)) {
+            if (object instanceof Request) {
                 request = (Request) object;
                 break;
             }
@@ -34,20 +34,20 @@ public class AdminPermissionsAspect {
 
         Assert.notNull(request, "RequiresPermissions注解的方法需要参数Spark.Request。");
 
-        MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
 
         RequiresPermissions requiresPermissions = method.getAnnotation(RequiresPermissions.class);
         String[] permissions = requiresPermissions.value();
         Logical logical = requiresPermissions.logical();
 
-        if (permissions.length > 0
-                && logical.equals(Logical.AND)
-                && !UserService.currentUserHasPermissions(request, permissions)) {
+        if (permissions.length == 0) {
             throw new NoPermissionsException("没有访问权限!");
         }
 
+        if (!UserService.currentUserHasPermissions(request, permissions, logical)) {
+            throw new NoPermissionsException("没有访问权限!");
+        }
 
-        return proceedingJoinPoint.proceed();
     }
 }

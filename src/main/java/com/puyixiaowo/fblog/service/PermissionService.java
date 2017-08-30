@@ -44,7 +44,7 @@ public class PermissionService {
             permissionBean.setPermission("%" + permissionBean.getPermission() + "%");
         }
         if (permissionBean.getPermissionName() != null) {
-            sbSql.apnopend("and permission_name like :permissionName ");
+            sbSql.append("and permission_name like :permissionName ");
             permissionBean.setPermissionName("%" + permissionBean.getPermissionName() + "%");
         }
     }

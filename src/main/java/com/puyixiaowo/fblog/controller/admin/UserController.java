@@ -1,11 +1,11 @@
 package com.puyixiaowo.fblog.controller.admin;
 
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
-import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.admin.UserRoleBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
+import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.RolePermissionService;
 import com.puyixiaowo.fblog.service.UserRoleService;
@@ -26,7 +26,7 @@ import java.util.List;
 public class UserController extends BaseController{
 
 
-    @RequiresPermissions("user:view")
+    @RequiresPermissions(value = {"user:view", "user:edit"})
     public static String users(Request request,
                                        Response response){
 
