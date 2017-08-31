@@ -1,14 +1,13 @@
 package com.puyixiaowo.fblog.controller.admin;
 
+import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
-import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.service.LoginService;
 import com.puyixiaowo.fblog.utils.DesUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
-import spark.Spark;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,8 +78,7 @@ public class LoginController extends BaseController {
         request.session().removeAttribute(Constants.SESSION_USER_KEY);
 
         response.redirect("/admin/loginPage");
-        Spark.halt();
-        return null;
+        return "";
     }
 
 }

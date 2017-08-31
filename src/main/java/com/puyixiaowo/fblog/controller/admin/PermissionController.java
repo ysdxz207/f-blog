@@ -1,9 +1,10 @@
 package com.puyixiaowo.fblog.controller.admin;
 
-import com.puyixiaowo.fblog.controller.BaseController;
+import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.admin.PermissionBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
+import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.PermissionService;
 import com.puyixiaowo.fblog.utils.DBUtils;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 public class PermissionController extends BaseController {
 
+    @RequiresPermissions(value = {"permission:view"})
     public static String permissions(Request request, Response response) {
         Boolean data = Boolean.valueOf(request.params(":data"));
 
@@ -43,6 +45,7 @@ public class PermissionController extends BaseController {
     }
 
 
+    @RequiresPermissions(value = {"permission:edit"})
     public static String edit(Request request, Response response){
         ResponseBean responseBean = new ResponseBean();
         List<PermissionBean> permissionBeanList = getParamsEntityJson(request, PermissionBean.class, true);
@@ -58,6 +61,7 @@ public class PermissionController extends BaseController {
         return responseBean.serialize();
     }
 
+    @RequiresPermissions(value = {"permission:delete"})
     public static String delete(Request request, Response response){
         ResponseBean responseBean = new ResponseBean();
 

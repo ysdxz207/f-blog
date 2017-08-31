@@ -63,6 +63,7 @@ public class UserController extends BaseController{
      * @param response
      * @return
      */
+    @RequiresPermissions(value = {"user:edit"})
     public static String edit(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
         try {
@@ -99,6 +100,7 @@ public class UserController extends BaseController{
         return responseBean.serialize();
     }
 
+    @RequiresPermissions(value = {"user:delete"})
     public static String delete(Request request, Response response){
         ResponseBean responseBean = new ResponseBean();
 

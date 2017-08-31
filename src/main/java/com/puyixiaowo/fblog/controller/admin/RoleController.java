@@ -1,11 +1,12 @@
 package com.puyixiaowo.fblog.controller.admin;
 
 import com.alibaba.fastjson.JSON;
-import com.puyixiaowo.fblog.controller.BaseController;
+import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.admin.RoleBean;
 import com.puyixiaowo.fblog.bean.admin.other.MenuPermissionBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
+import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.MenuService;
 import com.puyixiaowo.fblog.service.RoleService;
@@ -26,6 +27,7 @@ import java.util.Map;
  */
 public class RoleController extends BaseController {
 
+    @RequiresPermissions(value = {"role:view"})
     public static String roles(Request request, Response response) {
         Boolean data = Boolean.valueOf(request.params(":data"));
 
@@ -46,6 +48,7 @@ public class RoleController extends BaseController {
     }
 
 
+    @RequiresPermissions(value = {"role:edit"})
     public static String edit(Request request, Response response){
         ResponseBean responseBean = new ResponseBean();
         List<RoleBean> roleBeanList = getParamsEntityJson(request, RoleBean.class, true);
@@ -61,6 +64,7 @@ public class RoleController extends BaseController {
         return responseBean.serialize();
     }
 
+    @RequiresPermissions(value = {"role:delete"})
     public static String delete(Request request, Response response){
         ResponseBean responseBean = new ResponseBean();
 
@@ -74,6 +78,7 @@ public class RoleController extends BaseController {
         return responseBean.serialize();
     }
 
+    @RequiresPermissions(value = {"role:edit"})
     public static Object setPermission(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
 
@@ -103,6 +108,7 @@ public class RoleController extends BaseController {
         return responseBean.serialize();
     }
 
+    @RequiresPermissions(value = {"role:view"})
     public static String allArray() {
         List<RoleBean> list = DBUtils.selectList(RoleBean.class,
                 "select * from role ",

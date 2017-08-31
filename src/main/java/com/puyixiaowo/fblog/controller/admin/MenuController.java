@@ -3,10 +3,11 @@ package com.puyixiaowo.fblog.controller.admin;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.puyixiaowo.fblog.controller.BaseController;
+import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.admin.MenuBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
+import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.exception.MenuException;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
@@ -25,6 +26,7 @@ import java.util.List;
  * @date 2017-08-13 18:58
  */
 public class MenuController extends BaseController {
+
 
     public static Object navMenus(Request request, Response response) {
         String typeStr = request.params(":type");
@@ -67,6 +69,7 @@ public class MenuController extends BaseController {
         return result;
     }
 
+    @RequiresPermissions(value = {"menu:view"})
     public static String menus(Request request, Response response) {
         Boolean data = Boolean.valueOf(request.params(":data"));
 
@@ -90,6 +93,7 @@ public class MenuController extends BaseController {
         return pageBean.serialize();
     }
 
+    @RequiresPermissions(value = {"menu:edit"})
     public static String edit(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
         List<MenuBean> menuBeanList = getParamsEntityJson(request, MenuBean.class, true);
@@ -109,6 +113,7 @@ public class MenuController extends BaseController {
         return responseBean.serialize();
     }
 
+    @RequiresPermissions(value = {"menu:delete"})
     public static String delete(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
 
@@ -125,6 +130,7 @@ public class MenuController extends BaseController {
         return responseBean.serialize();
     }
 
+    @RequiresPermissions(value = {"menu:view"})
     public static String allArray(Request request, Response response) {
         boolean parent = "yes".equals(request.params(":parent"));
         List<MenuBean> list = DBUtils.selectList(MenuBean.class,
