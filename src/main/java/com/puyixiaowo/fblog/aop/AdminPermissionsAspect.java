@@ -19,9 +19,16 @@ import java.lang.reflect.Method;
  */
 @Aspect
 public class AdminPermissionsAspect {
-    @Before("execution(* com.puyixiaowo.fblog.controller.*.*(..)) && @annotation(com.puyixiaowo.fblog.annotation.admin.RequiresPermissions)")
+    @Before("execution(* *.*(..))")
     public void execute(JoinPoint joinPoint) throws Throwable {
 
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        RequiresPermissions requiresPermissions = method.getAnnotation(RequiresPermissions.class);
+
+        if (requiresPermissions == null) {
+            return;
+        }
         Object[] args = joinPoint.getArgs();
 
         Request request = null;
@@ -34,10 +41,8 @@ public class AdminPermissionsAspect {
 
         Assert.notNull(request, "RequiresPermissions注解的方法需要参数Spark.Request。");
 
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Method method = signature.getMethod();
 
-        RequiresPermissions requiresPermissions = method.getAnnotation(RequiresPermissions.class);
+
         String[] permissions = requiresPermissions.value();
         Logical logical = requiresPermissions.logical();
 
