@@ -8,10 +8,9 @@ import com.puyixiaowo.fblog.utils.Assert;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import spark.Request;
-
-import java.lang.reflect.Method;
 
 /**
  * @author Moses
@@ -19,12 +18,17 @@ import java.lang.reflect.Method;
  */
 @Aspect
 public class AdminPermissionsAspect {
-    @Before("execution(* *.*(..))")
-    public void execute(JoinPoint joinPoint) throws Throwable {
+
+    @Pointcut("execution(public * *(..))")
+    void annotatedMethod() {}
+
+
+    @Before("annotatedMethod() && @annotation(requiresPermissions)")
+    public void execute(JoinPoint joinPoint, RequiresPermissions requiresPermissions) throws Throwable {
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Method method = signature.getMethod();
-        RequiresPermissions requiresPermissions = method.getAnnotation(RequiresPermissions.class);
+//        Method method = signature.getMethod();
+//        RequiresPermissions requiresPermissions = method.getAnnotation(RequiresPermissions.class);
 
         if (requiresPermissions == null) {
             return;
@@ -40,7 +44,6 @@ public class AdminPermissionsAspect {
         }
 
         Assert.notNull(request, "RequiresPermissions注解的方法需要参数Spark.Request。");
-
 
 
         String[] permissions = requiresPermissions.value();
