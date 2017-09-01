@@ -108,7 +108,7 @@ public class Routes {
                         RoleController.setPermission(request, response)));
 
                 get("/all/array", (request, response) ->
-                RoleController.allArray());
+                RoleController.allArray(request));
             });
         });
     }

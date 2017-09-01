@@ -109,7 +109,7 @@ public class RoleController extends BaseController {
     }
 
     @RequiresPermissions(value = {"role:view"})
-    public static String allArray() {
+    public static String allArray(Request request) {
         List<RoleBean> list = DBUtils.selectList(RoleBean.class,
                 "select * from role ",
                 null);
