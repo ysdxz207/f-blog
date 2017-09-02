@@ -4,10 +4,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -178,5 +175,57 @@ public class ReflectionUtils {
     public static String fetchElementPropertyToString(final Collection collection, final String propertyName, final String separator) throws Exception {
         List list = fetchElementPropertyToList(collection, propertyName);
         return StringUtils.join(list.toArray(), separator);
+    }
+
+    /**
+     * 直接调用对象方法, 而忽略修饰符(private, protected)
+     * @param object
+     * @param methodName
+     * @param parameterTypes
+     * @param parameters
+     * @return
+     * @throws InvocationTargetException
+     * @throws IllegalArgumentException
+     */
+    public static Object invokeMethod(Object object, String methodName, Class<?> [] parameterTypes,
+                                      Object [] parameters) throws InvocationTargetException {
+
+        Method method = getDeclaredMethod(object, methodName, parameterTypes);
+
+        if(method == null){
+            throw new IllegalArgumentException("Could not find method [" + methodName + "] on target [" + object + "]");
+        }
+
+        method.setAccessible(true);
+
+        try {
+            return method.invoke(object, parameters);
+        } catch(IllegalAccessException e) {
+
+        }
+
+        return null;
+    }
+
+    /**
+     * 循环向上转型, 获取对象的 DeclaredMethod
+     * @param object
+     * @param methodName
+     * @param parameterTypes
+     * @return
+     */
+    public static Method getDeclaredMethod(Object object, String methodName, Class<?>[] parameterTypes){
+
+        for(Class<?> superClass = object.getClass(); superClass != Object.class; superClass = superClass.getSuperclass()){
+            try {
+                //superClass.getMethod(methodName, parameterTypes);
+                return superClass.getDeclaredMethod(methodName, parameterTypes);
+            } catch (NoSuchMethodException e) {
+                //Method 不在当前类定义, 继续向上转型
+            }
+            //..
+        }
+
+        return null;
     }
 }

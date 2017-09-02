@@ -3,8 +3,8 @@ package com.puyixiaowo.fblog.utils;
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
+import org.apache.commons.codec.binary.Base64;
 import spark.utils.StringUtils;
-import sun.misc.BASE64Decoder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -29,12 +29,10 @@ public class QrCodeUtils {
 
 
         base64 = replaceBlank(base64);
-        BASE64Decoder decoder = new BASE64Decoder();
         try {
             out = new FileOutputStream(new File(
                     filepath));
-            byte[] decoderBytes = decoder
-                    .decodeBuffer(base64);
+            byte[] decoderBytes = Base64.decodeBase64(base64);
             out.write(decoderBytes);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -80,11 +78,9 @@ public class QrCodeUtils {
         }
 
         base64 = replaceBlank(base64);
-        BASE64Decoder decoder = new BASE64Decoder();
         try {
 
-            byte[] decoderBytes = decoder
-                    .decodeBuffer(base64);
+            byte[] decoderBytes = Base64.decodeBase64(base64);
 
             ByteArrayInputStream in = new ByteArrayInputStream(decoderBytes);
             BufferedImage image = ImageIO.read(in);

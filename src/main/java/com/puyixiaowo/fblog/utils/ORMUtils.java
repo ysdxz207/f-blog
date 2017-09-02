@@ -4,7 +4,6 @@ import com.puyixiaowo.fblog.annotation.Id;
 import com.puyixiaowo.fblog.annotation.Table;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.exception.DBSqlException;
-import com.sun.deploy.util.ReflectionUtil;
 import spark.utils.Assert;
 
 import java.lang.reflect.Field;
@@ -55,7 +54,7 @@ public class ORMUtils {
         for (String primaryKeyGetter :
                 primaryKeyGetterList) {
             try {
-                Object id = ReflectionUtil.invoke(obj, primaryKeyGetter, null, null);
+                Object id = ReflectionUtils.invokeMethod(obj, primaryKeyGetter, null, null);
 
                 map.put(primaryKeyGetter.substring(3).
                         substring(0, 1).toLowerCase()

@@ -17,6 +17,13 @@ public class ConfigUtils {
     private static final String IGNORE_LIST = "ignore_list";
 
     public static void init(){
+        initAdminConf();
+        initRedis();
+    }
+    /**
+     * chu初始化后台登录链接配置
+     */
+    private static void initAdminConf(){
         Yaml yaml = new Yaml();
         Object obj = yaml.load(ResourceUtils.readFile(ADMIN_CONFIG_FILE));
 
@@ -32,5 +39,12 @@ public class ConfigUtils {
         }
 
         RedisUtils.set(EnumsRedisKey.REDIS_KEY_IGNORE_CONF.key, JSON.toJSONString(ignores));
+    }
+
+    /**
+     * 初始化redis配置
+     */
+    private static void initRedis(){
+
     }
 }
