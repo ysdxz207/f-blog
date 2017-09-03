@@ -19,15 +19,14 @@ import spark.Request;
 public class AdminPermissionsAspect {
 
     @Pointcut("within(com.puyixiaowo.fblog.controller..*)")
-    void annotatedMethod() {}
+    void controllerMethod() {}
 
 
 
 
-    @Before("annotatedMethod() && @annotation(requiresPermissions) && args(request,*)")
+    @Before("controllerMethod() && @annotation(requiresPermissions)")
     public void execute(JoinPoint joinPoint,
-                        RequiresPermissions requiresPermissions,
-                        Request request) throws Throwable {
+                        RequiresPermissions requiresPermissions) throws Throwable {
 
 //        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 //        Method method = signature.getMethod();
@@ -36,15 +35,15 @@ public class AdminPermissionsAspect {
         if (requiresPermissions == null) {
             return;
         }
-//        Object[] args = joinPoint.getArgs();
-//
-//        Request request = null;
-//        for (Object object : args) {
-//            if (object instanceof Request) {
-//                request = (Request) object;
-//                break;
-//            }
-//        }
+        Object[] args = joinPoint.getArgs();
+
+        Request request = null;
+        for (Object object : args) {
+            if (object instanceof Request) {
+                request = (Request) object;
+                break;
+            }
+        }
 
         Assert.notNull(request, "RequiresPermissions注解的方法需要参数spark.Request。");
 

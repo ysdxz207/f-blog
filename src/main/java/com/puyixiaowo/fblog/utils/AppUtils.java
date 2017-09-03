@@ -1,5 +1,6 @@
 package com.puyixiaowo.fblog.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.bean.sys.AppConfigBean;
 import com.puyixiaowo.fblog.enums.EnumAppConfig;
 
@@ -14,19 +15,25 @@ import java.util.Map;
  */
 public class AppUtils {
 
+    private static Map<String, String> argMap = new LinkedHashMap<>();
+
+
+    /**
+     * 将启动命令参数组装为map
+     * @param args
+     * @return
+     */
     public static AppConfigBean getAppConfigBean(String[] args) {
 
-        AppConfigBean appConfigBean = new AppConfigBean();
-        Map<String, String> argMap = new LinkedHashMap<>();
         Iterator<String> it = Arrays.asList(args).iterator();
         while (it.hasNext()) {
             String arg = it.next();
-            if (EnumAppConfig.ARG_PORT.arg.equals(arg)) {
-                String argValue = it.next();
-                argMap.put(arg, argValue);
+            EnumAppConfig enumAppConfig = EnumAppConfig.getEnum(arg);
+            if (enumAppConfig != null) {
+                argMap.put(enumAppConfig.field, it.next());
             }
         }
 
-        return appConfigBean;
+        return JSON.parseObject(JSON.toJSONString(argMap), AppConfigBean.class);
     }
 }

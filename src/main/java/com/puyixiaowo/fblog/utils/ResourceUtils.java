@@ -10,7 +10,7 @@ import java.util.Properties;
  * @date 2017-08-04 12:59
  */
 public class ResourceUtils {
-    private static  Properties properties;
+    private static Properties properties;
 
     public static InputStream readFile(String path) {
         InputStream inputStream = ResourceUtils.class

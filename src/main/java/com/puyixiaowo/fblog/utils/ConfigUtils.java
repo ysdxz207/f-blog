@@ -16,14 +16,15 @@ public class ConfigUtils {
     private static final String ADMIN_CONFIG_FILE = "conf/admin_auth.yaml";
     private static final String IGNORE_LIST = "ignore_list";
 
-    public static void init(){
+    public static void init() {
         initAdminConf();
         initRedis();
     }
+
     /**
      * chu初始化后台登录链接配置
      */
-    private static void initAdminConf(){
+    private static void initAdminConf() {
         Yaml yaml = new Yaml();
         Object obj = yaml.load(ResourceUtils.readFile(ADMIN_CONFIG_FILE));
 
@@ -44,7 +45,7 @@ public class ConfigUtils {
     /**
      * 初始化redis配置
      */
-    private static void initRedis(){
-
+    private static void initRedis() {
+        RedisUtils.testConnection();
     }
 }

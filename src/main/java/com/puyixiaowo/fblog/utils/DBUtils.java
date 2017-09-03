@@ -10,6 +10,7 @@ import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -19,24 +20,47 @@ import java.util.*;
  */
 public class DBUtils {
 
+    private static final String SQL_FILE_TABLE_ADMIN = "sql/admin.sql";
+    private static final String SQL_FILE_DATA_ADMIN = "sql/admin_init_data.sql";
+    private static final String SQL_FILE_TABLE_FBLOG = "sql/fblog.sql";
+    private static final String SQL_FILE_DATA_FBLOG = "sql/fblog_init_data.sql";
+
     private static final int SQL_TYPE_INSERT = 1;//添加
     private static final int SQL_TYPE_UPDATE = 2;//更新
 
     private static Sql2o sql2o;
 
+    /**
+     * 初始化数据库
+     */
     public static void initDB() {
-        initDB(null);
-    }
-
-    private static void initDB(String dbHost) {
-        if (StringUtils.isBlank(dbHost)) {
-            dbHost = (String) ResourceUtils.load("jdbc.properties").get("sqlite3.host");
-        }
+        String dbHost = (String) ResourceUtils.load("jdbc.properties").get("sqlite3.host");
 
         if (StringUtils.isBlank(dbHost)) {
             throw new DBException("There is no db host found.");
         }
 
+        initDBConnection(dbHost);
+
+        if (!new File(dbHost).exists()) {
+            //创建数据库文件
+            try (Connection conn = sql2o.open()) {
+                FileUtils.runResourcesSql(conn,
+                        SQL_FILE_TABLE_ADMIN,
+                        SQL_FILE_DATA_ADMIN,
+                        SQL_FILE_TABLE_FBLOG,
+                        SQL_FILE_DATA_FBLOG);
+            }
+        }
+
+    }
+
+    /**
+     * 初始化数据库连接
+     *
+     * @param dbHost
+     */
+    private static void initDBConnection(String dbHost) {
 
         sql2o = new Sql2o("jdbc:sqlite:" + dbHost, null, null);
 
@@ -44,10 +68,6 @@ public class DBUtils {
             throw new DBException("Can not find db " + dbHost);
         }
 
-    }
-
-    public static Sql2o getSql2o() {
-        return sql2o;
     }
 
     public static <T> T selectOne(Class clazz,
@@ -280,8 +300,6 @@ public class DBUtils {
     }
 
 
-
-
     public static int count(String sql, Object paramObj) {
         try (Connection conn = sql2o.open()) {
             Query query = conn.createQuery(sql).throwOnMappingFailure(false).bind(paramObj);
@@ -343,7 +361,7 @@ public class DBUtils {
 
     public static void main(String[] args) throws Exception {
 
-        DBUtils.initDB("D:\\workspace\\idea\\f-blog\\f_blog.db");
+        DBUtils.initDBConnection("D:\\workspace\\idea\\f-blog\\f_blog.db");
         List<User> userList = DBUtils.selectList(User.class,
                 "select * from user " +
                         "where loginname =:loginname",

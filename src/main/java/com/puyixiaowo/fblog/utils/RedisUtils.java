@@ -5,6 +5,7 @@ import com.puyixiaowo.fblog.exception.JedisConfigException;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.exceptions.JedisDataException;
 
 import java.util.ResourceBundle;
@@ -44,38 +45,43 @@ public class RedisUtils {
             jedisPool = new JedisPool(config, ip, port);
         }
 
-        //测试连接
-        testConnection();
     }
 
-    private static void testConnection() {
+    public static void testConnection() {
         getJedis().set("TEST_CONNECTION", "connected");
         getJedis().del("TEST_CONNECTION");
     }
 
 
-    private static Jedis getJedis(){
+    private static Jedis getJedis() {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
         } catch (Exception e) {
-            if (e.getCause() instanceof JedisDataException)
-            throw new JedisConfigException(
-                    "Jedis 连接配置错误，请检查redis.properties文件。异常信息："
-                            + e.getCause().getMessage());
+            if (e.getCause() instanceof JedisDataException) {
+
+                throw new JedisConfigException(
+                        "Jedis 连接配置错误，请检查redis.properties文件。异常信息："
+                                + e.getCause().getMessage());
+            }
+            if (e.getCause() instanceof JedisConnectionException) {
+                throw new JedisConnectionException("Redis可能未启动。异常信息："
+                        + e.getCause().getMessage());
+            }
         } finally {
             if (jedis != null)
-            jedis.close();
+                jedis.close();
         }
         return jedis;
     }
-    public static String get(String key){
+
+    public static String get(String key) {
         return getJedis().get(key);
     }
 
-    public static <T> T get(String key, Class<T> clazz){
+    public static <T> T get(String key, Class<T> clazz) {
         String str = get(key);
-         if (StringUtils.isBlank(str)) {
+        if (StringUtils.isBlank(str)) {
             return null;
         }
         return JSONObject.parseObject(str, clazz);
@@ -91,13 +97,14 @@ public class RedisUtils {
 
     public static Long delete(String pattern) {
         Set<String> keysSet = RedisUtils.keys(pattern);
-        String [] keys = keysSet.toArray(new String[keysSet.size()]);
+        String[] keys = keysSet.toArray(new String[keysSet.size()]);
         if (keys.length == 0) {
             return 0L;
         }
         return RedisUtils.delete(keys);
     }
-    public static Set<String> keys(String pattern){
+
+    public static Set<String> keys(String pattern) {
         return getJedis().keys(pattern);
     }
 
