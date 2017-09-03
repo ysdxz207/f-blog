@@ -76,7 +76,7 @@ public class MenuController extends BaseController {
         if (!data) {
             return new FreeMarkerTemplateEngine()
                     .render(new ModelAndView(null,
-                            "rbac/menu/menu_list.html"));
+                            "admin/menu/menu_list.html"));
         }
         PageBean pageBean = getPageBean(request);
         try {

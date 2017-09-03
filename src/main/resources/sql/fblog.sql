@@ -15,10 +15,10 @@ CREATE TABLE `article` (
   `context`        TEXT         NULL,
   `category`       VARCHAR(128) NULL,
   `tagIds`         VARCHAR(256) NULL,
-  `createDate`     INTEGER(13)  NOT NULL,
-  `lastUpdateDate` INTEGER(13)           DEFAULT 0,
+  `create_date`     INTEGER(13)  NOT NULL,
+  `last_update_date` INTEGER(13)           DEFAULT 1,
   `status`         INTEGER(4)   NULL,
-  `isDel`          INTEGER      NOT NULL DEFAULT 0,
+  `is_del`          INTEGER      NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`)
 );
 

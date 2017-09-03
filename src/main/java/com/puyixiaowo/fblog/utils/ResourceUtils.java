@@ -45,7 +45,7 @@ public class ResourceUtils {
     }
 
     public static String getResourcePath() {
-        return ResourceUtils.class.getResource("").getPath();
+        return ResourceUtils.class.getResource("/").getPath();
     }
 
     public static URL getResource(String filepath) {

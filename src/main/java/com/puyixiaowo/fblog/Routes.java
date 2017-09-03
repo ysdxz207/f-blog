@@ -21,6 +21,8 @@ public class Routes {
         AdminAuthFilter.init();
         //权限控制
         AdminPermissionsFilter.init();
+
+        //管理后台
         path("/admin", () -> {
             get("/", ((request, response) ->
                     MainController.index(request, response)),
@@ -34,9 +36,6 @@ public class Routes {
 
             get("/logout", ((request, response) ->
                             LoginController.logout(request, response)));
-
-            post("/article/list", ((request, response) ->
-                    ArticleController.selectArticleList(request, response)));
 
             get("/main", ((request, response) ->
                             MainController.main(request, response)),
@@ -110,6 +109,19 @@ public class Routes {
                 get("/all/array", (request, response) ->
                 RoleController.allArray(request));
             });
+
+            //博客组
+            path("/article", () -> {
+
+                get("/:data", ((request, response) ->
+                        ArticleController.articles(request, response)));
+
+                post("/edit/:data", ((request, response) ->
+                        ArticleController.edit(request, response)));
+            });
         });
+
+
+
     }
 }

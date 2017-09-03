@@ -1,8 +1,12 @@
-package com.puyixiaowo.fblog.domain;
+package com.puyixiaowo.fblog.bean;
+
+import com.puyixiaowo.core.entity.Validatable;
+import com.puyixiaowo.fblog.annotation.Table;
 
 import java.io.Serializable;
 
-public class Article implements Serializable {
+@Table("article")
+public class ArticleBean extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;

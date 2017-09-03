@@ -34,7 +34,7 @@ public class RoleController extends BaseController {
         if (!data) {
             return new FreeMarkerTemplateEngine()
                     .render(new ModelAndView(null,
-                            "rbac/role/role_list.html"));
+                            "admin/role/role_list.html"));
         }
         PageBean pageBean = getPageBean(request);
         RoleBean roleBean = getParamsEntity(request, RoleBean.class, false);
@@ -96,7 +96,7 @@ public class RoleController extends BaseController {
 
             return new FreeMarkerTemplateEngine()
                     .render(new ModelAndView(model,
-                            "rbac/role/role_permission_edit.html"));
+                            "admin/role/role_permission_edit.html"));
         }
 
         try {

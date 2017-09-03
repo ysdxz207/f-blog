@@ -35,7 +35,7 @@ public class UserController extends BaseController{
         if (!data) {
             return new FreeMarkerTemplateEngine()
                     .render(new ModelAndView(null,
-                            "rbac/user/user_list.html"));
+                            "admin/user/user_list.html"));
         }
 
         PageBean pageBean = getPageBean(request);
@@ -91,6 +91,7 @@ public class UserController extends BaseController{
                 UserRoleBean userRoleBean = new UserRoleBean();
                 userRoleBean.setRoleId(userBean.getRoleId());
                 userRoleBean.setUserId(userBean.getId());
+                DBUtils.executeSql("delete from user_role where user_id = :userId", userRoleBean);
                 DBUtils.insertOrUpdate(userRoleBean);
             }
         } catch (Exception e) {

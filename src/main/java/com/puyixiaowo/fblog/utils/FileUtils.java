@@ -21,14 +21,23 @@ public class FileUtils {
     public static final String SUFFIX = ".tmp";
 
     /**
-     * 运行sql
+     * 运行资源目录下sql
      * @param conn
-     * @param filepaths
+     * @param folder
+     *          目录
+     * @param filenames
+     *          文件名列表
      */
-    public static void runResourcesSql(Connection conn, String... filepaths) {
-        for (String filePath :
-                filepaths) {
-            List<String> sqlList = readResourcesSql(filePath);
+    public static void runResourcesSql(Connection conn, String folder, String... filenames) {
+
+        if (!folder.substring(folder.length() - 1).equals("/")
+                || folder.substring(folder.length() - 1).equals("\\")) {
+            folder += "/";
+        }
+
+        for (String filename :
+                filenames) {
+            List<String> sqlList = readResourcesSql(folder + filename);
             for (String sql :
                     sqlList) {
                 System.out.println(sql);

@@ -10,12 +10,12 @@ public class Menu implements Serializable {
 	private String icon;
 	private String sort;
 	private String href;
-	private Boolean status;
+	private Integer status;
 	private String remark;
 	private Integer type;
 	private String code;
 	private Long pid;
-	private Boolean expand;
+	private Integer expand;
 
 
 	public Long getId (){
@@ -58,11 +58,11 @@ public class Menu implements Serializable {
 		this.href = href;
 	}
 
-	public Boolean getStatus (){
+	public Integer getStatus (){
 		return status;
 	}
 
-	public void setStatus (Boolean status){
+	public void setStatus (Integer status){
 		this.status = status;
 	}
 
@@ -98,11 +98,11 @@ public class Menu implements Serializable {
 		this.pid = pid;
 	}
 
-	public Boolean getExpand (){
+	public Integer getExpand (){
 		return expand;
 	}
 
-	public void setExpand (Boolean expand){
+	public void setExpand (Integer expand){
 		this.expand = expand;
 	}
 }

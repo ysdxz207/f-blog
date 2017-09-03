@@ -7,6 +7,7 @@ import com.puyixiaowo.core.entity.Validatable;
 import com.puyixiaowo.core.exceptions.ValidationException;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.constants.Constants;
+import com.puyixiaowo.fblog.exception.BaseControllerException;
 import com.puyixiaowo.fblog.utils.ResourceUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import org.apache.commons.beanutils.BeanUtils;
@@ -33,7 +34,7 @@ public class BaseController {
      * @return
      */
     public static <T extends Validatable> T getParamsEntity(Request request,
-                                                            Class clazz,
+                                                            Class<T> clazz,
                                                             boolean validate) throws ValidationException {
         Map<String, String[]> map = request.queryMap().toMap();
         T obj = null;
@@ -56,9 +57,13 @@ public class BaseController {
     }
 
     public static <T> List<T> getParamsEntityJson(Request request,
-                                                  Class clazz,
+                                                  Class<T> clazz,
                                                   boolean validate) {
         String json = request.queryParams("json");
+        if (StringUtils.isBlank(json)) {
+            throw new BaseControllerException("接收到的参数中不包含'json'");
+        }
+
         JSONArray jsonArray = JSON.parseArray(json);
 
         return jsonArray.toJavaList(clazz);

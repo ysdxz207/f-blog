@@ -20,11 +20,7 @@ import java.util.*;
  */
 public class DBUtils {
 
-    private static final String SQL_FILE_TABLE_ADMIN = "sql/admin.sql";
-    private static final String SQL_FILE_DATA_ADMIN = "sql/admin_init_data.sql";
-    private static final String SQL_FILE_TABLE_FBLOG = "sql/fblog.sql";
-    private static final String SQL_FILE_DATA_FBLOG = "sql/fblog_init_data.sql";
-
+    private static final String FOLDER_SQL = "sql";
     private static final int SQL_TYPE_INSERT = 1;//添加
     private static final int SQL_TYPE_UPDATE = 2;//更新
 
@@ -45,11 +41,10 @@ public class DBUtils {
         if (!new File(dbHost).exists()) {
             //创建数据库文件
             try (Connection conn = sql2o.open()) {
-                FileUtils.runResourcesSql(conn,
-                        SQL_FILE_TABLE_ADMIN,
-                        SQL_FILE_DATA_ADMIN,
-                        SQL_FILE_TABLE_FBLOG,
-                        SQL_FILE_DATA_FBLOG);
+
+                File file = new File(ResourceUtils.getResourcePath() + FOLDER_SQL);
+                String [] filenames = file.list();
+                FileUtils.runResourcesSql(conn, FOLDER_SQL, filenames);
             }
         }
 
@@ -75,6 +70,17 @@ public class DBUtils {
                                   Map<String, Object> params) {
 
         List<T> list = selectList(clazz, sql, params);
+        if (list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+    public static <T> T selectOne(Class clazz,
+                                  String sql,
+                                  Object paramsObj) {
+
+        List<T> list = selectList(clazz, sql, paramsObj);
         if (list.isEmpty()) {
             return null;
         }
@@ -156,6 +162,7 @@ public class DBUtils {
             } catch (Exception e) {
                 ORMUtils.setId(obj);
                 String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, obj);
+                System.out.println(sql_insert);
                 Query queryInsert = conn.createQuery(sql_insert).throwOnMappingFailure(false);
                 lines = queryInsert.executeUpdate().getResult();
             }
@@ -171,6 +178,21 @@ public class DBUtils {
     private static String assembleSql(int sqlType,
                                       String tableName,
                                       Object obj) {
+
+        //获取主键字段名和值map
+        Map<String, Object> primaryKeyValueMap = ORMUtils.getPrimaryKeyValues(obj);
+
+        //将值为0的主键值设为null
+        for (Map.Entry entry :
+                primaryKeyValueMap.entrySet()) {
+            Object name = entry.getKey();
+            Object value = entry.getValue();
+
+            if (value != null
+                    && value.toString().equals("0")) {
+                primaryKeyValueMap.replace(name.toString(), null);
+            }
+        }
 
         Field[] filelds = obj.getClass().getDeclaredFields();
 
@@ -231,7 +253,6 @@ public class DBUtils {
 
                 break;
             case SQL_TYPE_UPDATE:
-                Map<String, Object> primaryKeyValueMap = ORMUtils.getPrimaryKeyValues(obj);
 
                 //update sql
                 sb_sql.append("update ");
@@ -355,6 +376,13 @@ public class DBUtils {
                     query.addParameter(entry.getKey(), entry.getValue());
                 }
             }
+            return query.executeUpdate().getResult();
+        }
+    }
+
+    public static Object executeSql(String sql, Object paramsObj) {
+        try (Connection conn = sql2o.open()) {
+            Query query = conn.createQuery(sql).throwOnMappingFailure(false).bind(paramsObj);
             return query.executeUpdate().getResult();
         }
     }

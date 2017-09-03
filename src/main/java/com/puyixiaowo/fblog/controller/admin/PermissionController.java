@@ -27,7 +27,7 @@ public class PermissionController extends BaseController {
         if (!data) {
             return new FreeMarkerTemplateEngine()
                     .render(new ModelAndView(null,
-                            "rbac/permission/permission_list.html"));
+                            "admin/permission/permission_list.html"));
         }
         PageBean pageBean = getPageBean(request);
         try {

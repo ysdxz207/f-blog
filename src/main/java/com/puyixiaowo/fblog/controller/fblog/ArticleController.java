@@ -1,9 +1,16 @@
 package com.puyixiaowo.fblog.controller.fblog;
 
-import com.alibaba.fastjson.JSON;
+import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
+import com.puyixiaowo.fblog.bean.ArticleBean;
+import com.puyixiaowo.fblog.bean.admin.UserBean;
+import com.puyixiaowo.fblog.bean.sys.PageBean;
+import com.puyixiaowo.fblog.bean.sys.ResponseBean;
+import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
-import com.puyixiaowo.fblog.domain.Article;
+import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
+import com.puyixiaowo.fblog.service.ArticleService;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
@@ -12,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author Moses
  * @date 2017-08-08 13:48:12
  * 文章
@@ -21,42 +27,89 @@ public class ArticleController extends BaseController {
 
     /**
      * 文章列表
+     *
      * @param request
      * @param response
      * @return
      */
-    public static Object selectArticleList(Request request, Response response) {
+    @RequiresPermissions(value = {"article:view"})
+    public static Object articles(Request request, Response response) {
 
-        Map<String, Object> params = new HashMap<>();
-        Map<String, Object> model = new HashMap<>();
-        params.put("offset", 0);
-        params.put("pageSize", 10);
+        Boolean data = Boolean.valueOf(request.params(":data"));
 
-        List<Article> articleList = DBUtils.selectList(Article.class,
-                "select * from article limit :offset, :pageSize",
-                params);
+        if (!data) {
+            return new FreeMarkerTemplateEngine()
+                    .render(new ModelAndView(null,
+                            "admin/article/article_list.html"));
+        }
 
-        return JSON.toJSONString(articleList);
+        PageBean pageBean = getPageBean(request);
+        try {
+            ArticleBean params = getParamsEntity(request, ArticleBean.class, false);
+            List<ArticleBean> list =
+                    ArticleService.selectArticleList(
+                            getParamsEntity(request, ArticleBean.class, false));
+            pageBean.setList(list);
+            int count = ArticleService.selectCount(params);
+            pageBean.setTotalCount(count);
+        } catch (Exception e) {
+            pageBean.error(e);
+        }
+        return pageBean.serialize();
     }
 
     /**
-     * 添加文章
+     * 添加或修改文章
+     *
      * @param request
      * @param response
      * @return
      */
-    public static Object addOrUpdateArticle(Request request, Response response) {
+    @RequiresPermissions(value = {"article:edit"})
+    public static String edit(Request request, Response response) {
+        Boolean data = Boolean.valueOf(request.params(":data"));
 
-        String update_sql = "update article set creator=:creator,title=:title," +
-                "";
-        String sql = "insert into artile values " +
-                "(:creator,:title,:context,:category,:tagIds," +
-                ":createDate,:lastUpdateDate,:status,:isDel) " +
-                "on duplicate key update b=values(b),c=values(c)";
+        if (!data) {
+            Map<String, Object> model = new HashMap<>();
+            ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
+            if (articleBean.getId() > 0) {
+                //编辑
+                articleBean = DBUtils.selectOne(ArticleBean.class, "select * from article ", articleBean);
+                model.put("model", articleBean);
+            }
 
-        String sql2 = "insert or replace into `artile` values ('feihong','我的第一篇文章','我的第一篇文章内容...','11111','测试','2017-08-08 14:36',null,1) on duplicate key update title='我的第一篇文章修改',context='我的第一篇文章内容修改'";
-        return null;
+            return new FreeMarkerTemplateEngine()
+                    .render(new ModelAndView(model,
+                            "admin/article/article_edit.html"));
+        }
+
+        ResponseBean responseBean = new ResponseBean();
+        try {
+            ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, true);
+
+            UserBean currentUser = request.session().attribute(Constants.SESSION_USER_KEY);
+            articleBean.setCreator(currentUser.getLoginname());
+            articleBean.setCreateDate(System.currentTimeMillis() / 1000);
+            DBUtils.insertOrUpdate(articleBean);
+        } catch (Exception e) {
+            responseBean.errorMessage(e.getMessage());
+        }
+
+        return responseBean.serialize();
     }
 
+    @RequiresPermissions(value = {"article:delete"})
+    public static String delete(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
 
+        try {
+            String ids = request.queryParams("id");
+            DBUtils.deleteByIds(ArticleBean.class,
+                    ids);
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+
+        return responseBean.serialize();
+    }
 }
