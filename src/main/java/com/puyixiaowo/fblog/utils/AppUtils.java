@@ -19,7 +19,7 @@ public class AppUtils {
 
 
     /**
-     * 将启动命令参数组装为map
+     * 将启动命令参数组装为AppConfigBean
      * @param args
      * @return
      */
