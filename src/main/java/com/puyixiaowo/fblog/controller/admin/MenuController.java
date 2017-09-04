@@ -95,6 +95,7 @@ public class MenuController extends BaseController {
 
     @RequiresPermissions(value = {"menu:edit"})
     public static String edit(Request request, Response response) {
+        System.out.println("edit");
         ResponseBean responseBean = new ResponseBean();
         List<MenuBean> menuBeanList = getParamsEntityJson(request, MenuBean.class, true);
         try {
@@ -103,6 +104,7 @@ public class MenuController extends BaseController {
                     menuBeanList) {
                 DBUtils.insertOrUpdate(menuBean);
             }
+
             //删除缓存，下次刷新
             RedisUtils.delete(EnumsRedisKey.REDIS_KEY_MENU_LIST.key + "*");
             responseBean.setMessage("操作成功，请手动刷新页面。");
@@ -132,18 +134,17 @@ public class MenuController extends BaseController {
 
     @RequiresPermissions(value = {"menu:view"})
     public static String allArray(Request request, Response response) {
-        boolean parent = "yes".equals(request.params(":parent"));
+        String parent = request.params(":parent");
         List<MenuBean> list = DBUtils.selectList(MenuBean.class,
                 "select * from menu where pid "
-                        + (parent ? " = 0" : " > 0"),
+                        + ("yes".equals(parent) ? " = 0"
+                        : ("no".equals(parent) ? " > 0" : ">= 0")),
                 null);
 
-        if (parent) {
-            MenuBean bean = new MenuBean();
-            bean.setId(0L);
-            bean.setMenuName("无");
-            list.add(0, bean);
-        }
+        MenuBean bean = new MenuBean();
+        bean.setId(0L);
+        bean.setMenuName("无");
+        list.add(0, bean);
 
         return JSON.toJSONString(list);
     }

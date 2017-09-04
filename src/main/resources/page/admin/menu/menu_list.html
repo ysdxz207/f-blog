@@ -19,8 +19,10 @@
             add: true,
             simpleData: true,
             keys: {
+                key: 'id',
                 parentKey: 'pid',
-                order:'sort'
+                order:'sort',
+                isExpand  : 'expand'
 
             }
         },
@@ -33,7 +35,7 @@
 		    beforeDrop  : null,     // function(sourceData, descData, position)，拖动到目标并放置之前方法，返回false则不放置，参数分别是：(源数据、目标数据、放置位置(append、before、after))
 		    afterDrop   : 'POST'    // string 或 function($descTr, $sourceTr)，如果是字符串并有dropUrl参数，则发送拖动数据到dropUrl，否则执行自定义方法
 		},
-		addLocation: 'last',
+		addLocation: 'first',
 		fieldSortable: false,
 		columnMenu: false,
         filterAll: true,
@@ -41,6 +43,9 @@
         showCheckboxcol: true,
         linenumberAll: true,
         afterSave: function($trs, datas) {
+            BJUI.navtab('refresh');
+        },
+        afterDelete: function($trs, datas) {
             BJUI.navtab('refresh');
         }
     }">
@@ -51,8 +56,8 @@
                 <th data-options="{name:'icon',align:'center',quickfilter:false}">图标</th>
                 <th data-options="{name:'href',align:'center',quickfilter:false}">访问链接</th>
                 <th data-options="{name:'remark',align:'center'}">备注</th>
-                <th data-options="{name:'type',align:'center',type:'select',items:[{'1':'权限菜单','2':'新闻菜单'},{'3':'字典菜单'}]}">类型</th>
-                <th data-options="{name:'pid',align:'center',type:'select',items: function() {return $.getJSON('${base}/admin/menu/all/array/yes')},itemattr: {value:'id',label:'menuName'}}">父级菜单</th>
+                <th data-options="{name:'type',align:'center',type:'select',items:[{'1':'权限菜单','2':'博客菜单'},{'3':'字典菜单'}]}">类型</th>
+                <th data-options="{name:'pid',align:'center',type:'select',items: function() {return $.getJSON('${base}/admin/menu/all/array/all')},itemattr: {value:'id',label:'menuName'}}">父级菜单</th>
                 <th data-options="{name:'code',align:'center'}">代码</th>
                 <th data-options="{name:'expand',align:'center',type:'select',items:[{'1':'展开','0':'不展开'}]}">是否展开</th>
                 <th data-options="{name:'status',align:'center',width:160,type:'select',items:[{'1':'<font color=\'green\'>有效</font>'},{'0':'<font color=\'#ea2000\'>未启用</font>'}]}">状态</th>

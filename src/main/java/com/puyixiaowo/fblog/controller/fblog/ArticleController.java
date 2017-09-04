@@ -90,6 +90,9 @@ public class ArticleController extends BaseController {
             UserBean currentUser = request.session().attribute(Constants.SESSION_USER_KEY);
             articleBean.setCreator(currentUser.getLoginname());
             articleBean.setCreateDate(System.currentTimeMillis() / 1000);
+            if (articleBean.getId() != null) {
+                articleBean.setLastUpdateDate(System.currentTimeMillis() / 1000);
+            }
             DBUtils.insertOrUpdate(articleBean);
         } catch (Exception e) {
             responseBean.errorMessage(e.getMessage());

@@ -1,7 +1,7 @@
 <div class="bjui-pageContent">
 <form action="${base}/admin/article/edit/true" class="datagrid-edit-form" data-toggle="validate" data-data-type="jsonp">
     
-    <input type="hidden" name="id" value="${model.id?c!}"/>
+    <input type="hidden" name="id" value="${(model.id?c)!}"/>
 
     <div class="bjui-row col-2">
         <label class="row-label">标题</label>
