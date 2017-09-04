@@ -74,7 +74,7 @@ public class ArticleController extends BaseController {
             ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
             if (articleBean.getId() > 0) {
                 //编辑
-                articleBean = DBUtils.selectOne(ArticleBean.class, "select * from article ", articleBean);
+                articleBean = DBUtils.selectOne(ArticleBean.class, "select * from article where id = :id", articleBean);
                 model.put("model", articleBean);
             }
 

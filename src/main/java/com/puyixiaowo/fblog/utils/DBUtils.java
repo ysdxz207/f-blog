@@ -9,6 +9,7 @@ import com.puyixiaowo.fblog.exception.DBSqlException;
 import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
+import org.sql2o.Sql2oException;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -43,7 +44,7 @@ public class DBUtils {
             try (Connection conn = sql2o.open()) {
 
                 File file = new File(ResourceUtils.getResourcePath() + FOLDER_SQL);
-                String [] filenames = file.list();
+                String[] filenames = file.list();
                 FileUtils.runResourcesSql(conn, FOLDER_SQL, filenames);
             }
         }
@@ -95,17 +96,17 @@ public class DBUtils {
         try (Connection conn = sql2o.open()) {
             Query query = conn.createQuery(sql).throwOnMappingFailure(false);
 
-            try {
-                if (params != null) {
-                    for (Map.Entry<String, Object> entry :
-                            params.entrySet()) {
+            if (params != null) {
+                for (Map.Entry<String, Object> entry :
+                        params.entrySet()) {
+                    try {
                         query.addParameter(entry.getKey(), entry.getValue());
+                    } catch (Sql2oException e) {
+                        //ignore
                     }
                 }
-            } catch (Exception e) {
-                throw new DBSqlException("Add parameter :[" +
-                        sql + "],error:" + e.getMessage());
             }
+
 
             List<E> list = query.executeAndFetch(clazz);
             return list;
