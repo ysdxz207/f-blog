@@ -133,7 +133,7 @@ public class MenuController extends BaseController {
     }
 
     @RequiresPermissions(value = {"menu:view"})
-    public static String allArray(Request request, Response response) {
+    public static String array(Request request, Response response) {
         String parent = request.params(":parent");
         List<MenuBean> list = DBUtils.selectList(MenuBean.class,
                 "select * from menu where pid "

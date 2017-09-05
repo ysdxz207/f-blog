@@ -52,8 +52,8 @@ public class Routes {
 
                 get("/:data", ((request, response) ->
                         MenuController.menus(request, response)));
-                get("/all/array/:parent", ((request, response) ->
-                        MenuController.allArray(request, response)));
+                get("/array/:parent", ((request, response) ->
+                        MenuController.array(request, response)));
 
                 post("/edit", ((request, response) ->
                         MenuController.edit(request, response)));
