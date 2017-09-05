@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.annotation.Id;
 import com.puyixiaowo.fblog.annotation.Transient;
 import com.puyixiaowo.fblog.domain.User;
+import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.exception.DBException;
 import com.puyixiaowo.fblog.exception.DBSqlException;
 import org.sql2o.Connection;
@@ -47,6 +48,13 @@ public class DBUtils {
                 String[] filenames = file.list();
                 FileUtils.runResourcesSql(conn, FOLDER_SQL, filenames);
             }
+            //清空redis
+            EnumsRedisKey [] enumsRedisKeys = EnumsRedisKey.values();
+            String [] keys = new String[enumsRedisKeys.length];
+            for (int i = 0; i < enumsRedisKeys.length; i ++) {
+                keys[i] = enumsRedisKeys[i].key + "*";
+            }
+            RedisUtils.delete(keys);
         }
 
     }

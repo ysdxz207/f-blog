@@ -16,9 +16,13 @@ public class ConfigUtils {
     private static final String ADMIN_CONFIG_FILE = "conf/admin_auth.yaml";
     private static final String IGNORE_LIST = "ignore_list";
 
+    /**
+     * 初始化配置有顺序
+     */
     public static void init() {
-        initAdminConf();
         initRedis();
+        DBUtils.initDB();
+        initAdminConf();
     }
 
     /**

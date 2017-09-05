@@ -26,6 +26,10 @@ public abstract class Validatable {
             }
             String message = notnull.message();
 
+            if (StringUtils.isBlank(message)) {
+                message = field.getName() + "不能为空";
+            }
+
             try {
                 if (StringUtils.isBlank(field.get(this))) {
                     map.put(field.getName(), message);

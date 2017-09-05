@@ -11,6 +11,7 @@ import com.puyixiaowo.fblog.exception.BaseControllerException;
 import com.puyixiaowo.fblog.utils.ResourceUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.BeanUtilsBean;
 import spark.Request;
 
 import java.io.IOException;
@@ -40,6 +41,7 @@ public class BaseController {
         T obj = null;
         try {
             obj = (T) Class.forName(clazz.getName()).newInstance();
+            BeanUtilsBean.getInstance().getConvertUtils().register(false, false, 0);
             BeanUtils.populate(obj, map);
         } catch (InstantiationException e) {
             e.printStackTrace();

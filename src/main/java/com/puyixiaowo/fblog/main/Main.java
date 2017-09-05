@@ -7,7 +7,6 @@ import com.puyixiaowo.fblog.error.ErrorHandler;
 import com.puyixiaowo.fblog.generator.utils.CustomIdSerializer;
 import com.puyixiaowo.fblog.utils.AppUtils;
 import com.puyixiaowo.fblog.utils.ConfigUtils;
-import com.puyixiaowo.fblog.utils.DBUtils;
 
 import static spark.Spark.port;
 
@@ -26,9 +25,9 @@ public class Main {
         AppConfigBean config = AppUtils.getAppConfigBean(args);
         port(config.getPort());
 
-        ErrorHandler.handleErrors();
         ConfigUtils.init();
-        DBUtils.initDB();
+
+        ErrorHandler.handleErrors();
         Routes.init();
 
         //ID序列化为字符串类型

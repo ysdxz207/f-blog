@@ -1,5 +1,6 @@
 package com.puyixiaowo.fblog.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fblog.exception.JedisConfigException;
 import redis.clients.jedis.Jedis;
@@ -92,6 +93,15 @@ public class RedisUtils {
     }
 
     public static long delete(String... keys) {
+        boolean pattern = JSON.toJSONString(keys).indexOf("*") != -1;
+        long num = 0;
+        if (pattern) {
+            for (String key :
+                    keys) {
+                num += delete(key);
+            }
+            return num;
+        }
         return getJedis().del(keys);
     }
 

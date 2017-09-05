@@ -118,6 +118,41 @@ public class Routes {
 
                 post("/edit/:data", ((request, response) ->
                         ArticleController.edit(request, response)));
+
+                post("/delete", ((request, response) ->
+                        ArticleController.delete(request, response)));
+            });
+
+            //博客分类组
+            path("/category", () -> {
+
+                get("/:data", ((request, response) ->
+                        CategoryController.categorys(request, response)));
+
+                post("/edit/:data", ((request, response) ->
+                        CategoryController.edit(request, response)));
+
+                post("/delete", ((request, response) ->
+                        CategoryController.delete(request, response)));
+
+                get("/all/array", (request, response) ->
+                        CategoryController.allArray(request));
+            });
+
+            //博客标签组
+            path("/tag", () -> {
+
+                get("/:data", ((request, response) ->
+                        TagController.tags(request, response)));
+
+                post("/edit/:data", ((request, response) ->
+                        TagController.edit(request, response)));
+
+                post("/delete", ((request, response) ->
+                        TagController.delete(request, response)));
+
+                get("/all/array", (request, response) ->
+                        TagController.allArray(request));
             });
         });
 

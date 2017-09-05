@@ -9,8 +9,7 @@ public class Article implements Serializable {
 	private String creator;
 	private String title;
 	private String context;
-	private String category;
-	private String tagIds;
+	private Long categoryId;
 	private Long createDate;
 	private Long lastUpdateDate;
 	private Integer status;
@@ -49,20 +48,12 @@ public class Article implements Serializable {
 		this.context = context;
 	}
 
-	public String getCategory (){
-		return category;
+	public Long getCategoryId (){
+		return categoryId;
 	}
 
-	public void setCategory (String category){
-		this.category = category;
-	}
-
-	public String getTagIds (){
-		return tagIds;
-	}
-
-	public void setTagIds (String tagIds){
-		this.tagIds = tagIds;
+	public void setCategoryId (Long categoryId){
+		this.categoryId = categoryId;
 	}
 
 	public Long getCreateDate (){

@@ -2,6 +2,7 @@ package com.puyixiaowo.fblog.controller.fblog;
 
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.ArticleBean;
+import com.puyixiaowo.fblog.bean.admin.CategoryBean;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
@@ -77,6 +78,10 @@ public class ArticleController extends BaseController {
                 articleBean = DBUtils.selectOne(ArticleBean.class, "select * from article where id = :id", articleBean);
                 model.put("model", articleBean);
             }
+
+            //分类列表
+            model.put("categoryList", DBUtils.selectList(CategoryBean.class,
+                    "select * from category", null));
 
             return new FreeMarkerTemplateEngine()
                     .render(new ModelAndView(model,

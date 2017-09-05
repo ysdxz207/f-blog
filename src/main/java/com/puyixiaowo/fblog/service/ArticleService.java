@@ -14,8 +14,15 @@ import java.util.List;
 public class ArticleService {
 
     public static List<ArticleBean> selectArticleList(ArticleBean articleBean){
-        StringBuilder sbSql = new StringBuilder("select * " +
-                "from article where 1=1 ");
+        StringBuilder sbSql = new StringBuilder("select a.*,c.name as category,group_concat(t.name) as tags " +
+                "from article a " +
+                "left join category c " +
+                "on a.category_id = c.id " +
+                "left join article_tag at " +
+                "on a.id = at.tag_id " +
+                "left join tag t " +
+                "on at.tag_id = t.id where 1=1 " +
+                "group by a.id");
 
         buildSqlParams(sbSql, articleBean);
         sbSql.append(" order by id asc");

@@ -1,7 +1,9 @@
 package com.puyixiaowo.fblog.bean;
 
 import com.puyixiaowo.core.entity.Validatable;
+import com.puyixiaowo.fblog.annotation.NotNull;
 import com.puyixiaowo.fblog.annotation.Table;
+import com.puyixiaowo.fblog.annotation.Transient;
 
 import java.io.Serializable;
 
@@ -11,14 +13,23 @@ public class ArticleBean extends Validatable implements Serializable {
 
 	private Long id;
 	private String creator;
+	@NotNull(message = "标题不能为空")
 	private String title;
+	@NotNull(message = "内容不能为空")
 	private String context;
-	private String category;
-	private String tagIds;
+	@NotNull(message = "请选择分类")
+	private Long categoryId;
 	private Long createDate;
 	private Long lastUpdateDate;
 	private Integer status;
 	private Integer isDel;
+
+
+	////////////////
+	@Transient
+	private String category;
+	@Transient
+	private String tags;
 
 
 	public Long getId (){
@@ -53,20 +64,12 @@ public class ArticleBean extends Validatable implements Serializable {
 		this.context = context;
 	}
 
-	public String getCategory (){
-		return category;
+	public Long getCategoryId (){
+		return categoryId;
 	}
 
-	public void setCategory (String category){
-		this.category = category;
-	}
-
-	public String getTagIds (){
-		return tagIds;
-	}
-
-	public void setTagIds (String tagIds){
-		this.tagIds = tagIds;
+	public void setCategoryId (Long categoryId){
+		this.categoryId = categoryId;
 	}
 
 	public Long getCreateDate (){
@@ -99,5 +102,21 @@ public class ArticleBean extends Validatable implements Serializable {
 
 	public void setIsDel (Integer isDel){
 		this.isDel = isDel;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
 	}
 }

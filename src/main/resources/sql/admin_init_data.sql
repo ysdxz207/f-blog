@@ -10,6 +10,8 @@ INSERT INTO `menu` VALUES ('4', '用户信息', null, '4', 'user/false', '1', '�
 INSERT INTO `menu` VALUES ('5', '角色信息', null, '5', 'role/false', '1', '角色信息', '1', 'role', '2', '0');
 INSERT INTO `menu` VALUES ('6', '菜单信息', null, '6', 'menu/false', '1', '菜单信息', '1', 'menu', '2', '0');
 INSERT INTO `menu` VALUES ('7', '权限信息', null, '7', 'permission/false', '1', '权限信息', '1', 'permission', '2', '0');
+INSERT INTO `menu` VALUES ('8', '文章分类', null, '8', 'category/false', '1', '文章分类', '2', 'category', '1', '0');
+INSERT INTO `menu` VALUES ('9', '文章标签', null, '9', 'tag/false', '1', '文章标签', '2', 'tag', '1', '0');
 
 
 -- ----------------------------
