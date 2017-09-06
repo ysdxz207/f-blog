@@ -21,6 +21,12 @@
         </div>
         <br>
 
+        <label class="row-label">标签</label>
+        <div class="row-input required">
+            <input type="text" name="tags" value="" data-toggle="tags" data-url="${base}/admin/tag/top/array" data-width="100%" size="20" placeholder="输入关键字，回车提交">
+        </div>
+        <br>
+
         <label class="row-label">内容</label>
         <div class="row-input required">
             <textarea name="context" id="article_edit_form_content" class="j-content" style="width: 800px;" data-toggle="kindeditor" data-minheight="200">${(model.context)!}</textarea>

@@ -79,9 +79,9 @@ public class TagController extends BaseController {
     }
 
     @RequiresPermissions(value = {"tag:view"})
-    public static String allArray(Request request) {
-        List<TagBean> list = DBUtils.selectList(TagBean.class,
-                "select * from tag ",
+    public static String topArray(Request request) {
+        List<String> list = DBUtils.selectList(String.class,
+                "select name from tag ",
                 null);
 
         return JSON.toJSONString(list);

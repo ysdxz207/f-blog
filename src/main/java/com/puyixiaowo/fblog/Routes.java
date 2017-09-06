@@ -151,8 +151,8 @@ public class Routes {
                 post("/delete", ((request, response) ->
                         TagController.delete(request, response)));
 
-                get("/all/array", (request, response) ->
-                        TagController.allArray(request));
+                get("/top/array", (request, response) ->
+                        TagController.topArray(request));
             });
         });
 
