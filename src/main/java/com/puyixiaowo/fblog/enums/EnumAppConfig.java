@@ -6,9 +6,7 @@ package com.puyixiaowo.fblog.enums;
  * 
  */
 public enum EnumAppConfig {
-    ARG_PORT("-p", "port", "端口参数"),
-    ARG_L("-l", "ll","aa"),
-    ARG_N("-n", "nn","bb");
+    ARG_PORT("-p", "port", "端口参数");
 
     EnumAppConfig(String arg, String field, String description) {
         this.arg = arg;
