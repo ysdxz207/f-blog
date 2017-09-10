@@ -1,5 +1,6 @@
 package com.puyixiaowo.fblog.service;
 
+import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.bean.ArticleBean;
 import com.puyixiaowo.fblog.bean.admin.ArticleTagBean;
 import com.puyixiaowo.fblog.bean.admin.TagBean;
@@ -8,7 +9,9 @@ import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -84,5 +87,32 @@ public class TagService {
         if (tagBean.getArticleId() != null) {
             sbSql.append("and article_id = :articleId ");
         }
+    }
+
+    public static String tagTop(String tagName, boolean isBean){
+        Map<String, Object> params = new HashMap<>();
+        String sql = "select " +
+                (isBean ? "t.*":"t.name") + " from tag t\n" +
+                "  left join\n" +
+                "(select at.*,count(at.id) as pop\n" +
+                "from article_tag at\n" +
+                "group by at.tag_id\n" +
+                "order by pop desc) mt\n" +
+                "on t.id = mt.tag_id where 1 = 1 ";
+
+        if (StringUtils.isNotBlank(tagName)) {
+            sql += " and name like :tagName ";
+            params.put("tagName", "%" + tagName + "%");
+
+        }
+
+        sql += "limit 10";
+        if (isBean) {
+            List<TagBean> list = DBUtils.selectList(TagBean.class, sql, params);
+            return JSON.toJSONString(list);
+        }
+        List<String> list = DBUtils.selectList(String.class,
+                sql, params);
+        return JSON.toJSONString(list);
     }
 }

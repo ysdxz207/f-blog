@@ -2,7 +2,7 @@ package com.puyixiaowo.fblog;
 
 import com.puyixiaowo.fblog.controller.admin.*;
 import com.puyixiaowo.fblog.controller.fblog.ArticleController;
-import com.puyixiaowo.fblog.controller.fblog.IndexController;
+import com.puyixiaowo.fblog.controller.fblog.FblogController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
 import com.puyixiaowo.fblog.filters.AdminPermissionsFilter;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
@@ -15,7 +15,10 @@ public class Routes {
         Spark.staticFileLocation("static");
 
         //前台
-        get("/", ((request, response) -> IndexController.index(request, response)));
+        path("/", () -> {
+            get("", ((request, response) -> FblogController.index(request, response)));
+            get("/tag/top", (request, response) -> FblogController.tagTop(request,response));
+        });
 
         //后台管理
         AdminAuthFilter.init();

@@ -1,11 +1,12 @@
 package com.puyixiaowo.fblog.controller.fblog;
 
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
+import com.puyixiaowo.fblog.service.TagService;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
-public class IndexController {
+public class FblogController {
 
     /**
      * 首页
@@ -18,5 +19,10 @@ public class IndexController {
         return new FreeMarkerTemplateEngine().render(
                 new ModelAndView(null, "index.html")
         );
+    }
+
+    public static String tagTop(Request request, Response response) {
+        String tagName = request.queryParams("tagName");
+        return TagService.tagTop(tagName, true);
     }
 }
