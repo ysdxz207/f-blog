@@ -16567,7 +16567,7 @@
             .on('keydown', $.proxy(this.tools.keyDown, this))
             .on('keyup', $.proxy(this.tools.keyUp, this))
         
-        if (!$.support.leadingWhitespace) { // for ie8
+        if ($.support.leadingWhitespace) { // for ie8
             $element.on('propertychange', $.proxy(this.tools.query, this))
         } else {
             $element.on('input', $.proxy(this.tools.query, this))

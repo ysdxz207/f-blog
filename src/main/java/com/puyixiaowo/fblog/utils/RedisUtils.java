@@ -56,8 +56,8 @@ public class RedisUtils {
 
     private static Jedis getJedis() {
         Jedis jedis = null;
-        try {
-            jedis = jedisPool.getResource();
+        try (Jedis j = jedisPool.getResource()){
+            jedis = j;
         } catch (Exception e) {
             if (e.getCause() instanceof JedisDataException) {
 
@@ -69,9 +69,6 @@ public class RedisUtils {
                 throw new JedisConnectionException("Redis可能未启动。异常信息："
                         + e.getCause().getMessage());
             }
-        } finally {
-            if (jedis != null)
-                jedis.close();
         }
         return jedis;
     }

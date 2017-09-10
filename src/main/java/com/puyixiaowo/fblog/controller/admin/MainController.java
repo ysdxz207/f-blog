@@ -29,11 +29,11 @@ public class MainController extends BaseController {
         Map<String ,Object> model = new HashMap<>();
         UserBean user = request.session().attribute(Constants.SESSION_USER_KEY);
         model.put("user", user);
-        return new ModelAndView(model, "index.html");
+        return new ModelAndView(model, "admin/index.html");
     }
 
     public static ModelAndView main(Request request, Response response) {
 
-        return new ModelAndView(null, "main.html");
+        return new ModelAndView(null, "admin/main.html");
     }
 }

@@ -6,7 +6,7 @@
     <div class="bjui-row col-2">
         <label class="row-label">标题</label>
         <div class="row-input required">
-            <input type="text" name="title" value="${(model.title)!}" data-rule="required" >
+            <input name="title" value="${(model.title)!}" data-rule="required" >
         </div>
         <br>
 
@@ -23,7 +23,7 @@
 
         <label class="row-label">标签</label>
         <div class="row-input required">
-            <input type="text" name="tags" value="" data-toggle="tags" data-url="${base}/admin/tag/top/array" data-width="100%" size="20" placeholder="输入关键字，回车提交">
+            <input name="tags" id="input" value="${(model.tags)!}" autocomplete="off" data-toggle="tags" data-url="${base}/admin/tag/top/array" data-width="100%" size="20" placeholder="输入关键字，回车提交">
         </div>
         <br>
 
@@ -49,3 +49,9 @@
         <li><button type="submit" class="btn-default" data-icon="save">发布</button></li>
     </ul>
 </div>
+
+<script>
+    $(function () {
+
+    })
+</script>

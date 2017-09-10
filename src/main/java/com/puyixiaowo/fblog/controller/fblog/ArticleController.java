@@ -10,6 +10,7 @@ import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.ArticleService;
+import com.puyixiaowo.fblog.service.TagService;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import spark.ModelAndView;
 import spark.Request;
@@ -75,7 +76,13 @@ public class ArticleController extends BaseController {
             ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
             if (articleBean.getId() > 0) {
                 //编辑
-                articleBean = DBUtils.selectOne(ArticleBean.class, "select * from article where id = :id", articleBean);
+                articleBean = DBUtils.selectOne(ArticleBean.class, "select a.*,group_concat(t.name) as tags " +
+                        "from article a " +
+                        "left join article_tag at " +
+                        "on a.id = at.article_id " +
+                        "left join tag t " +
+                        "on at.tag_id = t.id where a.id = :id " +
+                        "group by a.id", articleBean);
                 model.put("model", articleBean);
             }
 
@@ -94,11 +101,13 @@ public class ArticleController extends BaseController {
 
             UserBean currentUser = request.session().attribute(Constants.SESSION_USER_KEY);
             articleBean.setCreator(currentUser.getLoginname());
-            articleBean.setCreateDate(System.currentTimeMillis() / 1000);
+            articleBean.setCreateDate(System.currentTimeMillis());
             if (articleBean.getId() != null) {
-                articleBean.setLastUpdateDate(System.currentTimeMillis() / 1000);
+                articleBean.setLastUpdateDate(System.currentTimeMillis());
             }
             DBUtils.insertOrUpdate(articleBean);
+            //标签
+            TagService.insertArticleTags(articleBean);
         } catch (Exception e) {
             responseBean.errorMessage(e.getMessage());
         }

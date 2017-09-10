@@ -1,5 +1,7 @@
 package com.puyixiaowo.fblog.controller.fblog;
 
+import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
+import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
@@ -12,6 +14,9 @@ public class IndexController {
      * @return
      */
     public static Object index(Request request, Response response){
-        return "I am index.";
+
+        return new FreeMarkerTemplateEngine().render(
+                new ModelAndView(null, "index.html")
+        );
     }
 }

@@ -28,7 +28,7 @@ public class LoginController extends BaseController {
      * @return
      */
     public static ModelAndView loginPage(Request request, Response response) {
-        return new ModelAndView(null, "login.html");
+        return new ModelAndView(null, "admin/login.html");
     }
 
     /**

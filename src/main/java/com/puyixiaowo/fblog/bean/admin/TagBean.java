@@ -3,6 +3,7 @@ package com.puyixiaowo.fblog.bean.admin;
 import com.puyixiaowo.core.entity.Validatable;
 import com.puyixiaowo.fblog.annotation.NotNull;
 import com.puyixiaowo.fblog.annotation.Table;
+import com.puyixiaowo.fblog.annotation.Transient;
 
 import java.io.Serializable;
 
@@ -14,6 +15,9 @@ public class TagBean extends Validatable implements Serializable {
 	@NotNull(message = "标签名不能为空")
 	private String name;
 
+	///////////////
+	@Transient
+	private Long articleId;
 
 	public Long getId (){
 		return id;
@@ -29,5 +33,13 @@ public class TagBean extends Validatable implements Serializable {
 
 	public void setName (String name){
 		this.name = name;
+	}
+
+	public Long getArticleId() {
+		return articleId;
+	}
+
+	public void setArticleId(Long articleId) {
+		this.articleId = articleId;
 	}
 }

@@ -1,9 +1,13 @@
 package com.puyixiaowo.fblog.service;
 
+import com.puyixiaowo.fblog.bean.ArticleBean;
+import com.puyixiaowo.fblog.bean.admin.ArticleTagBean;
 import com.puyixiaowo.fblog.bean.admin.TagBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,11 +18,43 @@ import java.util.List;
  */
 public class TagService {
 
+    public static void insertArticleTags(ArticleBean articleBean) {
+        if(articleBean == null ||
+                StringUtils.isBlank(articleBean.getTags())) {
+            return;
+        }
+
+        List<String> tagNameList = Arrays.asList(articleBean.getTags().split(","));
+
+        //删除文章关联的已存在的标签
+        if (articleBean.getId() != null) {
+            DBUtils.executeSql("delete from article_tag " +
+                    "where article_id = :articleId",
+                    articleBean);
+        }
+        //创建并关联标签
+        for (String tagName : tagNameList) {
+            TagBean tagBean = new TagBean();
+            tagBean.setName(tagName);
+            tagBean = DBUtils.selectOne(TagBean.class, "select * from tag where name = :name", tagBean);
+            if (tagBean == null) {
+                DBUtils.insertOrUpdate(tagBean);
+            }
+
+            ArticleTagBean articleTagBean = new ArticleTagBean();
+            articleTagBean.setArticleId(articleBean.getId());
+            articleTagBean.setTagId(tagBean.getId());
+            DBUtils.insertOrUpdate(articleTagBean);
+        }
+    }
+
 
     public static List<TagBean> selectTagList(TagBean tagBean,
                                                       PageBean pageBean) {
 
-        StringBuilder sbSql = new StringBuilder("select * from tag where 1 = 1 ");
+        StringBuilder sbSql = new StringBuilder("select t.* from tag t " +
+                "left join article_tag at " +
+                "on t.id = at.tag_id where 1 = 1 ");
 
         buildSqlParams(sbSql, tagBean);
         sbSql.append(" order by id asc");
@@ -30,7 +66,9 @@ public class TagService {
     }
 
     public static int selectCount(TagBean tagBean) {
-        StringBuilder sbSql = new StringBuilder("select count(*) from tag where 1 = 1 ");
+        StringBuilder sbSql = new StringBuilder("select count(t.id) from tag t " +
+                "left join article_tag at " +
+                "on t.id = at.tag_id where 1 = 1 ");
 
         buildSqlParams(sbSql, tagBean);
         return DBUtils.count(sbSql.toString(), tagBean);
@@ -41,6 +79,10 @@ public class TagService {
         if (tagBean.getName() != null) {
             sbSql.append("and tag like :tag ");
             tagBean.setName("%" + tagBean.getName() + "%");
+        }
+
+        if (tagBean.getArticleId() != null) {
+            sbSql.append("and article_id = :articleId ");
         }
     }
 }

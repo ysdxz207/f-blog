@@ -1,9 +1,11 @@
 package com.puyixiaowo.fblog.bean;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.puyixiaowo.core.entity.Validatable;
 import com.puyixiaowo.fblog.annotation.NotNull;
 import com.puyixiaowo.fblog.annotation.Table;
 import com.puyixiaowo.fblog.annotation.Transient;
+import com.puyixiaowo.fblog.generator.utils.CustomDateTimeSerializer;
 
 import java.io.Serializable;
 
@@ -19,7 +21,9 @@ public class ArticleBean extends Validatable implements Serializable {
 	private String context;
 	@NotNull(message = "请选择分类")
 	private Long categoryId;
+	@JSONField(serializeUsing = CustomDateTimeSerializer.class)
 	private Long createDate;
+	@JSONField(serializeUsing = CustomDateTimeSerializer.class)
 	private Long lastUpdateDate;
 	private Integer status;
 	private Integer isDel;

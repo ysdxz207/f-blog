@@ -74,7 +74,7 @@ public class DBUtils {
 
     }
 
-    public static <T> T selectOne(Class clazz,
+    public static <T> T selectOne(Class<T> clazz,
                                   String sql,
                                   Map<String, Object> params) {
 
@@ -85,18 +85,18 @@ public class DBUtils {
         return list.get(0);
     }
 
-    public static <T> T selectOne(Class clazz,
+    public static <E> E selectOne(Class<E> clazz,
                                   String sql,
                                   Object paramsObj) {
 
-        List<T> list = selectList(clazz, sql, paramsObj);
+        List<E> list = selectList(clazz, sql, paramsObj);
         if (list.isEmpty()) {
             return null;
         }
         return list.get(0);
     }
 
-    public static <E> List<E> selectList(Class clazz,
+    public static <E> List<E> selectList(Class<E> clazz,
                                          String sql,
                                          Map<String, Object> params) {
 
@@ -121,7 +121,7 @@ public class DBUtils {
         }
     }
 
-    public static <E> List<E> selectList(Class clazz,
+    public static <E> List<E> selectList(Class<E> clazz,
                                          String sql,
                                          Object params) {
         Map<String, Object> map = JSON.toJavaObject(JSON.parseObject(JSON.toJSONString(params)), Map.class);
