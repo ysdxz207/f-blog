@@ -103,6 +103,9 @@ public class PageBean extends ResponseBean{
 		return pageTotal;
 	}
 
+	public void setPageTotal(int pageTotal) {
+		this.pageTotal = pageTotal;
+	}
 	///////////////////////
 	/**
 	 * 序列化

@@ -17,9 +17,8 @@
 <script id="template_article_list_pager" type="text.html">
     <nav aria-label="...">
         <ul class="pager">
-        {{pageCurrent}}
-            <li class="previous {{if pageCurrent == 1}}disabled{{/if}}"><a href="#"><i class="fa fa-angle-double-left"></i> 上一页</a></li>
-            <li class="next {{if pageTotal <= pageCurrent}}disabled{{/if}}"><a href="#">下一页 <i class="fa fa-angle-double-right"></i></a></li>
+            <li class="previous {{if pageCurrent == 1}}disabled{{/if}}"><a><i class="fa fa-angle-double-left"></i> 上一页</a></li>
+            <li class="next {{if pageTotal <= pageCurrent}}disabled{{/if}}"><a>下一页 <i class="fa fa-angle-double-right"></i></a></li>
         </ul>
     </nav>
 </script>

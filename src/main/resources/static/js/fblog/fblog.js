@@ -1,7 +1,7 @@
 var fblog = {
     $tagTop: $('.fblog-tag-top'),
     $articleListContainer: $('#fblog_article_list_container'),
-    pageCurrent: -1
+    pageCurrent: 1
 };
 
 (function (fblog) {
@@ -16,7 +16,7 @@ var fblog = {
                 "#72D0EB",
                 "#FFDD57",
                 "#4A4A4A",
-                "#DC9FB4",
+                "#DC6BDB",
                 "#FFB11B",
                 "#13CCAB",
                 "#FF634B"];
@@ -32,10 +32,11 @@ var fblog = {
 
     fblog.loadArticleList = function () {
         $.getJSON("/article/list", {
-            pageCurrent: fblog.pageCurrent + 1
+            pageCurrent: fblog.pageCurrent
         },function (data) {
 
             if (data) {
+                fblog.$articleListContainer.empty();
                 fblog.pageCurrent = data.pageCurrent;
                 var html = template('template_article_list', data);
                 fblog.$articleListContainer.html(html);
@@ -44,9 +45,23 @@ var fblog = {
 
     };
 
+    fblog.bind = function () {
+        $(document).on('click', '.pager .next a', function() {
+            fblog.pageCurrent += 1;
+            fblog.loadArticleList();
+        });
+
+        $(document).on('click', '.pager .previous a', function () {
+            fblog.pageCurrent -= 1;
+            fblog.loadArticleList();
+        });
+    };
+
     fblog.init = function () {
         fblog.loadTopTags();
         fblog.loadArticleList();
+        fblog.bind();
+
     };
 
 
