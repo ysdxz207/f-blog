@@ -1,6 +1,7 @@
 package com.puyixiaowo.fblog.service;
 
 import com.puyixiaowo.fblog.bean.ArticleBean;
+import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.utils.DBUtils;
 
 import java.util.List;
@@ -13,7 +14,8 @@ import java.util.List;
  */
 public class ArticleService {
 
-    public static List<ArticleBean> selectArticleList(ArticleBean articleBean){
+    public static List<ArticleBean> selectArticleList(ArticleBean articleBean,
+                                                      PageBean pageBean){
         StringBuilder sbSql = new StringBuilder("select a.*,c.name as category,group_concat(t.name) as tags " +
                 "from article a " +
                 "left join category c " +
@@ -26,6 +28,10 @@ public class ArticleService {
 
         buildSqlParams(sbSql, articleBean);
         sbSql.append(" order by id asc");
+        sbSql.append(" limit ");
+        sbSql.append(pageBean.getRowBounds().getOffset());
+        sbSql.append(", ");
+        sbSql.append(pageBean.getRowBounds().getLimit());
         return DBUtils.selectList(ArticleBean.class, sbSql.toString(), articleBean);
     }
 

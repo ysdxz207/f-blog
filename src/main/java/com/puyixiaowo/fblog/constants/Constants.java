@@ -5,7 +5,7 @@ public class Constants {
      * 后台用户session key
      */
     public static final String SESSION_USER_KEY = "fblog_session_admin_user_key";
-    public static final int DEFAULT_PAGE_SIZE = 20;
+    public static final int DEFAULT_PAGE_SIZE = 1;
     /*
      * 验证码session key
      */

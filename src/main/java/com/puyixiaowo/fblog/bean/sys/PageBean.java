@@ -20,6 +20,7 @@ public class PageBean extends ResponseBean{
 	private int pageSize = Constants.DEFAULT_PAGE_SIZE;
 	private int pageCurrent = 1;
 	private int totalCount = 0;
+	private int pageTotal = 0;
 	private RowBounds rowBounds;
 	private List<?> list = new ArrayList<Object>();
 
@@ -92,6 +93,14 @@ public class PageBean extends ResponseBean{
 
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
+		//计算总页数
+		int page = totalCount / pageSize;
+		int yu = totalCount % pageSize;
+		this.pageTotal = page == 0 ? 1 : (yu == 0 ? page : page + 1);
+	}
+
+	public int getPageTotal() {
+		return pageTotal;
 	}
 
 	///////////////////////

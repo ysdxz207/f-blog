@@ -1,5 +1,7 @@
 var fblog = {
-    $tagTop: $('.fblog-tag-top')
+    $tagTop: $('.fblog-tag-top'),
+    $articleListContainer: $('#fblog_article_list_container'),
+    pageCurrent: -1
 };
 
 (function (fblog) {
@@ -21,7 +23,6 @@ var fblog = {
 
             for (var i = 0; i < data.length; i++) {
                 var randomIndex = Math.floor(Math.random() * arr.length);
-                console.log(randomIndex);
                 var color = arr[randomIndex];
                 fblog.$tagTop.append('<span class="label label-default" style="background-color: '
                     + color + ';display: inline-block;border-radius: 1em;margin-left: 6px;margin-bottom: 4px;font-size: 100%;font-weight: 100;line-height: inherit;">' + data[i].name + '</span>');
@@ -29,8 +30,23 @@ var fblog = {
         })
     };
 
+    fblog.loadArticleList = function () {
+        $.getJSON("/article/list", {
+            pageCurrent: fblog.pageCurrent + 1
+        },function (data) {
+
+            if (data) {
+                fblog.pageCurrent = data.pageCurrent;
+                var html = template('template_article_list', data);
+                fblog.$articleListContainer.html(html);
+            }
+        });
+
+    };
+
     fblog.init = function () {
         fblog.loadTopTags();
+        fblog.loadArticleList();
     };
 
 

@@ -1,4 +1,4 @@
-package com.puyixiaowo.fblog.controller.fblog;
+package com.puyixiaowo.fblog.controller.admin;
 
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.ArticleBean;
@@ -49,8 +49,7 @@ public class ArticleController extends BaseController {
         try {
             ArticleBean params = getParamsEntity(request, ArticleBean.class, false);
             List<ArticleBean> list =
-                    ArticleService.selectArticleList(
-                            getParamsEntity(request, ArticleBean.class, false));
+                    ArticleService.selectArticleList(params, pageBean);
             pageBean.setList(list);
             int count = ArticleService.selectCount(params);
             pageBean.setTotalCount(count);

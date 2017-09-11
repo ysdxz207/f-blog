@@ -1,7 +1,7 @@
 package com.puyixiaowo.fblog;
 
 import com.puyixiaowo.fblog.controller.admin.*;
-import com.puyixiaowo.fblog.controller.fblog.ArticleController;
+import com.puyixiaowo.fblog.controller.admin.ArticleController;
 import com.puyixiaowo.fblog.controller.fblog.FblogController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
 import com.puyixiaowo.fblog.filters.AdminPermissionsFilter;
@@ -17,7 +17,10 @@ public class Routes {
         //前台
         path("/", () -> {
             get("", ((request, response) -> FblogController.index(request, response)));
+            get("/category/list", (request, response) -> FblogController.categoryList(request,response));
             get("/tag/top", (request, response) -> FblogController.tagTop(request,response));
+            get("/article/list", (request, response) -> FblogController.articleList(request,response));
+
         });
 
         //后台管理
