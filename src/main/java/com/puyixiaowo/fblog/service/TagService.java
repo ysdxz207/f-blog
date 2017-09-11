@@ -89,7 +89,9 @@ public class TagService {
         }
     }
 
-    public static String tagTop(String tagName, boolean isBean){
+    public static String tagTop(String tagName,
+                                Integer num,
+                                boolean isBean){
         Map<String, Object> params = new HashMap<>();
         String sql = "select " +
                 (isBean ? "t.*":"t.name") + " from tag t\n" +
@@ -106,7 +108,7 @@ public class TagService {
 
         }
 
-        sql += "limit 10";
+        sql += "limit " + (num == null ? 10 : num);
         if (isBean) {
             List<TagBean> list = DBUtils.selectList(TagBean.class, sql, params);
             return JSON.toJSONString(list);

@@ -80,7 +80,8 @@ public class TagController extends BaseController {
     @RequiresPermissions(value = {"tag:view"})
     public static String topArray(Request request) {
         String tagName = request.queryParams("tagName");
-        return TagService.tagTop(tagName, false);
+        Integer num = Integer.valueOf(request.queryParamOrDefault("num", "10"));
+        return TagService.tagTop(tagName, num, false);
     }
 
 }

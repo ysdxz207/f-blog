@@ -23,6 +23,7 @@ public class FblogController {
 
     public static String tagTop(Request request, Response response) {
         String tagName = request.queryParams("tagName");
-        return TagService.tagTop(tagName, true);
+        Integer num = Integer.parseInt(request.queryParamOrDefault("num", "10"));
+        return TagService.tagTop(tagName, num, true);
     }
 }
