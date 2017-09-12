@@ -1,6 +1,5 @@
 package com.puyixiaowo.fblog.controller.fblog;
 
-import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.bean.ArticleBean;
 import com.puyixiaowo.fblog.bean.admin.CategoryBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
@@ -30,11 +29,6 @@ public class FblogController extends BaseController{
         );
     }
 
-    public static String categoryList(Request request, Response response) {
-        List<CategoryBean> list = CategoryService.selectCategoryList(new CategoryBean(), new PageBean());
-        return JSON.toJSONString(list);
-    }
-
     /**
      * 标签
      * @param request
@@ -61,5 +55,12 @@ public class FblogController extends BaseController{
         pageBean.setList(list);
         pageBean.setTotalCount(ArticleService.selectCount(new ArticleBean()));
         return pageBean.serialize();
+    }
+
+    public static String categoryList(Request request, Response response) {
+
+        PageBean pageBean = getPageBean(request);
+        return CategoryService.selectCategoryListPage(
+                getParamsEntity(request, CategoryBean.class, false), pageBean);
     }
 }

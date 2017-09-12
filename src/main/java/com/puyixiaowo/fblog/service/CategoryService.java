@@ -43,4 +43,26 @@ public class CategoryService {
             categoryBean.setName("%" + categoryBean.getName() + "%");
         }
     }
+
+    /**
+     *
+     * @param categoryBean
+     * @param pageBean
+     * @return
+     */
+    public static String selectCategoryListPage(CategoryBean categoryBean,
+                                                PageBean pageBean) {
+
+        try {
+            List<CategoryBean> list = CategoryService.selectCategoryList(categoryBean,
+                    pageBean);
+            pageBean.setList(list);
+
+            int count = CategoryService.selectCount(categoryBean);
+            pageBean.setTotalCount(count);
+        } catch (Exception e) {
+            pageBean.error(e);
+        }
+        return pageBean.serialize();
+    }
 }

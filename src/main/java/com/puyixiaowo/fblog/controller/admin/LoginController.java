@@ -64,7 +64,7 @@ public class LoginController extends BaseController {
         }
 
 
-        return new ModelAndView(model, "login.html");
+        return new ModelAndView(model, "admin/login.html");
     }
 
     /**

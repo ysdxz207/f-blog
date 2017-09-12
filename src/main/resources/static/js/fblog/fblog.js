@@ -1,6 +1,8 @@
 var fblog = {
     $tagTop: $('.fblog-tag-top'),
     $articleListContainer: $('#fblog_article_list_container'),
+    $containerWidgetTags: $('#container_widget_tags'),
+    $containerWidgetCategories: $('#container_widget_categories'),
     PAGE_CURRENT_SESSION_KEY: 'fblog_page_current'
 };
 
@@ -21,6 +23,7 @@ var fblog = {
             if (!data) {
                 return;
             }
+            fblog.$containerWidgetTags.empty();
             var arr = ["#23D160",
                 "#FF3860",
                 "#72D0EB",
@@ -34,9 +37,10 @@ var fblog = {
             for (var i = 0; i < data.length; i++) {
                 var randomIndex = Math.floor(Math.random() * arr.length);
                 var color = arr[randomIndex];
-                fblog.$tagTop.append('<span class="label label-default" style="background-color: '
-                    + color + ';display: inline-block;border-radius: 1em;margin-left: 6px;margin-bottom: 4px;font-size: 100%;font-weight: 100;line-height: inherit;">' + data[i].name + '</span>');
+                data[i].color = color;
             }
+            var html = template('template_widget_tags', {list:data});
+            fblog.$containerWidgetTags.html(html);
         })
     };
 
@@ -67,8 +71,22 @@ var fblog = {
         });
     };
 
+    fblog.loadCategorys = function () {
+        $.getJSON("/category/list", {
+            pageCurrent: 1,
+            pageSize: 10
+        }, function (data) {
+
+            if (data) {
+                fblog.$containerWidgetCategories.empty();
+                var html = template('template_widget_categories', data);
+                fblog.$containerWidgetCategories.html(html);
+            }
+        });
+    };
     fblog.init = function () {
         fblog.loadTopTags();
+        fblog.loadCategorys();
         fblog.loadArticleList();
         fblog.bind();
 

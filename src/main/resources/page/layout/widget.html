@@ -7,17 +7,26 @@
 
 <div class="panel panel-default form-group ">
     <div class="panel-heading">分类</div>
-    <div class="list-group">
-        <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-        <a href="#" class="list-group-item">Morbi leo risus</a>
-        <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-        <a href="#" class="list-group-item">Vestibulum at eros</a>
+    <div class="list-group" id="container_widget_categories">
+
     </div>
 </div>
 
 <div class="panel panel-default form-group ">
     <div class="panel-heading">标签</div>
-    <div class="panel-body fblog-tag-top">
+    <div class="panel-body fblog-tag-top" id="container_widget_tags">
 
     </div>
 </div>
+
+<script id="template_widget_categories" type="text/html">
+{{each list as category index}}
+<a href="#" class="list-group-item">{{category.name}}</a>
+{{/each}}
+</script>
+
+<script id="template_widget_tags" type="text/html">
+{{each list as tag index}}
+<span class="label label-default" style="background-color: {{tag.color}};display: inline-block;border-radius: 1em;margin-left: 6px;margin-bottom: 4px;font-size: 100%;font-weight: 100;line-height: inherit;">{{tag.name}}</span>
+{{/each}}
+</script>
