@@ -30,9 +30,7 @@ public class FblogController extends BaseController{
 
         Map<String, Object> model = new HashMap<>();
         //查询文章列表,标签和分类通过ajax获取
-        String pageCurrentStr = request.params(":pageCurrent");
-        int pageCurrent = Integer.valueOf(pageCurrentStr == null ? "1" : pageCurrentStr);
-        PageBean pageBean = new PageBean(pageCurrent, 1);
+        PageBean pageBean = getPageBean(request);
 
         ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
 

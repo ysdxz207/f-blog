@@ -72,7 +72,7 @@ var fblog = {
         //首页分类
         $(document).on('click', '#container_widget_categories a', function () {
             var category = $(this).text();
-            fblog.loadArticleList(category);
+
         });
 
         //首页标签

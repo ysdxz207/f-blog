@@ -17,7 +17,6 @@ public class Routes {
         //前台
         path("", () -> {
             get("/", ((request, response) -> FblogController.index(request, response)));
-            get(":pageCurrent", ((request, response) -> FblogController.index(request, response)));
             get("/category/list", (request, response) -> FblogController.categoryList(request,response));
             get("/tag/top", (request, response) -> FblogController.tagTop(request,response));
             get("/article/list", (request, response) -> FblogController.articleList(request,response));
