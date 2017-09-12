@@ -50,7 +50,9 @@ public class FblogController extends BaseController{
     public static String articleList(Request request, Response response) {
         PageBean pageBean = getPageBean(request);
 
-        List<ArticleBean> list = ArticleService.selectArticleList(new ArticleBean(),
+        ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
+
+        List<ArticleBean> list = ArticleService.selectArticleList(articleBean,
                 pageBean);
         pageBean.setList(list);
         pageBean.setTotalCount(ArticleService.selectCount(new ArticleBean()));

@@ -23,11 +23,11 @@ public class ArticleService {
                 "left join article_tag at " +
                 "on a.id = at.article_id " +
                 "left join tag t " +
-                "on at.tag_id = t.id where 1=1 " +
-                "group by a.id");
+                "on at.tag_id = t.id where 1=1 ");
 
         buildSqlParams(sbSql, articleBean);
-        sbSql.append(" order by id asc");
+
+        sbSql.append("group by a.id order by id asc ");
         sbSql.append(" limit ");
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
@@ -54,8 +54,17 @@ public class ArticleService {
         if (articleBean.getStatus() != null) {
             sbSql.append("and status = :status ");
         }
+
         if (articleBean.getIsDel() != null) {
             sbSql.append("and is_del = :isDel ");
+        }
+
+        if (articleBean.getCategory() != null) {
+            sbSql.append("and c.name = :category ");
+        }
+
+        if (articleBean.getTags() != null) {
+            sbSql.append("and t.name = :tags ");
         }
     }
 }

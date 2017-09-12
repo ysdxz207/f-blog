@@ -32,6 +32,14 @@ public class DBUtils {
      * 初始化数据库
      */
     public static void initDB() {
+        //设置临时目录路径
+        String sqliteTempDir = System.getProperty("user.dir") + "/sqlite_temp";
+        File tempFile = new File(sqliteTempDir);
+        if (!tempFile.exists()) {
+            tempFile.mkdirs();
+        }
+        System.setProperty("org.sqlite.tmpdir",
+                sqliteTempDir);
         String dbHost = (String) ResourceUtils.load("jdbc.properties").get("sqlite3.host");
 
         if (StringUtils.isBlank(dbHost)) {
