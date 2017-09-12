@@ -5,10 +5,14 @@ body {
 
 a {
     text-decoration: none;
+    color: #000000;
+    cursor: pointer;
+}
+a:hover,a:focus {
+    text-decoration: none;
     color: #FF634B;
     cursor: pointer;
 }
-
 
 /*navbar*/
 
@@ -16,16 +20,20 @@ a {
     background-color: #4a4a4a;
     color: white;
 }
+
 .navbar-default .navbar-brand {
     font-size: 32px;
     color: white;
 }
+
 .navbar-default .navbar-brand:hover {
     color: white;
 }
-.nav.navbar-nav.navbar-right .fa{
+
+.nav.navbar-nav.navbar-right .fa {
     color: white;
 }
+
 .nav.navbar-nav .active {
     background-color: #444444;
 }
@@ -35,15 +43,23 @@ a {
     background-color: #444444;
 }
 
-/*pager*/
+
+    /*pager*/
 .pager li a {
     background-color: #4a4a4a;
     color: white;
 }
+
 .pager li a:hover {
     background-color: #444444;
     color: white;
 }
 
-/*footer*/
+/*tags*/
+.label a {
+    color: white;
+}
 
+.label a:hover, a:focus {
+    text-decoration: none;
+}
