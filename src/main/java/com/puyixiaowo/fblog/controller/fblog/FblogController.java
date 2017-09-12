@@ -1,5 +1,6 @@
 package com.puyixiaowo.fblog.controller.fblog;
 
+import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.bean.ArticleBean;
 import com.puyixiaowo.fblog.bean.admin.CategoryBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
@@ -8,11 +9,14 @@ import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.ArticleService;
 import com.puyixiaowo.fblog.service.CategoryService;
 import com.puyixiaowo.fblog.service.TagService;
+import com.puyixiaowo.fblog.utils.DBUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FblogController extends BaseController{
 
@@ -24,8 +28,22 @@ public class FblogController extends BaseController{
      */
     public static Object index(Request request, Response response){
 
+        Map<String, Object> model = new HashMap<>();
+        //查询文章列表,标签和分类通过ajax获取
+        String pageCurrentStr = request.params(":pageCurrent");
+        int pageCurrent = Integer.valueOf(pageCurrentStr == null ? "1" : pageCurrentStr);
+        PageBean pageBean = new PageBean(pageCurrent, 1);
+
+        ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
+
+        List<ArticleBean> list = ArticleService.selectArticleList(articleBean,
+                pageBean);
+        pageBean.setList(list);
+        pageBean.setTotalCount(ArticleService.selectCount(new ArticleBean()));
+
+        model.put("pageBean", pageBean);
         return new FreeMarkerTemplateEngine().render(
-                new ModelAndView(null, "index.html")
+                new ModelAndView(model, "index.html")
         );
     }
 
@@ -59,6 +77,25 @@ public class FblogController extends BaseController{
         return pageBean.serialize();
     }
 
+    public static String articleDetail(Request request, Response response) {
+        ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
+
+        articleBean = DBUtils.selectOne(ArticleBean.class, "select a.*,group_concat(t.name) as tags " +
+                "from article a " +
+                "left join article_tag at " +
+                "on a.id = at.article_id " +
+                "left join tag t " +
+                "on at.tag_id = t.id where a.id = :id " +
+                "group by a.id", articleBean);
+
+        return JSON.toJSONString(articleBean);
+    }
+    /**
+     * 分类
+     * @param request
+     * @param response
+     * @return
+     */
     public static String categoryList(Request request, Response response) {
 
         PageBean pageBean = getPageBean(request);

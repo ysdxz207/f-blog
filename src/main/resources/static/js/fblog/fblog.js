@@ -45,6 +45,7 @@ var fblog = {
     };
 
     fblog.loadArticleList = function (category, tag) {
+
         var params = {};
         params.pageCurrent = fblog.getPageCurrent();
         if (category) {
@@ -54,7 +55,7 @@ var fblog = {
             params.tags = tag;
         }
 
-        $.getJSON("/article/list", params,function (data) {
+        $.getJSON(url, params, function (data) {
 
             if (data) {
                 fblog.$articleListContainer.empty();
@@ -67,16 +68,7 @@ var fblog = {
     };
 
     fblog.bind = function () {
-        //下一页
-        $(document).on('click', '.pager .next a', function() {
-            fblog.setOrSumPageCurrent(1);
-            fblog.loadArticleList();
-        });
-        //上一页
-        $(document).on('click', '.pager .previous a', function () {
-            fblog.setOrSumPageCurrent(-1);
-            fblog.loadArticleList();
-        });
+
         //首页分类
         $(document).on('click', '#container_widget_categories a', function () {
             var category = $(this).text();
@@ -104,9 +96,10 @@ var fblog = {
         });
     };
     fblog.init = function () {
+
         fblog.loadTopTags();
         fblog.loadCategorys();
-        fblog.loadArticleList();
+        // fblog.loadArticleList();
         fblog.bind();
 
     };

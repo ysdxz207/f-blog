@@ -1,24 +1,20 @@
-<div class="col-sm-9 col-md-9 col-lg-9" id="fblog_article_list_container">
+<div class="col-sm-9 col-md-9 col-lg-9">
+    <#if (((pageBean.list)??) && (((pageBean.list)?size) > 0))>
+        <#list pageBean.list as article>
+            <div class="panel panel-default">
+                <div class="panel-heading"><a href="">${article.title}</a></div>
+                <div class="panel-body">
+                    ${article.context}
+                </div>
+            </div>
+        </#list>
+    </#if>
+    <#if (pageBean.totalCount > 0)>
+        <nav aria-label="...">
+            <ul class="pager">
+                <li class="previous <#if (pageBean.pageCurrent == 1)>disabled</#if>"><a href="/${pageBean.pageCurrent - 1}"><i class="fa fa-angle-double-left"></i> 上一页</a></li>
+                <li class="next <#if (pageBean.pageTotal <= pageBean.pageCurrent)>disabled</#if>"><a href="/${pageBean.pageCurrent + 1}">下一页 <i class="fa fa-angle-double-right"></i></a></li>
+            </ul>
+        </nav>
+    </#if>
 </div>
-
-
-<script id="template_article_list" type="text/html">
-    {{each list as article index}}
-    <div class="panel panel-default">
-        <div class="panel-heading"><a href="">{{article.title}}</a> </div>
-    <div class="panel-body">
-        {{article.context}}
-    </div>
-    </div>
-    {{/each}}
-    {{include 'template_article_list_pager'}}
-</script>
-
-<script id="template_article_list_pager" type="text.html">
-    <nav aria-label="...">
-        <ul class="pager">
-            <li class="previous {{if pageCurrent == 1}}disabled{{/if}}"><a><i class="fa fa-angle-double-left"></i> 上一页</a></li>
-            <li class="next {{if pageTotal <= pageCurrent}}disabled{{/if}}"><a>下一页 <i class="fa fa-angle-double-right"></i></a></li>
-        </ul>
-    </nav>
-</script>
