@@ -38,6 +38,14 @@ INSERT INTO `permission` VALUES ('18', '3', '查看文章', 'article:view');
 INSERT INTO `permission` VALUES ('19', '3', '添加文章', 'article:add');
 INSERT INTO `permission` VALUES ('20', '3', '编辑文章', 'article:edit');
 INSERT INTO `permission` VALUES ('21', '3', '删除文章', 'article:delete');
+INSERT INTO `permission` VALUES ('22', '8', '查看分类', 'category:view');
+INSERT INTO `permission` VALUES ('23', '8', '添加分类', 'category:add');
+INSERT INTO `permission` VALUES ('24', '8', '编辑分类', 'category:edit');
+INSERT INTO `permission` VALUES ('25', '8', '删除分类', 'category:delete');
+INSERT INTO `permission` VALUES ('26', '9', '查看标签', 'tag:view');
+INSERT INTO `permission` VALUES ('27', '9', '添加标签', 'tag:add');
+INSERT INTO `permission` VALUES ('28', '9', '编辑标签', 'tag:edit');
+INSERT INTO `permission` VALUES ('29', '9', '删除标签', 'tag:delete');
 
 
 
@@ -46,32 +54,6 @@ INSERT INTO `permission` VALUES ('21', '3', '删除文章', 'article:delete');
 -- ----------------------------
 INSERT INTO `role` VALUES ('1', '管理员', 'admin');
 
-
-
--- ----------------------------
--- Records of role_permission
--- ----------------------------
-INSERT INTO `role_permission` VALUES ('1', '1', '1');
-INSERT INTO `role_permission` VALUES ('2', '1', '2');
-INSERT INTO `role_permission` VALUES ('3', '1', '3');
-INSERT INTO `role_permission` VALUES ('4', '1', '4');
-INSERT INTO `role_permission` VALUES ('5', '1', '5');
-INSERT INTO `role_permission` VALUES ('6', '1', '6');
-INSERT INTO `role_permission` VALUES ('7', '1', '7');
-INSERT INTO `role_permission` VALUES ('8', '1', '8');
-INSERT INTO `role_permission` VALUES ('9', '1', '9');
-INSERT INTO `role_permission` VALUES ('10', '1', '10');
-INSERT INTO `role_permission` VALUES ('11', '1', '11');
-INSERT INTO `role_permission` VALUES ('12', '1', '12');
-INSERT INTO `role_permission` VALUES ('13', '1', '13');
-INSERT INTO `role_permission` VALUES ('14', '1', '14');
-INSERT INTO `role_permission` VALUES ('15', '1', '15');
-INSERT INTO `role_permission` VALUES ('16', '1', '16');
-INSERT INTO `role_permission` VALUES ('17', '1', '17');
-INSERT INTO `role_permission` VALUES ('18', '1', '18');
-INSERT INTO `role_permission` VALUES ('19', '1', '19');
-INSERT INTO `role_permission` VALUES ('20', '1', '20');
-INSERT INTO `role_permission` VALUES ('21', '1', '21');
 
 
 

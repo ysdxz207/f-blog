@@ -51,9 +51,6 @@ public class AdminPermissionsAspect {
         String[] permissions = requiresPermissions.value();
         Logical logical = requiresPermissions.logical();
 
-        if (permissions.length == 0) {
-            throw new NoPermissionsException("没有访问权限!");
-        }
 
         if (!UserService.currentUserHasPermissions(request, permissions, logical)) {
             throw new NoPermissionsException("没有访问权限!");

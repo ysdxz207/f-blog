@@ -131,4 +131,24 @@ public class ArticleController extends BaseController {
 
         return responseBean.serialize();
     }
+
+    @RequiresPermissions(value = {"article:view"})
+    public static String luceneReindex(Request request, Response response){
+        ResponseBean responseBean = new ResponseBean();
+        List<ArticleBean> list = ArticleService.selectArticleList(new ArticleBean(), new PageBean());
+
+        try {
+            //删除索引目录
+            LuceneIndexUtils.deleteIndexDir();
+            //添加索引
+            for (ArticleBean articleBean :
+                    list) {
+                LuceneIndexUtils.addLuceneIndex(articleBean);
+            }
+
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+        return responseBean.serialize();
+    }
 }
