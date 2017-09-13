@@ -7,6 +7,7 @@ import com.puyixiaowo.fblog.domain.User;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.exception.DBException;
 import com.puyixiaowo.fblog.exception.DBSqlException;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
@@ -169,21 +170,22 @@ public class DBUtils {
 
         String tableName = ORMUtils.getTableNameByClass(obj.getClass());
 
-        try (Connection conn = sql2o.open()) {
+        try (Connection conn = sql2o.beginTransaction(java.sql.Connection.TRANSACTION_SERIALIZABLE)) {
             Object primaryKey = null;
             int lines = 0;
             try {
                 String sql_update = assembleSql(SQL_TYPE_UPDATE, tableName, obj);
                 Query queryUpdate = conn.createQuery(sql_update).throwOnMappingFailure(false);
-                primaryKey = queryUpdate.executeUpdate().getKey();
+                lines = queryUpdate.executeUpdate().getResult();
             } catch (Exception e) {
                 ORMUtils.setId(obj);
                 String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, obj);
                 System.out.println(sql_insert);
                 Query queryInsert = conn.createQuery(sql_insert).throwOnMappingFailure(false);
-                lines = queryInsert.executeUpdate().getResult();
+                primaryKey = queryInsert.executeUpdate().getKey();
             }
 
+            conn.commit();
             if (primaryKey != null) {
                 return primaryKey;
             }
@@ -253,7 +255,7 @@ public class DBUtils {
 
                     //
                     sb2.append("'");
-                    sb2.append(fieldValue);
+                    sb2.append(StringEscapeUtils.escapeHtml4(fieldValue.toString()));
                     sb2.append("'");
                     sb2.append(",");
 
@@ -301,7 +303,7 @@ public class DBUtils {
                     sb1.append("`");
                     sb1.append("=");
                     sb1.append("'");
-                    sb1.append(fieldValue);
+                    sb1.append(StringEscapeUtils.escapeHtml4(fieldValue.toString()));
                     sb1.append("'");
                     sb1.append(",");
 
@@ -384,7 +386,7 @@ public class DBUtils {
     }
 
     public static Object executeSql(String sql, Map<String, Object> params) {
-        try (Connection conn = sql2o.open()) {
+        try (Connection conn = sql2o.beginTransaction(java.sql.Connection.TRANSACTION_SERIALIZABLE)) {
             Query query = conn.createQuery(sql).throwOnMappingFailure(false);
 
             if (params != null) {
@@ -393,14 +395,18 @@ public class DBUtils {
                     query.addParameter(entry.getKey(), entry.getValue());
                 }
             }
-            return query.executeUpdate().getResult();
+            int rows = query.executeUpdate().getResult();
+            conn.commit();
+            return rows;
         }
     }
 
     public static Object executeSql(String sql, Object paramsObj) {
-        try (Connection conn = sql2o.open()) {
+        try (Connection conn = sql2o.beginTransaction(java.sql.Connection.TRANSACTION_SERIALIZABLE)) {
             Query query = conn.createQuery(sql).throwOnMappingFailure(false).bind(paramsObj);
-            return query.executeUpdate().getResult();
+            int rows = query.executeUpdate().getResult();
+            conn.commit();
+            return rows;
         }
     }
 

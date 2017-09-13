@@ -36,8 +36,14 @@ public class ArticleService {
     }
 
     public static int selectCount(ArticleBean articleBean) {
-        StringBuilder sbSql = new StringBuilder("select count(id) " +
-                "from article where 1=1 ");
+        StringBuilder sbSql = new StringBuilder("select count(*) " +
+                "from article a " +
+                "left join category c " +
+                "on a.category_id = c.id " +
+                "left join article_tag at " +
+                "on a.id = at.article_id " +
+                "left join tag t " +
+                "on at.tag_id = t.id where 1=1 ");
 
         buildSqlParams(sbSql, articleBean);
         return DBUtils.count(sbSql.toString(), articleBean);

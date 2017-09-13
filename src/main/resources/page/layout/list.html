@@ -2,7 +2,7 @@
     <#if (((pageBean.list)??) && (((pageBean.list)?size) > 0))>
         <#list pageBean.list as article>
             <div class="panel panel-default">
-                <div class="panel-heading"><a href="">${article.title}</a></div>
+                <div class="panel-heading"><a href="/article/detail?id=${(article.id)?c}">${article.title}</a></div>
                 <div class="panel-body">
                     ${article.context}
                 </div>
@@ -16,5 +16,9 @@
                 <li class="next <#if (pageBean.pageTotal <= pageBean.pageCurrent)>disabled</#if>"><a href="/${pageBean.pageCurrent + 1}">下一页 <i class="fa fa-angle-double-right"></i></a></li>
             </ul>
         </nav>
+    <#else>
+        <div class="text-center" style="margin-top: 70px;color: #cdcdcd">
+            <h1>没有数据</h1>
+        </div>
     </#if>
 </div>

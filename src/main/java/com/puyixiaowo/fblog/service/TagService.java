@@ -32,17 +32,14 @@ public class TagService {
         //删除文章关联的已存在的标签
         if (articleBean.getId() != null) {
             DBUtils.executeSql("delete from article_tag " +
-                    "where article_id = :articleId",
+                    "where article_id = :id",
                     articleBean);
         }
         //创建并关联标签
         for (String tagName : tagNameList) {
             TagBean tagBean = new TagBean();
             tagBean.setName(tagName);
-            tagBean = DBUtils.selectOne(TagBean.class, "select * from tag where name = :name", tagBean);
-            if (tagBean == null) {
-                DBUtils.insertOrUpdate(tagBean);
-            }
+            DBUtils.insertOrUpdate(tagBean);
 
             ArticleTagBean articleTagBean = new ArticleTagBean();
             articleTagBean.setArticleId(articleBean.getId());

@@ -10,6 +10,7 @@ import com.puyixiaowo.fblog.service.ArticleService;
 import com.puyixiaowo.fblog.service.CategoryService;
 import com.puyixiaowo.fblog.service.TagService;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -37,7 +38,7 @@ public class FblogController extends BaseController{
         List<ArticleBean> list = ArticleService.selectArticleList(articleBean,
                 pageBean);
         pageBean.setList(list);
-        pageBean.setTotalCount(ArticleService.selectCount(new ArticleBean()));
+        pageBean.setTotalCount(ArticleService.selectCount(articleBean));
 
         model.put("pageBean", pageBean);
         return new FreeMarkerTemplateEngine().render(
@@ -75,7 +76,9 @@ public class FblogController extends BaseController{
         return pageBean.serialize();
     }
 
-    public static String articleDetail(Request request, Response response) {
+    public static Object articleDetail(Request request, Response response) {
+        Map<String, Object> model = new HashMap<>();
+
         ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
 
         articleBean = DBUtils.selectOne(ArticleBean.class, "select a.*,group_concat(t.name) as tags " +
@@ -86,7 +89,11 @@ public class FblogController extends BaseController{
                 "on at.tag_id = t.id where a.id = :id " +
                 "group by a.id", articleBean);
 
-        return JSON.toJSONString(articleBean);
+        articleBean.setContext(StringEscapeUtils.unescapeHtml4(articleBean.getContext()));
+        model.put("model", JSON.parseObject(JSON.toJSONString(articleBean)));
+        return new FreeMarkerTemplateEngine().render(
+                new ModelAndView(model, "index.html")
+        );
     }
     /**
      * 分类
