@@ -10,6 +10,7 @@ import com.puyixiaowo.fblog.service.ArticleService;
 import com.puyixiaowo.fblog.service.CategoryService;
 import com.puyixiaowo.fblog.service.TagService;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.LuceneIndexUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import spark.ModelAndView;
 import spark.Request;
@@ -106,5 +107,26 @@ public class FblogController extends BaseController{
         PageBean pageBean = getPageBean(request);
         return CategoryService.selectCategoryListPage(
                 getParamsEntity(request, CategoryBean.class, false), pageBean);
+    }
+
+    public static Object search(Request request, Response response){
+        Map<String, Object> model = new HashMap<>();
+
+        String words = request.queryParamOrDefault("search", "");
+        PageBean pageBean = getPageBean(request);
+
+        try {
+            List<ArticleBean> searchList = LuceneIndexUtils.search(pageBean, words);
+            pageBean.setList(searchList);
+//            pageBean.setTotalCount();
+        } catch (Exception e) {
+            pageBean.error(e);
+        }
+
+        model.put("search", words);
+        model.put("pageBean", pageBean);
+        return new FreeMarkerTemplateEngine().render(
+                new ModelAndView(model, "index.html")
+        );
     }
 }

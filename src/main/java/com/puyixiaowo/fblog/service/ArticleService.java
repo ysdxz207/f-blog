@@ -7,15 +7,13 @@ import com.puyixiaowo.fblog.utils.DBUtils;
 import java.util.List;
 
 /**
- *
  * @author Moses
  * @date 2017-09-03 21:48:40
- * 
  */
 public class ArticleService {
 
     public static List<ArticleBean> selectArticleList(ArticleBean articleBean,
-                                                      PageBean pageBean){
+                                                      PageBean pageBean) {
         StringBuilder sbSql = new StringBuilder("select a.*,c.name as category,group_concat(t.name) as tags " +
                 "from article a " +
                 "left join category c " +
@@ -73,4 +71,5 @@ public class ArticleService {
             sbSql.append("and t.name = :tags ");
         }
     }
+
 }

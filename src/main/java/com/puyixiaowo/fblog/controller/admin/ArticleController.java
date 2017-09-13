@@ -12,6 +12,7 @@ import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.ArticleService;
 import com.puyixiaowo.fblog.service.TagService;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.LuceneIndexUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -107,6 +108,8 @@ public class ArticleController extends BaseController {
             DBUtils.insertOrUpdate(articleBean);
             //标签
             TagService.insertArticleTags(articleBean);
+            //lucene搜索引擎
+            LuceneIndexUtils.addLuceneIndex(articleBean);
         } catch (Exception e) {
             responseBean.errorMessage(e.getMessage());
         }

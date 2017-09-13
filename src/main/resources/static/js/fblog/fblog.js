@@ -69,16 +69,12 @@ var fblog = {
 
     fblog.bind = function () {
 
-        //首页分类
-        $(document).on('click', '#container_widget_categories a', function () {
-            var category = $(this).text();
+        //搜索
+        $(document).on('click', '#btn_fblog_search', function () {
+            if (fblog.checkSearch()) {
 
-        });
-
-        //首页标签
-        $(document).on('click', '#container_widget_tags .label', function () {
-            var tags = $(this).text();
-            fblog.loadArticleList(null, tags);
+                $('form[role=search').submit();
+            }
         });
     };
 
@@ -104,6 +100,13 @@ var fblog = {
 
     };
 
+    fblog.checkSearch = function () {
+        var search = $('#input_fblog_search').val();
+        if (!search) {
+            return false;
+        }
+        return true;
+    }
 
     fblog.init();
 })(fblog);

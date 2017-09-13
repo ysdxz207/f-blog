@@ -21,6 +21,7 @@ public class Routes {
             get("/tag/top", (request, response) -> FblogController.tagTop(request,response));
             get("/article/list", (request, response) -> FblogController.articleList(request,response));
             get("/article/detail", (request, response) -> FblogController.articleDetail(request,response));
+            get("/search", (request, response) -> FblogController.search(request,response));
 
         });
 
