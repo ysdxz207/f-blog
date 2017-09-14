@@ -53,8 +53,7 @@ public class DBUtils {
             //创建数据库文件
             try (Connection conn = sql2o.open()) {
 
-                File file = new File(ResourceUtils.getResourcePath() + FOLDER_SQL);
-                String[] filenames = file.list();
+                String [] filenames = ResourceUtils.getResourceFolderFiles(FOLDER_SQL);
                 FileUtils.runResourcesSql(conn, FOLDER_SQL, filenames);
             }
             //清空redis

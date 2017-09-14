@@ -1,5 +1,6 @@
 package com.puyixiaowo.fblog.utils;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.sql2o.Connection;
@@ -35,6 +36,7 @@ public class FileUtils {
             folder += "/";
         }
 
+        System.out.println(JSON.toJSONString(filenames));
         for (String filename :
                 filenames) {
             List<String> sqlList = readResourcesSql(folder + filename);
