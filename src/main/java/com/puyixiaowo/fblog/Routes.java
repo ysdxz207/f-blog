@@ -129,6 +129,9 @@ public class Routes {
 
                 post("/delete", ((request, response) ->
                         ArticleController.delete(request, response)));
+
+                get("/lucene/reindex", ((request, response) ->
+                        ArticleController.luceneReindex( request, response)));
             });
 
             //博客分类组

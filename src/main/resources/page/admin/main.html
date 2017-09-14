@@ -2,9 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>首页</title>
 </head>
 <body>
-    欢迎
+    <button id="btn_fblog_search_reindex" type="button" class="btn btn-default">重建搜索索引</button>
 </body>
+<script>
+    //重建搜索索引
+    $('#btn_fblog_search_reindex').on('click', function () {
+        BJUI.ajax('doajax', {
+            url: '/admin/article/lucene/reindex',
+            loadingmask: true,
+            type: 'get',
+            okCallback: function(data, options) {
+                if (data.statusCode == 200) {
+                    BJUI.alertmsg('ok', '重建成功！');
+                } else {
+                    BJUI.alertmsg('error', '重建失败：' + data.message);
+                }
+            }
+        });
+    });
+</script>
 </html>

