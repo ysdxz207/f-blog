@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -69,6 +66,7 @@ public class ResourceUtils {
                     }
                 }
 
+                Collections.sort(filenameList);
                 return filenameList.toArray(new String[filenameList.size()]);
             } catch (Exception e) {
 
