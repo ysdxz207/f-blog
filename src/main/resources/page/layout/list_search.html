@@ -4,7 +4,12 @@
             <div class="panel panel-default">
                 <div class="panel-heading"><a href="/article/detail?id=${(article.id)?c}">${article.title}</a></div>
                 <div class="panel-body">
-                    ${article.context}
+                    <#assign context=(article.context!"")>
+                    <#if context?length &lt; 100>
+                        ${context}
+                        <#else>
+                            ${context?substring(0,100)} ...
+                    </#if>
                 </div>
             </div>
         </#list>
@@ -14,20 +19,20 @@
             <ul class="pager">
                 <#if (pageBean.pageCurrent == 1)>
                     <li class="previous disabled"><a><i class="fa fa-angle-double-left"></i> 上一页</a></li>
-                <#else>
-                    <li class="previous"><a href="/?pageCurrent=${pageBean.pageCurrent - 1}"><i class="fa fa-angle-double-left"></i> 上一页</a></li>
+                    <#else>
+                        <li class="previous"><a href="/search?pageCurrent=${pageBean.pageCurrent - 1}&search=${search!}"><i class="fa fa-angle-double-left"></i> 上一页</a></li>
                 </#if>
 
                 <#if (pageBean.pageTotal <= pageBean.pageCurrent)>
-                    <li class="next disabled"><a>下一页 <i class="fa fa-angle-double-right"></i></a></li>
+                <li class="next disabled"><a>下一页 <i class="fa fa-angle-double-right"></i></a></li>
                 <#else>
-                    <li class="next"><a href="/?pageCurrent=${pageBean.pageCurrent + 1}">下一页 <i class="fa fa-angle-double-right"></i></a></li>
-                </#if>
-            </ul>
-        </nav>
+                    <li class="next"><a href="/search?pageCurrent=${pageBean.pageCurrent + 1}&search=${search!}">下一页 <i class="fa fa-angle-double-right"></i></a></li>
+    </#if>
+    </ul>
+    </nav>
     <#else>
         <div class="text-center" style="margin-top: 70px;color: #cdcdcd">
             <h1>没有数据</h1>
         </div>
-    </#if>
+        </#if>
 </div>

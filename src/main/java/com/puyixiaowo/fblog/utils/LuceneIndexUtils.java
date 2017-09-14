@@ -4,8 +4,6 @@ import com.puyixiaowo.fblog.bean.ArticleBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
@@ -26,7 +24,6 @@ import org.lionsoul.jcseg.analyzer.JcsegAnalyzer;
 import org.lionsoul.jcseg.tokenizer.core.JcsegTaskConfig;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -73,7 +70,7 @@ public class LuceneIndexUtils {
     public static void removeLuceneIndex() {
     }
 
-    public static List<ArticleBean> search(PageBean pageBean,
+    public static PageBean search(PageBean pageBean,
                               String queries) throws Exception {
         List<ArticleBean> list = new ArrayList<>();
         Directory dir = FSDirectory.open(path);
@@ -86,6 +83,8 @@ public class LuceneIndexUtils {
         Query query = queryParser.parse(queries);
 
         try {
+            //获取搜索结果总数
+            pageBean.setTotalCount(searcher.count(query));
             //获取上一页的最后一个元素
             ScoreDoc lastScoreDoc = getLastScoreDoc(pageBean.getPageCurrent(),
                     pageBean.getPageSize(), query, searcher);
@@ -105,8 +104,10 @@ public class LuceneIndexUtils {
             reader.close();
         }
 
-        return list;
+        pageBean.setList(list);
+        return pageBean;
     }
+
 
 
     private static ScoreDoc getLastScoreDoc(int pageIndex, int pageSize, Query query, IndexSearcher indexSearcher) throws IOException {
@@ -114,27 +115,6 @@ public class LuceneIndexUtils {
         int num = pageSize * (pageIndex - 1);//获取上一页的数量
         TopDocs tds = indexSearcher.search(query, num);
         return tds.scoreDocs[num - 1];
-    }
-
-    /**
-     * 打印分词结果
-     * @param text
-     */
-    private static void analyze(String text) {
-        try {
-            TokenStream tokenStream = analyzer.tokenStream("context", new StringReader(text));
-            tokenStream.addAttribute(CharTermAttribute.class);
-            tokenStream.reset();
-            while (tokenStream.incrementToken()) {
-                CharTermAttribute charTermAttribute = (CharTermAttribute) tokenStream
-                        .getAttribute(CharTermAttribute.class);
-                System.out.println(charTermAttribute.toString());
-            }
-            tokenStream.end();
-            tokenStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**

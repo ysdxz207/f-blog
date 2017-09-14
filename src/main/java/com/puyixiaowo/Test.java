@@ -71,7 +71,7 @@ public class Test {
        Query query = parser.parse("三");
   */
         // 选择姓名中包含张字的记录
-        String[] queries = { "第二", "挽留" };
+        String[] queries = { "123", "123" };
         String[] fields = { "title", "context" };
         /**
          * 这里需要注意的就是BooleanClause.Occur[]数组,它表示多个条件之间的关系,

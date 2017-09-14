@@ -11,7 +11,11 @@
         <#if model??>
             <#include "/layout/detail.html" />
         <#else>
-            <#include "/layout/list.html" />
+            <#if search??>
+                <#include "/layout/list_search.html"/>
+            <#else>
+                <#include "/layout/list.html" />
+            </#if>
         </#if>
         <div class="col-sm-3 col-md-3 col-lg-3 visible-sm visible-md visible-lg">
             <#include "/layout/widget.html" />

@@ -6,7 +6,6 @@ package com.puyixiaowo.fblog.bean.sys;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.core.entity.RowBounds;
-import com.puyixiaowo.fblog.constants.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
  */
 public class PageBean extends ResponseBean{
 	private static final long serialVersionUID = 4728599360521173588L;
-	private int pageSize = Constants.DEFAULT_PAGE_SIZE;
+	private int pageSize = Integer.MAX_VALUE;
 	private int pageCurrent = 1;
 	private int totalCount = 0;
 	private int pageTotal = 0;

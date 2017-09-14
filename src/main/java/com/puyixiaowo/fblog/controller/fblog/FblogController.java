@@ -116,9 +116,7 @@ public class FblogController extends BaseController{
         PageBean pageBean = getPageBean(request);
 
         try {
-            List<ArticleBean> searchList = LuceneIndexUtils.search(pageBean, words);
-            pageBean.setList(searchList);
-//            pageBean.setTotalCount();
+            pageBean = LuceneIndexUtils.search(pageBean, words);
         } catch (Exception e) {
             pageBean.error(e);
         }
