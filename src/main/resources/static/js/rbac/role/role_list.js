@@ -8,10 +8,14 @@ var role = {};
 		var btn = $('<button type="button" class="btn-default" '
 				+ 'data-icon="fa-unlock-alt" >赋予权限</button>');
 		btn.on('click', function() {
-			var table = $.CurrentNavtab.find('#datagrid_permission_list');
+			var table = $.CurrentNavtab.find('#datagrid_role_list');
 			var selectedDatas = $(table).data('selectedDatas');
 			if (selectedDatas && (selectedDatas.length == 1)) {
 				var id = selectedDatas[0].id;
+				if (id = 20151106) {
+                    BJUI.alertmsg('warn', '超级管理员拥有所有权限，不可修改！');
+                    return btn;
+				}
 				var params = {};
 				params.roleId = id;
 				BJUI.navtab({

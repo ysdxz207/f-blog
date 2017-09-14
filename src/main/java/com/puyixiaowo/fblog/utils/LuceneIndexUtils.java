@@ -50,7 +50,7 @@ public class LuceneIndexUtils {
         Directory dirWrite = FSDirectory.open(path);
         // 初始化写入配置
         IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
-        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE);// 创建模式 OpenMode.CREATE_OR_APPEND 添加模式
+        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);// 创建模式 OpenMode.CREATE_OR_APPEND 添加模式
         //如果是CREATE ,每次都会重新创建这个索引，清空以前的数据，如果是append 每次都会追加，之前的不删除
         //在日常的需求索引添加中，一般都是 APPEND 持续添加模式
         writer = new IndexWriter(dirWrite, iwc);
