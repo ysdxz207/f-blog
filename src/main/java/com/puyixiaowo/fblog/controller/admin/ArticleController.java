@@ -13,7 +13,6 @@ import com.puyixiaowo.fblog.service.ArticleService;
 import com.puyixiaowo.fblog.service.TagService;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.LuceneIndexUtils;
-import org.apache.commons.text.StringEscapeUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -144,7 +143,6 @@ public class ArticleController extends BaseController {
             //添加索引
             for (ArticleBean articleBean :
                     list) {
-                articleBean.setContext(StringEscapeUtils.unescapeHtml4(articleBean.getContext()));
                 LuceneIndexUtils.addLuceneIndex(articleBean);
             }
 

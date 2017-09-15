@@ -5,10 +5,10 @@
                 <div class="panel-heading"><a href="/article/detail?id=${(article.id)?c}">${article.title}</a></div>
                 <div class="panel-body">
                     <#assign context=(article.context!"")>
-                    <#if context?length &lt; 100>
+                    <#if context?length &lt; 220>
                         ${context}
                         <#else>
-                            ${context?substring(0,100)} ...
+                            ${context?substring(0,220)} ...<a href="/article/detail?id=${(article.id)?c}">查看更多</a>
                     </#if>
                 </div>
             </div>

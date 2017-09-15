@@ -3,6 +3,8 @@ package com.puyixiaowo.fblog.service;
 import com.puyixiaowo.fblog.bean.ArticleBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.List;
 
@@ -30,7 +32,12 @@ public class ArticleService {
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
         sbSql.append(pageBean.getRowBounds().getLimit());
-        return DBUtils.selectList(ArticleBean.class, sbSql.toString(), articleBean);
+        List<ArticleBean> list = DBUtils.selectList(ArticleBean.class, sbSql.toString(), articleBean);
+        for (ArticleBean bean : list) {
+            String html = StringEscapeUtils.unescapeHtml4(bean.getContext());
+            bean.setContext(StringUtils.delHTMLTag(html));
+        }
+        return list;
     }
 
     public static int selectCount(ArticleBean articleBean) {
