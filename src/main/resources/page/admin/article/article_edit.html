@@ -23,13 +23,14 @@
 
         <label class="row-label">标签</label>
         <div class="row-input required">
-            <input name="tags" id="input" value="${(model.tags)!}" autocomplete="off" data-toggle="tags" data-width="100%" size="20" placeholder="多个用英文逗号分隔">
+            <input name="tags" id="input" value="${(model.tags)!}" autocomplete="off" data-width="100%" size="20" placeholder="多个用英文逗号分隔">
         </div>
         <br>
 
         <label class="row-label">内容</label>
-        <div class="row-input required">
-            <textarea name="context" id="article_edit_form_content" class="j-content" style="width: 800px;" data-toggle="kindeditor" data-minheight="200">${(model.context)!}</textarea>
+        <div class="row-input">
+            <input type="hidden" id="hidden_article_edit_form_content" />
+            <div name="context" id="article_edit_form_content" class="j-content" style="width: 800px;" data-toggle="kindeditor" data-minheight="200">${(model.context)!}</div>
         </div>
         <br>
         <label class="row-label">发布状态</label>
@@ -49,3 +50,13 @@
         <li><button type="submit" class="btn-default" data-icon="save">发布</button></li>
     </ul>
 </div>
+
+<script>
+    $(function () {
+        var E = window.wangEditor;
+        var editor = new E('#article_edit_form_content');
+        editor.create();
+
+
+    });
+</script>
