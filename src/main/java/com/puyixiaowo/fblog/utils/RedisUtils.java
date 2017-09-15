@@ -19,8 +19,6 @@ import java.util.Set;
 public class RedisUtils {
     private static JedisPool jedisPool;
 
-    private static final int TIME_OUT = 3000;
-
     static {
         //读取相关的配置
         ResourceBundle resourceBundle = ResourceBundle.getBundle("redis");
@@ -30,6 +28,7 @@ public class RedisUtils {
         int maxActive = Integer.parseInt(resourceBundle.getString("redis.pool.maxActive"));
         int maxIdle = Integer.parseInt(resourceBundle.getString("redis.pool.maxIdle"));
         int maxWait = Integer.parseInt(resourceBundle.getString("redis.pool.maxWait"));
+        int timeout = Integer.parseInt(resourceBundle.getString("redis.pool.timeout"));
 
 
         // 建立连接池配置参数
@@ -41,7 +40,7 @@ public class RedisUtils {
         // 设置空间连接
         config.setMaxIdle(maxIdle);
         if (StringUtils.isNotBlank(password)) {
-            jedisPool = new JedisPool(config, ip, port, TIME_OUT, password);
+            jedisPool = new JedisPool(config, ip, port, timeout, password);
         } else {
             jedisPool = new JedisPool(config, ip, port);
         }
@@ -49,15 +48,22 @@ public class RedisUtils {
     }
 
     public static void testConnection() {
-        getJedis().set("TEST_CONNECTION", "connected");
-        getJedis().del("TEST_CONNECTION");
+        try (Jedis jedis = getJedis()) {
+            jedis.set("TEST_CONNECTION", "connected");
+            jedis.del("TEST_CONNECTION");
+        }
+
     }
 
 
+    /**
+     * 需要关闭jedis
+     * @return
+     */
     private static Jedis getJedis() {
         Jedis jedis = null;
-        try (Jedis j = jedisPool.getResource()){
-            jedis = j;
+        try {
+            jedis = jedisPool.getResource();
         } catch (Exception e) {
             if (e.getCause() instanceof JedisDataException) {
 
@@ -74,7 +80,9 @@ public class RedisUtils {
     }
 
     public static String get(String key) {
-        return getJedis().get(key);
+        try (Jedis jedis = getJedis()) {
+            return jedis.get(key);
+        }
     }
 
     public static <T> T get(String key, Class<T> clazz) {
@@ -82,11 +90,13 @@ public class RedisUtils {
         if (StringUtils.isBlank(str)) {
             return null;
         }
-        return JSONObject.parseObject(str, clazz);
+        return JSON.parseObject(str, clazz);
     }
 
     public static void set(String key, String value) {
-        getJedis().set(key, value);
+        try (Jedis jedis = getJedis()) {
+            jedis.set(key, value);
+        }
     }
 
     public static long delete(String... keys) {
@@ -99,7 +109,9 @@ public class RedisUtils {
             }
             return num;
         }
-        return getJedis().del(keys);
+        try (Jedis jedis = getJedis()) {
+            return jedis.del(keys);
+        }
     }
 
     public static Long delete(String pattern) {
@@ -112,11 +124,13 @@ public class RedisUtils {
     }
 
     public static Set<String> keys(String pattern) {
-        return getJedis().keys(pattern);
+        try (Jedis jedis = getJedis()) {
+            return jedis.keys(pattern);
+        }
     }
 
     public static <T> T getDefault(String key, Class<T> clazz, T defaultValue) {
-        String str = getJedis().get(key);
+        String str = get(key);
         if (StringUtils.isBlank(str)) {
             return defaultValue;
         }
