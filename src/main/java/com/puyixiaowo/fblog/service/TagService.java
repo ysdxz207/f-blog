@@ -39,7 +39,12 @@ public class TagService {
         for (String tagName : tagNameList) {
             TagBean tagBean = new TagBean();
             tagBean.setName(tagName);
-            DBUtils.insertOrUpdate(tagBean);
+            TagBean tagDb = DBUtils.selectOne(TagBean.class,"select * from tag where name=:name", tagBean);
+            if (tagDb == null) {
+                DBUtils.insertOrUpdate(tagBean);
+            } else {
+                tagBean = tagDb;
+            }
 
             ArticleTagBean articleTagBean = new ArticleTagBean();
             articleTagBean.setArticleId(articleBean.getId());

@@ -75,6 +75,10 @@ public class CategoryController extends BaseController {
                 "select * from category ",
                 null);
 
+        CategoryBean categoryBean = new CategoryBean();
+        categoryBean.setId(0L);
+        categoryBean.setName("默认分类");
+        list.add(0, categoryBean);
         return JSON.toJSONString(list);
     }
 

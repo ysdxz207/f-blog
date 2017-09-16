@@ -13,10 +13,13 @@ import com.puyixiaowo.fblog.service.ArticleService;
 import com.puyixiaowo.fblog.service.TagService;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.LuceneIndexUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +86,8 @@ public class ArticleController extends BaseController {
                         "left join tag t " +
                         "on at.tag_id = t.id where a.id = :id " +
                         "group by a.id", articleBean);
+                String html = StringEscapeUtils.unescapeHtml4(articleBean.getContext());
+                articleBean.setContext(html);
                 model.put("model", articleBean);
             }
 
@@ -105,6 +110,9 @@ public class ArticleController extends BaseController {
             if (articleBean.getId() != null) {
                 articleBean.setLastUpdateDate(System.currentTimeMillis());
             }
+
+            //处理encode内容
+            articleBean.setContext(URLDecoder.decode(articleBean.getContext(), "UTF-8"));
             DBUtils.insertOrUpdate(articleBean);
             //标签
             TagService.insertArticleTags(articleBean);
@@ -135,7 +143,9 @@ public class ArticleController extends BaseController {
     @RequiresPermissions(value = {"article:view"})
     public static String luceneReindex(Request request, Response response){
         ResponseBean responseBean = new ResponseBean();
-        List<ArticleBean> list = ArticleService.selectArticleList(new ArticleBean(), new PageBean());
+        ArticleBean params = new ArticleBean();
+        params.setStatus(1);//发布状态
+        List<ArticleBean> list = ArticleService.selectArticleList(params, new PageBean());
 
         try {
             //删除索引目录
