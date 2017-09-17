@@ -15,6 +15,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import spark.Spark;
 
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +75,9 @@ public class FblogController extends BaseController{
                 "on at.tag_id = t.id where a.id = :id " +
                 "group by a.id", articleBean);
 
+        if (articleBean == null) {
+            Spark.halt("文章不存在");
+        }
         articleBean.setContext(StringEscapeUtils.unescapeHtml4(articleBean.getContext()));
         model.put("model", JSON.parseObject(JSON.toJSONString(articleBean)));
         return new FreeMarkerTemplateEngine().render(

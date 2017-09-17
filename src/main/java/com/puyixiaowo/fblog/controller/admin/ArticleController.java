@@ -13,13 +13,11 @@ import com.puyixiaowo.fblog.service.ArticleService;
 import com.puyixiaowo.fblog.service.TagService;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.LuceneIndexUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,13 +109,11 @@ public class ArticleController extends BaseController {
                 articleBean.setLastUpdateDate(System.currentTimeMillis());
             }
 
-            //处理encode内容
-            articleBean.setContext(articleBean.getContext());
             DBUtils.insertOrUpdate(articleBean);
             //标签
             TagService.insertArticleTags(articleBean);
             //lucene搜索引擎
-            LuceneIndexUtils.addLuceneIndex(articleBean);
+            LuceneIndexUtils.dealLuceneIndex(articleBean);
         } catch (Exception e) {
             responseBean.errorMessage(e.getMessage());
         }
@@ -141,7 +137,7 @@ public class ArticleController extends BaseController {
     }
 
     @RequiresPermissions(value = {"article:view"})
-    public static String luceneReindex(Request request, Response response){
+    public static String luceneReindex(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
         ArticleBean params = new ArticleBean();
         params.setStatus(1);//发布状态
@@ -153,7 +149,7 @@ public class ArticleController extends BaseController {
             //添加索引
             for (ArticleBean articleBean :
                     list) {
-                LuceneIndexUtils.addLuceneIndex(articleBean);
+                LuceneIndexUtils.dealLuceneIndex(articleBean);
             }
 
         } catch (Exception e) {

@@ -39,7 +39,7 @@
         <br>
 
         <label class="row-label">标签</label>
-        <div class="row-input required">
+        <div class="row-input">
             <input name="tags" id="input" value="${(model.tags)!}" autocomplete="off" size="20" placeholder="多个标签用英文逗号分隔">
         </div>
         <br>
@@ -56,7 +56,6 @@
         <label class="row-label">发布状态</label>
         <div class="row-input required">
             <select name="status" data-toggle="selectpicker" data-rule="required" data-width="100%">
-                <option value="">请选择</option>
                 <option value="1" ${(((model.status)??) && (model.status == 1))?string('selected', '') }>发布</option>
                 <option value="0" ${(((model.status)??) && (model.status == 0))?string('selected', '') }>不发布</option>
             </select>

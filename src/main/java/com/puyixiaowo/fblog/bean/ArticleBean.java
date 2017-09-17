@@ -26,7 +26,6 @@ public class ArticleBean extends Validatable implements Serializable {
 	@JSONField(serializeUsing = CustomDateTimeSerializer.class)
 	private Long lastUpdateDate;
 	private Integer status;
-	private Integer isDel;
 
 
 	////////////////
@@ -98,14 +97,6 @@ public class ArticleBean extends Validatable implements Serializable {
 
 	public void setStatus (Integer status){
 		this.status = status;
-	}
-
-	public Integer getIsDel (){
-		return isDel;
-	}
-
-	public void setIsDel (Integer isDel){
-		this.isDel = isDel;
 	}
 
 	public String getCategory() {

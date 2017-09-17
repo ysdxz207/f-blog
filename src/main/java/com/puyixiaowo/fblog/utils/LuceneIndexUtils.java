@@ -54,7 +54,7 @@ public class LuceneIndexUtils {
         return writer;
     }
 
-    public static void addLuceneIndex(ArticleBean articleBean) throws Exception {
+    private static void addLuceneIndex(ArticleBean articleBean) throws Exception {
 
         if (articleBean.getStatus() == 0) {
             return;
@@ -127,5 +127,29 @@ public class LuceneIndexUtils {
      */
     public static void deleteIndexDir() throws Exception {
         FileUtils.deleteDirectory(path.toFile());
+    }
+
+    private static void deleteLuceneIndex(ArticleBean articleBean) throws Exception {
+        if (articleBean.getStatus() == 1) {
+            return;
+        }
+        Directory dir = FSDirectory.open(path);
+        IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
+        IndexWriter indexWriter = new IndexWriter(dir, iwc);
+
+        QueryParser queryParser = new QueryParser("title", analyzer);
+        Query query = queryParser.parse(articleBean.getTitle());
+
+        indexWriter.deleteDocuments(query);
+        indexWriter.commit();
+        indexWriter.close();
+    }
+
+    public static void dealLuceneIndex(ArticleBean articleBean) throws Exception{
+        if (articleBean.getStatus() == 0) {
+            deleteLuceneIndex(articleBean);
+        } else {
+            addLuceneIndex(articleBean);
+        }
     }
 }

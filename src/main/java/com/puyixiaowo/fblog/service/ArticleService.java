@@ -66,10 +66,6 @@ public class ArticleService {
             sbSql.append("and status = :status ");
         }
 
-        if (articleBean.getIsDel() != null) {
-            sbSql.append("and is_del = :isDel ");
-        }
-
         if (articleBean.getCategory() != null) {
             sbSql.append("and c.name = :category ");
         }

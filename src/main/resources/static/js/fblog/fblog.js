@@ -2,21 +2,10 @@ var fblog = {
     $tagTop: $('.fblog-tag-top'),
     $articleListContainer: $('#fblog_article_list_container'),
     $containerWidgetTags: $('#container_widget_tags'),
-    $containerWidgetCategories: $('#container_widget_categories'),
-    PAGE_CURRENT_SESSION_KEY: 'fblog_page_current'
+    $containerWidgetCategories: $('#container_widget_categories')
 };
 
 (function (fblog) {
-
-    fblog.getPageCurrent = function () {
-        var obj = $.session.get(fblog.PAGE_CURRENT_SESSION_KEY);
-        return obj ? parseInt(obj) : 1;
-    };
-
-    fblog.setOrSumPageCurrent = function (sum, pageCurrent) {
-        var page = sum ? fblog.getPageCurrent() + sum : pageCurrent;
-        $.session.set(fblog.PAGE_CURRENT_SESSION_KEY, page);
-    };
 
     fblog.loadTopTags = function () {
         $.getJSON("/tag/top?num=20", function (data) {
@@ -44,28 +33,7 @@ var fblog = {
         })
     };
 
-    fblog.loadArticleList = function (category, tag) {
 
-        var params = {};
-        params.pageCurrent = fblog.getPageCurrent();
-        if (category) {
-            params.category = category;
-        }
-        if (tag) {
-            params.tags = tag;
-        }
-
-        $.getJSON(url, params, function (data) {
-
-            if (data) {
-                fblog.$articleListContainer.empty();
-                fblog.setOrSumPageCurrent(null, data.pageCurrent);
-                var html = template('template_article_list', data);
-                fblog.$articleListContainer.html(html);
-            }
-        });
-
-    };
 
     fblog.bind = function () {
 
@@ -73,7 +41,7 @@ var fblog = {
         $(document).on('click', '#btn_fblog_search', function () {
             if (fblog.checkSearch()) {
 
-                $('form[role=search').submit();
+                $('form[role=search]').submit();
             }
         });
     };
@@ -95,7 +63,6 @@ var fblog = {
 
         fblog.loadTopTags();
         fblog.loadCategorys();
-        // fblog.loadArticleList();
         fblog.bind();
 
     };
