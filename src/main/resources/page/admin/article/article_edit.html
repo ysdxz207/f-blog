@@ -8,6 +8,12 @@
         background-color: white;
         z-index: 811211;
     }
+    #hidden_article_edit_form_content {
+        border: 0px;
+        height: 0px;
+        width: 0px;
+        padding: 0px;
+    }
 </style>
 <div class="bjui-pageContent">
 <form action="${base}/admin/article/edit/true" class="datagrid-edit-form" data-toggle="validate" data-data-type="jsonp">
@@ -40,7 +46,7 @@
 
         <label class="row-label">内容</label>
         <div class="row-input">
-            <input name="context" id="hidden_article_edit_form_content" type="hidden" value="${(model.context)!}"/>
+            <textarea name="context" id="hidden_article_edit_form_content">${(model.context)!}</textarea>
             <!-- 内容-->
             <div id="article_edit_form_content" style="width: 800px"></div>
         </div>
@@ -75,10 +81,10 @@
         var editor = new E('#article_edit_form_content');
         editor.customConfig.uploadImgShowBase64 = true;  // 使用 base64 保存图片
         editor.customConfig.onchange = function (html) {
-            $hiddenInputArticleEdit.val(encodeURI(html))
+            $hiddenInputArticleEdit.val(html)
         };
         editor.create();
-        editor.txt.html(decodeURI($('#hidden_article_edit_form_content').val()));
+        editor.txt.html($('#hidden_article_edit_form_content').val());
 
 
         var $fullScreenBtn = $('<div id="btn_article_edit_full_screen" class="w-e-menu" style="z-index:10001;">' +
@@ -91,7 +97,7 @@
             var editorFullScreen = new EFullScreen('#article_edit_form_content_full_screen');
             editorFullScreen.customConfig.uploadImgShowBase64 = true;  // 使用 base64 保存图片
             editorFullScreen.customConfig.onchange = function (html) {
-                $hiddenInputArticleEdit.val(encodeURI(html))
+                $hiddenInputArticleEdit.val(html)
             };
             editorFullScreen.create();
             editorFullScreen.txt.html(editor.txt.html());

@@ -112,7 +112,7 @@ public class ArticleController extends BaseController {
             }
 
             //处理encode内容
-            articleBean.setContext(URLDecoder.decode(articleBean.getContext(), "UTF-8"));
+            articleBean.setContext(articleBean.getContext());
             DBUtils.insertOrUpdate(articleBean);
             //标签
             TagService.insertArticleTags(articleBean);
