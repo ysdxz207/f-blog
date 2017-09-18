@@ -15,6 +15,25 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
+    <!--打包替换redis密码-->
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <redis.pass>123456</redis.pass>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <redis.pass>K31f65ds095f1GDaakf0387</redis.pass>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <resources>
             <resource>
