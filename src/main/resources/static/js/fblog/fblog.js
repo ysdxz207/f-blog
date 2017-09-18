@@ -61,9 +61,9 @@ var fblog = {
                 fblog.$containerWidgetCategories.empty();
                 fblog.$containerWidgetCategories.parent().fadeTo(300,1);
                 $.each(data.list, function (i, category) {
-                    var $category = $('<a href="/?category="'
+                    var $category = $('<a href="/?category='
                         + category.name
-                        + ' class="list-group-item">' + category.name + '</a>');
+                        + '" class="list-group-item">' + category.name + '</a>');
                     $category.hide();
                     fblog.$containerWidgetCategories.append($category);
                     $category.fadeIn(500);
