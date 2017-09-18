@@ -11,6 +11,7 @@ import com.puyixiaowo.fblog.service.CategoryService;
 import com.puyixiaowo.fblog.service.TagService;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.LuceneIndexUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import spark.ModelAndView;
 import spark.Request;
@@ -40,6 +41,10 @@ public class FblogController extends BaseController{
         articleBean.setStatus(1);//发布状态
         List<ArticleBean> list = ArticleService.selectArticleList(articleBean,
                 pageBean);
+        for (ArticleBean bean :
+                list) {
+            bean.setContext(StringUtils.delHTMLTag(bean.getContext()));
+        }
         pageBean.setList(list);
         pageBean.setTotalCount(ArticleService.selectCount(articleBean));
 

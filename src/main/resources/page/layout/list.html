@@ -3,7 +3,7 @@
         <#list pageBean.list as article>
             <div class="panel panel-default">
                 <div class="panel-heading"><a href="/article/detail?id=${(article.id)?c}">${article.title}</a></div>
-                <div class="panel-body">
+                <div class="panel-body article-panel-body">
                     <#assign context=(article.context!"")>
                     <#if context?length &lt; 320>
                         ${context}

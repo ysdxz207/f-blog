@@ -56,9 +56,13 @@ public class LuceneIndexUtils {
 
     private static void addLuceneIndex(ArticleBean articleBean) throws Exception {
 
-        if (articleBean.getStatus() == 0) {
+        if (articleBean.getStatus() == 0
+                || StringUtils.isBlank(articleBean.getContext())) {
             return;
         }
+
+        articleBean.setContext(StringUtils.delHTMLTag(articleBean.getContext()));
+
         IndexWriter writer = getIndexWriter();
 
         Document doc = new Document();
