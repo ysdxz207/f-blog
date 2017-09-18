@@ -7,7 +7,6 @@ import com.puyixiaowo.fblog.domain.User;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.exception.DBException;
 import com.puyixiaowo.fblog.exception.DBSqlException;
-import org.apache.commons.text.StringEscapeUtils;
 import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
@@ -174,13 +173,13 @@ public class DBUtils {
             int lines = 0;
             try {
                 String sql_update = assembleSql(SQL_TYPE_UPDATE, tableName, obj);
-                Query queryUpdate = conn.createQuery(sql_update).throwOnMappingFailure(false);
+                Query queryUpdate = conn.createQuery(sql_update).throwOnMappingFailure(false).bind(obj);
                 lines = queryUpdate.executeUpdate().getResult();
             } catch (Exception e) {
                 ORMUtils.setId(obj);
                 String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, obj);
                 System.out.println(sql_insert);
-                Query queryInsert = conn.createQuery(sql_insert).throwOnMappingFailure(false);
+                Query queryInsert = conn.createQuery(sql_insert).throwOnMappingFailure(false).bind(obj);
                 primaryKey = queryInsert.executeUpdate().getKey();
             }
 
@@ -236,26 +235,24 @@ public class DBUtils {
                         continue;
                     }
                     field.setAccessible(true);
-                    String fieldName = ORMUtils.getFieldColumnName(field);
+                    String columnName = ORMUtils.getFieldColumnName(field);
                     Object fieldValue = "";
                     try {
                         fieldValue = field.get(obj);
                     } catch (IllegalAccessException e) {
                     }
-                    if ("serialVersionUID".equals(fieldName) ||
+                    if ("serialVersionUID".equals(columnName) ||
                             fieldValue == null ||
                             StringUtils.isBlank(fieldValue.toString())) {
                         continue;
                     }
                     sb1.append("`");
-                    sb1.append(fieldName);
+                    sb1.append(columnName);
                     sb1.append("`");
                     sb1.append(",");
 
                     //
-                    sb2.append("'");
-                    sb2.append(StringEscapeUtils.escapeHtml4(fieldValue.toString()));
-                    sb2.append("'");
+                    sb2.append(":" + field.getName());
                     sb2.append(",");
 
                 }
@@ -284,26 +281,24 @@ public class DBUtils {
                         continue;
                     }
                     field.setAccessible(true);
-                    String fieldName = ORMUtils.getFieldColumnName(field);
+                    String columnName = ORMUtils.getFieldColumnName(field);
                     Object fieldValue = "";
                     try {
                         fieldValue = field.get(obj);
                     } catch (IllegalAccessException e) {
                     }
-                    if ("serialVersionUID".equals(fieldName) ||
+                    if ("serialVersionUID".equals(columnName) ||
                             fieldValue == null ||
                             StringUtils.isBlank(fieldValue.toString()) ||
                             field.getAnnotation(Id.class) != null ||
-                            "id".equalsIgnoreCase(fieldName)) {
+                            "id".equalsIgnoreCase(columnName)) {
                         continue;
                     }
                     sb1.append("`");
-                    sb1.append(fieldName);
+                    sb1.append(columnName);
                     sb1.append("`");
                     sb1.append("=");
-                    sb1.append("'");
-                    sb1.append(StringEscapeUtils.escapeHtml4(fieldValue.toString()));
-                    sb1.append("'");
+                    sb1.append(":" + field.getName());
                     sb1.append(",");
 
                 }
