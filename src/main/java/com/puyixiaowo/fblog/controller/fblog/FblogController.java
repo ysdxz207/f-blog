@@ -43,7 +43,8 @@ public class FblogController extends BaseController{
                 pageBean);
         for (ArticleBean bean :
                 list) {
-            bean.setContext(StringUtils.delHTMLTag(bean.getContext()));
+            String html = StringEscapeUtils.unescapeHtml4(bean.getContext());
+            bean.setContext(StringUtils.delHTMLTag(html));
         }
         pageBean.setList(list);
         pageBean.setTotalCount(ArticleService.selectCount(articleBean));
