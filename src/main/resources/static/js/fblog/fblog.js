@@ -13,6 +13,7 @@ var fblog = {
                 return;
             }
             fblog.$containerWidgetTags.empty();
+            fblog.$containerWidgetTags.parent().delay('fast').fadeTo(500, 1);
             var arr = ["#23D160",
                 "#FF3860",
                 "#72D0EB",
@@ -23,13 +24,17 @@ var fblog = {
                 "#13CCAB",
                 "#FF634B"];
 
-            for (var i = 0; i < data.length; i++) {
-                var randomIndex = Math.floor(Math.random() * arr.length);
-                var color = arr[randomIndex];
-                data[i].color = color;
-            }
-            var html = template('template_widget_tags', {list:data});
-            fblog.$containerWidgetTags.html(html);
+           $.each(data, function (i, tag) {
+               var randomIndex = Math.floor(Math.random() * arr.length);
+               var color = arr[randomIndex];
+
+               var $tag = $('<span class="label label-default" style="background-color: '
+                   + color + ';display: inline-block;border-radius: 1em;margin-left: 6px;margin-bottom: 4px;font-size: 100%;font-weight: 100;line-height: inherit;">' +
+                   '    <a href="/?tags=' + tag.name + '">' + tag.name + '</a>' +
+                   '</span>');
+               fblog.$containerWidgetTags.append($tag);
+               $tag.fadeIn(700);
+           });
         })
     };
 
@@ -54,16 +59,23 @@ var fblog = {
 
             if (data) {
                 fblog.$containerWidgetCategories.empty();
-                var html = template('template_widget_categories', data);
-                fblog.$containerWidgetCategories.html(html);
+                fblog.$containerWidgetCategories.parent().fadeTo(300,1);
+                $.each(data.list, function (i, category) {
+                    var $category = $('<a href="/?category="'
+                        + category.name
+                        + ' class="list-group-item">' + category.name + '</a>');
+                    $category.hide();
+                    fblog.$containerWidgetCategories.append($category);
+                    $category.fadeIn(500);
+                });
             }
         });
     };
     fblog.init = function () {
 
+        fblog.bind();
         fblog.loadTopTags();
         fblog.loadCategorys();
-        fblog.bind();
 
     };
 
