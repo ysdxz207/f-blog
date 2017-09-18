@@ -134,9 +134,7 @@ public class LuceneIndexUtils {
     }
 
     private static void deleteLuceneIndex(ArticleBean articleBean) throws Exception {
-        if (articleBean.getStatus() == 1) {
-            return;
-        }
+
         Directory dir = FSDirectory.open(path);
         IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
         IndexWriter indexWriter = new IndexWriter(dir, iwc);
@@ -150,10 +148,7 @@ public class LuceneIndexUtils {
     }
 
     public static void dealLuceneIndex(ArticleBean articleBean) throws Exception{
-        if (articleBean.getStatus() == 0) {
-            deleteLuceneIndex(articleBean);
-        } else {
-            addLuceneIndex(articleBean);
-        }
+        deleteLuceneIndex(articleBean);
+        addLuceneIndex(articleBean);
     }
 }
