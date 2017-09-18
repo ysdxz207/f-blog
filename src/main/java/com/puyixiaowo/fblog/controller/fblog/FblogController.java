@@ -15,6 +15,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import spark.Spark;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +29,7 @@ public class FblogController extends BaseController{
      * @param response
      * @return
      */
-    public static Object index(Request request, Response response){
+    public static Object articleList(Request request, Response response){
 
         Map<String, Object> model = new HashMap<>();
         //查询文章列表,标签和分类通过ajax获取
@@ -36,6 +37,7 @@ public class FblogController extends BaseController{
 
         ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
 
+        articleBean.setStatus(1);//发布状态
         List<ArticleBean> list = ArticleService.selectArticleList(articleBean,
                 pageBean);
         pageBean.setList(list);
@@ -59,29 +61,12 @@ public class FblogController extends BaseController{
         return TagService.tagTop(tagName, num, true);
     }
 
-    /**
-     * 文章列表
-     * @param request
-     * @param response
-     * @return
-     */
-    public static String articleList(Request request, Response response) {
-        PageBean pageBean = getPageBean(request);
-
-        ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
-
-        List<ArticleBean> list = ArticleService.selectArticleList(articleBean,
-                pageBean);
-        pageBean.setList(list);
-        pageBean.setTotalCount(ArticleService.selectCount(new ArticleBean()));
-        return pageBean.serialize();
-    }
 
     public static Object articleDetail(Request request, Response response) {
         Map<String, Object> model = new HashMap<>();
 
         ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
-
+        articleBean.setStatus(1);//发布状态
         articleBean = DBUtils.selectOne(ArticleBean.class, "select a.*,group_concat(t.name) as tags " +
                 "from article a " +
                 "left join article_tag at " +
@@ -90,6 +75,9 @@ public class FblogController extends BaseController{
                 "on at.tag_id = t.id where a.id = :id " +
                 "group by a.id", articleBean);
 
+        if (articleBean == null) {
+            Spark.halt("文章不存在");
+        }
         articleBean.setContext(StringEscapeUtils.unescapeHtml4(articleBean.getContext()));
         model.put("model", JSON.parseObject(JSON.toJSONString(articleBean)));
         return new FreeMarkerTemplateEngine().render(

@@ -1,3 +1,20 @@
+<style>
+    .full-screen {
+        width : 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: white;
+        z-index: 811211;
+    }
+    #hidden_article_edit_form_content {
+        border: 0px;
+        height: 0px;
+        width: 0px;
+        padding: 0px;
+    }
+</style>
 <div class="bjui-pageContent">
 <form action="${base}/admin/article/edit/true" class="datagrid-edit-form" data-toggle="validate" data-data-type="jsonp">
     
@@ -13,7 +30,7 @@
         <label class="row-label">分类</label>
         <div class="row-input required">
             <select name="categoryId" data-toggle="selectpicker" data-rule="required">
-                <option value="">请选择</option>
+                <option value="0">默认分类</option>
                 <#list categoryList as category>
                     <option value="${(category.id?c)!}" ${(((model.categoryId?c)?? && model.categoryId?c == category.id?c))?string('selected','')}>${(category.name)!}</option>
                 </#list>
@@ -22,21 +39,23 @@
         <br>
 
         <label class="row-label">标签</label>
-        <div class="row-input required">
-            <input name="tags" id="input" value="${(model.tags)!}" autocomplete="off" data-width="100%" size="20" placeholder="多个用英文逗号分隔">
+        <div class="row-input">
+            <input name="tags" id="input" value="${(model.tags)!}" autocomplete="off" size="20" placeholder="多个标签用英文逗号分隔">
         </div>
         <br>
 
         <label class="row-label">内容</label>
         <div class="row-input">
-            <input type="hidden" id="hidden_article_edit_form_content" />
-            <div name="context" id="article_edit_form_content" class="j-content" style="width: 800px;" data-toggle="kindeditor" data-minheight="200">${(model.context)!}</div>
+            <textarea name="context" id="hidden_article_edit_form_content">${(model.context)!}</textarea>
+            <!-- 内容-->
+            <div id="article_edit_form_content" style="width: 800px"></div>
         </div>
+        <!--全屏模式-->
+        <div id="cover"></div>
         <br>
         <label class="row-label">发布状态</label>
         <div class="row-input required">
             <select name="status" data-toggle="selectpicker" data-rule="required" data-width="100%">
-                <option value="">请选择</option>
                 <option value="1" ${(((model.status)??) && (model.status == 1))?string('selected', '') }>发布</option>
                 <option value="0" ${(((model.status)??) && (model.status == 0))?string('selected', '') }>不发布</option>
             </select>
@@ -52,11 +71,46 @@
 </div>
 
 <script>
+
     $(function () {
+
+        var $hiddenInputArticleEdit = $('#hidden_article_edit_form_content');
+
         var E = window.wangEditor;
         var editor = new E('#article_edit_form_content');
+        editor.customConfig.uploadImgShowBase64 = true;  // 使用 base64 保存图片
+        editor.customConfig.onchange = function (html) {
+            $hiddenInputArticleEdit.val(html)
+        };
         editor.create();
+        editor.txt.html($('#hidden_article_edit_form_content').val());
 
 
+        var $fullScreenBtn = $('<div id="btn_article_edit_full_screen" class="w-e-menu" style="z-index:10001;">' +
+            '<i class="fa fa-window-maximize " title="全屏"><i></i></i></div>');
+        $('#article_edit_form_content .w-e-toolbar').append($fullScreenBtn);
+        $fullScreenBtn.on('click', function () {
+            var obj = $('<div id="article_edit_form_content_full_screen" class="full-screen"></div>');
+            obj.appendTo($('body'));
+            var EFullScreen = window.wangEditor;
+            var editorFullScreen = new EFullScreen('#article_edit_form_content_full_screen');
+            editorFullScreen.customConfig.uploadImgShowBase64 = true;  // 使用 base64 保存图片
+            editorFullScreen.customConfig.onchange = function (html) {
+                $hiddenInputArticleEdit.val(html)
+            };
+            editorFullScreen.create();
+            editorFullScreen.txt.html(editor.txt.html());
+
+            var $unFullScreenBtn = $('<div id="btn_article_edit_unfull_screen" class="w-e-menu" style="z-index:10001;">' +
+                '<i class="fa fa-clone" title="退出全屏"><i></i></i></div>');
+            $('#article_edit_form_content_full_screen .w-e-toolbar').append($unFullScreenBtn);
+            $unFullScreenBtn.on('click', function () {
+                var $contentFullScreen = $('#article_edit_form_content_full_screen');
+                editor.txt.html(editorFullScreen.txt.html());
+                $contentFullScreen.remove();
+            });
+            //设置编辑器高度为100%
+            $('#article_edit_form_content_full_screen .w-e-text-container').css('height', '100%');
+        });
     });
 </script>

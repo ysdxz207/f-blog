@@ -13,6 +13,7 @@ import com.puyixiaowo.fblog.service.ArticleService;
 import com.puyixiaowo.fblog.service.TagService;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.LuceneIndexUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -83,6 +84,8 @@ public class ArticleController extends BaseController {
                         "left join tag t " +
                         "on at.tag_id = t.id where a.id = :id " +
                         "group by a.id", articleBean);
+                String html = StringEscapeUtils.unescapeHtml4(articleBean.getContext());
+                articleBean.setContext(html);
                 model.put("model", articleBean);
             }
 
@@ -105,11 +108,12 @@ public class ArticleController extends BaseController {
             if (articleBean.getId() != null) {
                 articleBean.setLastUpdateDate(System.currentTimeMillis());
             }
+
             DBUtils.insertOrUpdate(articleBean);
             //标签
             TagService.insertArticleTags(articleBean);
             //lucene搜索引擎
-            LuceneIndexUtils.addLuceneIndex(articleBean);
+            LuceneIndexUtils.dealLuceneIndex(articleBean);
         } catch (Exception e) {
             responseBean.errorMessage(e.getMessage());
         }
@@ -133,9 +137,11 @@ public class ArticleController extends BaseController {
     }
 
     @RequiresPermissions(value = {"article:view"})
-    public static String luceneReindex(Request request, Response response){
+    public static String luceneReindex(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
-        List<ArticleBean> list = ArticleService.selectArticleList(new ArticleBean(), new PageBean());
+        ArticleBean params = new ArticleBean();
+        params.setStatus(1);//发布状态
+        List<ArticleBean> list = ArticleService.selectArticleList(params, new PageBean());
 
         try {
             //删除索引目录
@@ -143,7 +149,7 @@ public class ArticleController extends BaseController {
             //添加索引
             for (ArticleBean articleBean :
                     list) {
-                LuceneIndexUtils.addLuceneIndex(articleBean);
+                LuceneIndexUtils.dealLuceneIndex(articleBean);
             }
 
         } catch (Exception e) {

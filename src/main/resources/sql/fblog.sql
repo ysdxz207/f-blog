@@ -8,7 +8,6 @@ CREATE TABLE `article` (
   `create_date`      INTEGER(13)  NOT NULL,
   `last_update_date` INTEGER(13)           DEFAULT 1,
   `status`           INTEGER(4)   NULL,
-  `is_del`           INTEGER      NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`)
 );
 
