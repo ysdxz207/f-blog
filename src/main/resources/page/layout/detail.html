@@ -1,6 +1,6 @@
 <div class="col-sm-9 col-md-9 col-lg-9">
 
-    <div class="panel panel-defaul">
+    <div class="panel">
         <div class="panel-heading">
             <h2>${(model.title)!}</h2>
             <p>${(model.createDate!)}</p>
@@ -9,6 +9,8 @@
             ${(model.context)!}
         </div>
     </div>
+
+    <#include "/layout/comment.html"/>
 </div>
 <script>
     hljs.initHighlightingOnLoad();

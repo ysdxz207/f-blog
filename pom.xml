@@ -22,15 +22,15 @@
             <properties>
                 <redis.pass>123456</redis.pass>
             </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
         </profile>
         <profile>
             <id>production</id>
             <properties>
                 <redis.pass>K31f65ds095f1GDaakf0387</redis.pass>
             </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
     </profiles>
 
