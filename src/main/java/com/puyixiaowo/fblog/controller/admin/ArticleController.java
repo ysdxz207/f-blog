@@ -50,11 +50,7 @@ public class ArticleController extends BaseController {
         PageBean pageBean = getPageBean(request);
         try {
             ArticleBean params = getParamsEntity(request, ArticleBean.class, false);
-            List<ArticleBean> list =
-                    ArticleService.selectArticleList(params, pageBean);
-            pageBean.setList(list);
-            int count = ArticleService.selectCount(params);
-            pageBean.setTotalCount(count);
+            pageBean = ArticleService.selectArticlePageBean(params, pageBean);
         } catch (Exception e) {
             pageBean.error(e);
         }

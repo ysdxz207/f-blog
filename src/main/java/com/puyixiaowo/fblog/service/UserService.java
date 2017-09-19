@@ -2,6 +2,7 @@ package com.puyixiaowo.fblog.service;
 
 import com.puyixiaowo.fblog.annotation.admin.Logical;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
+import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.ListUtils;
@@ -17,23 +18,23 @@ import java.util.List;
  */
 public class UserService {
 
-    public static List<UserBean> selectUserList(UserBean userBean){
+    public static String getSelectSql(UserBean userBean,
+                                      PageBean pageBean){
         StringBuilder sbSql = new StringBuilder("select u.*,ur.role_id " +
                 "from user u left join user_role ur on u.id=ur.user_id where loginname<>'feihong' ");
 
         buildSqlParams(sbSql, userBean);
-        sbSql.append(" order by id asc");
-        return DBUtils.selectList(sbSql.toString(), userBean);
+        sbSql.append("order by id asc ");
+        sbSql.append("limit ");
+        sbSql.append(pageBean.getRowBounds().getOffset());
+        sbSql.append(", ");
+        sbSql.append(pageBean.getRowBounds().getLimit());
+        return sbSql.toString();
     }
 
-    public static int selectCount(UserBean userBean) {
-        StringBuilder sbSql = new StringBuilder("select count(*) " +
-                "from user u left join user_role ur on u.id=ur.user_id where loginname<>'feihong' ");
-
-        buildSqlParams(sbSql, userBean);
-        return DBUtils.count(sbSql.toString(), userBean);
+    public static PageBean selectUserPageBean(UserBean userBean, PageBean pageBean){
+        return DBUtils.selectPageBean(getSelectSql(userBean, pageBean), userBean);
     }
-
 
     public static void buildSqlParams(StringBuilder sbSql,
                                       UserBean userBean) {

@@ -19,7 +19,6 @@ import spark.Response;
 import spark.Spark;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class FblogController extends BaseController{
@@ -34,21 +33,17 @@ public class FblogController extends BaseController{
 
         Map<String, Object> model = new HashMap<>();
         //查询文章列表,标签和分类通过ajax获取
-        PageBean pageBean = getPageBean(request);
+        PageBean<ArticleBean> pageBean = getPageBean(request);
 
         ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
 
         articleBean.setStatus(1);//发布状态
-        List<ArticleBean> list = ArticleService.selectArticleList(articleBean,
-                pageBean);
+        pageBean = ArticleService.selectArticlePageBean(articleBean, pageBean);
         for (ArticleBean bean :
-                list) {
+                pageBean.getList()) {
             String html = StringEscapeUtils.unescapeHtml4(bean.getContext());
             bean.setContext(StringUtils.delHTMLTag(html));
         }
-        pageBean.setList(list);
-        pageBean.setTotalCount(ArticleService.selectCount(articleBean));
-
         model.put("pageBean", pageBean);
         return new FreeMarkerTemplateEngine().render(
                 new ModelAndView(model, "index.html")
@@ -99,8 +94,8 @@ public class FblogController extends BaseController{
     public static String categoryList(Request request, Response response) {
 
         PageBean pageBean = getPageBean(request);
-        return CategoryService.selectCategoryListPage(
-                getParamsEntity(request, CategoryBean.class, false), pageBean);
+        return CategoryService.selectCategoryPageBean(
+                getParamsEntity(request, CategoryBean.class, false), pageBean).serialize();
     }
 
     public static Object search(Request request, Response response){

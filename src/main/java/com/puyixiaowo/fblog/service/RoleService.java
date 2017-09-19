@@ -8,7 +8,6 @@ import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author Moses
@@ -17,7 +16,7 @@ import java.util.List;
 public class RoleService {
 
 
-    public static List<RoleBean> selectRoleList(RoleBean roleBean,
+    public static String getSelectSql(RoleBean roleBean,
                                                       PageBean pageBean) {
 
         StringBuilder sbSql = new StringBuilder("select * from role where 1 = 1 ");
@@ -28,14 +27,7 @@ public class RoleService {
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
         sbSql.append(pageBean.getRowBounds().getLimit());
-        return DBUtils.selectList(sbSql.toString(), roleBean);
-    }
-
-    public static int selectCount(RoleBean roleBean) {
-        StringBuilder sbSql = new StringBuilder("select count(*) from role where 1 = 1 ");
-
-        buildSqlParams(sbSql, roleBean);
-        return DBUtils.count(sbSql.toString(), roleBean);
+        return sbSql.toString();
     }
 
     public static void buildSqlParams(StringBuilder sbSql,
@@ -79,5 +71,9 @@ public class RoleService {
             bean.setPermissionId(permissionId);
             DBUtils.insertOrUpdate(bean);
         }
+    }
+
+    public static PageBean selectRolePageBean(RoleBean roleBean, PageBean pageBean) {
+        return DBUtils.selectPageBean(getSelectSql(roleBean, pageBean), roleBean);
     }
 }

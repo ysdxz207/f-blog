@@ -42,27 +42,8 @@ public class ArticleService {
     public static PageBean selectArticlePageBean(ArticleBean articleBean,
                                                       PageBean pageBean) {
         String sql = getSelectSql(articleBean, pageBean);
-        List<ArticleBean> list = DBUtils.selectList(sql, articleBean);
-        return null;
+        return DBUtils.selectPageBean(sql, articleBean);
     }
-
-    public static int selectCount(ArticleBean articleBean) {
-        StringBuilder sbSql = new StringBuilder("select count(*) " +
-                "from " +
-                "(select a.id from article a " +
-                "left join category c " +
-                "on a.category_id = c.id " +
-                "left join article_tag at " +
-                "on a.id = at.article_id " +
-                "left join tag t " +
-                "on at.tag_id = t.id where 1=1 ");
-
-        buildSqlParams(sbSql, articleBean);
-
-        sbSql.append("group by a.id)");
-        return DBUtils.count(sbSql.toString(), articleBean);
-    }
-
 
     public static void buildSqlParams(StringBuilder sbSql,
                                       ArticleBean articleBean) {

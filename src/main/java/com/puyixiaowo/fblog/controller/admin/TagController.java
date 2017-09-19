@@ -34,12 +34,7 @@ public class TagController extends BaseController {
         PageBean pageBean = getPageBean(request);
         try {
             TagBean tagBean = getParamsEntity(request, TagBean.class, false);
-            List<TagBean> list = TagService.selectTagList(tagBean,
-                    pageBean);
-            pageBean.setList(list);
-
-            int count = TagService.selectCount(tagBean);
-            pageBean.setTotalCount(count);
+            pageBean = TagService.selectTagPageBean(tagBean, pageBean);
         } catch (Exception e) {
             pageBean.error(e);
         }

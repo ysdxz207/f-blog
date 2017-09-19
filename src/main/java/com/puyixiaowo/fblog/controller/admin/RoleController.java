@@ -20,10 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
  * @author Moses
  * @date 2017-08-26 21:23:47
- * 
  */
 public class RoleController extends BaseController {
 
@@ -38,18 +36,13 @@ public class RoleController extends BaseController {
         }
         PageBean pageBean = getPageBean(request);
         RoleBean roleBean = getParamsEntity(request, RoleBean.class, false);
-        List<RoleBean> list = RoleService.selectRoleList(roleBean,
-                pageBean);
-        pageBean.setList(list);
-
-        int count = RoleService.selectCount(roleBean);
-        pageBean.setTotalCount(count);
+        pageBean = RoleService.selectRolePageBean(roleBean, pageBean);
         return pageBean.serialize();
     }
 
 
     @RequiresPermissions(value = {"role:edit"})
-    public static String edit(Request request, Response response){
+    public static String edit(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
         List<RoleBean> roleBeanList = getParamsEntityJson(request, RoleBean.class, true);
         try {
@@ -65,7 +58,7 @@ public class RoleController extends BaseController {
     }
 
     @RequiresPermissions(value = {"role:delete"})
-    public static String delete(Request request, Response response){
+    public static String delete(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
 
         try {

@@ -66,7 +66,7 @@ public class MenuService {
     }
 
 
-    public static List<MenuBean> selectMenuList(MenuBean menuBean,
+    public static String getSelectSql(MenuBean menuBean,
                                                 PageBean pageBean) {
         StringBuilder sbSql = new StringBuilder("select * from menu where 1 = 1 ");
 
@@ -76,16 +76,11 @@ public class MenuService {
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
         sbSql.append(pageBean.getRowBounds().getLimit());
-        return DBUtils.selectList(sbSql.toString(), menuBean);
+        return sbSql.toString();
     }
-
-    public static int selectCount(MenuBean menuBean) {
-        StringBuilder sbSql = new StringBuilder("select count(*) from menu where 1 = 1 ");
-
-        buildSqlParams(sbSql, menuBean);
-        return DBUtils.count(sbSql.toString(), menuBean);
+    public static PageBean selectMenuPageBean(MenuBean menuBean, PageBean pageBean) {
+        return DBUtils.selectPageBean(getSelectSql(menuBean, pageBean), menuBean);
     }
-
     public static void buildSqlParams(StringBuilder sbSql,
                                                MenuBean menuBean) {
         if (menuBean.getPid() != null) {
@@ -157,4 +152,6 @@ public class MenuService {
                     }
                 });
     }
+
+
 }

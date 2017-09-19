@@ -4,8 +4,8 @@
 package com.puyixiaowo.fblog.bean.sys;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.core.entity.RowBounds;
+import com.puyixiaowo.fblog.constants.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,21 +14,23 @@ import java.util.List;
  * @author huangfeihong
  * @date 2016年12月8日 下午10:20:18
  */
-public class PageBean extends ResponseBean{
+public class PageBean<T> extends ResponseBean{
 	private static final long serialVersionUID = 4728599360521173588L;
-	private int pageSize = Integer.MAX_VALUE;
+	//默认查询所有，由构造方法new RowBounds()确定
+	private int pageSize = Constants.DEFAULT_PAGE_SIZE;
 	private int pageCurrent = 1;
 	private int totalCount = 0;
 	private int pageTotal = 0;
 	private RowBounds rowBounds;
-	private List<?> list = new ArrayList<Object>();
+	private List<T> list = new ArrayList<>();
 
 
 	/**
 	 * 
 	 */
 	public PageBean() {
-		this.rowBounds = buidRowBounds();
+		this.rowBounds = new RowBounds();//默认查所有
+		this.setMessage("");//关闭成功提示框
 	}
 	
 	/**
@@ -50,6 +52,7 @@ public class PageBean extends ResponseBean{
 		} else {
 			this.rowBounds = buidRowBounds();
 		}
+		this.setMessage("");//关闭成功提示框
 	}
 
 	public int getPageSize() {
@@ -78,11 +81,11 @@ public class PageBean extends ResponseBean{
 
 	
 	
-	public List<?> getList() {
+	public List<T> getList() {
 		return list;
 	}
 
-	public void setList(List<?> list) {
+	public void setList(List<T> list) {
 		this.list = list;
 	}
 
@@ -106,16 +109,7 @@ public class PageBean extends ResponseBean{
 		this.pageTotal = pageTotal;
 	}
 	///////////////////////
-	/**
-	 * 序列化
-	 * @param list
-	 */
-	public void setSerializeList(List<?> list) {
-		
-		this.list = JSONObject.parseArray(JSON.toJSONString(list));
-	}
-	
-	
+
 	private RowBounds buidRowBounds() {
 		int offset = (pageCurrent - 1) * pageSize ;
 		RowBounds bouds = new RowBounds(offset, pageSize);
@@ -124,27 +118,6 @@ public class PageBean extends ResponseBean{
 		}
 		
 		return rowBounds;
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <T> List<T> getRecordList(Class clazz) throws Exception{
-//		List<T> dest = new ArrayList<T>();
-//		for (Object obj : recordList) {
-//			if (obj != null && obj.getClass() == clazz) {
-//				dest.add((T) obj);
-//			}
-//		}
-		if (list == null) {
-			return null;
-		}
-		if (list.size() == 0) {
-			return new ArrayList<T>();
-		}
-		Class c = list.get(0).getClass();
-		if (clazz != c) {
-			throw new Exception("转换list失败:目标Class:" + clazz + "不等于源Class:" + c);
-		}
-		return (List<T>) list;
 	}
 
 	@Override

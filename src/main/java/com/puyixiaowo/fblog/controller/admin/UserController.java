@@ -38,20 +38,14 @@ public class UserController extends BaseController{
                             "admin/user/user_list.html"));
         }
 
-        PageBean pageBean = getPageBean(request);
+        PageBean<UserBean> pageBean = getPageBean(request);
         try {
             UserBean params = getParamsEntity(request, UserBean.class, false);
-            List<UserBean> list =
-                    UserService.selectUserList(
-                            getParamsEntity(request, UserBean.class, false));
-
+            pageBean = UserService.selectUserPageBean(params, pageBean);
             for (UserBean userBean :
-                    list) {
+                    pageBean.getList()) {
                 userBean.setPassword(DesUtils.decrypt(userBean.getPassword()));
             }
-            pageBean.setList(list);
-            int count = UserService.selectCount(params);
-            pageBean.setTotalCount(count);
         } catch (Exception e) {
             pageBean.error(e);
         }

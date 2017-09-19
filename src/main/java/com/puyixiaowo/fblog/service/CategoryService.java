@@ -14,10 +14,8 @@ import java.util.List;
  */
 public class CategoryService {
 
-
-    public static List<CategoryBean> selectCategoryList(CategoryBean categoryBean,
-                                                      PageBean pageBean) {
-
+    public static String getSelectSql(CategoryBean categoryBean,
+                                      PageBean pageBean) {
         StringBuilder sbSql = new StringBuilder("select * from category where 1 = 1 ");
 
         buildSqlParams(sbSql, categoryBean);
@@ -26,14 +24,20 @@ public class CategoryService {
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
         sbSql.append(pageBean.getRowBounds().getLimit());
-        return DBUtils.selectList(sbSql.toString(), categoryBean);
+        return sbSql.toString();
     }
 
-    public static int selectCount(CategoryBean categoryBean) {
-        StringBuilder sbSql = new StringBuilder("select count(*) from category where 1 = 1 ");
+    public static List<CategoryBean> selectCategoryList(CategoryBean categoryBean,
+                                                      PageBean pageBean) {
 
-        buildSqlParams(sbSql, categoryBean);
-        return DBUtils.count(sbSql.toString(), categoryBean);
+
+        return DBUtils.selectList(getSelectSql(categoryBean, pageBean), categoryBean);
+    }
+
+    public static PageBean selectCategoryPageBean (CategoryBean categoryBean,
+                                                   PageBean pageBean) {
+        return DBUtils.selectPageBean(getSelectSql(categoryBean, pageBean),
+                categoryBean);
     }
 
     public static void buildSqlParams(StringBuilder sbSql,
@@ -42,27 +46,5 @@ public class CategoryService {
             sbSql.append("and category like :category ");
             categoryBean.setName("%" + categoryBean.getName() + "%");
         }
-    }
-
-    /**
-     *
-     * @param categoryBean
-     * @param pageBean
-     * @return
-     */
-    public static String selectCategoryListPage(CategoryBean categoryBean,
-                                                PageBean pageBean) {
-
-        try {
-            List<CategoryBean> list = CategoryService.selectCategoryList(categoryBean,
-                    pageBean);
-            pageBean.setList(list);
-
-            int count = CategoryService.selectCount(categoryBean);
-            pageBean.setTotalCount(count);
-        } catch (Exception e) {
-            pageBean.error(e);
-        }
-        return pageBean.serialize();
     }
 }

@@ -339,12 +339,23 @@ public class DBUtils {
         if (StringUtils.isBlank(sql)) {
             return 0;
         }
-        if (sql.indexOf("limit") != -1) {
+        if (sql.toLowerCase().indexOf("limit") != -1) {
             sql = sql.replaceAll("limit +\\d+, *\\d+", "");
         }
+
+        if(!sql.toLowerCase().replaceAll("\\s+","").startsWith("selectcount(")){
+            sql = "select count(*) from ("
+                    + (sql.endsWith(";") ? sql.substring(0, sql.length() - 1) : sql)
+                    + ")";
+        }
+
         try (Connection conn = sql2o.open()) {
             Query query = conn.createQuery(sql).throwOnMappingFailure(false).bind(paramObj);
-            return query.executeScalar(Integer.class);
+            Integer count = query.executeScalar(Integer.class);
+            if (count == null) {
+                System.out.println("统计sql可能不正确：" + sql);
+            }
+            return count == null ? 0 : count;
         }
     }
 
@@ -415,7 +426,7 @@ public class DBUtils {
     public static PageBean selectPageBean(String sql,
                                           Object paramObj){
         PageBean pageBean = new PageBean();
-        List<Object> list = selectList(sql, paramObj.getClass());
+        List<Object> list = selectList(sql, paramObj);
         int count = count(sql, paramObj);
         pageBean.setList(list);
         pageBean.setTotalCount(count);
@@ -439,7 +450,5 @@ public class DBUtils {
         Object obj = new PageBean();
 
         System.out.println(obj.getClass().getName());
-
-
     }
 }

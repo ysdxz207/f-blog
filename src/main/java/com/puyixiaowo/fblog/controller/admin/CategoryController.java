@@ -33,8 +33,8 @@ public class CategoryController extends BaseController {
                             "admin/category/category_list.html"));
         }
         PageBean pageBean = getPageBean(request);
-        return CategoryService.selectCategoryListPage(
-                getParamsEntity(request, CategoryBean.class, false), pageBean);
+        return CategoryService.selectCategoryPageBean(
+                getParamsEntity(request, CategoryBean.class, false), pageBean).serialize();
     }
 
 

@@ -81,12 +81,8 @@ public class MenuController extends BaseController {
         PageBean pageBean = getPageBean(request);
         try {
             MenuBean menuBean = getParamsEntity(request, MenuBean.class, false);
-            List<MenuBean> list = MenuService.selectMenuList(menuBean,
-                    pageBean);
-            pageBean.setList(list);
 
-            int count = MenuService.selectCount(menuBean);
-            pageBean.setTotalCount(count);
+            pageBean = MenuService.selectMenuPageBean(menuBean, pageBean);
         } catch (Exception e) {
             pageBean.error(e);
         }

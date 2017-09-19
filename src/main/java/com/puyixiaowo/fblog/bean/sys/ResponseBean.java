@@ -18,7 +18,6 @@ public class ResponseBean implements Serializable {
 
 	private static final long serialVersionUID = -5266170746828998914L;
 	private int statusCode = Constants.RESPONSE_STATUS_CODE_SUCCESS;
-	private String errorCode = null;
 	private String message = Constants.RESPONSE_SUCCESS_MESSAGE;
 	private Object data;
 
@@ -28,14 +27,6 @@ public class ResponseBean implements Serializable {
 	private String forward;
 	private String forwardConfirm;
 
-
-	public String getErrorCode() {
-		return errorCode;
-	}
-
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
-	}
 
 	public int getStatusCode() {
 		return statusCode;

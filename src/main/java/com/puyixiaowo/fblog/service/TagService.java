@@ -54,7 +54,7 @@ public class TagService {
     }
 
 
-    public static List<TagBean> selectTagList(TagBean tagBean,
+    public static String getSelectSql(TagBean tagBean,
                                                       PageBean pageBean) {
 
         StringBuilder sbSql = new StringBuilder("select t.* from tag t " +
@@ -67,18 +67,11 @@ public class TagService {
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
         sbSql.append(pageBean.getRowBounds().getLimit());
-        return DBUtils.selectList(sbSql.toString(), tagBean);
+        return sbSql.toString();
     }
-
-    public static int selectCount(TagBean tagBean) {
-        StringBuilder sbSql = new StringBuilder("select count(t.id) from tag t " +
-                "left join article_tag at " +
-                "on t.id = at.tag_id where 1 = 1 ");
-
-        buildSqlParams(sbSql, tagBean);
-        return DBUtils.count(sbSql.toString(), tagBean);
+    public static PageBean selectTagPageBean(TagBean tagBean, PageBean pageBean){
+        return DBUtils.selectPageBean(getSelectSql(tagBean, pageBean), tagBean);
     }
-
     public static void buildSqlParams(StringBuilder sbSql,
                                                TagBean tagBean) {
         if (tagBean.getName() != null) {

@@ -32,12 +32,7 @@ public class PermissionController extends BaseController {
         PageBean pageBean = getPageBean(request);
         try {
             PermissionBean permissionBean = getParamsEntity(request, PermissionBean.class, false);
-            List<PermissionBean> list = PermissionService.selectPermissionList(permissionBean,
-                    pageBean);
-            pageBean.setList(list);
-
-            int count = PermissionService.selectCount(permissionBean);
-            pageBean.setTotalCount(count);
+            PermissionService.selectPermissionPageBean(permissionBean, pageBean);
         } catch (Exception e) {
             pageBean.error(e);
         }
