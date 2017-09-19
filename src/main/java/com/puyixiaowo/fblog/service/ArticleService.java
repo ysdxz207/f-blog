@@ -25,7 +25,7 @@ public class ArticleService {
 
         buildSqlParams(sbSql, articleBean);
 
-        sbSql.append("group by a.id order by id asc ");
+        sbSql.append("group by a.id order by a.create_date desc ");
         sbSql.append(" limit ");
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
