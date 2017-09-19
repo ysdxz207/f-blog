@@ -76,7 +76,7 @@ public class MenuService {
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
         sbSql.append(pageBean.getRowBounds().getLimit());
-        return DBUtils.selectList(MenuBean.class, sbSql.toString(), menuBean);
+        return DBUtils.selectList(sbSql.toString(), menuBean);
     }
 
     public static int selectCount(MenuBean menuBean) {

@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class ArticleService {
 
-    public static List<ArticleBean> selectArticleList(ArticleBean articleBean,
-                                                      PageBean pageBean) {
+    public static String getSelectSql(ArticleBean articleBean,
+                                      PageBean pageBean) {
         StringBuilder sbSql = new StringBuilder("select a.*,c.name as category,group_concat(t.name) as tags " +
                 "from article a " +
                 "left join category c " +
@@ -30,13 +30,26 @@ public class ArticleService {
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
         sbSql.append(pageBean.getRowBounds().getLimit());
-        List<ArticleBean> list = DBUtils.selectList(ArticleBean.class, sbSql.toString(), articleBean);
-        return list;
+        return sbSql.toString();
+    }
+
+    public static List<ArticleBean> selectArticleList(ArticleBean articleBean,
+                                                      PageBean pageBean) {
+        return DBUtils.selectList(getSelectSql(articleBean, pageBean),
+                articleBean);
+    }
+
+    public static PageBean selectArticlePageBean(ArticleBean articleBean,
+                                                      PageBean pageBean) {
+        String sql = getSelectSql(articleBean, pageBean);
+        List<ArticleBean> list = DBUtils.selectList(sql, articleBean);
+        return null;
     }
 
     public static int selectCount(ArticleBean articleBean) {
         StringBuilder sbSql = new StringBuilder("select count(*) " +
-                "from article a " +
+                "from " +
+                "(select a.id from article a " +
                 "left join category c " +
                 "on a.category_id = c.id " +
                 "left join article_tag at " +
@@ -45,6 +58,8 @@ public class ArticleService {
                 "on at.tag_id = t.id where 1=1 ");
 
         buildSqlParams(sbSql, articleBean);
+
+        sbSql.append("group by a.id)");
         return DBUtils.count(sbSql.toString(), articleBean);
     }
 

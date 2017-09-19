@@ -26,7 +26,7 @@ public class CategoryService {
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
         sbSql.append(pageBean.getRowBounds().getLimit());
-        return DBUtils.selectList(CategoryBean.class, sbSql.toString(), categoryBean);
+        return DBUtils.selectList(sbSql.toString(), categoryBean);
     }
 
     public static int selectCount(CategoryBean categoryBean) {

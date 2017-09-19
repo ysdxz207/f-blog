@@ -34,6 +34,7 @@ public class BaseController {
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     public static <T extends Validatable> T getParamsEntity(Request request,
                                                             Class<T> clazz,
                                                             boolean validate) throws ValidationException {

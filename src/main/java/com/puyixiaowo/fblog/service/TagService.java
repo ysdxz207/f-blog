@@ -39,7 +39,7 @@ public class TagService {
         for (String tagName : tagNameList) {
             TagBean tagBean = new TagBean();
             tagBean.setName(tagName);
-            TagBean tagDb = DBUtils.selectOne(TagBean.class,"select * from tag where name=:name", tagBean);
+            TagBean tagDb = DBUtils.selectOne("select * from tag where name=:name", tagBean);
             if (tagDb == null) {
                 DBUtils.insertOrUpdate(tagBean);
             } else {
@@ -67,7 +67,7 @@ public class TagService {
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
         sbSql.append(pageBean.getRowBounds().getLimit());
-        return DBUtils.selectList(TagBean.class, sbSql.toString(), tagBean);
+        return DBUtils.selectList(sbSql.toString(), tagBean);
     }
 
     public static int selectCount(TagBean tagBean) {

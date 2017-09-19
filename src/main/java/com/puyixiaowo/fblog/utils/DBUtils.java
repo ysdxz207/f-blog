@@ -3,7 +3,8 @@ package com.puyixiaowo.fblog.utils;
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.annotation.Id;
 import com.puyixiaowo.fblog.annotation.Transient;
-import com.puyixiaowo.fblog.domain.User;
+import com.puyixiaowo.fblog.bean.admin.UserBean;
+import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.exception.DBException;
 import com.puyixiaowo.fblog.exception.DBSqlException;
@@ -92,11 +93,10 @@ public class DBUtils {
         return list.get(0);
     }
 
-    public static <E> E selectOne(Class<E> clazz,
-                                  String sql,
+    public static <E> E selectOne(String sql,
                                   Object paramsObj) {
 
-        List<E> list = selectList(clazz, sql, paramsObj);
+        List<E> list = selectList(sql, paramsObj);
         if (list.isEmpty()) {
             return null;
         }
@@ -128,9 +128,9 @@ public class DBUtils {
         }
     }
 
-    public static <E> List<E> selectList(Class<E> clazz,
-                                         String sql,
+    public static <E> List<E> selectList(String sql,
                                          Object params) {
+        Class<E> clazz = (Class<E>) params.getClass();
         Map<String, Object> map = JSON.toJavaObject(JSON.parseObject(JSON.toJSONString(params)), Map.class);
         return selectList(clazz, sql, map);
     }
@@ -335,6 +335,13 @@ public class DBUtils {
 
 
     public static int count(String sql, Object paramObj) {
+
+        if (StringUtils.isBlank(sql)) {
+            return 0;
+        }
+        if (sql.indexOf("limit") != -1) {
+            sql = sql.replaceAll("limit +\\d+, *\\d+", "");
+        }
         try (Connection conn = sql2o.open()) {
             Query query = conn.createQuery(sql).throwOnMappingFailure(false).bind(paramObj);
             return query.executeScalar(Integer.class);
@@ -404,17 +411,35 @@ public class DBUtils {
         }
     }
 
+
+    public static PageBean selectPageBean(String sql,
+                                          Object paramObj){
+        PageBean pageBean = new PageBean();
+        List<Object> list = selectList(sql, paramObj.getClass());
+        int count = count(sql, paramObj);
+        pageBean.setList(list);
+        pageBean.setTotalCount(count);
+        return pageBean;
+    }
+
+
     public static void main(String[] args) throws Exception {
 
         DBUtils.initDBConnection("D:\\workspace\\idea\\f-blog\\f_blog.db");
-        List<User> userList = DBUtils.selectList(User.class,
-                "select * from user " +
-                        "where loginname =:loginname",
-                new HashMap<String, Object>() {
-                    {
-                        put("loginname", "feihong");
-                    }
-                });
+
+        UserBean userBean = new UserBean();
+        userBean.setLoginname("feihong");
+
+        List<UserBean> userList = DBUtils.selectList("select * from user " +
+                        "where loginname =:loginname", userBean);
         System.out.println(userList.get(0).getId());
+
+
+
+        Object obj = new PageBean();
+
+        System.out.println(obj.getClass().getName());
+
+
     }
 }

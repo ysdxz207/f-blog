@@ -24,7 +24,7 @@ public class PermissionService {
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
         sbSql.append(pageBean.getRowBounds().getLimit());
-        return DBUtils.selectList(PermissionBean.class, sbSql.toString(), permissionBean);
+        return DBUtils.selectList(sbSql.toString(), permissionBean);
     }
 
     public static int selectCount(PermissionBean permissionBean) {

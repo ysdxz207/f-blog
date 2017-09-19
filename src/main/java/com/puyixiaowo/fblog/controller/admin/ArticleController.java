@@ -77,7 +77,7 @@ public class ArticleController extends BaseController {
             ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
             if (articleBean.getId() > 0) {
                 //编辑
-                articleBean = DBUtils.selectOne(ArticleBean.class, "select a.*,group_concat(t.name) as tags " +
+                articleBean = DBUtils.selectOne("select a.*,group_concat(t.name) as tags " +
                         "from article a " +
                         "left join article_tag at " +
                         "on a.id = at.article_id " +

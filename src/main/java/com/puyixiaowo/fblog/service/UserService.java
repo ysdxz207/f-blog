@@ -23,7 +23,7 @@ public class UserService {
 
         buildSqlParams(sbSql, userBean);
         sbSql.append(" order by id asc");
-        return DBUtils.selectList(UserBean.class, sbSql.toString(), userBean);
+        return DBUtils.selectList(sbSql.toString(), userBean);
     }
 
     public static int selectCount(UserBean userBean) {

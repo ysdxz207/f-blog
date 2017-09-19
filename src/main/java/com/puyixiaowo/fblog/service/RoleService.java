@@ -28,7 +28,7 @@ public class RoleService {
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
         sbSql.append(pageBean.getRowBounds().getLimit());
-        return DBUtils.selectList(RoleBean.class, sbSql.toString(), roleBean);
+        return DBUtils.selectList(sbSql.toString(), roleBean);
     }
 
     public static int selectCount(RoleBean roleBean) {

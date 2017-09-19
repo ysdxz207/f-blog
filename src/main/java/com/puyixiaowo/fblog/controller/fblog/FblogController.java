@@ -73,7 +73,7 @@ public class FblogController extends BaseController{
 
         ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
         articleBean.setStatus(1);//发布状态
-        articleBean = DBUtils.selectOne(ArticleBean.class, "select a.*,group_concat(t.name) as tags " +
+        articleBean = DBUtils.selectOne("select a.*,group_concat(t.name) as tags " +
                 "from article a " +
                 "left join article_tag at " +
                 "on a.id = at.article_id " +
