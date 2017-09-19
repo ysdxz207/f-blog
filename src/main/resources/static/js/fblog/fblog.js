@@ -84,10 +84,10 @@ var fblog = {
         var articleId = $('#hidden_article_detail_article_id').val();
         if ($articleDetailTagsContent) {
             $.getJSON("/article/tags?articleId=" + articleId, function (data) {
-                if (!data) {
+                if (data.statusCode != 200) {
                     return;
                 }
-                $.each(data, function (i, tag) {
+                $.each(data.data, function (i, tag) {
                     var color = fblog.getRandomColor();
                     var $tag = $('<span class="label label-default" style="background-color: '
                         + color + ';display: inline-block;border-radius: 1em;margin-left: 6px;margin-bottom: 4px;font-size: 100%;font-weight: 100;line-height: inherit;">' +
