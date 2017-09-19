@@ -3,6 +3,8 @@ package com.puyixiaowo.fblog.utils;
 import com.puyixiaowo.fblog.bean.ArticleBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -71,6 +73,9 @@ public class LuceneIndexUtils {
         doc.add(new Field("id", articleBean.getId() + "", new FieldType(TextField.TYPE_STORED)));
         doc.add(new Field("title", articleBean.getTitle(), new FieldType(TextField.TYPE_STORED)));
         doc.add(new Field("context", articleBean.getContext(), new FieldType(TextField.TYPE_STORED)));
+        doc.add(new Field("createDate",
+                DateFormatUtils.format(articleBean.getCreateDate(),
+                        "yyyy-MM-dd HH:mm:ss"), new FieldType(TextField.TYPE_STORED)));
         writer.addDocument(doc);
         writer.close(); // 关闭读写器
     }
@@ -85,7 +90,7 @@ public class LuceneIndexUtils {
         IndexReader reader = DirectoryReader.open(dir);
         IndexSearcher searcher = new IndexSearcher(reader);
 
-        String[] fields = {"title", "context"};
+        String[] fields = {"title", "context", "createDate"};
 
         QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
         Query query = queryParser.parse(queries);
@@ -104,6 +109,9 @@ public class LuceneIndexUtils {
                 bean.setId(Long.valueOf(doc.get("id")));
                 bean.setTitle(doc.get("title"));
                 bean.setContext(doc.get("context"));
+                bean.setCreateDate(DateUtils
+                        .parseDate(doc.get("createDate"),
+                                "yyyy-MM-dd HH:mm:ss").getTime());
                 list.add(bean);
             }
         } catch (Exception e) {

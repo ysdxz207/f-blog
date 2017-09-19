@@ -1,9 +1,10 @@
 package com.puyixiaowo.fblog.controller.fblog;
 
-import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.bean.ArticleBean;
 import com.puyixiaowo.fblog.bean.admin.CategoryBean;
+import com.puyixiaowo.fblog.bean.admin.TagBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
+import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.ArticleService;
@@ -80,7 +81,8 @@ public class FblogController extends BaseController{
             Spark.halt("文章不存在");
         }
         articleBean.setContext(StringEscapeUtils.unescapeHtml4(articleBean.getContext()));
-        model.put("model", JSON.parseObject(JSON.toJSONString(articleBean)));
+
+        model.put("model", articleBean);
         return new FreeMarkerTemplateEngine().render(
                 new ModelAndView(model, "index.html")
         );
@@ -115,5 +117,19 @@ public class FblogController extends BaseController{
         return new FreeMarkerTemplateEngine().render(
                 new ModelAndView(model, "index.html")
         );
+    }
+
+    public static String articleTags(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
+        TagBean tagBean = getParamsEntity(request, TagBean.class, false);
+
+        PageBean pageBean = new PageBean();
+        try {
+            pageBean = TagService.selectTagPageBean(tagBean, pageBean);
+            responseBean.setData(pageBean.getList());
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+        return responseBean.serialize();
     }
 }

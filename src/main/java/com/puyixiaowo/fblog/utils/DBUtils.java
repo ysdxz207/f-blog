@@ -29,6 +29,9 @@ public class DBUtils {
 
     private static Sql2o sql2o;
 
+    public static Sql2o getSql2o() {
+        return sql2o;
+    }
     /**
      * 初始化数据库
      */

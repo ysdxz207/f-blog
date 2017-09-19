@@ -1,7 +1,6 @@
 package com.puyixiaowo.fblog;
 
 import com.puyixiaowo.fblog.controller.admin.*;
-import com.puyixiaowo.fblog.controller.admin.ArticleController;
 import com.puyixiaowo.fblog.controller.fblog.FblogController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
 import com.puyixiaowo.fblog.filters.AdminPermissionsFilter;
@@ -17,10 +16,11 @@ public class Routes {
         //前台
         path("", () -> {
             get("/", ((request, response) -> FblogController.articleList(request, response)));
-            get("/category/list", (request, response) -> FblogController.categoryList(request,response));
-            get("/tag/top", (request, response) -> FblogController.tagTop(request,response));
-            get("/article/detail", (request, response) -> FblogController.articleDetail(request,response));
-            get("/search", (request, response) -> FblogController.search(request,response));
+            get("/category/list", (request, response) -> FblogController.categoryList(request, response));
+            get("/tag/top", (request, response) -> FblogController.tagTop(request, response));
+            get("/article/detail", (request, response) -> FblogController.articleDetail(request, response));
+            get("/search", (request, response) -> FblogController.search(request, response));
+            get("/article/tags", (request, response) -> FblogController.articleTags(request, response));
 
         });
 
@@ -32,17 +32,17 @@ public class Routes {
         //管理后台
         path("/admin", () -> {
             get("/", ((request, response) ->
-                    MainController.index(request, response)),
+                            MainController.index(request, response)),
                     new FreeMarkerTemplateEngine());
             get("/loginPage", ((request, response) ->
                             LoginController.loginPage(request, response)),
                     new FreeMarkerTemplateEngine());
             post("/login", ((request, response) ->
-                    LoginController.doLogin(request, response)),
+                            LoginController.doLogin(request, response)),
                     new FreeMarkerTemplateEngine());
 
             get("/logout", ((request, response) ->
-                            LoginController.logout(request, response)));
+                    LoginController.logout(request, response)));
 
             get("/main", ((request, response) ->
                             MainController.main(request, response)),
@@ -114,7 +114,7 @@ public class Routes {
                         RoleController.setPermission(request, response)));
 
                 get("/all/array", (request, response) ->
-                RoleController.allArray(request));
+                        RoleController.allArray(request));
             });
 
             //博客组
@@ -130,7 +130,7 @@ public class Routes {
                         ArticleController.delete(request, response)));
 
                 get("/lucene/reindex", ((request, response) ->
-                        ArticleController.luceneReindex( request, response)));
+                        ArticleController.luceneReindex(request, response)));
             });
 
             //博客分类组
@@ -165,8 +165,5 @@ public class Routes {
                         TagController.topArray(request));
             });
         });
-
-
-
     }
 }

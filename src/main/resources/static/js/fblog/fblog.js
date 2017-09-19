@@ -2,7 +2,16 @@ var fblog = {
     $tagTop: $('.fblog-tag-top'),
     $articleListContainer: $('#fblog_article_list_container'),
     $containerWidgetTags: $('#container_widget_tags'),
-    $containerWidgetCategories: $('#container_widget_categories')
+    $containerWidgetCategories: $('#container_widget_categories'),
+    colors: ["#23D160",
+            "#FF3860",
+            "#72D0EB",
+            "#FFDD57",
+            "#4A4A4A",
+            "#DC6BDB",
+            "#FFB11B",
+            "#13CCAB",
+            "#FF634B"]
 };
 
 (function (fblog) {
@@ -14,19 +23,9 @@ var fblog = {
             }
             fblog.$containerWidgetTags.empty();
             fblog.$containerWidgetTags.parent().delay('fast').fadeTo(500, 1);
-            var arr = ["#23D160",
-                "#FF3860",
-                "#72D0EB",
-                "#FFDD57",
-                "#4A4A4A",
-                "#DC6BDB",
-                "#FFB11B",
-                "#13CCAB",
-                "#FF634B"];
 
            $.each(data, function (i, tag) {
-               var randomIndex = Math.floor(Math.random() * arr.length);
-               var color = arr[randomIndex];
+               var color = fblog.getRandomColor();
 
                var $tag = $('<span class="label label-default" style="background-color: '
                    + color + ';display: inline-block;border-radius: 1em;margin-left: 6px;margin-bottom: 4px;font-size: 100%;font-weight: 100;line-height: inherit;">' +
@@ -38,7 +37,15 @@ var fblog = {
         })
     };
 
-
+    /**
+     * 获取随机颜色
+     * @returns {*}
+     */
+    fblog.getRandomColor = function () {
+        var randomIndex = Math.floor(Math.random() * fblog.colors.length);
+        var color = fblog.colors[randomIndex];
+        return color;
+    };
 
     fblog.bind = function () {
 
@@ -71,12 +78,36 @@ var fblog = {
             }
         });
     };
+
+    fblog.loadArticleTags = function () {
+        var $articleDetailTagsContent = $('#article_detail_tags_content');
+        var articleId = $('#hidden_article_detail_article_id').val();
+        if ($articleDetailTagsContent) {
+            $.getJSON("/article/tags?articleId=" + articleId, function (data) {
+                if (!data) {
+                    return;
+                }
+                $.each(data, function (i, tag) {
+                    var color = fblog.getRandomColor();
+                    var $tag = $('<span class="label label-default" style="background-color: '
+                        + color + ';display: inline-block;border-radius: 1em;margin-left: 6px;margin-bottom: 4px;font-size: 100%;font-weight: 100;line-height: inherit;">' +
+                        '    <a href="/?tags=' + tag.name + '">' + tag.name + '</a>' +
+                        '</span>');
+
+                    $articleDetailTagsContent.append($tag);
+                    $tag.fadeIn();
+                });
+            });
+        }
+    };
     fblog.init = function () {
 
         fblog.bind();
         fblog.loadTopTags();
         fblog.loadCategorys();
 
+        //detail
+        fblog.loadArticleTags();
     };
 
     fblog.checkSearch = function () {

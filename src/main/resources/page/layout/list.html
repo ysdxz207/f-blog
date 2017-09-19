@@ -2,7 +2,19 @@
     <#if (((pageBean.list)??) && (((pageBean.list)?size) > 0))>
         <#list pageBean.list as article>
             <div class="panel panel-default">
-                <div class="panel-heading"><a href="/article/detail?id=${(article.id)?c}">${article.title}</a></div>
+                <div class="panel-heading">
+                    <a href="/article/detail?id=${(article.id)?c}" title="${(article.title)!}" class="article-list-title">
+                        <#assign title=(article.title!"")>
+                        <#if title?length &lt; 28>
+                            ${title}
+                            <#else>
+                                ${title?substring(0,28)}...
+                        </#if>
+                    </a>
+                    <#if (article.createDate)??>
+                        <span class="article-create-date">${(article.createDate)?number_to_datetime}</span>
+                    </#if>
+                </div>
                 <div class="panel-body article-panel-body">
                     <#assign context=(article.context!"")>
                     <#if context?length &lt; 320>
