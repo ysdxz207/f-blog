@@ -31,7 +31,7 @@ public class DomainGenerator {
      * @param srcBase
      * <p>要生成的实体类src目录，如：src/main/java</p>
      * @param domainPackage
-     * <p>要生成的实体类所在包名，如：com.puyixiaowo.fblog.domain</p>
+     * <p>要生成的实体类所在包名，如：com.puyixiaowo.yiyi.domain</p>
      */
     public static void generateDomains(String dbhost,
                                         String tables,

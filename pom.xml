@@ -138,7 +138,7 @@
                             <webappTargetDir>${project.build.directory}/classes</webappTargetDir>
                             <cssSourceDir>/static</cssSourceDir>
                             <cssSourceIncludes>
-                                <cssSourceInclude>**/fblog/**/*.css</cssSourceInclude>
+                                <cssSourceInclude>**/yiyi/**/*.css</cssSourceInclude>
                             </cssSourceIncludes>
                             <cssSourceExcludes>
                                 <cssSourceExclude>**/*.min.css</cssSourceExclude>
@@ -147,7 +147,7 @@
                             <!--js-->
                             <jsSourceDir>/static</jsSourceDir>
                             <jsSourceIncludes>
-                                <jsSourceInclude>**/fblog/**/*.js</jsSourceInclude>
+                                <jsSourceInclude>**/yiyi/**/*.js</jsSourceInclude>
                                 <jsSourceInclude>**/rbac/**/*.js</jsSourceInclude>
                             </jsSourceIncludes>
                             <jsSourceExcludes>

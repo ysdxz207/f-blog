@@ -47,7 +47,7 @@ public class FblogController extends BaseController{
         }
         model.put("pageBean", pageBean);
         return new FreeMarkerTemplateEngine().render(
-                new ModelAndView(model, "fblog/index.html")
+                new ModelAndView(model, "yiyi/index.html")
         );
     }
 
@@ -84,7 +84,7 @@ public class FblogController extends BaseController{
 
         model.put("model", articleBean);
         return new FreeMarkerTemplateEngine().render(
-                new ModelAndView(model, "fblog/index.html")
+                new ModelAndView(model, "yiyi/index.html")
         );
     }
     /**
@@ -115,7 +115,7 @@ public class FblogController extends BaseController{
         model.put("search", words);
         model.put("pageBean", pageBean);
         return new FreeMarkerTemplateEngine().render(
-                new ModelAndView(model, "fblog/index.html")
+                new ModelAndView(model, "yiyi/index.html")
         );
     }
 

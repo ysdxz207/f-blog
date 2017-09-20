@@ -1,6 +1,6 @@
 var fblog = {
     BASE_PATH: $('#base_path').val(),
-    $tagTop: $('.fblog-tag-top'),
+    $tagTop: $('.yiyi-tag-top'),
     $articleListContainer: $('#fblog_article_list_container'),
     $containerWidgetTags: $('#container_widget_tags'),
     $containerWidgetCategories: $('#container_widget_categories'),

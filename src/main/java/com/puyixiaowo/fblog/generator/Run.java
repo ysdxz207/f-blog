@@ -11,7 +11,7 @@ public class Run {
         String tables= "user,role,user_role,permission,role_permission" +
                 ",menu,article,category,tag,article_tag";
         String src = "src/main/java";
-        String domainPackage = "com.puyixiaowo.fblog.domain";
+        String domainPackage = "com.puyixiaowo.yiyi.domain";
 
         DomainGenerator.generateDomains(dbhost, tables, src, domainPackage);
     }
