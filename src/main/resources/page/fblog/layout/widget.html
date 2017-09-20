@@ -1,7 +1,7 @@
 <style>
 
 </style>
-<form class="form-group" role="search" action="/search" onsubmit="return fblog.checkSearch()">
+<form class="form-group" role="search" action="${fblog}/search" onsubmit="return fblog.checkSearch()">
     <div class="input-group">
         <input type="text" value="${search!}" name="search" id="input_fblog_search" class="form-control" placeholder="搜索文章">
         <span id="btn_fblog_search" class="input-group-addon btn">搜索</span>

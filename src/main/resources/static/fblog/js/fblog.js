@@ -29,7 +29,7 @@ var fblog = {
 
                var $tag = $('<span class="label label-default" style="background-color: '
                    + color + ';display: inline-block;border-radius: 1em;margin-left: 6px;margin-bottom: 4px;font-size: 100%;font-weight: 100;line-height: inherit;">' +
-                   '    <a href=' + tag.name + '"/?tags=">' + tag.name + '</a>' +
+                   '    <a href=' + tag.name + '"/fblog/?tags=">' + tag.name + '</a>' +
                    '</span>');
                fblog.$containerWidgetTags.append($tag);
                $tag.fadeIn(700);
@@ -70,7 +70,7 @@ var fblog = {
                 $.each(data.list, function (i, category) {
                     var $category = $('<a href='
                         + category.name
-                        + '"/?category=" class="list-group-item">' + category.name + '</a>');
+                        + '"/fblog/?category=" class="list-group-item">' + category.name + '</a>');
                     $category.hide();
                     fblog.$containerWidgetCategories.append($category);
                     $category.fadeIn(500);
@@ -91,7 +91,7 @@ var fblog = {
                     var color = fblog.getRandomColor();
                     var $tag = $('<span class="label label-default" style="background-color: '
                         + color + ';display: inline-block;border-radius: 1em;margin-left: 6px;margin-bottom: 4px;font-size: 100%;font-weight: 100;line-height: inherit;">' +
-                        '    <a href=' + tag.name + '"/?tags=">' + tag.name + '</a>' +
+                        '    <a href=' + tag.name + '"/fblog/?tags=">' + tag.name + '</a>' +
                         '</span>');
 
                     $articleDetailTagsContent.append($tag);
