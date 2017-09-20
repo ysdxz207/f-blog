@@ -1,4 +1,5 @@
 var fblog = {
+    BASE_PATH: $('#base_path').val(),
     $tagTop: $('.fblog-tag-top'),
     $articleListContainer: $('#fblog_article_list_container'),
     $containerWidgetTags: $('#container_widget_tags'),
@@ -17,7 +18,7 @@ var fblog = {
 (function (fblog) {
 
     fblog.loadTopTags = function () {
-        $.getJSON("/fblog/tag/top?num=20", function (data) {
+        $.getJSON(fblog.BASE_PATH + "/tag/top?num=20", function (data) {
             if (!data) {
                 return;
             }
@@ -25,12 +26,7 @@ var fblog = {
             fblog.$containerWidgetTags.parent().delay('fast').fadeTo(500, 1);
 
            $.each(data, function (i, tag) {
-               var color = fblog.getRandomColor();
-
-               var $tag = $('<span class="label label-default" style="background-color: '
-                   + color + ';display: inline-block;border-radius: 1em;margin-left: 6px;margin-bottom: 4px;font-size: 100%;font-weight: 100;line-height: inherit;">' +
-                   '    <a href=' + tag.name + '"/fblog/?tags=">' + tag.name + '</a>' +
-                   '</span>');
+               var $tag = fblog.makeTag(tag)
                fblog.$containerWidgetTags.append($tag);
                $tag.fadeIn(700);
            });
@@ -59,7 +55,7 @@ var fblog = {
     };
 
     fblog.loadCategorys = function () {
-        $.getJSON("/fblog/category/list", {
+        $.getJSON(fblog.BASE_PATH + "/category/list", {
             pageCurrent: 1,
             pageSize: 10
         }, function (data) {
@@ -68,10 +64,7 @@ var fblog = {
                 fblog.$containerWidgetCategories.empty();
                 fblog.$containerWidgetCategories.parent().fadeTo(300,1);
                 $.each(data.list, function (i, category) {
-                    var $category = $('<a href='
-                        + category.name
-                        + '"/fblog/?category=" class="list-group-item">' + category.name + '</a>');
-                    $category.hide();
+                    var $category = fblog.makeCategory(category);
                     fblog.$containerWidgetCategories.append($category);
                     $category.fadeIn(500);
                 });
@@ -83,23 +76,50 @@ var fblog = {
         var $articleDetailTagsContent = $('#article_detail_tags_content');
         var articleId = $('#hidden_article_detail_article_id').val();
         if ($articleDetailTagsContent) {
-            $.getJSON("/fblog/article/tags?articleId=" + articleId, function (data) {
+            $.getJSON(fblog.BASE_PATH + "/article/tags?articleId=" + articleId, function (data) {
                 if (data.statusCode != 200) {
                     return;
                 }
                 $.each(data.data, function (i, tag) {
-                    var color = fblog.getRandomColor();
-                    var $tag = $('<span class="label label-default" style="background-color: '
-                        + color + ';display: inline-block;border-radius: 1em;margin-left: 6px;margin-bottom: 4px;font-size: 100%;font-weight: 100;line-height: inherit;">' +
-                        '    <a href=' + tag.name + '"/fblog/?tags=">' + tag.name + '</a>' +
-                        '</span>');
-
+                    var $tag = fblog.makeTag(tag)
                     $articleDetailTagsContent.append($tag);
                     $tag.fadeIn();
                 });
             });
         }
     };
+
+    /**
+     * 组装tag标签
+     * @param tag
+     * @returns {*|jQuery}
+     */
+    fblog.makeTag = function (tag) {
+        var $tag = $('<span class="label label-default" ' +
+            'style="display: inline-block;border-radius: 1em;' +
+            'margin-left: 6px;margin-bottom: 4px;' +
+            'font-size: 100%;font-weight: 100;' +
+            'line-height: inherit;"><a></a></span>').hide();
+        var color = fblog.getRandomColor();
+        var href = fblog.BASE_PATH + '/?tags=' + tag.name;
+        $tag.css('background-color', color);
+        $tag.find('a').attr('href', href).text(tag.name);
+        return $tag;
+    };
+
+    /**
+     * 组装分类标签
+     * @param tag
+     * @returns {*|jQuery}
+     */
+    fblog.makeCategory = function (category) {
+        var $category = $('<a class="list-group-item"></a>').hide();
+        var href = fblog.BASE_PATH + '/?category=' + category.name;
+        $category.attr('href', href);
+        $category.text(category.name);
+        return $category;
+    };
+
     fblog.init = function () {
 
         fblog.bind();

@@ -144,6 +144,7 @@
                             <jsSourceDir>/static</jsSourceDir>
                             <jsSourceIncludes>
                                 <jsSourceInclude>**/fblog/**/*.js</jsSourceInclude>
+                                <jsSourceInclude>**/rbac/**/*.js</jsSourceInclude>
                             </jsSourceIncludes>
                             <jsSourceExcludes>
                                 <jsSourceExclude>**/*.min.js</jsSourceExclude>
