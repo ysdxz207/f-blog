@@ -3,7 +3,7 @@
         <#list pageBean.list as article>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a href="/article/detail?id=${(article.id)?c}" title="${(article.title)!}" class="article-list-title">
+                    <a href="${fblog}/article/detail?id=${(article.id)?c}" title="${(article.title)!}" class="article-list-title">
                         <#assign title=(article.title!"")>
                             <#if title?length &lt; 28>
                                 ${title}
@@ -20,7 +20,7 @@
                     <#if context?length &lt; 220>
                         ${context}
                         <#else>
-                            ${context?substring(0,220)} ...<a href="/article/detail?id=${(article.id)?c}">查看更多</a>
+                            ${context?substring(0,220)} ...<a href="${fblog}/article/detail?id=${(article.id)?c}">查看更多</a>
                     </#if>
                 </div>
             </div>
