@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <#include "${fblog}/inc/inc.html" />
+    <#include "${yiyi}/inc/inc.html" />
 </head>
 <body>
-<#include "${fblog}/inc/nav.html"/>
+<#include "${yiyi}/inc/nav.html"/>
 
     <div class="container">
 
         <#if model??>
-            <#include "${fblog}/layout/detail.html" />
+            <#include "${yiyi}/layout/detail.html" />
         <#else>
             <#if search??>
-                <#include "${fblog}/layout/list_search.html"/>
+                <#include "${yiyi}/layout/list_search.html"/>
             <#else>
-                <#include "${fblog}/layout/list.html" />
+                <#include "${yiyi}/layout/list.html" />
             </#if>
         </#if>
         <div class="col-sm-3 col-md-3 col-lg-3 visible-sm visible-md visible-lg">
-            <#include "${fblog}/layout/widget.html" />
+            <#include "${yiyi}/layout/widget.html" />
         </div>
     </div>
-<#include "${fblog}/inc/footer.html"/>
+<#include "${yiyi}/inc/footer.html"/>
 </body>
-<script type="text/javascript" src="${fblog}/js/fblog.js"></script>
+<script type="text/javascript" src="${yiyi}/js/fblog.js"></script>
 </html>
