@@ -132,16 +132,22 @@
                             <webappSourceDir>${basedir}/src/main/resources</webappSourceDir>
                             <!--覆盖未压缩的文件-->
                             <webappTargetDir>${project.build.directory}/classes</webappTargetDir>
-                            <cssSourceDir>/static/css</cssSourceDir>
+                            <cssSourceDir>/static</cssSourceDir>
                             <cssSourceIncludes>
-                                <cssSourceInclude>*.css</cssSourceInclude>
+                                <cssSourceInclude>**/fblog/**/*.css</cssSourceInclude>
                             </cssSourceIncludes>
+                            <cssSourceExcludes>
+                                <cssSourceExclude>**/*.min.css</cssSourceExclude>
+                            </cssSourceExcludes>
 
-                            <!--只压缩bjui-->
-                            <jsSourceDir>/static/js</jsSourceDir>
+                            <!--js-->
+                            <jsSourceDir>/static</jsSourceDir>
                             <jsSourceIncludes>
-                                <jsSourceInclude>*.js</jsSourceInclude>
+                                <jsSourceInclude>**/fblog/**/*.js</jsSourceInclude>
                             </jsSourceIncludes>
+                            <jsSourceExcludes>
+                                <jsSourceExclude>**/*.min.js</jsSourceExclude>
+                            </jsSourceExcludes>
 
                         </configuration>
                         <goals>
@@ -284,7 +290,5 @@
             <artifactId>aspectjweaver</artifactId>
             <version>1.8.10</version>
         </dependency>
-
-
     </dependencies>
 </project>

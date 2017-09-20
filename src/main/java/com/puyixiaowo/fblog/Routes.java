@@ -14,7 +14,7 @@ public class Routes {
         Spark.staticFileLocation("static");
 
         //前台
-        path("", () -> {
+        path("/fblog", () -> {
             get("/", ((request, response) -> FblogController.articleList(request, response)));
             get("/category/list", (request, response) -> FblogController.categoryList(request, response));
             get("/tag/top", (request, response) -> FblogController.tagTop(request, response));
@@ -23,6 +23,13 @@ public class Routes {
             get("/article/tags", (request, response) -> FblogController.articleTags(request, response));
 
         });
+
+        path("/xiannv", () -> {
+            get("/", (request, response) -> {
+                return "小仙女";
+            });
+        });
+
 
         //后台管理
         AdminAuthFilter.init();

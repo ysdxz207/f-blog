@@ -1,5 +1,7 @@
 .idea
 **/target
 *.iml
-
+**/lucene
+**/out
+**/sqlite_temp
 *.db

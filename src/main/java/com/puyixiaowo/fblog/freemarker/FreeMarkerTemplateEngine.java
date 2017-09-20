@@ -37,6 +37,7 @@ public class FreeMarkerTemplateEngine extends TemplateEngine {
         retVal.setEncoding(Locale.CHINA, "UTF-8");
         try {
             retVal.setSharedVariable("base", "");
+            retVal.setSharedVariable("fblog", "/fblog");
         } catch (TemplateModelException e) {
             e.printStackTrace();
         }
