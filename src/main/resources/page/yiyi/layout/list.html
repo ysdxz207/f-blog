@@ -20,7 +20,7 @@
                     <#if context?length &lt; 320>
                         ${context}
                         <#else>
-                            ${context?substring(0,320)} ...<a href="/article/detail?id=${(article.id)?c}">查看更多</a>
+                            ${context?substring(0,320)} ...<a href="${yiyi}/article/detail?id=${(article.id)?c}">查看更多</a>
                     </#if>
                 </div>
             </div>
@@ -32,13 +32,13 @@
                 <#if (pageBean.pageCurrent == 1)>
                     <li class="previous disabled"><a><i class="fa fa-angle-double-left"></i> 上一页</a></li>
                 <#else>
-                    <li class="previous"><a href="/?pageCurrent=${pageBean.pageCurrent - 1}"><i class="fa fa-angle-double-left"></i> 上一页</a></li>
+                    <li class="previous"><a href="${yiyi}/?pageCurrent=${pageBean.pageCurrent - 1}"><i class="fa fa-angle-double-left"></i> 上一页</a></li>
                 </#if>
 
                 <#if (pageBean.pageTotal <= pageBean.pageCurrent)>
                     <li class="next disabled"><a>下一页 <i class="fa fa-angle-double-right"></i></a></li>
                 <#else>
-                    <li class="next"><a href="/?pageCurrent=${pageBean.pageCurrent + 1}">下一页 <i class="fa fa-angle-double-right"></i></a></li>
+                    <li class="next"><a href="${yiyi}/?pageCurrent=${pageBean.pageCurrent + 1}">下一页 <i class="fa fa-angle-double-right"></i></a></li>
                 </#if>
             </ul>
         </nav>
