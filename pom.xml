@@ -21,12 +21,16 @@
             <id>dev</id>
             <properties>
                 <redis.pass>123456</redis.pass>
+                <site.fblog>/yiyi</site.fblog>
+                <site.xiannv>/pupu</site.xiannv>
             </properties>
         </profile>
         <profile>
             <id>production</id>
             <properties>
                 <redis.pass>K31f65ds095f1GDaakf0387</redis.pass>
+                <site.fblog>/</site.fblog>
+                <site.xiannv>/</site.xiannv>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>

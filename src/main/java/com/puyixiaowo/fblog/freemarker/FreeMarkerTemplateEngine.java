@@ -1,5 +1,6 @@
 package com.puyixiaowo.fblog.freemarker;
 
+import com.puyixiaowo.fblog.constants.Constants;
 import freemarker.template.*;
 import spark.ModelAndView;
 import spark.TemplateEngine;
@@ -37,7 +38,8 @@ public class FreeMarkerTemplateEngine extends TemplateEngine {
         retVal.setEncoding(Locale.CHINA, "UTF-8");
         try {
             retVal.setSharedVariable("base", "");
-            retVal.setSharedVariable("fblog", "/fblog");
+            retVal.setSharedVariable("yiyi", Constants.SITE_YIYI);
+            retVal.setSharedVariable("pupu", Constants.SITE_PUPU);
         } catch (TemplateModelException e) {
             e.printStackTrace();
         }
