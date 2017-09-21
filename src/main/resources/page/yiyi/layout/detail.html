@@ -5,7 +5,7 @@
         <div class="panel-heading">
             <h2>${(model.title)!}</h2>
             <#if (model.createDate)??>
-                <p>${(model.createDate)?number_to_datetime}</p>
+                <p class="article-create-date">${(model.createDate)?number_to_datetime}</p>
             </#if>
             <p id="article_detail_tags_content"></p>
         </div>
