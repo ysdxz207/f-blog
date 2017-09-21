@@ -114,7 +114,6 @@ public class ArticleController extends BaseController {
         } catch (Exception e) {
             responseBean.errorMessage(e.getMessage());
         }
-
         return responseBean.serialize();
     }
 

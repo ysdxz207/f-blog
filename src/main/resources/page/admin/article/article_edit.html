@@ -16,7 +16,7 @@
     }
 </style>
 <div class="bjui-pageContent">
-<form action="${admin}/article/edit/true" class="datagrid-edit-form" data-toggle="validate" data-data-type="jsonp">
+<form>
     
     <input type="hidden" name="id" value="${(model.id?c)!}"/>
 
@@ -66,7 +66,7 @@
 <div class="bjui-pageFooter">
     <ul>
         <li><button type="button" class="btn-close" data-icon="close">取消</button></li>
-        <li><button type="submit" class="btn-default" data-icon="save">发布</button></li>
+        <li><button type="button" id="btn_admin_article_edit" class="btn-default" data-icon="save">发布</button></li>
     </ul>
 </div>
 
@@ -112,5 +112,29 @@
             //设置编辑器高度为100%
             $('#article_edit_form_content_full_screen .w-e-text-container').css('height', '100%');
         });
+
+        //提交表单
+        $('#btn_admin_article_edit').on('click', function () {
+            BJUI.ajax('ajaxform', {
+                url: '${admin}/article/edit/true',
+                form: $.CurrentNavtab.find('form:eq(0)'),
+                validate: true,
+                loadingmask: true,
+                closeCurrent: true,//参数不起作用
+                datagrids: 'datagrid_article_list_filter',//参数不起作用
+                okalert: false,
+                okCallback: function(json, options) {
+                    if (json.statusCode != 200) {
+                        BJUI.alertmsg('error', json.message);
+                        return;
+                    }
+
+                    BJUI.navtab('closeCurrentTab');
+                    BJUI.navtab('switchTab', 'article');
+                    console.log($('#datagrid_article_list_filter').datagrid());
+                    $('#datagrid_article_list_filter').datagrid('refresh', true);
+                }
+            })
+        })
     });
 </script>

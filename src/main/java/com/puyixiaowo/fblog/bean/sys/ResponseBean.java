@@ -24,6 +24,7 @@ public class ResponseBean implements Serializable {
 	//////////
 	private boolean closeCurrent = true;//默认关闭当前对话框
 	private String tabid;
+	private String datagrids;
 	private String forward;
 	private String forwardConfirm;
 
@@ -82,6 +83,14 @@ public class ResponseBean implements Serializable {
 
 	public void setForwardConfirm(String forwardConfirm) {
 		this.forwardConfirm = forwardConfirm;
+	}
+
+	public String getDatagrids() {
+		return datagrids;
+	}
+
+	public void setDatagrids(String datagrids) {
+		this.datagrids = datagrids;
 	}
 
 	//////////////////////////////
