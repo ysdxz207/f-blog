@@ -74,6 +74,6 @@ public class RoleService {
     }
 
     public static PageBean selectRolePageBean(RoleBean roleBean, PageBean pageBean) {
-        return DBUtils.selectPageBean(getSelectSql(roleBean, pageBean), roleBean);
+        return DBUtils.selectPageBean(getSelectSql(roleBean, pageBean), roleBean, pageBean);
     }
 }

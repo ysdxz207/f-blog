@@ -33,7 +33,7 @@ public class UserService {
     }
 
     public static PageBean selectUserPageBean(UserBean userBean, PageBean pageBean){
-        return DBUtils.selectPageBean(getSelectSql(userBean, pageBean), userBean);
+        return DBUtils.selectPageBean(getSelectSql(userBean, pageBean), userBean, pageBean);
     }
 
     public static void buildSqlParams(StringBuilder sbSql,

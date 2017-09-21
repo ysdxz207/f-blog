@@ -26,7 +26,7 @@ public class PermissionService {
     }
 
     public static PageBean selectPermissionPageBean(PermissionBean permissionBean, PageBean pageBean){
-        return DBUtils.selectPageBean(getSelectSql(permissionBean, pageBean), permissionBean);
+        return DBUtils.selectPageBean(getSelectSql(permissionBean, pageBean), permissionBean, pageBean);
     }
     public static void buildSqlParams(StringBuilder sbSql,
                                                PermissionBean permissionBean) {

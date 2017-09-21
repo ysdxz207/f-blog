@@ -79,7 +79,7 @@ public class MenuService {
         return sbSql.toString();
     }
     public static PageBean selectMenuPageBean(MenuBean menuBean, PageBean pageBean) {
-        return DBUtils.selectPageBean(getSelectSql(menuBean, pageBean), menuBean);
+        return DBUtils.selectPageBean(getSelectSql(menuBean, pageBean), menuBean, pageBean);
     }
     public static void buildSqlParams(StringBuilder sbSql,
                                                MenuBean menuBean) {

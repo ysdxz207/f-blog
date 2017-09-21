@@ -427,8 +427,8 @@ public class DBUtils {
 
 
     public static PageBean selectPageBean(String sql,
-                                          Object paramObj){
-        PageBean pageBean = new PageBean();
+                                          Object paramObj,
+                                          PageBean pageBean){
         List<Object> list = selectList(sql, paramObj);
         int count = count(sql, paramObj);
         pageBean.setList(list);

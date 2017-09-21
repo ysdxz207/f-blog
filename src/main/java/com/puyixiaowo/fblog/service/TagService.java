@@ -70,7 +70,7 @@ public class TagService {
         return sbSql.toString();
     }
     public static PageBean selectTagPageBean(TagBean tagBean, PageBean pageBean){
-        return DBUtils.selectPageBean(getSelectSql(tagBean, pageBean), tagBean);
+        return DBUtils.selectPageBean(getSelectSql(tagBean, pageBean), tagBean, pageBean);
     }
     public static void buildSqlParams(StringBuilder sbSql,
                                                TagBean tagBean) {

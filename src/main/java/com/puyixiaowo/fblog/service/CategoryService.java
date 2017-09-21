@@ -37,7 +37,7 @@ public class CategoryService {
     public static PageBean selectCategoryPageBean (CategoryBean categoryBean,
                                                    PageBean pageBean) {
         return DBUtils.selectPageBean(getSelectSql(categoryBean, pageBean),
-                categoryBean);
+                categoryBean, pageBean);
     }
 
     public static void buildSqlParams(StringBuilder sbSql,

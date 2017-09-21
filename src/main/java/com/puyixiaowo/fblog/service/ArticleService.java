@@ -42,7 +42,7 @@ public class ArticleService {
     public static PageBean selectArticlePageBean(ArticleBean articleBean,
                                                       PageBean pageBean) {
         String sql = getSelectSql(articleBean, pageBean);
-        return DBUtils.selectPageBean(sql, articleBean);
+        return DBUtils.selectPageBean(sql, articleBean, pageBean);
     }
 
     public static void buildSqlParams(StringBuilder sbSql,
