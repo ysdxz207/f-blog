@@ -57,7 +57,7 @@ var fblog = {
     fblog.loadCategorys = function () {
         $.getJSON(fblog.BASE_PATH + "/category/list", {
             pageCurrent: 1,
-            pageSize: 10
+            pageSize: 6
         }, function (data) {
 
             if (data) {
