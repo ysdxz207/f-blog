@@ -82,6 +82,9 @@
         editor.customConfig.onchange = function (html) {
             $hiddenInputArticleEdit.val(html)
         };
+        // 关闭粘贴样式的过滤
+        editor.customConfig.pasteFilterStyle = false;
+        editor.customConfig.zIndex = 1;//不设置的话BJUI的mask会显示不正常，mask的z-index是2
         editor.create();
         editor.txt.html($('#hidden_article_edit_form_content').val());
 
@@ -98,6 +101,8 @@
             editorFullScreen.customConfig.onchange = function (html) {
                 $hiddenInputArticleEdit.val(html)
             };
+            // 关闭粘贴样式的过滤
+            editor.customConfig.pasteFilterStyle = false;
             editorFullScreen.create();
             editorFullScreen.txt.html(editor.txt.html());
 
