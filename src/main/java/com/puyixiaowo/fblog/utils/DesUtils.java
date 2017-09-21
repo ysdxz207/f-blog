@@ -1,5 +1,7 @@
 package com.puyixiaowo.fblog.utils;
 
+import com.puyixiaowo.fblog.constants.Constants;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -11,10 +13,6 @@ import java.security.SecureRandom;
  * 字符串加密工具
  */
 public class DesUtils {
-	/**
-	 * 秘钥
-	 */
-	private static final String PASSWORD_CRYPT_KEY = "20151106";
 	private final static String DES = "DES";
 
 	
@@ -115,7 +113,7 @@ public class DesUtils {
 	public final static String decrypt(String data) {
 		try {
 			return new String(decrypt(hex2byte(data.getBytes()),
-					PASSWORD_CRYPT_KEY.getBytes()));
+					Constants.PASS_DES_KEY.getBytes()));
 		} catch (Exception e) {
 		}
 		return null;
@@ -130,7 +128,7 @@ public class DesUtils {
 	 */
 	public final static String encrypt(String str) {
 		try {
-			return byte2hex(encrypt(str.getBytes(), PASSWORD_CRYPT_KEY
+			return byte2hex(encrypt(str.getBytes(), Constants.PASS_DES_KEY
 					.getBytes()));
 		} catch (Exception e) {
 			e.printStackTrace();
