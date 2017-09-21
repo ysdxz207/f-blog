@@ -6,11 +6,11 @@
         showToolbar: true,
         toolbarItem: 'add,save,cancel,edit,del',
         loadType: 'GET',
-        dataUrl: '${base}/admin/user/true',
+        dataUrl: '${admin}/user/true',
         dataType: 'json',
-        editUrl: '${base}/admin/user/edit',
+        editUrl: '${admin}/user/edit',
         delType: 'POST',
-        delUrl: '${base}/admin/user/delete',
+        delUrl: '${admin}/user/delete',
         delPK: 'id',
         local: 'remote',
         filterAll: true,
@@ -38,7 +38,7 @@
 
                 }">密码</th>
                 <th data-options="{name:'nickname',align:'center'}">昵称</th>
-                <th data-options="{name:'roleId',align:'center',width:180,type:'select',items: function() {return $.getJSON('${base}/admin/role/all/array')},itemattr: {value:'id',label:'roleName'}}">角色</th>
+                <th data-options="{name:'roleId',align:'center',width:180,type:'select',items: function() {return $.getJSON('${admin}/role/all/array')},itemattr: {value:'id',label:'roleName'}}">角色</th>
                 <th data-options="{name:'createTime',align:'center',quickfilter:false,type:'date',pattern:'yyyy-MM-dd HH:mm:ss',add:false,edit:false}">创建时间</th>
                 <th data-options="{name:'lastLoginTime',align:'center',quickfilter:false,type:'date',pattern:'yyyy-MM-dd HH:mm:ss',add:false,edit:false}">最后登录时间</th>
                 <th data-options="{name:'status',align:'center',width:160,type:'select',items:[{'1':'<font color=\'green\'>有效</font>'},{'0':'<font color=\'#ea2000\'>禁止登录</font>'}]}">状态</th>

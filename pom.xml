@@ -23,6 +23,7 @@
                 <redis.pass>123456</redis.pass>
                 <site.yiyi>/yiyi</site.yiyi>
                 <site.pupu>/pupu</site.pupu>
+                <site.admin>/admin</site.admin>
             </properties>
         </profile>
         <profile>
@@ -32,6 +33,7 @@
                 <!--路径不能是/-->
                 <site.yiyi></site.yiyi>
                 <site.pupu></site.pupu>
+                <site.admin>/admin</site.admin>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -137,7 +139,7 @@
                             <webappSourceDir>${basedir}/src/main/resources</webappSourceDir>
                             <!--覆盖未压缩的文件-->
                             <webappTargetDir>${project.build.directory}/classes</webappTargetDir>
-                            <cssSourceDir>/static</cssSourceDir>
+                            <cssSourceDir>/static_resources</cssSourceDir>
                             <cssSourceIncludes>
                                 <cssSourceInclude>**/yiyi/**/*.css</cssSourceInclude>
                             </cssSourceIncludes>
@@ -146,10 +148,10 @@
                             </cssSourceExcludes>
 
                             <!--js-->
-                            <jsSourceDir>/static</jsSourceDir>
+                            <jsSourceDir>/static_resources</jsSourceDir>
                             <jsSourceIncludes>
                                 <jsSourceInclude>**/yiyi/**/*.js</jsSourceInclude>
-                                <jsSourceInclude>**/rbac/**/*.js</jsSourceInclude>
+                                <jsSourceInclude>**/admin/**/*.js</jsSourceInclude>
                             </jsSourceIncludes>
                             <jsSourceExcludes>
                                 <jsSourceExclude>**/*.min.js</jsSourceExclude>

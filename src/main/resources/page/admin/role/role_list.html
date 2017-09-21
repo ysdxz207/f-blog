@@ -5,11 +5,11 @@
         showToolbar: true,
         toolbarItem: 'add,save,cancel,edit,del',
         loadType: 'GET',
-        dataUrl: '${base}/admin/role/true',
+        dataUrl: '${admin}/role/true',
         dataType: 'json',
-        editUrl: '${base}/admin/role/edit',
+        editUrl: '${admin}/role/edit',
         delType: 'POST',
-        delUrl: '${base}/admin/role/delete',
+        delUrl: '${admin}/role/delete',
         delPK: 'id',
         local: 'remote',
         filterAll: true,
@@ -23,7 +23,7 @@
             BJUI.navtab('refresh');
         },
         toolbarCustom: function(){
-        	var url = '${base}/admin/role/setPermission/false';
+        	var url = '${admin}/role/setPermission/false';
         	return role.btnSetPermissions(url);
         }
     }">
@@ -36,4 +36,4 @@
         </thead>
     </table>
 </div>
-<script type="text/javascript" src="${base}/rbac/js/role/role_list.js"></script>
+<script type="text/javascript" src="${admin}/js/role/role_list.js"></script>

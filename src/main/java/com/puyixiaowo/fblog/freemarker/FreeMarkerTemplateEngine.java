@@ -37,7 +37,7 @@ public class FreeMarkerTemplateEngine extends TemplateEngine {
         Configuration retVal = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
         retVal.setEncoding(Locale.CHINA, "UTF-8");
         try {
-            retVal.setSharedVariable("base", "");
+            retVal.setSharedVariable("admin", Constants.SITE_ADMIN);
             retVal.setSharedVariable("yiyi", Constants.SITE_YIYI);
             retVal.setSharedVariable("pupu", Constants.SITE_PUPU);
         } catch (TemplateModelException e) {

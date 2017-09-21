@@ -6,11 +6,11 @@
         showToolbar: true,
         toolbarItem: 'add,save,cancel,edit,del',
         loadType: 'GET',
-        dataUrl: '${base}/admin/menu/true',
+        dataUrl: '${admin}/menu/true',
         dataType: 'json',
-        editUrl: '${base}/admin/menu/edit',
+        editUrl: '${admin}/menu/edit',
         delType: 'POST',
-        delUrl: '${base}/admin/menu/delete',
+        delUrl: '${admin}/menu/delete',
         delPK: 'id',
         local: 'remote',
         isTree: 'menuName',//文档错了，树形文件夹会显示在menuName一列
@@ -28,7 +28,7 @@
         },
 		dropOptions: {
 		    drop        : true,    // 拖动开关
-		    dropUrl     : '${base}/admin/menu/edit',     // 拖动结束后，发送数据到该url
+		    dropUrl     : '${admin}/menu/edit',     // 拖动结束后，发送数据到该url
 		    paging      : false,     // 是否发送分页参数
 		    scope       : 'drop',   // 发送拖动数据范围，'drop' = '被拖动影响的数据'，'all' = '当前页全部数据'
 		    beforeDrag  : null,     // function($tr, data)，拖动前方法，返回false则不拖动
@@ -57,7 +57,7 @@
                 <th data-options="{name:'href',align:'center',quickfilter:false}">访问链接</th>
                 <th data-options="{name:'remark',align:'center'}">备注</th>
                 <th data-options="{name:'type',align:'center',type:'select',items:[{'1':'权限菜单','2':'博客菜单'},{'3':'字典菜单'}]}">类型</th>
-                <!--<th data-options="{name:'pid',align:'center',type:'select',items: function() {return $.getJSON('${base}/admin/menu/array/all')},itemattr: {value:'id',label:'menuName'}}">父级菜单</th>-->
+                <!--<th data-options="{name:'pid',align:'center',type:'select',items: function() {return $.getJSON('${admin}/menu/array/all')},itemattr: {value:'id',label:'menuName'}}">父级菜单</th>-->
                 <th data-options="{name:'pid',align:'center'}">父级菜单</th>
                 <th data-options="{name:'code',align:'center'}">代码</th>
                 <th data-options="{name:'expand',align:'center',type:'select',items:[{'1':'展开','0':'不展开'}]}">是否展开</th>

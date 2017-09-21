@@ -11,7 +11,7 @@ import static spark.Spark.*;
 
 public class Routes {
     public static void init() {
-        Spark.staticFileLocation("static");
+        Spark.staticFileLocation("static_resources");
 
         //fblog前台
         path("/yiyi", () -> {

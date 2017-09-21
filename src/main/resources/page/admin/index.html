@@ -13,12 +13,12 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <!--<link href="/themes/css/bootstrap.css" rel="stylesheet">-->
     <!-- core - css -->
-    <link href="${base}/themes/css/style.css" rel="stylesheet">
-    <link href="${base}/themes/blue/core.css" id="bjui-link-theme" rel="stylesheet">
-    <link href="${base}/themes/css/fontsize.css" id="bjui-link-theme" rel="stylesheet">
+    <link href="${admin}/themes/css/style.css" rel="stylesheet">
+    <link href="${admin}/themes/blue/core.css" id="bjui-link-theme" rel="stylesheet">
+    <link href="${admin}/themes/css/fontsize.css" id="bjui-link-theme" rel="stylesheet">
     <!-- plug - css -->
     <link href="https://cdn.bootcss.com/wangEditor/3.0.8/wangEditor.min.css" rel="stylesheet">
-    <link href="${base}/plugins/nice-validator-1.0.7/jquery.validator.css" rel="stylesheet">
+    <link href="${admin}/plugins/nice-validator-1.0.7/jquery.validator.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/css/bootstrap-select.min.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- jquery -->
@@ -26,14 +26,14 @@
     <!--<script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>-->
     <script src="http://apps.bdimg.com/libs/jquery.cookie/1.4.1/jquery.cookie.js"></script>
     <!--  -->
-    <script src="${base}/rbac/js/bjui-all.js"></script>
+    <script src="${admin}/js/bjui-all.js"></script>
 
     <!-- plugins -->
     <script src="https://cdn.bootcss.com/wangEditor/3.0.8/wangEditor.min.js"></script>
     <script src="https://cdn.bootcss.com/zTree.v3/3.5.29/js/jquery.ztree.all.min.js"></script>
     <!-- nice validate -->
     <script src="https://cdn.bootcss.com/nice-validator/1.1.1/jquery.validator.min.js"></script>
-    <script src="/plugins/nice-validator-1.0.7/jquery.validator.themes.js"></script>
+    <script src="${admin}/plugins/nice-validator-1.0.7/jquery.validator.themes.js"></script>
     <!-- bootstrap plugins -->
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!--<script src="/plugins/bootstrap.min.js"></script>-->
@@ -47,8 +47,8 @@
     <script type="text/javascript">
         $(function() {
             BJUI.init({
-                JSPATH       : '/',         //[可选]框架路径
-                PLUGINPATH   : '/plugins/', //[可选]插件路径
+                JSPATH       : '${admin}/',         //[可选]框架路径
+                PLUGINPATH   : '${admin}/plugins/', //[可选]插件路径
                 loginInfo    : {url:'/admin/login', title:'登录', width:440, height:240}, // 会话超时后弹出登录对话框
                 statusCode   : {ok:200, error:300, timeout:301}, //[可选]
                 ajaxTimeout  : 300000, //[可选]全局Ajax请求超时时间(毫秒)
@@ -162,9 +162,9 @@
         </div>
         <nav class="collapse navbar-collapse" id="bjui-navbar-collapse">
             <ul class="nav navbar-nav navbar-right" id="bjui-hnav-navbar">
-                <li>
-                    <a href="/admin/menu/menus/3" data-toggle="sidenav" data-id-key="targetid">字典管理</a>
-                </li>
+                <!--<li>-->
+                    <!--<a href="/admin/menu/menus/3" data-toggle="sidenav" data-id-key="targetid">字典管理</a>-->
+                <!--</li>-->
                 <li class="active">
                     <a href="/admin/menu/menus/2" data-toggle="sidenav" data-id-key="targetid">博客管理</a>
                 </li>

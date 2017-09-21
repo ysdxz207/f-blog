@@ -13,7 +13,7 @@
 html, body { height: 100%; overflow: hidden; }
 body {
     font-family: "Verdana", "Tahoma", "Lucida Grande", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
-    background: url(/images/loginbg_01.jpg) no-repeat center center fixed;
+    background: url(${admin}/images/loginbg_01.jpg) no-repeat center center fixed;
     background-size: cover;
 }
 .form-control{height:37px;}
@@ -84,7 +84,7 @@ function changeCode(){
 }
 function choose_bg() {
     var bg = Math.floor(Math.random() * 9 + 1);
-    $('body').css('background-image', 'url(/images/loginbg_0'+ bg +'.jpg)');
+    $('body').css('background-image', 'url(${admin}/images/loginbg_0'+ bg +'.jpg)');
 }
 </script>
 </head>
