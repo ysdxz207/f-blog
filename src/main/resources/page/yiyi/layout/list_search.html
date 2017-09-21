@@ -3,7 +3,7 @@
         <#list pageBean.list as article>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a href="${yiyi}/yiyi/article/detail?id=${(article.id)?c}" title="${(article.title)!}" class="article-list-title">
+                    <a href="${yiyi}/article/detail?id=${(article.id)?c}" title="${(article.title)!}" class="article-list-title">
                         <#assign title=(article.title!"")>
                             <#if title?length &lt; 28>
                                 ${title}

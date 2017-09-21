@@ -141,14 +141,19 @@ public class LuceneIndexUtils {
         FileUtils.deleteDirectory(path.toFile());
     }
 
-    private static void deleteLuceneIndex(ArticleBean articleBean) throws Exception {
+    public static void deleteLuceneIndex(Long id) throws Exception {
+
+        if (id == null ||
+                id <= 0) {
+            return;
+        }
 
         Directory dir = FSDirectory.open(path);
         IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
         IndexWriter indexWriter = new IndexWriter(dir, iwc);
 
-        QueryParser queryParser = new QueryParser("title", analyzer);
-        Query query = queryParser.parse(QueryParser.escape(articleBean.getTitle()));
+        QueryParser queryParser = new QueryParser("id", analyzer);
+        Query query = queryParser.parse("id:" + id);
 
         indexWriter.deleteDocuments(query);
         indexWriter.commit();
@@ -156,7 +161,7 @@ public class LuceneIndexUtils {
     }
 
     public static void dealLuceneIndex(ArticleBean articleBean) throws Exception{
-        deleteLuceneIndex(articleBean);
+        deleteLuceneIndex(articleBean.getId());
         addLuceneIndex(articleBean);
     }
 }

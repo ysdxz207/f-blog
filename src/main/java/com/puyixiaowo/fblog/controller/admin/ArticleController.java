@@ -13,6 +13,7 @@ import com.puyixiaowo.fblog.service.ArticleService;
 import com.puyixiaowo.fblog.service.TagService;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.LuceneIndexUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import spark.ModelAndView;
 import spark.Request;
@@ -121,10 +122,19 @@ public class ArticleController extends BaseController {
     public static String delete(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
 
+
         try {
             String ids = request.queryParams("id");
-            DBUtils.deleteByIds(ArticleBean.class,
-                    ids);
+            if (StringUtils.isNotBlank(ids)) {
+                DBUtils.deleteByIds(ArticleBean.class,
+                        ids);
+                //删除lucene索引
+                for (String id :
+                        ids.split(",")) {
+                    LuceneIndexUtils.deleteLuceneIndex(Long.valueOf(id));
+                }
+            }
+
         } catch (Exception e) {
             responseBean.error(e);
         }
