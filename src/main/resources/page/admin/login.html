@@ -64,7 +64,7 @@ $(function() {
             $.cookie(COOKIE_NAME, null, { path: '/' });  //删除cookie
         }
         
-        $("#login_ok").attr("disabled", true).val('登陆中..');
+        $("#login_ok").attr("disabled", true).val('登录中..');
         /*
         var key = CryptoJS.enc.Base64.parse($("#j_randomKey").val());
         var iv = CryptoJS.enc.Latin1.parse('0102030405060708');
@@ -128,11 +128,11 @@ function choose_bg() {
                 </div>
             </div>
             -->
-            <div class="form-group">
+            <!--<div class="form-group">
                 <div class="checkbox">
                     <label for="j_remember" class="m"><input id="j_remember" type="checkbox" name="rememberMe" value="true">&nbsp;记住登陆账号!</label>
                 </div>
-            </div>
+            </div>-->
             <div class="text-center">
                 <button type="submit" id="login_ok" class="btn btn-primary btn-lg">&nbsp;登&nbsp;录&nbsp;</button>&nbsp;&nbsp;&nbsp;&nbsp;
                 <button type="reset" class="btn btn-default btn-lg">&nbsp;重&nbsp;置&nbsp;</button>
