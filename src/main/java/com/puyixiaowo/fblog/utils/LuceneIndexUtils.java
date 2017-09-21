@@ -93,7 +93,7 @@ public class LuceneIndexUtils {
         String[] fields = {"title", "context", "createDate"};
 
         QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
-        Query query = queryParser.parse(queries);
+        Query query = queryParser.parse(QueryParser.escape(queries));
 
         try {
             //获取搜索结果总数
@@ -148,7 +148,7 @@ public class LuceneIndexUtils {
         IndexWriter indexWriter = new IndexWriter(dir, iwc);
 
         QueryParser queryParser = new QueryParser("title", analyzer);
-        Query query = queryParser.parse(articleBean.getTitle());
+        Query query = queryParser.parse(QueryParser.escape(articleBean.getTitle()));
 
         indexWriter.deleteDocuments(query);
         indexWriter.commit();
