@@ -27,7 +27,7 @@ public class Constants {
 
 
     /*
-     * 密码des密钥
+     * 密码des密钥,值由ConfigUtils初始化从admin_auth.yaml中取
      */
     public static String PASS_DES_KEY = "20151106";
     public static final String SITE_ADMIN = ResourceUtils.load("conf/site.properties").getProperty("site.admin");
