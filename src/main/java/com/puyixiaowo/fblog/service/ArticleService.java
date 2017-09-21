@@ -60,6 +60,10 @@ public class ArticleService {
             sbSql.append("and c.name = :category ");
         }
 
+        if (articleBean.getCategoryId() != null) {
+            sbSql.append("and a.category_id = :categoryId ");
+        }
+
         if (articleBean.getTags() != null) {
             sbSql.append("and t.name = :tags ");
         }
