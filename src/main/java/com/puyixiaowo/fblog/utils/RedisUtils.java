@@ -17,20 +17,33 @@ import java.util.Set;
  * @date 2017-08-03 9:29
  */
 public class RedisUtils {
+
+    private static String host ;
+    private static int port;
+    private static String password;
+    private static int maxActive;
+    private static int maxIdle;
+    private static int maxWait;
+    private static int timeout;
+
     private static JedisPool jedisPool;
 
     static {
         //读取相关的配置
         ResourceBundle resourceBundle = ResourceBundle.getBundle("redis");
-        String ip = resourceBundle.getString("redis.host");
-        int port = Integer.parseInt(resourceBundle.getString("redis.port"));
-        String password = resourceBundle.getString("redis.password");
-        int maxActive = Integer.parseInt(resourceBundle.getString("redis.pool.maxActive"));
-        int maxIdle = Integer.parseInt(resourceBundle.getString("redis.pool.maxIdle"));
-        int maxWait = Integer.parseInt(resourceBundle.getString("redis.pool.maxWait"));
-        int timeout = Integer.parseInt(resourceBundle.getString("redis.pool.timeout"));
+        host = resourceBundle.getString("redis.host");
+        port = Integer.parseInt(resourceBundle.getString("redis.port"));
+        password = resourceBundle.getString("redis.password");
+        maxActive = Integer.parseInt(resourceBundle.getString("redis.pool.maxActive"));
+        maxIdle = Integer.parseInt(resourceBundle.getString("redis.pool.maxIdle"));
+        maxWait = Integer.parseInt(resourceBundle.getString("redis.pool.maxWait"));
+        timeout = Integer.parseInt(resourceBundle.getString("redis.pool.timeout"));
 
 
+        init(host, port, password);
+    }
+
+    private static void init(String host, int port, String password) {
         // 建立连接池配置参数
         JedisPoolConfig config = new JedisPoolConfig();
         // 设置最大连接数
@@ -40,11 +53,10 @@ public class RedisUtils {
         // 设置空间连接
         config.setMaxIdle(maxIdle);
         if (StringUtils.isNotBlank(password)) {
-            jedisPool = new JedisPool(config, ip, port, timeout, password);
+            jedisPool = new JedisPool(config, host, port, timeout, password);
         } else {
-            jedisPool = new JedisPool(config, ip, port);
+            jedisPool = new JedisPool(config, host, port);
         }
-
     }
 
     public static void testConnection() {

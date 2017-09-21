@@ -4,15 +4,15 @@
     <div class="panel">
         <div class="panel-heading">
             <h2>${(model.title)!}</h2>
-            <#if (article.createDate)??>
-                <p>${(article.createDate)?number_to_datetime}</p>
+            <#if (model.createDate)??>
+                <p>${(model.createDate)?number_to_datetime}</p>
             </#if>
             <p id="article_detail_tags_content"></p>
         </div>
         <div class="panel-body">
             ${(model.context)!}
-        </div>
-    </div>
+        </>
+     </div>
 
     <#include "/yiyi/layout/comment.html"/>
 </div>
