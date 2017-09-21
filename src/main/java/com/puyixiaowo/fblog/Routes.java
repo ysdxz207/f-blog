@@ -1,5 +1,6 @@
 package com.puyixiaowo.fblog;
 
+import com.puyixiaowo.fblog.controller.IndexController;
 import com.puyixiaowo.fblog.controller.admin.*;
 import com.puyixiaowo.fblog.controller.fblog.FblogController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
@@ -12,6 +13,8 @@ import static spark.Spark.*;
 public class Routes {
     public static void init() {
         Spark.staticFileLocation("static_resources");
+
+        get("/", (request, response) -> IndexController.index(request, response));
 
         //fblog前台
         path("/yiyi", () -> {
