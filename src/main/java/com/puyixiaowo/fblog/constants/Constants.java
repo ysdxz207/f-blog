@@ -26,6 +26,10 @@ public class Constants {
     public static final String RESPONSE_SUCCESS_MESSAGE = "操作成功";
 
 
+    /*
+     * 密码des密钥
+     */
+    public static String PASS_DES_KEY = "20151106";
     public static final String SITE_ADMIN = ResourceUtils.load("conf/site.properties").getProperty("site.admin");
     public static final String SITE_YIYI = ResourceUtils.load("conf/site.properties").getProperty("site.yiyi");
     public static final String SITE_PUPU = ResourceUtils.load("conf/site.properties").getProperty("site.pupu");

@@ -1,6 +1,7 @@
 package com.puyixiaowo.fblog.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import org.yaml.snakeyaml.Yaml;
 
@@ -15,6 +16,7 @@ public class ConfigUtils {
 
     private static final String ADMIN_CONFIG_FILE = "conf/admin_auth.yaml";
     private static final String IGNORE_LIST = "ignore_list";
+    private static final String PASS_DES_KEY = "pass_des_key";
 
     /**
      * 初始化配置有顺序
@@ -26,7 +28,7 @@ public class ConfigUtils {
     }
 
     /**
-     * chu初始化后台登录链接配置
+     * chu初始化后台登录链接配置以及密钥配置
      */
     private static void initAdminConf() {
         Yaml yaml = new Yaml();
@@ -35,9 +37,21 @@ public class ConfigUtils {
         if (!(obj instanceof Map)) {
             throw new RuntimeException("后台用户登录链接配置不正确");
         }
-        Map<String, List> map = (Map) obj;
+        Map<String, Object> map = (Map) obj;
 
-        List<String> ignores = map.get(IGNORE_LIST);
+        Object ignoresObj = map.get(IGNORE_LIST);
+
+        List<String> ignores = null;
+        if (ignoresObj instanceof List) {
+            ignores = (List<String>) ignoresObj;
+        }
+        Object keyObj = map.get(PASS_DES_KEY);
+        String key = null;
+        if (keyObj instanceof String) {
+            key = keyObj.toString();
+        }
+
+        Constants.PASS_DES_KEY = key;
 
         if (ignores == null) {
             throw new RuntimeException("后台用户权限配置不正确");

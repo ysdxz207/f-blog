@@ -4,3 +4,5 @@
 ignore_list:
   - /admin/loginPage
   - /admin/login
+# password des key
+pass_des_key: '20151106'
