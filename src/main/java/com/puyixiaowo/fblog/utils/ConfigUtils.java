@@ -3,6 +3,7 @@ package com.puyixiaowo.fblog.utils;
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
+import com.puyixiaowo.fblog.error.ErrorHandler;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class ConfigUtils {
         initRedis();
         DBUtils.initDB();
         initAdminConf();
+        ErrorHandler.init();
     }
 
     /**
