@@ -46,7 +46,7 @@ var fblog = {
     fblog.bind = function () {
 
         //搜索
-        $(document).on('click', '#btn_fblog_search', function () {
+        $(document).on('click', '#btn_fblog_search,#btn_fblog_search_nav', function () {
             if (fblog.checkSearch()) {
 
                 $('form[role=search]').submit();
@@ -131,8 +131,9 @@ var fblog = {
     };
 
     fblog.checkSearch = function () {
-        var search = $('#input_fblog_search').val();
-        if (!search) {
+        var search = $('#input_fblog_search').val(),
+            searchNav = $('#input_fblog_search_nav');
+        if (!search && !searchNav) {
             return false;
         }
         return true;

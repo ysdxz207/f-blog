@@ -3,14 +3,12 @@ package com.puyixiaowo.fblog.utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fblog.exception.JedisConfigException;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import redis.clients.jedis.*;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.exceptions.JedisDataException;
 
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Moses
@@ -147,5 +145,31 @@ public class RedisUtils {
             return defaultValue;
         }
         return JSONObject.parseObject(str, clazz);
+    }
+
+    private static void selectDB(ShardedJedis shardedJedis, int dbIndex) {
+        Collection<Jedis> collection=shardedJedis.getAllShards();
+        Iterator<Jedis> iterator = collection.iterator();
+        while(iterator.hasNext()){
+            Jedis jedis = iterator.next();
+            jedis.select(dbIndex);
+        }
+
+    }
+
+    public static void main(String[] args) {
+        JedisShardInfo jedisShardInfo = new JedisShardInfo("http://127.0.0.1:6379/2");
+        jedisShardInfo.setPassword("123456");
+        System.out.println(jedisShardInfo.getDb());
+        List<JedisShardInfo> shards = Arrays.asList(
+                jedisShardInfo
+        );
+
+        GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+
+        ShardedJedisPool shardedJedisPool = new ShardedJedisPool(config, shards);
+
+        ShardedJedis shardedJedis = shardedJedisPool.getResource();
+        System.out.println(JSON.toJSONString(shardedJedis.getAllShardInfo()));
     }
 }
