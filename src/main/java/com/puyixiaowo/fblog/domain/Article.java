@@ -12,6 +12,7 @@ public class Article implements Serializable {
 	private Long categoryId;
 	private Long createDate;
 	private Long lastUpdateDate;
+	private String type;
 	private Integer status;
 
 
@@ -79,4 +80,11 @@ public class Article implements Serializable {
 		this.status = status;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 }

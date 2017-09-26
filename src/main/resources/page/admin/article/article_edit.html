@@ -21,6 +21,16 @@
     <input type="hidden" name="id" value="${(model.id?c)!}"/>
 
     <div class="bjui-row col-2">
+        <label class="row-label">博客</label>
+        <div class="row-input required">
+            <select name="type" data-toggle="selectpicker" data-rule="required">
+                <option value="">请选择</option>
+                <option value="yiyi">yiyi</option>
+                <option value="pupu">pupu</option>
+            </select>
+        </div>
+        <br>
+
         <label class="row-label">标题</label>
         <div class="row-input required">
             <input name="title" value="${(model.title)!}" data-rule="required" >

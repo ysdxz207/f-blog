@@ -63,7 +63,9 @@ public class ArticleService {
         if (articleBean.getCategoryId() != null) {
             sbSql.append("and a.category_id = :categoryId ");
         }
-
+        if (articleBean.getType() != null) {
+            sbSql.append("and a.type = :type ");
+        }
         if (articleBean.getTags() != null) {
             sbSql.append("and t.name = :tags ");
         }

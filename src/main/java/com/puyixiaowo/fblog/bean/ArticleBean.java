@@ -25,6 +25,8 @@ public class ArticleBean extends Validatable implements Serializable {
 	private Long createDate;
 	@JSONField(serializeUsing = CustomDateTimeSerializer.class)
 	private Long lastUpdateDate;
+	@NotNull(message = "请选择所属")
+	private String type;
 	private Integer status;
 
 
@@ -113,5 +115,13 @@ public class ArticleBean extends Validatable implements Serializable {
 
 	public void setTags(String tags) {
 		this.tags = tags;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }

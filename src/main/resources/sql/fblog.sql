@@ -7,6 +7,7 @@ CREATE TABLE `article` (
   `category_id`      INTEGER(20)  NULL,
   `create_date`      INTEGER(13)  NOT NULL,
   `last_update_date` INTEGER(13)           DEFAULT 1,
+  `type`             VARCHAR(10)   NOT NULL DEFAULT 'yiyi',
   `status`           INTEGER(4)   NULL,
   PRIMARY KEY (`id`)
 );

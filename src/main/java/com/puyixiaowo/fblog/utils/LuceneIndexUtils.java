@@ -71,6 +71,7 @@ public class LuceneIndexUtils {
 
         // 对字段建立索引
         doc.add(new Field("id", articleBean.getId() + "", new FieldType(TextField.TYPE_STORED)));
+        doc.add(new Field("type", articleBean.getType(), new FieldType(TextField.TYPE_STORED)));
         doc.add(new Field("title", articleBean.getTitle(), new FieldType(TextField.TYPE_STORED)));
         doc.add(new Field("context", articleBean.getContext(), new FieldType(TextField.TYPE_STORED)));
         doc.add(new Field("createDate",
@@ -84,7 +85,7 @@ public class LuceneIndexUtils {
     }
 
     public static PageBean search(PageBean pageBean,
-                              String queries) throws Exception {
+                              String queries, String type) throws Exception {
         List<ArticleBean> list = new ArrayList<>();
         Directory dir = FSDirectory.open(path);
         IndexReader reader = DirectoryReader.open(dir);
@@ -105,13 +106,18 @@ public class LuceneIndexUtils {
             TopDocs topDocs = searcher.searchAfter(lastScoreDoc, query, pageBean.getPageSize());
             for (ScoreDoc item : topDocs.scoreDocs) {
                 Document doc = searcher.doc(item.doc);
+                if (!doc.get("type").equals(type)) {
+                    continue;
+                }
                 ArticleBean bean = new ArticleBean();
                 bean.setId(Long.valueOf(doc.get("id")));
                 bean.setTitle(doc.get("title"));
                 bean.setContext(doc.get("context"));
+                bean.setType(doc.get("type"));
                 bean.setCreateDate(DateUtils
                         .parseDate(doc.get("createDate"),
                                 "yyyy-MM-dd HH:mm:ss").getTime());
+
                 list.add(bean);
             }
         } catch (Exception e) {

@@ -39,6 +39,7 @@ public class FblogController extends BaseController{
         ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
 
         articleBean.setStatus(1);//发布状态
+        articleBean.setType("yiyi");
         pageBean = ArticleService.selectArticlePageBean(articleBean, pageBean);
         for (ArticleBean bean :
                 pageBean.getList()) {
@@ -107,7 +108,7 @@ public class FblogController extends BaseController{
         PageBean pageBean = getPageBean(request);
 
         try {
-            pageBean = LuceneIndexUtils.search(pageBean, words);
+            pageBean = LuceneIndexUtils.search(pageBean, words, "yiyi");
         } catch (Exception e) {
             pageBean.error(e);
         }
