@@ -54,20 +54,25 @@ var fblog = {
         });
     };
 
-    fblog.loadCategorys = function () {
+    fblog.loadCategories = function (pageCurrent) {
         $.getJSON(fblog.BASE_PATH + "/category/list", {
-            pageCurrent: 1,
+            pageCurrent: pageCurrent,
             pageSize: 6
         }, function (data) {
-
-            if (data) {
-                fblog.$containerWidgetCategories.empty();
+            if (data.list.length > 0) {
+                fblog.$containerWidgetCategories.find('.more').remove();
                 fblog.$containerWidgetCategories.parent().fadeTo(300,1);
                 $.each(data.list, function (i, category) {
                     var $category = fblog.makeCategory(category);
                     fblog.$containerWidgetCategories.append($category);
                     $category.fadeIn(500);
                 });
+                //加载更多
+                if (data.pageCurrent < data.pageTotal) {
+                    var $category = $('<a href="javascript:fblog.loadCategories(' + (pageCurrent + 1) + ')" class="list-group-item text-center more">加载更多...</a>');
+                    fblog.$containerWidgetCategories.append($category);
+                    $category.fadeIn(500);
+                }
             }
         });
     };
@@ -124,7 +129,7 @@ var fblog = {
 
         fblog.bind();
         fblog.loadTopTags();
-        fblog.loadCategorys();
+        fblog.loadCategories(1);
 
         //detail
         fblog.loadArticleTags();
