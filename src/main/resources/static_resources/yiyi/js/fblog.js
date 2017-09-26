@@ -132,7 +132,7 @@ var fblog = {
 
     fblog.checkSearch = function () {
         var search = $('#input_fblog_search').val(),
-            searchNav = $('#input_fblog_search_nav');
+            searchNav = $('#input_fblog_search_nav').val();
         if (!search && !searchNav) {
             return false;
         }
