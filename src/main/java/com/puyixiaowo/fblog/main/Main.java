@@ -7,6 +7,8 @@ import com.puyixiaowo.fblog.error.ErrorHandler;
 import com.puyixiaowo.fblog.generator.utils.CustomIdSerializer;
 import com.puyixiaowo.fblog.utils.AppUtils;
 import com.puyixiaowo.fblog.utils.ConfigUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static spark.Spark.port;
 
