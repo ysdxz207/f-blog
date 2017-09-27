@@ -30,6 +30,8 @@ public class Constants {
      * 密码des密钥,值由ConfigUtils初始化从admin_auth.yaml中取
      */
     public static String PASS_DES_KEY = "20151106";
+    public static final String DB_HOST = ResourceUtils.load("jdbc.properties").getProperty("sqlite3.host");
+    public static final String BACK_UP_DB_FILE_PATH = ResourceUtils.load("conf/site.properties").getProperty("db.backup.path");
     public static final String SITE_ADMIN = ResourceUtils.load("conf/site.properties").getProperty("site.admin");
     public static final String SITE_YIYI = ResourceUtils.load("conf/site.properties").getProperty("site.yiyi");
     public static final String SITE_PUPU = ResourceUtils.load("conf/site.properties").getProperty("site.pupu");

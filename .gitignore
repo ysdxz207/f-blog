@@ -6,3 +6,4 @@
 **/sqlite_temp
 *.db
 logs
+dbbackup

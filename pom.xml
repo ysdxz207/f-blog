@@ -24,6 +24,7 @@
                 <site.yiyi>/yiyi</site.yiyi>
                 <site.pupu>/pupu</site.pupu>
                 <site.admin>/admin</site.admin>
+                <db.backup.path>./dbbackup</db.backup.path>
             </properties>
         </profile>
         <profile>
@@ -34,6 +35,7 @@
                 <site.yiyi></site.yiyi>
                 <site.pupu></site.pupu>
                 <site.admin>/admin</site.admin>
+                <db.backup.path>/root/fblog_db_backup</db.backup.path>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>

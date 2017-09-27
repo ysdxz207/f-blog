@@ -6,10 +6,8 @@ import org.apache.commons.io.LineIterator;
 import org.sql2o.Connection;
 import org.sql2o.Query;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +21,10 @@ public class FileUtils {
 
     /**
      * 运行资源目录下sql
+     *
      * @param conn
-     * @param folder
-     *          目录
-     * @param filenames
-     *          文件名列表
+     * @param folder    目录
+     * @param filenames 文件名列表
      */
     public static void runResourcesSql(Connection conn, String folder, String... filenames) {
 
@@ -90,5 +87,16 @@ public class FileUtils {
             IOUtils.copy(in, out);
         }
         return tempFile;
+    }
+
+    public static void copyFile(File source, File target) {
+        try (FileInputStream inStream = new FileInputStream(source);
+             FileOutputStream outStream = new FileOutputStream(target);
+             FileChannel in = inStream.getChannel();
+             FileChannel out = outStream.getChannel()) {
+            in.transferTo(0, in.size(), out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

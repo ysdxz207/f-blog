@@ -5,6 +5,7 @@ import com.puyixiaowo.fblog.annotation.Id;
 import com.puyixiaowo.fblog.annotation.Transient;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
+import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.exception.DBException;
 import com.puyixiaowo.fblog.exception.DBSqlException;
@@ -44,7 +45,7 @@ public class DBUtils {
         }
         System.setProperty("org.sqlite.tmpdir",
                 sqliteTempDir);
-        String dbHost = (String) ResourceUtils.load("jdbc.properties").get("sqlite3.host");
+        String dbHost = Constants.DB_HOST;
 
         if (StringUtils.isBlank(dbHost)) {
             throw new DBException("There is no db host found.");
