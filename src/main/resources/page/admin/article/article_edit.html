@@ -25,8 +25,8 @@
         <div class="row-input required">
             <select name="type" data-toggle="selectpicker" data-rule="required">
                 <option value="">请选择</option>
-                <option value="yiyi">yiyi</option>
-                <option value="pupu">pupu</option>
+                <option value="yiyi" ${((model.type?? && model.type == 'yiyi'))?string('selected','')}>yiyi</option>
+                <option value="pupu" ${(model.type?? && model.type == 'pupu')?string('selected','')}>pupu</option>
             </select>
         </div>
         <br>
