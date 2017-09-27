@@ -15,6 +15,7 @@ import static spark.Spark.port;
  * @date 2017-08-01 18:21
  */
 public class Main {
+
     /**
      * 支持启动设置端口：java -jar f-blog-1.0.jar -p 1521,
      * 默认启动端口8003
@@ -29,7 +30,6 @@ public class Main {
 
         ErrorHandler.handleErrors();
         Routes.init();
-
         //ID序列化为字符串类型
         SerializeConfig.getGlobalInstance().put(Long.class, new CustomIdSerializer());
     }

@@ -5,3 +5,4 @@
 **/out
 **/sqlite_temp
 *.db
+logs

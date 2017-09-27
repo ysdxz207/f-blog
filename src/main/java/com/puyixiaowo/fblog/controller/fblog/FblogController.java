@@ -14,6 +14,8 @@ import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.LuceneIndexUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -23,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FblogController extends BaseController{
+
+    private static final Logger logger = LoggerFactory.getLogger(FblogController.class);
 
     /**
      * 首页
@@ -40,11 +44,15 @@ public class FblogController extends BaseController{
 
         articleBean.setStatus(1);//发布状态
         articleBean.setType("yiyi");
-        pageBean = ArticleService.selectArticlePageBean(articleBean, pageBean);
-        for (ArticleBean bean :
-                pageBean.getList()) {
-            String html = StringEscapeUtils.unescapeHtml4(bean.getContext());
-            bean.setContext(StringUtils.delHTMLTag(html));
+        try {
+            pageBean = ArticleService.selectArticlePageBean(articleBean, pageBean);
+            for (ArticleBean bean :
+                    pageBean.getList()) {
+                String html = StringEscapeUtils.unescapeHtml4(bean.getContext());
+                bean.setContext(StringUtils.delHTMLTag(html));
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
         model.put("pageBean", pageBean);
         return new FreeMarkerTemplateEngine().render(
