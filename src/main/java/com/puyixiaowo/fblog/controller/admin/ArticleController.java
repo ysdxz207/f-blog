@@ -100,11 +100,11 @@ public class ArticleController extends BaseController {
             ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, true);
 
             UserBean currentUser = request.session().attribute(Constants.SESSION_USER_KEY);
-            articleBean.setCreator(currentUser.getLoginname());
-            articleBean.setCreateDate(System.currentTimeMillis());
-            if (articleBean.getId() != null) {
-                articleBean.setLastUpdateDate(System.currentTimeMillis());
+            if (articleBean.getId() == null) {
+                articleBean.setCreator(currentUser.getLoginname());
+                articleBean.setCreateDate(System.currentTimeMillis());
             }
+            articleBean.setLastUpdateDate(System.currentTimeMillis());
 
             DBUtils.insertOrUpdate(articleBean);
             //标签
