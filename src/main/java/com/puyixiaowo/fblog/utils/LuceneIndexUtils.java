@@ -154,9 +154,7 @@ public class LuceneIndexUtils {
             return;
         }
 
-        Directory dir = FSDirectory.open(path);
-        IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
-        IndexWriter indexWriter = new IndexWriter(dir, iwc);
+        IndexWriter indexWriter = getIndexWriter();
 
         QueryParser queryParser = new QueryParser("id", analyzer);
         Query query = queryParser.parse("id:" + id);

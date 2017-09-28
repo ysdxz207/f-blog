@@ -14,7 +14,10 @@ import com.puyixiaowo.fblog.service.TagService;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.LuceneIndexUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.text.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -29,6 +32,8 @@ import java.util.Map;
  * 文章
  */
 public class ArticleController extends BaseController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
     /**
      * 文章列表
@@ -98,9 +103,18 @@ public class ArticleController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
         try {
             ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, true);
-
             UserBean currentUser = request.session().attribute(Constants.SESSION_USER_KEY);
-            if (articleBean.getId() == null) {
+
+            if (articleBean.getId() != null) {
+                ArticleBean bean = DBUtils.selectOne("select * from article where id=:id", articleBean);
+                if (bean == null) {
+                    responseBean.errorMessage("文章不存在！");
+                    return responseBean.serialize();
+                }
+
+                articleBean.setCreateDate(bean.getCreateDate());
+                articleBean.setCreator(bean.getCreator());
+            } else  {
                 articleBean.setCreator(currentUser.getLoginname());
                 articleBean.setCreateDate(System.currentTimeMillis());
             }
@@ -113,6 +127,7 @@ public class ArticleController extends BaseController {
             LuceneIndexUtils.dealLuceneIndex(articleBean);
         } catch (Exception e) {
             responseBean.errorMessage(e.getMessage());
+            logger.error("编辑文章异常：", e);
         }
         return responseBean.serialize();
     }
