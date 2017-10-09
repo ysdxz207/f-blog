@@ -27,31 +27,31 @@ public class TimerBackupDB extends TimerTask{
 
     private static final int TIME_EVERY_DAY = 1 * 24 * 60 * 60 * 1000;
     private static Date FIRST_DATE;
-    private static String SOURCE_FILE_NAME;
-    private static String TARGET_FILE_NAME;
 
 
     public TimerBackupDB() {
-        LocalDate localDate = LocalDate.now(ZoneId.systemDefault()).plusDays(1L);
-        FIRST_DATE = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-
-
-        SOURCE_FILE_NAME = Constants.DB_HOST;
-        TARGET_FILE_NAME = Constants.BACK_UP_DB_FILE_PATH
-                + "/"
-                + DateFormatUtils.format(FIRST_DATE, "yyyy-MM-dd")
-                + ".fblog.db";
-
+        FIRST_DATE = getTomorrowDate();
     }
 
     @Override
     public void run() {
+        String SOURCE_FILE_NAME = Constants.DB_HOST;
+        String TARGET_FILE_NAME = Constants.BACK_UP_DB_FILE_PATH
+                + "/"
+                + DateFormatUtils.format(getTomorrowDate(), "yyyy-MM-dd")
+                + ".fblog.db";
+
         File source = new File(SOURCE_FILE_NAME);
         File target = new File(TARGET_FILE_NAME);
         if (!target.getParentFile().exists()) {
             target.getParentFile().mkdirs();
         }
         FileUtils.copyFile(source, target);
+    }
+
+    private static Date getTomorrowDate() {
+        LocalDate localDate = LocalDate.now(ZoneId.systemDefault()).plusDays(1L);
+        return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public void start () {
