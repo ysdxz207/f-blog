@@ -62,8 +62,9 @@ public class TagService {
                 "on t.id = at.tag_id where 1 = 1 ");
 
         buildSqlParams(sbSql, tagBean);
-        sbSql.append(" order by id asc");
-        sbSql.append(" limit ");
+        sbSql.append("group by t.id ");
+        sbSql.append("order by t.id asc ");
+        sbSql.append("limit ");
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
         sbSql.append(pageBean.getRowBounds().getLimit());
