@@ -35,6 +35,7 @@ public class TimerBackupDB extends TimerTask{
 
     @Override
     public void run() {
+        logger.info("开始数据库备份...");
         String SOURCE_FILE_NAME = Constants.DB_HOST;
         String TARGET_FILE_NAME = Constants.BACK_UP_DB_FILE_PATH
                 + "/"
