@@ -8,6 +8,7 @@ import com.puyixiaowo.core.exceptions.ValidationException;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.exception.BaseControllerException;
+import com.puyixiaowo.fblog.utils.ReflectionUtils;
 import com.puyixiaowo.fblog.utils.ResourceUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import org.apache.commons.beanutils.BeanUtils;
@@ -37,24 +38,20 @@ public class BaseController {
     @SuppressWarnings("unchecked")
     public static <T extends Validatable> T getParamsEntity(Request request,
                                                             Class<T> clazz,
-                                                            boolean validate) throws ValidationException {
+                                                            boolean validate) throws ValidationException, ClassNotFoundException, InvocationTargetException, IllegalAccessException, InstantiationException {
         Map<String, String[]> map = request.queryMap().toMap();
-        T obj = null;
-        try {
-            obj = (T) Class.forName(clazz.getName()).newInstance();
-            BeanUtilsBean.getInstance().getConvertUtils().register(false, false, 0);
-            BeanUtils.populate(obj, map);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+
+        T obj = (T) Class.forName(clazz.getName()).newInstance();
+        BeanUtilsBean.getInstance().getConvertUtils().register(false, false, 0);
+        BeanUtils.populate(obj, map);
         if (validate) {
             obj.validate();
+        }
+
+        Object id = ReflectionUtils.getFieldValue(obj, "id");
+
+        if (id == null || id.equals(0L)) {
+            ReflectionUtils.setFieldValue(obj, "id", null);
         }
         return obj;
     }
@@ -73,7 +70,7 @@ public class BaseController {
     }
 
     public static JSONObject getParamsJSON(Request request,
-                                           Class clazz) {
+                                           Class clazz) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException {
         Object t = getParamsEntity(request, clazz, false);
         return JSON.parseObject(JSON.toJSONString(t));
     }
@@ -96,9 +93,11 @@ public class BaseController {
         return null;
     }
 
-    /*
+    /**
      * 获取分页RowBouds
-	 */
+     * @param request
+     * @return
+     */
     public static PageBean getPageBean(Request request) {
 
         String pageCurrentStr = request.queryParams("pageCurrent");

@@ -21,6 +21,7 @@ import spark.Request;
 import spark.Response;
 import spark.Spark;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,11 +41,11 @@ public class FblogController extends BaseController{
         //查询文章列表,标签和分类通过ajax获取
         PageBean<ArticleBean> pageBean = getPageBean(request);
 
-        ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
-
-        articleBean.setStatus(1);//发布状态
-        articleBean.setType("yiyi");
         try {
+            ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
+
+            articleBean.setStatus(1);//发布状态
+            articleBean.setType("yiyi");
             pageBean = ArticleService.selectArticlePageBean(articleBean, pageBean);
             for (ArticleBean bean :
                     pageBean.getList()) {
@@ -76,7 +77,12 @@ public class FblogController extends BaseController{
     public static Object articleDetail(Request request, Response response) {
         Map<String, Object> model = new HashMap<>();
 
-        ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
+        ArticleBean articleBean = null;
+        try {
+            articleBean = getParamsEntity(request, ArticleBean.class, false);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
         articleBean.setStatus(1);//发布状态
         articleBean = DBUtils.selectOne("select a.*,group_concat(t.name) as tags " +
                 "from article a " +
@@ -105,8 +111,14 @@ public class FblogController extends BaseController{
     public static String categoryList(Request request, Response response) {
 
         PageBean pageBean = getPageBean(request);
-        return CategoryService.selectCategoryPageBean(
-                getParamsEntity(request, CategoryBean.class, false), pageBean).serialize();
+        try {
+            return CategoryService.selectCategoryPageBean(
+                    getParamsEntity(request, CategoryBean.class, false), pageBean).serialize();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+
+        return "";
     }
 
     public static Object search(Request request, Response response){
@@ -130,10 +142,10 @@ public class FblogController extends BaseController{
 
     public static String articleTags(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
-        TagBean tagBean = getParamsEntity(request, TagBean.class, false);
 
         PageBean pageBean = new PageBean();
         try {
+            TagBean tagBean = getParamsEntity(request, TagBean.class, false);
             pageBean = TagService.selectTagPageBean(tagBean, pageBean);
             responseBean.setData(pageBean.getList());
         } catch (Exception e) {

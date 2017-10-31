@@ -22,6 +22,7 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,8 +77,13 @@ public class ArticleController extends BaseController {
 
         if (!data) {
             Map<String, Object> model = new HashMap<>();
-            ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
-            if (articleBean.getId() > 0) {
+            ArticleBean articleBean = null;
+            try {
+                articleBean = getParamsEntity(request, ArticleBean.class, false);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            }
+            if (articleBean.getId() != null) {
                 //编辑
                 articleBean = DBUtils.selectOne("select a.*,group_concat(t.name) as tags " +
                         "from article a " +
@@ -105,7 +111,7 @@ public class ArticleController extends BaseController {
             ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, true);
             UserBean currentUser = request.session().attribute(Constants.SESSION_USER_KEY);
 
-            if (articleBean.getId() != null) {
+            if (StringUtils.isNotBlank(articleBean.getId())) {
                 ArticleBean bean = DBUtils.selectOne("select * from article where id=:id", articleBean);
                 if (bean == null) {
                     responseBean.errorMessage("文章不存在！");

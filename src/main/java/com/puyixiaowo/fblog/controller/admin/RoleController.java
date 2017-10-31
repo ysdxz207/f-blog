@@ -11,6 +11,8 @@ import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.MenuService;
 import com.puyixiaowo.fblog.service.RoleService;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -25,6 +27,8 @@ import java.util.Map;
  */
 public class RoleController extends BaseController {
 
+    private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
+
     @RequiresPermissions(value = {"role:view"})
     public static String roles(Request request, Response response) {
         Boolean data = Boolean.valueOf(request.params(":data"));
@@ -35,7 +39,12 @@ public class RoleController extends BaseController {
                             "admin/role/role_list.html"));
         }
         PageBean pageBean = getPageBean(request);
-        RoleBean roleBean = getParamsEntity(request, RoleBean.class, false);
+        RoleBean roleBean = null;
+        try {
+            roleBean = getParamsEntity(request, RoleBean.class, false);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
         pageBean = RoleService.selectRolePageBean(roleBean, pageBean);
         return pageBean.serialize();
     }
