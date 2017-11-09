@@ -21,10 +21,10 @@ public class SignUtils {
 
 
 	public static String sign(String privateKey,
-											Map<String, String> sPara) {
+											Map<String, String> params) {
 
 		privateKey = StringUtils.replaceBlank(privateKey);
-		String prestr = createLinkString(sPara);
+		String prestr = createLinkString(params);
 		String md = DigestUtils.md5Hex(getContentBytes(prestr, "UTF-8"));
 		String mysign = buildSign(md, privateKey);
 		return mysign;
