@@ -12,8 +12,9 @@ INSERT INTO `menu` VALUES ('6', '菜单信息', null, '6', 'menu/false', '1', '�
 INSERT INTO `menu` VALUES ('7', '权限信息', null, '7', 'permission/false', '1', '权限信息', '1', 'permission', '2', '0');
 INSERT INTO `menu` VALUES ('8', '文章分类', null, '8', 'category/false', '1', '文章分类', '2', 'category', '1', '0');
 INSERT INTO `menu` VALUES ('9', '文章标签', null, '9', 'tag/false', '1', '文章标签', '2', 'tag', '1', '0');
-INSERT INTO `menu` VALUES ('10', '阿福管理', null, '9', 'afu/false', '1', '阿福管理', '3', 'afu', '0', '0');
-INSERT INTO `menu` VALUES ('12', '阿福类别', null, '10', 'afu/type/false', '1', '阿福类别管理', '3', 'afu_type', '9', '0');
+INSERT INTO `menu` VALUES ('10', '阿福管理', null, '10', null, '1', '阿福管理', '3', 'afu_manage', '0', '0');
+INSERT INTO `menu` VALUES ('11', '阿福信息', null, '11', 'afu/false', '1', '阿福管理', '3', 'afu', '10', '0');
+INSERT INTO `menu` VALUES ('12', '阿福类别', null, '12', 'afu/type/false', '1', '阿福类别管理', '3', 'afu_type', '10', '0');
 
 
 -- ----------------------------

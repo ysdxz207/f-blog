@@ -81,10 +81,6 @@ public class AfuTypeController extends BaseController {
                 "select * from afu_type ",
                 null);
 
-        AfuTypeBean afuTypeBean = new AfuTypeBean();
-        afuTypeBean.setId(0L);
-        afuTypeBean.setName("默认类别");
-        list.add(0, afuTypeBean);
         return JSON.toJSONString(list);
     }
 
