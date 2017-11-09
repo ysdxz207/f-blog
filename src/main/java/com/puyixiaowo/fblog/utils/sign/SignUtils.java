@@ -25,7 +25,7 @@ public class SignUtils {
 
 		privateKey = StringUtils.replaceBlank(privateKey);
 		String prestr = createLinkString(params);
-		String md = DigestUtils.md5Hex(getContentBytes(prestr, "UTF-8"));
+		String md = DigestUtils.md5Hex(getContentBytes(prestr, CHARSET));
 		String mysign = buildSign(md, privateKey);
 		return mysign;
 	}
