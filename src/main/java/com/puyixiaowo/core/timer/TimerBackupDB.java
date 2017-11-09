@@ -39,7 +39,7 @@ public class TimerBackupDB extends TimerTask{
         String SOURCE_FILE_NAME = Constants.DB_HOST;
         String TARGET_FILE_NAME = Constants.BACK_UP_DB_FILE_PATH
                 + "/"
-                + DateFormatUtils.format(getTomorrowDate(), "yyyy-MM-dd")
+                + DateFormatUtils.format(new Date(), "yyyy-MM-dd")
                 + ".fblog.db";
 
         File source = new File(SOURCE_FILE_NAME);
