@@ -5,12 +5,15 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.core.entity.Validatable;
 import com.puyixiaowo.core.exceptions.ValidationException;
+import com.puyixiaowo.fblog.bean.admin.afu.AfuTypeBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.exception.BaseControllerException;
+import com.puyixiaowo.fblog.service.AfuTypeService;
 import com.puyixiaowo.fblog.utils.ReflectionUtils;
 import com.puyixiaowo.fblog.utils.ResourceUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
+import com.puyixiaowo.fblog.utils.sign.SignUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import spark.Request;
@@ -23,6 +26,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,10 +73,16 @@ public class BaseController {
         return jsonArray.toJavaList(clazz);
     }
 
-    public static JSONObject getParamsJSON(Request request,
-                                           Class clazz) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        Object t = getParamsEntity(request, clazz, false);
-        return JSON.parseObject(JSON.toJSONString(t));
+    public static Map<String, String> getParamsMap(Request request) {
+        Map<String, String[]> map = request.queryMap().toMap();
+        Map<String, String> mapReturn = new HashMap<>();
+        for (Map.Entry entry : map.entrySet()) {
+            String key = entry.getKey() == null ? "" : entry.getKey().toString();
+            String value = entry.getValue() == null ? "" : ((String [])entry.getValue())[0];
+            mapReturn.put(key, value);
+        }
+
+        return mapReturn;
     }
 
     public static String renderHTML(String htmlFile) {
@@ -111,5 +121,29 @@ public class BaseController {
             pageSize = Integer.valueOf(pageSizeStr);
         }
         return new PageBean(pageCurrent, pageSize);
+    }
+
+
+    /**
+     * 验签
+     * @param request
+     * @return
+     */
+    public static boolean verifySign(Request request) {
+        String typeName = request.queryParams("typeName");
+
+        if (StringUtils.isBlank(typeName)) {
+            return false;
+        }
+
+        AfuTypeBean afuTypeBean = AfuTypeService.getAfuTypeByName(typeName);
+
+        if (afuTypeBean == null ||
+                StringUtils.isBlank(afuTypeBean.getPublicKey())) {
+            return false;
+        }
+        String sign = request.queryParams("sign");
+        Map<String, String> params = getParamsMap(request);
+        return SignUtils.verify(params, sign, afuTypeBean.getPublicKey());
     }
 }

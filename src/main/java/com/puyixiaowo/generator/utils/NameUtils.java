@@ -1,4 +1,4 @@
-package com.puyixiaowo.fblog.generator.utils;
+package com.puyixiaowo.generator.utils;
 
 import com.puyixiaowo.fblog.utils.StringUtils;
 

@@ -1,8 +1,8 @@
-package com.puyixiaowo.fblog.generator;
+package com.puyixiaowo.generator;
 
-import com.puyixiaowo.fblog.generator.enums.TypeEnums;
-import com.puyixiaowo.fblog.generator.model.GField;
-import com.puyixiaowo.fblog.generator.utils.FileUtils;
+import com.puyixiaowo.generator.enums.TypeEnums;
+import com.puyixiaowo.generator.model.GField;
+import com.puyixiaowo.generator.utils.FileUtils;
 import com.puyixiaowo.fblog.utils.CamelCaseUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 

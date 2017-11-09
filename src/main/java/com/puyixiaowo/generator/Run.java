@@ -1,4 +1,4 @@
-package com.puyixiaowo.fblog.generator;
+package com.puyixiaowo.generator;
 
 
 /**
@@ -7,11 +7,11 @@ package com.puyixiaowo.fblog.generator;
  */
 public class Run {
     public static void main(String[] args) {
-        String dbhost = "f_blog.db";
+        String dbhost = "fblog.db";
         String tables= "user,role,user_role,permission,role_permission" +
-                ",menu,article,category,tag,article_tag";
+                ",menu,article,category,tag,article_tag,afu,afu_type";
         String src = "src/main/java";
-        String domainPackage = "com.puyixiaowo.yiyi.domain";
+        String domainPackage = "com.puyixiaowo.fblog.domain";
 
         DomainGenerator.generateDomains(dbhost, tables, src, domainPackage);
     }

@@ -8,6 +8,7 @@ import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.exception.DBException;
+import com.puyixiaowo.fblog.exception.DBObjectExistsException;
 import com.puyixiaowo.fblog.exception.DBSqlException;
 import org.sql2o.Connection;
 import org.sql2o.Query;
@@ -33,6 +34,7 @@ public class DBUtils {
     public static Sql2o getSql2o() {
         return sql2o;
     }
+
     /**
      * 初始化数据库
      */
@@ -57,13 +59,13 @@ public class DBUtils {
             //创建数据库文件
             try (Connection conn = sql2o.open()) {
 
-                String [] filenames = ResourceUtils.getResourceFolderFiles(FOLDER_SQL);
+                String[] filenames = ResourceUtils.getResourceFolderFiles(FOLDER_SQL);
                 FileUtils.runResourcesSql(conn, FOLDER_SQL, filenames);
             }
             //清空redis
-            EnumsRedisKey [] enumsRedisKeys = EnumsRedisKey.values();
-            String [] keys = new String[enumsRedisKeys.length];
-            for (int i = 0; i < enumsRedisKeys.length; i ++) {
+            EnumsRedisKey[] enumsRedisKeys = EnumsRedisKey.values();
+            String[] keys = new String[enumsRedisKeys.length];
+            for (int i = 0; i < enumsRedisKeys.length; i++) {
                 keys[i] = enumsRedisKeys[i].key + "*";
             }
             RedisUtils.delete(keys);
@@ -180,11 +182,18 @@ public class DBUtils {
                 Query queryUpdate = conn.createQuery(sql_update).throwOnMappingFailure(false).bind(obj);
                 lines = queryUpdate.executeUpdate().getResult();
             } catch (Exception e) {
-                ORMUtils.setId(obj);
-                String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, obj);
-                System.out.println(sql_insert);
-                Query queryInsert = conn.createQuery(sql_insert).throwOnMappingFailure(false).bind(obj);
-                primaryKey = queryInsert.executeUpdate().getKey();
+                try {
+                    ORMUtils.setId(obj);
+                    String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, obj);
+                    System.out.println(sql_insert);
+                    Query queryInsert = conn.createQuery(sql_insert).throwOnMappingFailure(false).bind(obj);
+                    primaryKey = queryInsert.executeUpdate().getKey();
+                } catch (Sql2oException e1) {
+                    if (e1.getMessage() != null &&
+                            e1.getMessage().indexOf("SQLITE_CONSTRAINT_UNIQUE") != -1) {
+                        throw new DBObjectExistsException("重复插入对象");
+                    }
+                }
             }
 
             conn.commit();
@@ -347,7 +356,7 @@ public class DBUtils {
             sql = sql.replaceAll("limit +\\d+, *\\d+", "");
         }
 
-        if(!sql.toLowerCase().replaceAll("\\s+","").startsWith("selectcount(")){
+        if (!sql.toLowerCase().replaceAll("\\s+", "").startsWith("selectcount(")) {
             sql = "select count(*) from ("
                     + (sql.endsWith(";") ? sql.substring(0, sql.length() - 1) : sql)
                     + ")";
@@ -429,7 +438,7 @@ public class DBUtils {
 
     public static PageBean selectPageBean(String sql,
                                           Object paramObj,
-                                          PageBean pageBean){
+                                          PageBean pageBean) {
         List<Object> list = selectList(sql, paramObj);
         int count = count(sql, paramObj);
         pageBean.setList(list);
@@ -446,9 +455,8 @@ public class DBUtils {
         userBean.setLoginname("feihong");
 
         List<UserBean> userList = DBUtils.selectList("select * from user " +
-                        "where loginname =:loginname", userBean);
+                "where loginname =:loginname", userBean);
         System.out.println(userList.get(0).getId());
-
 
 
         Object obj = new PageBean();

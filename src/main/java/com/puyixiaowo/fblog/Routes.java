@@ -2,6 +2,9 @@ package com.puyixiaowo.fblog;
 
 import com.puyixiaowo.fblog.controller.IndexController;
 import com.puyixiaowo.fblog.controller.admin.*;
+import com.puyixiaowo.fblog.controller.admin.afu.AfuController;
+import com.puyixiaowo.fblog.controller.admin.afu.AfuTypeController;
+import com.puyixiaowo.fblog.controller.afu.AfuApiController;
 import com.puyixiaowo.fblog.controller.fblog.FblogController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
 import com.puyixiaowo.fblog.filters.AdminPermissionsFilter;
@@ -172,6 +175,41 @@ public class Routes {
 
                 get("/top/array", (request, response) ->
                         TagController.topArray(request));
+            });
+
+            //afu组
+            path("/afu", () -> {
+                get("/:data", ((request, response) ->
+                        AfuController.afus(request, response)));
+                get("/detail", ((request, response) ->
+                        AfuController.detail(request, response)));
+
+                path("/type", () -> {
+
+                    get("/", ((request, response) ->
+                            AfuTypeController.afuTypes(request, response)));
+                    get("/edit", ((request, response) ->
+                            AfuTypeController.edit(request, response)));
+                    get("/delete", ((request, response) ->
+                            AfuTypeController.delete(request, response)));
+
+                    get("/all/array", ((request, response) ->
+                            AfuTypeController.allArray(request)));
+
+
+                });
+            });
+        });
+
+        //afu
+        path("/afu", () -> {
+            path("/api", () -> {
+                post("/list", ((request, response) ->
+                        AfuApiController.apiAfus(request, response)));
+                post("/edit", ((request, response) ->
+                        AfuApiController.apiAfusEdit(request, response)));
+                post("/delete", ((request, response) ->
+                        AfuApiController.apiAfusDelete(request, response)));
             });
         });
     }

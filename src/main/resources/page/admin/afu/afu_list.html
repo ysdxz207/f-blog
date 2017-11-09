@@ -1,0 +1,55 @@
+<div class="bjui-pageContent">
+    <table class="table table-bordered" id="datagrid_afu_list_filter" data-toggle="datagrid" data-options="{
+        height: '100%',
+        gridTitle : '配置列表',
+        showToolbar: true,
+        toolbarItem: '',
+        loadType: 'GET',
+        dataUrl: '${admin}/afu/true',
+        dataType: 'json',
+        editUrl: '${admin}/afu/edit/false',
+        editMode: {
+        	navtab: {
+        		id : 'afu_edit',
+				title : '编辑配置',
+				fresh : true
+        	}
+        },
+        delType: 'POST',
+        delUrl: '${admin}/afu/delete',
+        delPK: 'id',
+        local: 'remote',
+        filterAll: true,
+        paging: {pageSize: 20,selectPageSize:'20,40,100'},
+        showCheckboxcol: true,
+        linenumberAll: true,
+        afterSave: function($trs, datas) {
+        	BJUI.navtab('refresh');
+        },
+        afterDelete: function($trs, datas) {
+            BJUI.navtab('refresh');
+        }
+    }">
+        <thead>
+            <tr>
+                <th data-options="{name:'id',align:'center',quickfilter:false,width: 200,add:false,edit:false}">ID</th>
+                <th data-options="{name:'name',align:'center',width: 200}">名称</th>
+                <th data-options="{name:'type',align:'center',width: 120,type:'select',items: function() {return $.getJSON('${admin}/afu/type/all/array')},itemattr: {value:'id',label:'name'}}">分类</th>
+                <th data-options="{name:'createTime',align:'center',width: 200}">创建时间</th>
+                <th data-options="{name:'id', align: 'center',width:100, render:function(value, data){
+
+                    return test()
+                })}">操作</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<script>
+
+    function test() {
+
+        return "<input type='button' value='详情'>";
+
+    }
+</script>

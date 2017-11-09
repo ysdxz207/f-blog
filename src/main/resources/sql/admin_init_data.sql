@@ -12,6 +12,8 @@ INSERT INTO `menu` VALUES ('6', '菜单信息', null, '6', 'menu/false', '1', '�
 INSERT INTO `menu` VALUES ('7', '权限信息', null, '7', 'permission/false', '1', '权限信息', '1', 'permission', '2', '0');
 INSERT INTO `menu` VALUES ('8', '文章分类', null, '8', 'category/false', '1', '文章分类', '2', 'category', '1', '0');
 INSERT INTO `menu` VALUES ('9', '文章标签', null, '9', 'tag/false', '1', '文章标签', '2', 'tag', '1', '0');
+INSERT INTO `menu` VALUES ('10', '阿福管理', null, '9', 'afu/false', '1', '阿福管理', '3', 'afu', '0', '0');
+INSERT INTO `menu` VALUES ('12', '阿福类别', null, '10', 'afu/type/false', '1', '阿福类别管理', '3', 'afu_type', '9', '0');
 
 
 -- ----------------------------
@@ -46,7 +48,14 @@ INSERT INTO `permission` VALUES ('26', '9', '查看标签', 'tag:view');
 INSERT INTO `permission` VALUES ('27', '9', '添加标签', 'tag:add');
 INSERT INTO `permission` VALUES ('28', '9', '编辑标签', 'tag:edit');
 INSERT INTO `permission` VALUES ('29', '9', '删除标签', 'tag:delete');
-
+INSERT INTO `permission` VALUES ('30', '10', '查看阿福', 'afu:view');
+INSERT INTO `permission` VALUES ('31', '10', '添加阿福', 'afu:add');
+INSERT INTO `permission` VALUES ('32', '10', '编辑阿福', 'afu:edit');
+INSERT INTO `permission` VALUES ('33', '10', '删除阿福', 'afu:delete');
+INSERT INTO `permission` VALUES ('34', '11', '查看阿福类别', 'afuType:view');
+INSERT INTO `permission` VALUES ('35', '11', '查看阿福类别', 'afuType:add');
+INSERT INTO `permission` VALUES ('36', '11', '查看阿福类别', 'afuType:edit');
+INSERT INTO `permission` VALUES ('37', '11', '查看阿福类别', 'afuType:delete');
 
 
 -- ----------------------------

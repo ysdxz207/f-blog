@@ -1,4 +1,4 @@
-package com.puyixiaowo.fblog.generator.model;
+package com.puyixiaowo.generator.model;
 
 /**
  * @author Moses

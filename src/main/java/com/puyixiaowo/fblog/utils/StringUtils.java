@@ -3,6 +3,8 @@ package com.puyixiaowo.fblog.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.regex.Pattern.compile;
+
 /**
  * @author feihong
  * @date 2017-08-10 23:21
@@ -83,5 +85,20 @@ public class StringUtils {
         Matcher m_space = p_space.matcher(htmlStr);
         htmlStr = m_space.replaceAll(""); // 过滤空格回车标签
         return htmlStr.trim(); // 返回文本字符串
+    }
+
+    /**
+     * 删除空格，换行符，制表符
+     * @param str
+     * @return
+     */
+    public static String replaceBlank(String str) {
+        String dest = "";
+        if (str!=null) {
+            Pattern p = compile("\\s*|\t|\r|\n");
+            Matcher m = p.matcher(str);
+            dest = m.replaceAll("");
+        }
+        return dest;
     }
 }

@@ -1,4 +1,4 @@
-package com.puyixiaowo.fblog.generator.utils;
+package com.puyixiaowo.generator.utils;
 
 import java.io.FileWriter;
 import java.io.IOException;

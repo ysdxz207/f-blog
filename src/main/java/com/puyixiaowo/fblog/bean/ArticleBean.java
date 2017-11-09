@@ -5,7 +5,7 @@ import com.puyixiaowo.core.entity.Validatable;
 import com.puyixiaowo.fblog.annotation.NotNull;
 import com.puyixiaowo.fblog.annotation.Table;
 import com.puyixiaowo.fblog.annotation.Transient;
-import com.puyixiaowo.fblog.generator.utils.CustomDateTimeSerializer;
+import com.puyixiaowo.generator.utils.CustomDateTimeSerializer;
 
 import java.io.Serializable;
 

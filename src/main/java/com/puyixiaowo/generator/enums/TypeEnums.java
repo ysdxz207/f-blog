@@ -1,4 +1,4 @@
-package com.puyixiaowo.fblog.generator.enums;
+package com.puyixiaowo.generator.enums;
 
 import com.puyixiaowo.fblog.utils.StringUtils;
 

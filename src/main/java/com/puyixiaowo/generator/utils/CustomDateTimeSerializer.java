@@ -1,4 +1,4 @@
-package com.puyixiaowo.fblog.generator.utils;
+package com.puyixiaowo.generator.utils;
 
 import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.ObjectSerializer;
