@@ -3,7 +3,7 @@
 -- ----------------------------
 DROP TABLE IF EXISTS `permission`;
 CREATE TABLE `permission` (
-  `id`              INTEGER(20)  NOT NULL,
+  `id`              INTEGER(20)  NOT NULL UNIQUE,
   `menu_id`         INTEGER(20)  NOT NULL,
   `permission_name` VARCHAR(128) NOT NULL,
   `permission`      VARCHAR(128) DEFAULT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE `permission` (
 -- ----------------------------
 DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu` (
-  `id`        INTEGER(20)  NOT NULL,
+  `id`        INTEGER(20)  NOT NULL UNIQUE,
   `menu_name` VARCHAR(128) NOT NULL,
   `icon`      VARCHAR(64)           DEFAULT NULL,
   `sort`      VARCHAR(64)           DEFAULT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `menu` (
 -- ----------------------------
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
-  `id`        INTEGER(20) NOT NULL,
+  `id`        INTEGER(20) NOT NULL UNIQUE,
   `role_name` VARCHAR(20) NOT NULL,
   `code`      VARCHAR(64) NOT NULL,
   PRIMARY KEY (`id`)
@@ -45,7 +45,7 @@ CREATE TABLE `role` (
 -- ----------------------------
 DROP TABLE IF EXISTS `role_permission`;
 CREATE TABLE `role_permission` (
-  `id`            INTEGER(20) NOT NULL,
+  `id`            INTEGER(20) NOT NULL UNIQUE,
   `role_id`       INTEGER(20) NOT NULL,
   `permission_id` INTEGER(20) NOT NULL,
   PRIMARY KEY (`id`)
@@ -56,7 +56,7 @@ CREATE TABLE `role_permission` (
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id`              INTEGER(20) NOT NULL,
+  `id`              INTEGER(20) NOT NULL UNIQUE,
   `loginname`       VARCHAR(64) NOT NULL,
   `nickname`        VARCHAR(64) NOT NULL,
   `password`        VARCHAR(64) NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE `user` (
 -- ----------------------------
 DROP TABLE IF EXISTS `user_role`;
 CREATE TABLE `user_role` (
-  `id`      INTEGER(20) NOT NULL,
+  `id`      INTEGER(20) NOT NULL UNIQUE,
   `user_id` INTEGER(20) NOT NULL,
   `role_id` INTEGER(20) NOT NULL,
   PRIMARY KEY (`id`)
