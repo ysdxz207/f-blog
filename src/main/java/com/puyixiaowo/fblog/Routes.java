@@ -202,8 +202,8 @@ public class Routes {
         });
 
         //afu
-        path("/afu", () -> {
-            path("/api", () -> {
+        path("/api", () -> {
+            path("/afu", () -> {
                 post("/list", ((request, response) ->
                         AfuApiController.apiAfus(request, response)));
                 post("/edit", ((request, response) ->
