@@ -6,10 +6,11 @@
     <div class="bjui-row col-2">
         <label class="row-label">名称</label>
         <div class="row-input">
-            <input readonly value="${(model.name)!}" data-rule="required" >
+            <input name="name" ${((model.id)??)?string('readonly', '') } value="${(model.name)!}" data-rule="required" >
         </div>
         <br>
 
+        <#if (model.id)??>
         <label class="row-label">私钥</label>
         <div class="row-input">
             <textarea readonly rows="10" cols="50">${(model.privateKey)!}</textarea>
@@ -20,6 +21,7 @@
         <div class="row-input">
             <textarea readonly rows="6" cols="50">${(model.publicKey)!}</textarea>
         </div>
+        </#if>
         <br>
         <label class="row-label">状态</label>
         <div class="row-input required">

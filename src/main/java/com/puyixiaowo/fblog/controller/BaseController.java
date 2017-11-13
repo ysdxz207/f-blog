@@ -130,13 +130,19 @@ public class BaseController {
      * @return
      */
     public static boolean verifySign(Request request) {
-        String typeName = request.queryParams("typeName");
 
-        if (StringUtils.isBlank(typeName)) {
+        String idStr = request.queryParams("type");
+
+        if (StringUtils.isBlank(idStr)) {
             return false;
         }
 
-        AfuTypeBean afuTypeBean = AfuTypeService.getAfuTypeByName(typeName);
+        AfuTypeBean afuTypeBean = null;
+        try {
+            afuTypeBean = AfuTypeService.getAfuTypeById(Long.valueOf(idStr));
+        } catch (Exception e) {
+            return false;
+        }
 
         if (afuTypeBean == null ||
                 StringUtils.isBlank(afuTypeBean.getPublicKey())) {

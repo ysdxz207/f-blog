@@ -58,7 +58,7 @@ public class AfuApiController extends BaseController {
             afuBean = getParamsEntity(request, AfuBean.class, true);
 
             //类别
-            AfuTypeBean afuTypeBean = AfuTypeService.getAfuTypeByName(afuBean.getTypeName());
+            AfuTypeBean afuTypeBean = AfuTypeService.getAfuTypeById(afuBean.getType());
 
             if (afuTypeBean == null) {
                 responseBean.errorMessage("类别不存在");
@@ -90,15 +90,16 @@ public class AfuApiController extends BaseController {
 
         String id = request.queryParams("id");
         String name = request.queryParams("name");
-        String typeName = request.queryParams("typeName");
+        String typeStr = request.queryParams("type");
+        Long type = Long.valueOf(StringUtils.isBlank(typeStr) ? "0" : typeStr);
         try {
             if (StringUtils.isNotBlank(id)) {
                 DBUtils.deleteByIds(AfuBean.class, id);
-            } else {
+            } else if (StringUtils.isNotBlank(name) && type > 0){
                 AfuBean afuBean = new AfuBean();
                 afuBean.setName(name);
-                afuBean.setTypeName(typeName);
-                DBUtils.executeSql("delete from afu where name = :name and typeName=:typeName", afuBean);
+                afuBean.setType(type);
+                DBUtils.executeSql("delete from afu where name = :name and type=:type", afuBean);
             }
         } catch (Exception e) {
             responseBean.errorMessage(e.getMessage());

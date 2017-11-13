@@ -21,7 +21,6 @@ public class AfuBean extends Validatable implements Serializable {
 	private String content;
 
 	//
-	@NotNull(message = "缺少参数")
 	@Transient
 	private String typeName;
 

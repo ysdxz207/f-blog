@@ -12,10 +12,10 @@ import com.puyixiaowo.fblog.utils.DBUtils;
  */
 public class AfuTypeService {
 
-    public static AfuTypeBean getAfuTypeByName(String typeName) {
+    public static AfuTypeBean getAfuTypeById(Long id) {
         AfuTypeBean afuTypeBean = new AfuTypeBean();
-        afuTypeBean.setName(typeName);
-        return DBUtils.selectOne("select * from afu_type where name=:name", afuTypeBean);
+        afuTypeBean.setId(id);
+        return DBUtils.selectOne("select * from afu_type where id=:id", afuTypeBean);
     }
 
     public static String getSelectSql(AfuTypeBean afuTypeBean,
