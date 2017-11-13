@@ -13,6 +13,7 @@ public class AfuTypeBean extends Validatable implements Serializable {
 	private String name;
 	private String privateKey;
 	private String publicKey;
+	private Integer status;
 
 
 	public Long getId (){
@@ -45,5 +46,13 @@ public class AfuTypeBean extends Validatable implements Serializable {
 
 	public void setPublicKey(String publicKey) {
 		this.publicKey = publicKey;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }

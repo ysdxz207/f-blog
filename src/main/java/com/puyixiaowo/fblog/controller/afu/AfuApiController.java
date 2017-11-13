@@ -62,6 +62,8 @@ public class AfuApiController extends BaseController {
 
             if (afuTypeBean == null) {
                 responseBean.errorMessage("类别不存在");
+            } if (afuTypeBean.getStatus() == 0) {
+                responseBean.errorMessage("当前类别已失效");
             } else {
                 afuBean.setType(afuTypeBean.getId());
                 afuBean.setCreateTime(System.currentTimeMillis());

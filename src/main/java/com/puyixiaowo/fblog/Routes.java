@@ -181,19 +181,19 @@ public class Routes {
             path("/afu", () -> {
                 get("/:data", ((request, response) ->
                         AfuController.afus(request, response)));
-                get("/detail", ((request, response) ->
+                get("/detail/:id", ((request, response) ->
                         AfuController.detail(request, response)));
 
                 path("/type", () -> {
 
-                    get("/", ((request, response) ->
+                    get("/:data", ((request, response) ->
                             AfuTypeController.afuTypes(request, response)));
-                    get("/edit", ((request, response) ->
+                    post("/edit/:data", ((request, response) ->
                             AfuTypeController.edit(request, response)));
-                    get("/delete", ((request, response) ->
+                    post("/delete", ((request, response) ->
                             AfuTypeController.delete(request, response)));
 
-                    get("/all/array", ((request, response) ->
+                    get("/all/array/:data", ((request, response) ->
                             AfuTypeController.allArray(request)));
 
 

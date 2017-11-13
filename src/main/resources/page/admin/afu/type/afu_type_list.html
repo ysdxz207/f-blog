@@ -1,17 +1,17 @@
 <div class="bjui-pageContent">
-    <table class="table table-bordered" id="datagrid_afu_list_filter" data-toggle="datagrid" data-options="{
+    <table class="table table-bordered" id="datagrid_afu_type_list_filter" data-toggle="datagrid" data-options="{
         height: '100%',
         gridTitle : '配置列表',
         showToolbar: true,
-        toolbarItem: '',
+        toolbarItem: 'add,save,cancel,edit,del',
         loadType: 'GET',
-        dataUrl: '${admin}/afu/true',
+        dataUrl: '${admin}/afu/type/true',
         dataType: 'json',
-        editUrl: '${admin}/afu/edit/false',
+        editUrl: '${admin}/afu/type/edit/false',
         editMode: {
         	navtab: {
         		id : 'afu_edit',
-				title : '编辑配置',
+				title : '编辑类别',
 				fresh : true
         	}
         },
@@ -33,13 +33,8 @@
         <thead>
             <tr>
                 <th data-options="{name:'id',align:'center',quickfilter:false,width: 200,add:false,edit:false}">ID</th>
-                <th data-options="{name:'name',align:'center',width: 200}">名称</th>
-                <th data-options="{name:'type',align:'center',width: 120,type:'select',items: function() {return $.getJSON('${admin}/afu/type/all/array')},itemattr: {value:'id',label:'name'}}">分类</th>
-                <th data-options="{name:'createTime',align:'center',width: 200}">创建时间</th>
-                <th data-options="{name:'id', align: 'center',width:100, render:function(value, data){
-
-                    return optBtn(value)
-                }}">操作</th>
+                <th data-options="{name:'name',align:'center',width: 200}">类别名称</th>
+                <th data-options="{name:'status',align:'center',width:160,type:'select',items:[{'1':'<font color=\'green\'>有效</font>'},{'0':'<font color=\'#ea2000\'>失效</font>'}]}">状态</th>
             </tr>
         </thead>
     </table>

@@ -1,0 +1,39 @@
+<div class="bjui-pageContent">
+<form method="post" action="/admin/afu/type/edit/true" class="datagrid-edit-form" data-toggle="validate" data-data-type="jsonp">
+    
+    <input type="hidden" name="id" value="${(model.id?c)!}"/>
+
+    <div class="bjui-row col-2">
+        <label class="row-label">名称</label>
+        <div class="row-input">
+            <input readonly value="${(model.name)!}" data-rule="required" >
+        </div>
+        <br>
+
+        <label class="row-label">私钥</label>
+        <div class="row-input">
+            <textarea readonly rows="10" cols="50">${(model.privateKey)!}</textarea>
+        </div>
+        <br>
+
+        <label class="row-label">公钥</label>
+        <div class="row-input">
+            <textarea readonly rows="6" cols="50">${(model.publicKey)!}</textarea>
+        </div>
+        <br>
+        <label class="row-label">状态</label>
+        <div class="row-input required">
+            <select name="status" data-toggle="selectpicker" data-rule="required" data-width="100%">
+                <option value="1" ${(((model.status)??) && (model.status == 1))?string('selected', '') }>有效</option>
+                <option value="0" ${(((model.status)??) && (model.status == 0))?string('selected', '') }>失效</option>
+            </select>
+        </div>
+    </div>
+</form>
+</div>
+<div class="bjui-pageFooter">
+    <ul>
+        <li><button type="button" class="btn-close" data-icon="close">取消</button></li>
+        <li><button type="submit" class="btn-default" data-icon="save">发布</button></li>
+    </ul>
+</div>

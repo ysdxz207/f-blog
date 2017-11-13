@@ -21,7 +21,7 @@ public class AfuTypeService {
     public static String getSelectSql(AfuTypeBean afuTypeBean,
                                                       PageBean pageBean) {
 
-        StringBuilder sbSql = new StringBuilder("select * from afu_type where 1 = 1 ");
+        StringBuilder sbSql = new StringBuilder("select * from afu_type t where 1 = 1 ");
 
         buildSqlParams(sbSql, afuTypeBean);
         sbSql.append("group by t.id ");

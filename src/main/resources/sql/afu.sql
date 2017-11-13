@@ -19,5 +19,6 @@ CREATE TABLE `afu_type` (
   `name` VARCHAR(128) NOT NULL UNIQUE,
   `private_key` VARCHAR(1024) NOT NULL,
   `public_key` VARCHAR(1024) NOT NULL,
+  `status` INTEGER(4) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`)
 );

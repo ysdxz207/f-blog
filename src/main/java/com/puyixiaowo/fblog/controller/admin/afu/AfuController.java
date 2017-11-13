@@ -3,11 +3,13 @@ package com.puyixiaowo.fblog.controller.admin.afu;
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.admin.afu.AfuBean;
+import com.puyixiaowo.fblog.bean.admin.afu.AfuTypeBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.AfuService;
+import com.puyixiaowo.fblog.service.AfuTypeService;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +17,9 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Moses
@@ -47,17 +51,23 @@ public class AfuController extends BaseController {
 
     @RequiresPermissions(value = {"afu:view"})
     public static String detail(Request request, Response response) {
-        ResponseBean responseBean = new ResponseBean();
 
-        AfuBean afuBean = null;
+        AfuBean afuBean = new AfuBean();
         try {
-            afuBean = getParamsEntity(request, AfuBean.class, false);
-            afuBean = DBUtils.selectOne("select * from afu where id=:id", afuBean);
+            afuBean.setId(Long.valueOf(request.params(":id")));
+            afuBean = DBUtils.selectOne("select a.*,at.name as typeName from afu a " +
+                    "left join afu_type at on a.type = at.id where a.id=:id", afuBean);
         }catch (Exception e) {
-            responseBean.error(e);
+            logger.error("查看阿福详情异常：" + e.getMessage());
         }
 
-        return JSON.toJSONString(afuBean);
+        Map<String, Object> map = new HashMap<>();
+        map.put("model", afuBean);
+
+        return new FreeMarkerTemplateEngine()
+                .render(new ModelAndView(map,
+                        "admin/afu/afu_detail.html"));
+
     }
 
 }
