@@ -13,6 +13,8 @@ import static java.util.regex.Pattern.compile;
 
 /**
  * RSA密钥生成工具
+ * 因本工具类使用随机数，在tomcat下使用时需加上启动参数：
+ * -Djava.security.egd=file:/dev/./urandom
  */
 public class RSAKeyUtils {
   
