@@ -174,6 +174,6 @@ public class DesUtils {
 	
 	
 	public static void main(String[] args) {
-		System.out.println(encrypt("lsy207"));
+		System.out.println(encrypt("123456"));
 	}
 }

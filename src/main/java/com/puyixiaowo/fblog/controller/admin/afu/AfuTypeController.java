@@ -2,10 +2,12 @@ package com.puyixiaowo.fblog.controller.admin.afu;
 
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
+import com.puyixiaowo.fblog.bean.admin.afu.AfuBean;
 import com.puyixiaowo.fblog.bean.admin.afu.AfuTypeBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.controller.BaseController;
+import com.puyixiaowo.fblog.domain.Afu;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.AfuTypeService;
 import com.puyixiaowo.fblog.utils.DBUtils;
@@ -82,8 +84,16 @@ public class AfuTypeController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
 
         try {
+            String ids = request.queryParams("id");
             DBUtils.deleteByIds(AfuTypeBean.class,
                     request.queryParams("id"));
+            //删除对应阿福
+            AfuBean afuBean = new AfuBean();
+            for (String idStr : ids.split(",")) {
+                afuBean.setType(Long.valueOf(idStr));
+                DBUtils.executeSql("delete from afu where type=:type", afuBean);
+            }
+
         } catch (Exception e) {
             responseBean.error(e);
         }
