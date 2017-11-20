@@ -193,7 +193,7 @@ public class Routes {
                     post("/delete", ((request, response) ->
                             AfuTypeController.delete(request, response)));
 
-                    get("/all/array/:data", ((request, response) ->
+                    get("/all/array", ((request, response) ->
                             AfuTypeController.allArray(request)));
 
 

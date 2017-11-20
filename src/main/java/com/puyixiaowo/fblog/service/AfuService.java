@@ -21,7 +21,7 @@ public class AfuService {
 
         buildSqlParams(sbSql, afuBean);
         sbSql.append("group by t.id ");
-        sbSql.append("order by t.id asc ");
+        sbSql.append("order by t.id desc ");
         sbSql.append("limit ");
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");

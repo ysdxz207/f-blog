@@ -31,7 +31,7 @@ public class SignUtils {
 	}
 
 	public static String createLinkString(Map<String, String> params) {
-		List<String> keys = new ArrayList<String>(params.keySet());
+		List<String> keys = new ArrayList<>(params.keySet());
 		Collections.sort(keys);
 		String prestr = "";
 		for (int i = 0; i < keys.size(); i++) {
