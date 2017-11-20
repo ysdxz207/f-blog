@@ -86,7 +86,7 @@ public class AfuTypeController extends BaseController {
         try {
             String ids = request.queryParams("id");
             DBUtils.deleteByIds(AfuTypeBean.class,
-                    request.queryParams("id"));
+                    ids);
             //删除对应阿福
             AfuBean afuBean = new AfuBean();
             for (String idStr : ids.split(",")) {

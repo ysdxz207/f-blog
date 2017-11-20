@@ -5,4 +5,14 @@
     <p><input value="${(model.typeName)!}" size="25" readonly/></p>
     <label>内容：</label>
     <p><textarea readonly rows="18" cols="80">${(model.content)!}</textarea></p>
+
+    <#if (model.id)??>
+        <div>
+            <button type="button" class="btn btn-danger"
+                    data-toggle="doajax"
+                    data-options="{url:'${admin}/afu/delete?id=${(model.id)?c!}'}"
+                    confirmMsg="真的要删除此阿福吗？">删除此阿福</button>
+        </div>
+    </#if>
+    <br/><br/><br/>
 </div>

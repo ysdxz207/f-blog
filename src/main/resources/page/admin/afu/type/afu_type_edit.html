@@ -1,15 +1,21 @@
 <div class="bjui-pageContent">
 <form method="post" action="/admin/afu/type/edit/true" class="datagrid-edit-form" data-toggle="validate" data-data-type="jsonp">
     
-    <input type="hidden" name="id" value="${(model.id?c)!}"/>
-
     <div class="bjui-row col-2">
+
         <label class="row-label">名称</label>
         <div class="row-input">
             <input name="name" ${((model.id)??)?string('readonly', '') } value="${(model.name)!}" data-rule="required" >
         </div>
         <br>
 
+        <#if (model.id)??>
+            <label class="row-label">ID(调接口作为type使用)</label>
+            <div class="row-input">
+                <input name="id" readonly value="${(model.id?c)!}" data-rule="required" >
+            </div>
+            <br>
+        </#if>
         <#if (model.id)??>
         <label class="row-label">私钥</label>
         <div class="row-input">
