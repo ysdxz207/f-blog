@@ -183,7 +183,7 @@ public class Routes {
                         AfuController.afus(request, response)));
                 get("/detail/:id", ((request, response) ->
                         AfuController.detail(request, response)));
-                get("/delete", ((request, response) ->
+                post("/delete", ((request, response) ->
                         AfuController.delete(request, response)));
 
                 path("/type", () -> {

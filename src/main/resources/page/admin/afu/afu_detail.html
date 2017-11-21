@@ -10,8 +10,14 @@
         <div>
             <button type="button" class="btn btn-danger"
                     data-toggle="doajax"
-                    data-options="{url:'${admin}/afu/delete?id=${(model.id)?c!}'}"
-                    confirmMsg="真的要删除此阿福吗？">删除此阿福</button>
+                    data-options="{
+                    url:'${admin}/afu/delete?id=${(model.id)?c!}',
+                    confirmMsg:'真的要删除此阿福吗？\n删除后不能恢复哟！',
+                    okCallback:function(json,options){
+                        BJUI.navtab('close');
+                        BJUI.navtab('refresh', 'afu');
+                        BJUI.navtab('switchTab', 'afu');
+                    }}">删除此阿福</button>
         </div>
     </#if>
     <br/><br/><br/>
