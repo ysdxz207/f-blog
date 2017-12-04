@@ -14,13 +14,14 @@
         width: 0px;
         padding: 0px;
     }
+
 </style>
 <div class="bjui-pageContent">
 <form>
     
     <input type="hidden" name="id" value="${(model.id?c)!}"/>
 
-    <div class="bjui-row col-2">
+    <div class="bjui-row col-4">
         <label class="row-label">博客</label>
         <div class="row-input required">
             <select name="type" data-toggle="selectpicker" data-rule="required">
@@ -32,7 +33,7 @@
         <br>
 
         <label class="row-label">标题</label>
-        <div class="row-input required">
+        <div class="row-input required fill-2">
             <input name="title" value="${(model.title)!}" data-rule="required" >
         </div>
         <br>
@@ -49,8 +50,8 @@
         <br>
 
         <label class="row-label">标签</label>
-        <div class="row-input">
-            <input name="tags" id="input" value="${(model.tags)!}" autocomplete="off" size="20" placeholder="多个标签用英文逗号分隔">
+        <div class="row-input fill-2">
+            <input name="tags" id="input" value="${(model.tags)!}" autocomplete="off" placeholder="多个标签用英文逗号分隔">
         </div>
         <br>
 
