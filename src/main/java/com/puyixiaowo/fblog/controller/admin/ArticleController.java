@@ -92,7 +92,7 @@ public class ArticleController extends BaseController {
                         "left join tag t " +
                         "on at.tag_id = t.id where a.id = :id " +
                         "group by a.id", articleBean);
-                String html = StringEscapeUtils.unescapeHtml4(articleBean.getContext());
+                String html = StringEscapeUtils.escapeHtml4(articleBean.getContext());
                 articleBean.setContext(html);
                 model.put("model", articleBean);
             }
