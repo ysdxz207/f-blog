@@ -95,7 +95,7 @@ public class FblogController extends BaseController{
         if (articleBean == null) {
             Spark.halt("文章不存在");
         }
-        articleBean.setContext(StringEscapeUtils.unescapeHtml4(articleBean.getContext()));
+        articleBean.setContext(articleBean.getContext());
 
         model.put("model", articleBean);
         return new FreeMarkerTemplateEngine().render(
