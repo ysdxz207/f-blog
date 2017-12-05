@@ -52,6 +52,8 @@ public class Routes {
             post("/login", ((request, response) ->
                             LoginController.doLogin(request, response)),
                     new FreeMarkerTemplateEngine());
+            get("/captcha.jpg", ((request, response) ->
+                            LoginController.captcha(request, response)));
 
             get("/logout", ((request, response) ->
                     LoginController.logout(request, response)));
@@ -93,6 +95,10 @@ public class Routes {
 
                 post("/delete", ((request, response) ->
                         UserController.delete(request, response)));
+                get("/current/edit/:data", ((request, response) ->
+                        UserController.currentEdit(request, response)));
+                post("/current/edit/:data", ((request, response) ->
+                        UserController.currentEdit(request, response)));
             });
             /*
              * 权限组

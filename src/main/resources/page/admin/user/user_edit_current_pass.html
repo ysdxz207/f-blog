@@ -1,6 +1,5 @@
-<#assign base=request.contextPath />
 <div class="bjui-pageContent">
-<form action="${admin}/user/edit/true" class="datagrid-edit-form" data-toggle="validate" data-data-type="jsonp">
+<form action="${admin}/user/current/edit/true" class="datagrid-edit-form" data-toggle="validate" data-data-type="jsonp">
     <input type="hidden" name="id" value="${((model.id)?c)!}"/>
     <div class="bjui-row col-1">
         <label class="row-label">登录名</label>

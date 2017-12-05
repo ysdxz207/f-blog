@@ -5,6 +5,7 @@ import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.admin.UserRoleBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
+import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.RolePermissionService;
@@ -17,6 +18,7 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -114,4 +116,50 @@ public class UserController extends BaseController{
 
         return responseBean.serialize();
     }
+
+    /**
+     * 添加或修改用户
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequiresPermissions(value = {"user:edit"})
+    public static Object currentEdit(Request request, Response response) {
+        Boolean data = Boolean.valueOf(request.params(":data"));
+        Boolean isUpdatePass = Boolean.valueOf(request.queryParamOrDefault("pass", "false"));
+        UserBean currentUserBean = request.session().attribute(Constants.SESSION_USER_KEY);
+
+        if (!data) {
+            String page = "admin/user/user_edit_current.html";
+            if (isUpdatePass) {
+                page = "admin/user/user_edit_current_pass.html";
+            }
+            HashMap<String, Object> model = new HashMap<>();
+            model.put("model", currentUserBean);
+            return new FreeMarkerTemplateEngine()
+                    .render(new ModelAndView(model,
+                            page));
+        }
+
+
+        ResponseBean responseBean = new ResponseBean();
+
+        try {
+            UserBean userBean = getParamsEntity(request, UserBean.class, false);
+
+            if (userBean.getId().equals(currentUserBean.getId())) {
+                if (StringUtils.isNotBlank(userBean.getPassword())) {
+                    userBean.setPassword(DesUtils.encrypt(userBean.getPassword()));
+                }
+                DBUtils.insertOrUpdate(userBean);
+            }
+
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+
+        return responseBean.serialize();
+
+    }
+
 }

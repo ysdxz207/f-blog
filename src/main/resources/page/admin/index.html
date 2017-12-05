@@ -120,13 +120,13 @@
         <nav class="collapse navbar-collapse" id="bjui-top-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="datetime"><a><span id="bjui-date">0000/00/00</span> <span id="bjui-clock">00:00:00</span></a></li>
-                <li><a href="/admin/user/edit/false?id=${user.id}&type=info" data-toggle="dialog" data-id="sys_user_changepass"
+                <li><a href="/admin/user/current/edit/false?id=${(user.id)?c}" data-toggle="dialog" data-id="sys_user_changepass"
                        data-mask="true" data-width="300" data-height="200">
                     账号：${user.nickname!}
                 </a>
                 </li>
                 <li><a href="#">角色：${user.roleName!}</a></li>
-                <li><a href="/admin/user/edit/false?id=${user.id}&type=pass" data-toggle="dialog" data-id="sys_user_changepass" data-mask="true" data-width="400" data-height="300">修改密码</a></li>
+                <li><a href="/admin/user/current/edit/false?id=${(user.id)?c}&pass=true" data-toggle="dialog" data-id="sys_user_changepass" data-mask="true" data-width="400" data-height="300">修改密码</a></li>
                 <li><a href="/admin/logout" style="font-weight:bold;">&nbsp;<i class="fa fa-power-off"></i> 注销登陆</a></li>
                 <li class="dropdown"><a href="#" class="dropdown-toggle bjui-fonts-tit" data-toggle="dropdown" title="更改字号"><i class="fa fa-font"></i> 大</a>
                     <ul class="dropdown-menu" role="menu" id="bjui-fonts">

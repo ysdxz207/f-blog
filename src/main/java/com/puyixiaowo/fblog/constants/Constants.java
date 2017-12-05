@@ -11,7 +11,7 @@ public class Constants {
     /*
      * 验证码session key
      */
-    public static final String KAPTCHA_SESSION_KEY = "KAPTCHA_SESSION_KEY";
+    public static final String KAPTCHA_SESSION_KEY = "KAPTCHA_SESSION_KEY_FBLOG";
     /*
      * 成功状态码
      */

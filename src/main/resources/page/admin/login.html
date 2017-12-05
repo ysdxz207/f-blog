@@ -28,17 +28,9 @@ body {
 }
 </style>
 <script type="text/javascript">
-var COOKIE_NAME = 'sys_em_username';
 $(function() {
     choose_bg();
     changeCode();
-    if ($.cookie(COOKIE_NAME)){
-        $("#j_username").val($.cookie(COOKIE_NAME));
-        $("#j_password").focus();
-        $("#j_remember").attr('checked', true);
-    } else {
-        $("#j_username").focus();
-    }
     $("#captcha_img").click(function(){
         changeCode();
     });
@@ -57,13 +49,7 @@ $(function() {
             $(this).find('.form-control').eq(i_index).focus();
             return false;
         }
-        var $remember = $("#j_remember");
-        if ($remember.attr('checked')) {
-            $.cookie(COOKIE_NAME, $("#j_username").val(), { path: '/', expires: 15 });
-        } else {
-            $.cookie(COOKIE_NAME, null, { path: '/' });  //删除cookie
-        }
-        
+
         $("#login_ok").attr("disabled", true).val('登录中..');
         /*
         var key = CryptoJS.enc.Base64.parse($("#j_randomKey").val());
@@ -80,7 +66,7 @@ $(function() {
     });
 });
 function changeCode(){
-    $("#captcha_img").attr("src", "/captcha.jpg?t="+ (new Date().getTime()));
+    $("#captcha_img").attr("src", "${admin}/captcha.jpg?t="+ (new Date().getTime()));
 }
 function choose_bg() {
     var bg = Math.floor(Math.random() * 9 + 1);
@@ -119,15 +105,13 @@ function choose_bg() {
                     <input type="password" class="form-control" id="j_password" name="upass" placeholder="登录密码" aria-describedby="sizing-addon-password">
                 </div>
             </div>
-            <!--
             <div class="form-group">
                 <div class="input-group">
-                    <span class="input-group-addon" id="sizing-addon-password"><span class="glyphicon glyphicon-exclamation-sign"></span></span>
+                    <span class="input-group-addon" id="sizing-addon-code"><span class="glyphicon glyphicon-exclamation-sign"></span></span>
                     <input type="text" class="form-control" id="j_captcha" name="captcha" placeholder="验证码" aria-describedby="sizing-addon-password">
-                    <span class="input-group-addon code" id="basic-addon-code"><img id="captcha_img" src="/captcha.jpg" alt="点击更换" title="点击更换" class="m"></span>
+                    <span class="input-group-addon code" id="basic-addon-code"><img id="captcha_img" src="${admin}/captcha.jpg" alt="点击更换" title="点击更换" class="m"></span>
                 </div>
             </div>
-            -->
             <!--<div class="form-group">
                 <div class="checkbox">
                     <label for="j_remember" class="m"><input id="j_remember" type="checkbox" name="rememberMe" value="true">&nbsp;记住登陆账号!</label>
