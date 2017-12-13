@@ -6,7 +6,8 @@ public enum  EnumsRedisKey {
     REDIS_KEY_MENU_LIST("REDIS_KEY_MENU_LIST_", "菜单列表"),
 
 
-    REDIS_KEY_REFRESH_MENU_LIST("REDIS_KEY_REFRESH_MENU_LIST_", "是否刷新菜单缓存");
+    REDIS_KEY_REFRESH_MENU_LIST("REDIS_KEY_REFRESH_MENU_LIST_", "是否刷新菜单缓存"),
+    REDIS_KEY_FNEWS_LIST("REDIS_KEY_FNEWS_LIST_", "新闻列表");
 
 
     EnumsRedisKey(String key, String description) {

@@ -2,6 +2,7 @@ package com.puyixiaowo.fblog.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.core.timer.TimerBackupDB;
+import com.puyixiaowo.core.timer.TimerFetchNews;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.error.ErrorHandler;
@@ -30,6 +31,7 @@ public class ConfigUtils {
         ErrorHandler.init();
 
         new TimerBackupDB().start();//启动备数据库份
+        new TimerFetchNews().start();//启动新闻获取定时器
     }
 
     /**

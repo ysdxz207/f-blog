@@ -103,6 +103,14 @@ public class RedisUtils {
         return JSON.parseObject(str, clazz);
     }
 
+    public static <T> List<T> getList(String key, Class<T> clazz) {
+        String str = get(key);
+        if (StringUtils.isBlank(str)) {
+            return null;
+        }
+        return JSON.parseArray(str, clazz);
+    }
+
     public static void set(String key, String value) {
         try (Jedis jedis = getJedis()) {
             jedis.set(key, value);
