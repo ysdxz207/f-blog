@@ -31,7 +31,7 @@ public class ConfigUtils {
         ErrorHandler.init();
 
         new TimerBackupDB().start();//启动备数据库份
-        new TimerFetchNews().start();//启动新闻获取定时器
+//        new TimerFetchNews().start();//启动新闻获取定时器
     }
 
     /**

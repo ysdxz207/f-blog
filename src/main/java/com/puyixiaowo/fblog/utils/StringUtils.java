@@ -101,4 +101,14 @@ public class StringUtils {
         }
         return dest;
     }
+
+    /**
+     * 获取两个字符串的相似度
+     * @param str
+     * @param target
+     * @return
+     */
+    public static float getSimilarityRatio(String str, String target) {
+        return new Levenshtein().getSimilarityRatio(str, target);
+    }
 }

@@ -13,19 +13,20 @@ import java.io.Serializable;
 public class NewsBean extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
+	private String id;
 	private String source;
 	private String title;
 	private String html;
-	private String type;
-	@JSONField(serializeUsing = CustomDateTimeSerializer.class)
-	private Long pubDate;
+	@NotNull
+	private String channelId;
+	private Boolean havePic;
+	private String pubDate;
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -53,19 +54,27 @@ public class NewsBean extends Validatable implements Serializable {
 		this.html = html;
 	}
 
-	public String getType() {
-		return type;
+	public Boolean getHavePic() {
+		return havePic;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setHavePic(Boolean havePic) {
+		this.havePic = havePic;
 	}
 
-	public Long getPubDate() {
+	public String getChannelId() {
+		return channelId;
+	}
+
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
+	}
+
+	public String getPubDate() {
 		return pubDate;
 	}
 
-	public void setPubDate(Long pubDate) {
+	public void setPubDate(String pubDate) {
 		this.pubDate = pubDate;
 	}
 }

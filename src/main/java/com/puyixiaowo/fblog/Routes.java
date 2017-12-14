@@ -6,6 +6,7 @@ import com.puyixiaowo.fblog.controller.admin.afu.AfuController;
 import com.puyixiaowo.fblog.controller.admin.afu.AfuTypeController;
 import com.puyixiaowo.fblog.controller.afu.AfuApiController;
 import com.puyixiaowo.fblog.controller.fblog.FblogController;
+import com.puyixiaowo.fblog.controller.fnews.FNewsController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
 import com.puyixiaowo.fblog.filters.AdminPermissionsFilter;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
@@ -219,6 +220,14 @@ public class Routes {
                 post("/delete", ((request, response) ->
                         AfuApiController.apiAfusDelete(request, response)));
             });
+        });
+
+        //fnews
+        path("/fnews", () -> {
+            get("/list/:data", ((request, response) ->
+                    FNewsController.news(request, response)));
+            post("/list/:data", ((request, response) ->
+                    FNewsController.news(request, response)));
         });
     }
 }
