@@ -38,7 +38,7 @@ public class ShortLinkController {
 
         String id = IdUtils.generateId() + "";
         String shorLink = "http://puyixiaowo.win/shortlink/" + id;
-        String qrcode = QrCodeUtils.createQrcode(shorLink);
+        String qrcode = QrCodeUtils.createQrcode(400, 400, shorLink);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("link", link);
@@ -47,8 +47,14 @@ public class ShortLinkController {
         RedisUtils.set(EnumsRedisKey.REDIS_KEY_SHORT_LINK.key + id,
                 jsonObject.toJSONString(), TEN_DAYS);
 
-        responseBean.setData(qrcode);
+        responseBean.setData("data:image/png;base64," + qrcode);
 
         return responseBean.serialize();
+    }
+
+    public static Object showShortLink(Request request, Response response) {
+        String id = request.params(":id");
+
+        String str = RedisUtils.get(EnumsRedisKey.REDIS_KEY_SHORT_LINK.key + id);
     }
 }
