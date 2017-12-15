@@ -117,6 +117,13 @@ public class RedisUtils {
         }
     }
 
+    public static void set(String key, String value, int expireSeconds) {
+        try (Jedis jedis = getJedis()) {
+            jedis.set(key, value);
+            jedis.expire(key, expireSeconds);
+        }
+    }
+
     public static long delete(String... keys) {
         boolean pattern = JSON.toJSONString(keys).indexOf("*") != -1;
         long num = 0;
