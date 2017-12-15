@@ -232,7 +232,9 @@ public class Routes {
         });
 
         //shor link
-        path("/shorlink", () -> {
+        path("/shortlink", () -> {
+            get("", ((request, response) ->
+                    ShortLinkController.shortLink(request, response)));
             get("/create", ((request, response) ->
                     ShortLinkController.makeShortLink(request, response)));
             post("/create", ((request, response) ->
