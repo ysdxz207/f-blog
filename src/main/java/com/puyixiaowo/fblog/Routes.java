@@ -7,7 +7,7 @@ import com.puyixiaowo.fblog.controller.admin.afu.AfuTypeController;
 import com.puyixiaowo.fblog.controller.afu.AfuApiController;
 import com.puyixiaowo.fblog.controller.fblog.FblogController;
 import com.puyixiaowo.fblog.controller.fnews.FNewsController;
-import com.puyixiaowo.fblog.controller.shorlink.ShortLinkController;
+import com.puyixiaowo.fblog.controller.shorlink.QrcodeController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
 import com.puyixiaowo.fblog.filters.AdminPermissionsFilter;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
@@ -231,16 +231,16 @@ public class Routes {
                     FNewsController.news(request, response)));
         });
 
-        //shor link
-        path("/shortlink", () -> {
+        //qrcode
+        path("/qrcode", () -> {
             get("", ((request, response) ->
-                    ShortLinkController.shortLink(request, response)));
+                    QrcodeController.qrcodeIndex(request, response)));
             get("/create", ((request, response) ->
-                    ShortLinkController.makeShortLink(request, response)));
+                    QrcodeController.makeQrcode(request, response)));
             post("/create", ((request, response) ->
-                    ShortLinkController.makeShortLink(request, response)));
+                    QrcodeController.makeQrcode(request, response)));
             get("/:id", ((request, response) ->
-                    ShortLinkController.showShortLink(request, response)));
+                    QrcodeController.showQrcodeLink(request, response)));
         });
     }
 }

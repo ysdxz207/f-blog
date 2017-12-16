@@ -22,14 +22,14 @@ import java.net.UnknownHostException;
  * @author Moses
  * @date 2017-12-15 17:40
  */
-public class ShortLinkController {
+public class QrcodeController {
 
     private static final int TEN_DAYS = 3 * 24 * 60 * 60;
 
-    public static Object shortLink(Request request, Response response) {
+    public static Object qrcodeIndex(Request request, Response response) {
         return new FreeMarkerTemplateEngine()
                 .render(new ModelAndView(null,
-                        "shortlink/shortlink_index.html"));
+                        "qrcode/qrcode_index.html"));
     }
 
 
@@ -40,7 +40,7 @@ public class ShortLinkController {
      * @param response
      * @return
      */
-    public static Object makeShortLink(Request request, Response response) {
+    public static Object makeQrcode(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
         String link = request.queryParams("link");
         Boolean isLink = Boolean.valueOf(request.queryParamOrDefault("isLink", "true"));
@@ -70,10 +70,10 @@ public class ShortLinkController {
             host = host + ":" + port + "/";
         }
 
-        String shorLink = host + "shortlink/" + id;
-        if (link.length() < 60) {
-            shorLink = link;
-        }
+        String shorLink = host + "qrcode/" + id;
+//        if (link.length() < 60) {
+//            shorLink = link;
+//        }
         String qrcode = QrCodeUtils.createQrcode(400, 400, shorLink);
 
         JSONObject jsonObject = new JSONObject();
@@ -94,7 +94,7 @@ public class ShortLinkController {
      * @param response
      * @return
      */
-    public static Object showShortLink(Request request, Response response) {
+    public static Object showQrcodeLink(Request request, Response response) {
         String id = request.params(":id");
 
         String str = RedisUtils.get(EnumsRedisKey.REDIS_KEY_SHORT_LINK.key + id);
