@@ -72,10 +72,17 @@
 
             var qrcodeContent = $('#content_qrcode'),
                 imgObj = $('<img style="width: 60%">');
+
+            var isMobile = qrcodeContent.is(":hidden");
             if (!link) {
                 return;
             }
-            qrcodeContent.empty().append(loading);
+            if (isMobile) {
+                imgObj.css('width', '90%');
+                smask(loading);
+            } else {
+                qrcodeContent.empty().append(loading);
+            }
             $.ajax({
                 url: "/qrcode/create",
                 data: {link: link, isLink: isLink},
@@ -83,12 +90,10 @@
                 dataType: "json",
                 success: function (result) {
                     if (result.statusCode == 200) {
-                        qrcodeContent.empty();
-                        if (qrcodeContent.is(":hidden")) {
-                            imgObj.css('width', '90%');
+                        if (isMobile) {
                             smask(imgObj);
                         } else {
-                            qrcodeContent.append(imgObj);
+                            qrcodeContent.empty();
                         }
                         imgObj.prop('src', result.data);
                     } else {

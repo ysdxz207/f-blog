@@ -6,7 +6,13 @@
 
 ;
 jQuery.fn.smask = function(html){
-	var modalMain = $('<div>').attr('id', 'alert-modal').addClass('modal fade').addClass('text-center'),
+	//移除其他mask
+	var maskObj = window.maskObj;
+	if (maskObj) {
+		maskObj.modal('hide');
+	}
+
+	var modalMain = $('<div>').attr('id', 'mask_modal').addClass('modal fade').addClass('text-center'),
 		htmlObj = $(html),
 		htmlObjWidth = htmlObj.width();
 
@@ -20,5 +26,6 @@ jQuery.fn.smask = function(html){
 	modalMain.modal('show').on('hidden.bs.modal', function (e) {
 		modalMain.remove();
 	});
+	window.maskObj = modalMain;
 }
 smask = jQuery.fn.smask;
