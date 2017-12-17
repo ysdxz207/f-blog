@@ -29,7 +29,7 @@ public class QrcodeController {
     public static Object qrcodeIndex(Request request, Response response) {
         return new FreeMarkerTemplateEngine()
                 .render(new ModelAndView(null,
-                        "qrcode/qrcode_index.html"));
+                        "tools/qrcode/qrcode_index.html"));
     }
 
 

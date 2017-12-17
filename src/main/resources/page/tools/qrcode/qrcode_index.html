@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>链接转二维码</title>
+    <style>
+        html, body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            padding-top: 100px;
+        }
+        #content_qrcode {
+            line-height: 400px;
+        }
+        #content_qrcode>img {
+            width: 400px;
+        }
+    </style>
+    <#include "/public/public.html" />
+    <link href="https://cdn.bootcss.com/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script>
+    <script src="/public/bootstrap-alert.js"></script>
+    <script src="/public/bootstrap-mask.js"></script>
+</head>
+<body>
+<#include "/public/nav.html" />
+<div class="container">
+    <div class="col-md-12">
+        <p class="bg-primary">
+            <h1>链接转二维码，支持超长链接哟！</h1>
+        </p>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-6">
+            <div class="form-group">
+                <textarea class="form-control" rows="18" cols="64" id="text_content"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="check_is_link">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-success" id="btn_convert">转换</button>
+            </div>
+        </div>
+        <div class="col-md-6 form-group text-center hidden-xs" id="content_qrcode">
+            <img src="/images/qrcode_yiyi.png">
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        //checkbox
+        $("#check_is_link").bootstrapSwitch({
+            labelText: '是否为链接',
+            onText: '是',
+            offText: '否',
+            onColor: 'success',
+            offColor: 'warning',
+            size: 'normal',
+            labelWidth: '100',
+            state: true
+        });
+
+        $('#btn_convert').on('click', function () {
+            var link = $('#text_content').val(),
+                isLink = $('#check_is_link').bootstrapSwitch('state');
+
+            var loading = $('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>\n' +
+                '<span class="sr-only">Loading...</span>');
+
+            var qrcodeContent = $('#content_qrcode'),
+                imgObj = $('<img style="width: 60%">');
+
+            var isMobile = qrcodeContent.is(":hidden");
+            if (!link) {
+                return;
+            }
+            if (isMobile) {
+                imgObj.css('width', '90%');
+                smask(loading);
+            } else {
+                qrcodeContent.empty().append(loading);
+            }
+            $.ajax({
+                url: "/qrcode/create",
+                data: {link: link, isLink: isLink},
+                method: "POST",
+                dataType: "json",
+                success: function (result) {
+                    if (result.statusCode == 200) {
+                        if (isMobile) {
+                            smask(imgObj);
+                        } else {
+                            qrcodeContent.empty();
+                        }
+                        imgObj.prop('src', result.data);
+                    } else {
+                        salert(result.message);
+                    }
+                }
+            });
+        });
+    });
+</script>
+</html>
