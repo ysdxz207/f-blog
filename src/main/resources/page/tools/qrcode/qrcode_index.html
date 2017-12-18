@@ -6,10 +6,10 @@
     <style>
 
         #content_qrcode {
-            line-height: 400px;
+            line-height: 200px;
         }
         #content_qrcode>img {
-            width: 400px;
+            width: 300px;
         }
     </style>
     <#include "/public/public.html" />
@@ -29,8 +29,10 @@
     <div class="col-md-12">
         <div class="col-md-6">
             <div class="form-group">
-                <textarea class="form-control" rows="18" cols="64" id="text_content"></textarea>
+                <textarea class="form-control" rows="14" cols="64" id="text_content"></textarea>
             </div>
+        </div>
+        <div class="col-md-2 form-group text-center">
             <div class="form-group">
                 <input type="checkbox" id="check_is_link">
             </div>
@@ -38,7 +40,7 @@
                 <button type="button" class="btn btn-success" id="btn_convert">转换</button>
             </div>
         </div>
-        <div class="col-md-6 form-group text-center hidden-xs" id="content_qrcode">
+        <div class="col-md-4 form-group text-center hidden-xs" id="content_qrcode">
             <img src="/images/qrcode_yiyi.png">
         </div>
     </div>
@@ -48,13 +50,13 @@
     $(function () {
         //checkbox
         $("#check_is_link").bootstrapSwitch({
-            labelText: '是否为链接',
+            labelText: '链接',
             onText: '是',
             offText: '否',
             onColor: 'success',
             offColor: 'warning',
             size: 'normal',
-            labelWidth: '100',
+            labelWidth: '30',
             state: true
         });
 
