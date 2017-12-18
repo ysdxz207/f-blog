@@ -12,7 +12,7 @@ import java.util.*;
 
 /**
  * @author Moses
- * @date 2017-08-03 9:29
+ * @date 2017-08-03
  */
 public class RedisUtils {
 

@@ -11,7 +11,7 @@ import java.util.jar.JarFile;
 
 /**
  * @author Moses
- * @date 2017-08-04 12:59
+ * @date 2017-08-04
  */
 public class ResourceUtils {
     private static Properties properties;

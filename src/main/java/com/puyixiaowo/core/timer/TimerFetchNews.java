@@ -25,7 +25,7 @@ import java.util.concurrent.Future;
  * 定时获取新闻
  *
  * @author Moses
- * @date 2017-12-13 17:46:58
+ * @date 2017-12-13
  */
 public class TimerFetchNews extends TimerTask {
 

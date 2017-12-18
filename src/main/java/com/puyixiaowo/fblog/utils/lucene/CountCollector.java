@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * 
  * @author Moses
- * @date 2017-09-13 18:43
+ * @date 2017-09-13
  * 
  */
 public class CountCollector implements Collector {

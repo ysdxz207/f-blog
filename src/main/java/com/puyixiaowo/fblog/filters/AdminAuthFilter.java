@@ -12,7 +12,7 @@ import static spark.Spark.halt;
 /**
  *
  * @author feihong
- * @date 2017-08-06 18:04:00
+ * @date 2017-08-06
  * 管理后台用户权限控制过滤器
  */
 public class AdminAuthFilter {

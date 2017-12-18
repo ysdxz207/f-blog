@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * @author feihong
- * @date 2017-08-13 18:58
+ * @date 2017-08-13
  */
 public class PermissionController extends BaseController {
 

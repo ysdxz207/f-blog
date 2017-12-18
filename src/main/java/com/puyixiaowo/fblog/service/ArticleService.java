@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * @author Moses
- * @date 2017-09-03 21:48:40
+ * @date 2017-09-03
  */
 public class ArticleService {
 

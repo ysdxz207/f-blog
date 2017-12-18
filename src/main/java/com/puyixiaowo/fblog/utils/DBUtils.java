@@ -21,7 +21,7 @@ import java.util.*;
 
 /**
  * @author Moses
- * @date 2017-08-04 12:57
+ * @date 2017-08-04
  */
 public class DBUtils {
 

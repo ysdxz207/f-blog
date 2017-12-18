@@ -7,7 +7,7 @@ import static java.util.regex.Pattern.compile;
 
 /**
  * @author feihong
- * @date 2017-08-10 23:21
+ * @date 2017-08-10
  */
 public class StringUtils {
 

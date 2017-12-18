@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 
 /**
  * @author Moses
- * @date 2017-08-23 23:13
+ * @date 2017-08-23
  */
 public class CustomIdSerializer implements ObjectSerializer {
     @Override

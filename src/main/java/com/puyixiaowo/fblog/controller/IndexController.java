@@ -8,7 +8,7 @@ import spark.Response;
 /**
  * 
  * @author Moses
- * @date 2017-09-21 14:43
+ * @date 2017-09-21
  * 
  */
 public class IndexController extends BaseController {

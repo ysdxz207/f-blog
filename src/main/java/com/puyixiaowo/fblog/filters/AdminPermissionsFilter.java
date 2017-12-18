@@ -4,7 +4,7 @@ import static spark.Spark.before;
 
 /**
  * @author Moses
- * @date 2017-08-27 16:17
+ * @date 2017-08-27
  */
 public class AdminPermissionsFilter {
     public static void init(){

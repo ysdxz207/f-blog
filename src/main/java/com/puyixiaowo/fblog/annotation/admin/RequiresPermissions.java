@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  *
  * @author Moses
- * @date 2017-08-27 10:31:21
+ * @date 2017-08-27
  * 权限控制
  */
 @Target({ElementType.METHOD})

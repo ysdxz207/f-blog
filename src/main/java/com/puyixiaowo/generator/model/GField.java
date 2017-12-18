@@ -2,7 +2,7 @@ package com.puyixiaowo.generator.model;
 
 /**
  * @author Moses
- * @date 2017-08-15 23:09
+ * @date 2017-08-15
  */
 public class GField {
     private String name;

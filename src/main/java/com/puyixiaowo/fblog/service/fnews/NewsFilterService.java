@@ -23,7 +23,7 @@ import java.util.concurrent.Future;
 
 /**
  * @author Moses
- * @date 2017-12-14 10:18
+ * @date 2017-12-14
  */
 public class NewsFilterService {
     private static final Logger logger = LoggerFactory.getLogger(NewsFilterService.class);

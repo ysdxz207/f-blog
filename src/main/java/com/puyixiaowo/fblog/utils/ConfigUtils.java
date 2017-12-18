@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * @author feihong
- * @date 2017-08-12 23:05
+ * @date 2017-08-12
  */
 public class ConfigUtils {
 

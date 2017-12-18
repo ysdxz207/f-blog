@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * @author Moses
- * @date 2017-08-08 13:40:25
+ * @date 2017-08-08
  * 登录
  */
 public class LoginController extends BaseController {

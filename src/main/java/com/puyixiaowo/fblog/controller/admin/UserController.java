@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * @author Moses
- * @date 2017-08-10 9:57
+ * @date 2017-08-10
  */
 public class UserController extends BaseController{
 

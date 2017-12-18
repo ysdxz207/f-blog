@@ -13,7 +13,7 @@ import java.util.concurrent.RecursiveTask;
  * 关键词获取新闻线程
  *
  * @author Moses
- * @date 2017-12-14 10:16:39
+ * @date 2017-12-14
  */
 public class NewsByFilterThread extends RecursiveTask<List<NewsBean>> {
 

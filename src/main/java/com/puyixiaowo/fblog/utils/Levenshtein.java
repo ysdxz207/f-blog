@@ -2,7 +2,7 @@ package com.puyixiaowo.fblog.utils;
 /**
  * 相似度工具
  * @author huangfeihong
- * @date 2017-03-07 17:11:53
+ * @date 2017-03-07
  */
 public class Levenshtein {
 	private int compare(String str, String target) {

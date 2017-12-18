@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * @author Moses
- * @date 2017-08-16 23:14
+ * @date 2017-08-16
  */
 public class DomainGenerator {
 

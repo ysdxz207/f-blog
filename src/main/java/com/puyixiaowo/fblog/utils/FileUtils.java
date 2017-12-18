@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * @author Moses
- * @date 2017-09-03 20:48
+ * @date 2017-09-03
  */
 public class FileUtils {
     public static final String PREFIX = "f_blog_stream2file";

@@ -2,7 +2,7 @@ package com.puyixiaowo.fblog.utils;
 
 /**
  * @author Moses
- * @date 2017-08-24 22:54
+ * @date 2017-08-24
  */
 public class Assert {
     public static void notNull(Object object, String message) {

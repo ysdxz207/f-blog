@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 
 /**
  * @author feihong
- * @date 2017-08-10 23:08
+ * @date 2017-08-10
  */
 public abstract class Validatable {
 
@@ -40,9 +40,11 @@ public abstract class Validatable {
             }
 
         }
-        if (!map.isEmpty())
-        throw new ValidationException(JSON.
-                toJSONString(StringUtils.join(map.values().
-                        toArray(), ",")));
+        if (!map.isEmpty()) {
+
+            throw new ValidationException(JSON.
+                    toJSONString(StringUtils.join(map.values().
+                            toArray(), ",")));
+        }
     }
 }

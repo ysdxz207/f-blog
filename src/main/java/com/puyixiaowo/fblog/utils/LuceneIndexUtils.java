@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * 
  * @author Moses
- * @date 2017-09-13 17:01
+ * @date 2017-09-13
  * 
  */
 public class LuceneIndexUtils {

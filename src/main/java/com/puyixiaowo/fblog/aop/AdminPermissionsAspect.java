@@ -13,7 +13,7 @@ import spark.Request;
 
 /**
  * @author Moses
- * @date 2017-08-27 21:18
+ * @date 2017-08-27
  */
 @Aspect
 public class AdminPermissionsAspect {

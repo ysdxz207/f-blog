@@ -3,7 +3,7 @@ package com.puyixiaowo.generator;
 
 /**
  * @author feihong
- * @date 2017-08-13 22:17
+ * @date 2017-08-13
  */
 public class Run {
     public static void main(String[] args) {

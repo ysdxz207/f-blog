@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author Moses
- * @date 2017-08-09 18:23
+ * @date 2017-08-09
  */
 public class QrCodeUtils {
 

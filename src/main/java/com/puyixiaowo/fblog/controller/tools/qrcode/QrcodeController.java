@@ -1,9 +1,8 @@
-package com.puyixiaowo.fblog.controller.shorlink;
+package com.puyixiaowo.fblog.controller.tools.qrcode;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
-import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.utils.IdUtils;
@@ -21,7 +20,7 @@ import java.net.UnknownHostException;
 
 /**
  * @author Moses
- * @date 2017-12-15 17:40
+ * @date 2017-12-15
  */
 public class QrcodeController {
 

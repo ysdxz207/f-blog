@@ -7,7 +7,7 @@ import com.puyixiaowo.fblog.controller.admin.afu.AfuTypeController;
 import com.puyixiaowo.fblog.controller.afu.AfuApiController;
 import com.puyixiaowo.fblog.controller.fblog.FblogController;
 import com.puyixiaowo.fblog.controller.fnews.FNewsController;
-import com.puyixiaowo.fblog.controller.shorlink.QrcodeController;
+import com.puyixiaowo.fblog.controller.tools.qrcode.QrcodeController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
 import com.puyixiaowo.fblog.filters.AdminPermissionsFilter;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;

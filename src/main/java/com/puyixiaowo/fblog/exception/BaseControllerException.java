@@ -2,7 +2,7 @@ package com.puyixiaowo.fblog.exception;
 
 /**
  * @author Moses
- * @date 2017-09-03 22:28
+ * @date 2017-09-03
  */
 public class BaseControllerException extends RuntimeException {
     public BaseControllerException() {

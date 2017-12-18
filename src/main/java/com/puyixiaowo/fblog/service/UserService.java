@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * @author Moses
- * @date 2017-08-19 17:13
+ * @date 2017-08-19
  */
 public class UserService {
 

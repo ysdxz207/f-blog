@@ -17,7 +17,7 @@ import spark.Response;
 
 /**
  * @author Moses
- * @date 2017-08-26 21:23:47
+ * @date 2017-08-26
  */
 public class AfuApiController extends BaseController {
 

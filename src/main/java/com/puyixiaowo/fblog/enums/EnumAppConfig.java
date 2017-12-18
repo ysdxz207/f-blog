@@ -2,7 +2,7 @@ package com.puyixiaowo.fblog.enums;
 /**
  * 
  * @author Moses
- * @date 2017-09-01 13:39
+ * @date 2017-09-01
  * 
  */
 public enum EnumAppConfig {

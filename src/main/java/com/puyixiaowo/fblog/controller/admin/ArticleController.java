@@ -29,7 +29,7 @@ import java.util.Map;
 
 /**
  * @author Moses
- * @date 2017-08-08 13:48:12
+ * @date 2017-08-08
  * 文章
  */
 public class ArticleController extends BaseController {

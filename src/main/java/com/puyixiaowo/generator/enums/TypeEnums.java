@@ -4,7 +4,7 @@ import com.puyixiaowo.fblog.utils.StringUtils;
 
 /**
  * @author Moses
- * @date 2017-08-15 23:28
+ * @date 2017-08-15
  */
 public enum TypeEnums {
 

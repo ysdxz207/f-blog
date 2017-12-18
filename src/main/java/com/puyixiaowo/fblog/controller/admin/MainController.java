@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  *
  * @author Moses
- * @date 2017-08-08 13:40:41
+ * @date 2017-08-08
  * 首页数据处理
  */
 public class MainController extends BaseController {

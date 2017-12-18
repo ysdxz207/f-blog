@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * @author Moses
- * @date 2017-09-01 13:33
+ * @date 2017-09-01
  */
 public class AppUtils {
 

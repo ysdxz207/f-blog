@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  *
  * @author feihong
- * @date 2017-08-11 23:54:24
+ * @date 2017-08-11
  * 标明主键
  */
 @Retention(RetentionPolicy.RUNTIME) // 注解会在class字节码文件中存在，在运行时可以通过反射获取到

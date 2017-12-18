@@ -7,7 +7,7 @@ import com.puyixiaowo.fblog.utils.ResourceUtils;
 /**
  * 
  * @author Moses
- * @date 2017-12-05 17:15
+ * @date 2017-12-05
  * 
  */
 public class CaptchaProducer extends DefaultKaptcha {

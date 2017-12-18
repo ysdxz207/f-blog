@@ -18,7 +18,7 @@ import java.util.TimerTask;
 
 /**
  * @author Moses
- * @date 2017-09-27 17:04
+ * @date 2017-09-27
  * 每天零点执行备份f_blog.db
  */
 public class TimerBackupDB extends TimerTask{

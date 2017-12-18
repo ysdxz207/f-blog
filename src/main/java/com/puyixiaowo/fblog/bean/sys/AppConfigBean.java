@@ -2,7 +2,7 @@ package com.puyixiaowo.fblog.bean.sys;
 /**
  * 
  * @author Moses
- * @date 2017-09-01 13:32
+ * @date 2017-09-01
  * @copyright Copyright by www.lamic.cn
  * @description 
  */

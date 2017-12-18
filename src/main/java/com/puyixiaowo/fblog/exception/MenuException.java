@@ -2,7 +2,7 @@ package com.puyixiaowo.fblog.exception;
 
 /**
  * @author Moses
- * @date 2017-08-19 10:19
+ * @date 2017-08-19
  */
 public class MenuException extends RuntimeException {
 

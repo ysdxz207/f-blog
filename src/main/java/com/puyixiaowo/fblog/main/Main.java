@@ -12,7 +12,7 @@ import static spark.Spark.port;
 
 /**
  * @author Moses
- * @date 2017-08-01 18:21
+ * @date 2017-08-01
  */
 public class Main {
 
