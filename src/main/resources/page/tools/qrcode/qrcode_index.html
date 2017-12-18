@@ -66,7 +66,7 @@
                 '<span class="sr-only">Loading...</span>');
 
             var qrcodeContent = $('#content_qrcode'),
-                imgObj = $('<img style="width: 60%">');
+                imgObj = $('<img>');
 
             var isMobile = qrcodeContent.is(":hidden");
             if (!link) {
@@ -88,7 +88,7 @@
                         if (isMobile) {
                             smask(imgObj);
                         } else {
-                            qrcodeContent.empty();
+                            qrcodeContent.empty().append(imgObj);
                         }
                         imgObj.prop('src', result.data);
                     } else {
