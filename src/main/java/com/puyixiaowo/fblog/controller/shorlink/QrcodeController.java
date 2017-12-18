@@ -3,6 +3,7 @@ package com.puyixiaowo.fblog.controller.shorlink;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
+import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.utils.IdUtils;
@@ -53,25 +54,24 @@ public class QrcodeController {
 
         HttpServletRequest req = request.raw();
         String id = IdUtils.generateId() + "";
-
-        StringBuffer url = req.getRequestURL();
-        int uriLen = req.getRequestURI().length();
-        String host = url.delete(url.length() - uriLen, url.length()).append("/").toString();
-
-        if (host.toLowerCase().indexOf("localhost") != -1) {
+        String scheme = req.getScheme();
+        String serverName = req.getServerName();
+        if ("localhost".equalsIgnoreCase(serverName)) {
             InetAddress addr = null;
-            int port = req.getServerPort();
             try {
                 addr = InetAddress.getLocalHost();
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
-            host = "http://" + addr.getHostAddress();
-            if (port != 80) {
-                host += ":" + port + "/";
-            }
+            serverName = addr.getHostAddress();
         }
-        String shorLink = host + "qrcode/" + id;
+        String host = scheme + "://" + serverName;
+        int port = req.getServerPort();
+        if (port != 80) {
+            host = host + ":" + port;
+        }
+
+        String shorLink = host + "/qrcode/" + id;
 //        if (link.length() < 60) {
 //            shorLink = link;
 //        }
