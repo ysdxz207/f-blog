@@ -42,28 +42,52 @@ public class LoginController extends BaseController {
     }
 
     /**
-     * 登录
+     * 管理后台登录
      *
      * @param request
      * @param response
      * @return
      */
-    public static ModelAndView doLogin(Request request,
+    public static ModelAndView adminLogin(Request request,
                                        Response response) {
 
+        String loginPage = "admin/login.html";
+        String redirectPage = "/admin/";
+        return login(request, response, redirectPage, loginPage);
+    }
+
+    /**
+     * 书登录
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    public static ModelAndView bookLogin(Request request,
+                                          Response response) {
+
+        String loginPage = "book/login.html";
+        String redirectPage = "/book";
+        return login(request, response, redirectPage, loginPage);
+    }
+
+    public static ModelAndView login(Request request,
+                                Response response,
+                                String redirectPage,
+                                String loginPage) {
         Map<String, Object> model = new HashMap<>();
 
         String captcha = request.queryParams("captcha");
         if (StringUtils.isBlank(captcha)) {
             model.put("message", "请输入验证码");
-            return new ModelAndView(model, "admin/login.html");
+            return new ModelAndView(model, loginPage);
         }
 
 
         String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
         if (!captcha.equalsIgnoreCase(sessionCaptcha)) {
             model.put("message", "验证码错误");
-            return new ModelAndView(model, "admin/login.html");
+            return new ModelAndView(model, loginPage);
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -80,7 +104,7 @@ public class LoginController extends BaseController {
             } else {
 
                 request.session().attribute(Constants.SESSION_USER_KEY, userBean);
-                response.redirect("/admin/");
+                response.redirect(redirectPage);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,7 +112,7 @@ public class LoginController extends BaseController {
         }
 
 
-        return new ModelAndView(model, "admin/login.html");
+        return new ModelAndView(model, loginPage);
     }
 
     /**

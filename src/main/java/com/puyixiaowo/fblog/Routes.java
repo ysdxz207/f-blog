@@ -52,7 +52,7 @@ public class Routes {
                             LoginController.loginPage(request, response)),
                     new FreeMarkerTemplateEngine());
             post("/login", ((request, response) ->
-                            LoginController.doLogin(request, response)),
+                            LoginController.adminLogin(request, response)),
                     new FreeMarkerTemplateEngine());
             get("/captcha.jpg", ((request, response) ->
                             LoginController.captcha(request, response)));
