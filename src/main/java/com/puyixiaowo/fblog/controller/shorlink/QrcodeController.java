@@ -53,23 +53,24 @@ public class QrcodeController {
 
         HttpServletRequest req = request.raw();
         String id = IdUtils.generateId() + "";
-        String scheme = req.getScheme();
-        String serverName = req.getServerName();
-        if ("localhost".equalsIgnoreCase(serverName)) {
+
+        StringBuffer url = req.getRequestURL();
+        int uriLen = req.getRequestURI().length();
+        String host = url.delete(url.length() - uriLen, url.length()).append("/").toString();
+
+        if (host.toLowerCase().indexOf("localhost") != -1) {
             InetAddress addr = null;
+            int port = req.getServerPort();
             try {
                 addr = InetAddress.getLocalHost();
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
-            serverName = addr.getHostAddress();
+            host = "http://" + addr.getHostAddress();
+            if (port != 80) {
+                host += ":" + port + "/";
+            }
         }
-        String host = scheme + "://" + serverName;
-        int port = req.getServerPort();
-        if (port != 80) {
-            host = host + ":" + port + "/";
-        }
-
         String shorLink = host + "qrcode/" + id;
 //        if (link.length() < 60) {
 //            shorLink = link;
@@ -100,7 +101,7 @@ public class QrcodeController {
         String str = RedisUtils.get(EnumsRedisKey.REDIS_KEY_SHORT_LINK.key + id);
 
         if (StringUtils.isBlank(str)) {
-            Spark.internalServerError("<html><body><h1>无法获取此二维码</h1></body></html>");
+            Spark.internalServerError("<html><body><h1>无法访问此链接</h1></body></html>");
         }
 
         JSONObject jsonObject = JSON.parseObject(str);
@@ -108,6 +109,10 @@ public class QrcodeController {
         Boolean isLink = jsonObject.getBoolean("isLink");
 
         if (isLink != null && isLink) {
+            if (content.toLowerCase().indexOf("http://") == -1
+                    || content.toLowerCase().indexOf("https://") == -1) {
+                content = "http://" + content;
+            }
             response.redirect(content);
             return null;
         } else {
