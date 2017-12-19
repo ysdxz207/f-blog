@@ -1,8 +1,10 @@
 package com.puyixiaowo.fblog.controller.tools.books;
 
+import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookChapterBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
+import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.book.BookChapterService;
@@ -12,7 +14,9 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Moses
@@ -22,31 +26,22 @@ public class BookController extends BaseController {
 
 
     public static Object userBooks(Request request, Response response) {
-        Boolean data = Boolean.valueOf(request.params(":data"));
-
-        if (!data) {
-            return new FreeMarkerTemplateEngine()
-                    .render(new ModelAndView(null,
-                            "book/book_index.html"));
-        }
-
+        Map<String, Object> model = new HashMap<>();
 
         PageBean pageBean = getPageBean(request);
 
-        String userIdStr = request.queryParams("userId");
-        if (StringUtils.isBlank(userIdStr)) {
-            pageBean.errorMessage("缺少userId");
-            return pageBean.serialize();
-        }
+
         try {
-            Long userId = Long.valueOf(userIdStr);
-            List<BookBean> list = BookService.getUserBookList(userId);
+            UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
+            List<BookBean> list = BookService.getUserBookList(userBean.getId());
             pageBean.setList(list);
         } catch (Exception e) {
             pageBean.error(e);
         }
 
-        return pageBean.serialize();
+        model.put("pageBean", pageBean);
+        return new FreeMarkerTemplateEngine()
+                .render(new ModelAndView(model, "tools/book/book_index.html"));
     }
 
     public static Object bookChapters(Request request, Response response) {
@@ -55,7 +50,7 @@ public class BookController extends BaseController {
         if (!data) {
             return new FreeMarkerTemplateEngine()
                     .render(new ModelAndView(null,
-                            "book/book_chapters.html"));
+                            "tools/book/book_chapters.html"));
         }
 
 

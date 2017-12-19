@@ -3,6 +3,7 @@ package com.puyixiaowo.fblog.controller.admin;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
+import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -24,17 +25,19 @@ public class MainController extends BaseController {
      * @param response
      * @return
      */
-    public static ModelAndView index(Request request, Response response) {
+    public static Object index(Request request, Response response) {
 
         Map<String ,Object> model = new HashMap<>();
         UserBean user = request.session().attribute(Constants.SESSION_USER_KEY);
         model.put("user", user);
-        return new ModelAndView(model, "admin/index.html");
+        return new FreeMarkerTemplateEngine()
+                .render(new ModelAndView(model, "admin/index.html"));
     }
 
-    public static ModelAndView main(Request request, Response response) {
+    public static Object main(Request request, Response response) {
 
-        return new ModelAndView(null, "admin/main.html");
+        return new FreeMarkerTemplateEngine()
+                .render(new ModelAndView(null, "admin/main.html"));
     }
 
     /**

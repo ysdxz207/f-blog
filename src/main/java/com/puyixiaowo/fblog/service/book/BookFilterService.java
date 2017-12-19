@@ -58,7 +58,7 @@ public class BookFilterService {
 
     public static void requestFetchBookUpdate(BookBean bookBean) {
         List<BookBean> list = new ArrayList<>();
-        logger.info("开始获取书：" + bookBean.getName());
+        logger.info("书[" + bookBean.getName() + "]开始获取...");
         List<BookChapterBean> needFetchChapters = getNeedFetchChapters(bookBean);
 
         logger.info("书[" + bookBean.getName() + "]需要更新章数：" + needFetchChapters.size());

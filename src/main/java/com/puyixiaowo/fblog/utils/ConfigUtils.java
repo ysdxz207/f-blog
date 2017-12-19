@@ -19,6 +19,7 @@ import java.util.Map;
 public class ConfigUtils {
 
     private static final String ADMIN_CONFIG_FILE = "conf/admin_auth.yaml";
+    private static final String BOOK_CONFIG_FILE = "conf/book_auth.yaml";
     private static final String IGNORE_LIST = "ignore_list";
     private static final String PASS_DES_KEY = "pass_des_key";
 
@@ -29,6 +30,7 @@ public class ConfigUtils {
         initRedis();
         DBUtils.initDB();
         initAdminConf();
+        initBookConfig();
         ErrorHandler.init();
 
         new TimerBackupDB().start();//启动备数据库份
@@ -67,6 +69,28 @@ public class ConfigUtils {
         }
 
         RedisUtils.set(EnumsRedisKey.REDIS_KEY_IGNORE_CONF.key, JSON.toJSONString(ignores));
+    }
+
+    private static void initBookConfig() {
+        Yaml yaml = new Yaml();
+        Object obj = yaml.load(ResourceUtils.readFile(BOOK_CONFIG_FILE));
+
+        if (!(obj instanceof Map)) {
+            throw new RuntimeException("书登录链接配置不正确");
+        }
+        Map<String, Object> map = (Map) obj;
+
+        Object ignoresObj = map.get(IGNORE_LIST);
+
+        List<String> ignores = null;
+        if (ignoresObj instanceof List) {
+            ignores = (List<String>) ignoresObj;
+        }
+        if (ignores == null) {
+            throw new RuntimeException("书用户权限配置不正确");
+        }
+
+        RedisUtils.set(EnumsRedisKey.REDIS_KEY_IGNORE_CONF_BOOK.key, JSON.toJSONString(ignores));
     }
 
     /**

@@ -12,6 +12,7 @@ import com.puyixiaowo.fblog.controller.tools.books.BookController;
 import com.puyixiaowo.fblog.controller.tools.qrcode.QrcodeController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
 import com.puyixiaowo.fblog.filters.AdminPermissionsFilter;
+import com.puyixiaowo.fblog.filters.BookAuthFilter;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import spark.Spark;
 
@@ -48,20 +49,19 @@ public class Routes {
 
         //后台管理
         AdminAuthFilter.init();
+        ///书
+        BookAuthFilter.init();
         //权限控制
         AdminPermissionsFilter.init();
 
         //管理后台
         path("/admin", () -> {
             get("/", ((request, response) ->
-                            MainController.index(request, response)),
-                    new FreeMarkerTemplateEngine());
+                            MainController.index(request, response)));
             get("/loginPage", ((request, response) ->
-                            LoginController.loginPage(request, response)),
-                    new FreeMarkerTemplateEngine());
+                            LoginController.loginPage(request, response)));
             post("/login", ((request, response) ->
-                            LoginController.adminLogin(request, response)),
-                    new FreeMarkerTemplateEngine());
+                            LoginController.adminLogin(request, response)));
             get("/captcha.jpg", ((request, response) ->
                             LoginController.captcha(request, response)));
 
@@ -69,8 +69,7 @@ public class Routes {
                     LoginController.logout(request, response)));
 
             get("/main", ((request, response) ->
-                            MainController.main(request, response)),
-                    new FreeMarkerTemplateEngine());
+                            MainController.main(request, response)));
 
             /*
              * 菜单组
@@ -253,15 +252,22 @@ public class Routes {
 
         //qrcode
         path("/book", () -> {
-            get("/:data", ((request, response) ->
-                    BookController.userBooks(request, response)));
-            post("/:data", ((request, response) ->
+            get("/loginPage", ((request, response) ->
+                    LoginController.loginPageBook(request, response)));
+            get("/captcha.jpg", ((request, response) ->
+                    LoginController.captcha(request, response)));
+            post("/login", ((request, response) ->
+                    LoginController.bookLogin(request, response)));
+
+            get("/index", ((request, response) ->
                     BookController.userBooks(request, response)));
 
             get("/chapter/:data", ((request, response) ->
                     BookController.bookChapters(request, response)));
             post("/chapter/:data", ((request, response) ->
                     BookController.bookChapters(request, response)));
+
+
         });
     }
 }
