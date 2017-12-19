@@ -1,5 +1,6 @@
 package com.puyixiaowo.fblog.service.book;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.core.thread.BookByFilterThread;
@@ -60,16 +61,28 @@ public class BookFilterService {
         logger.info("开始获取书：" + bookBean.getName());
         List<BookChapterBean> needFetchChapters = getNeedFetchChapters(bookBean);
 
+        logger.info("书[" + bookBean.getName() + "]需要更新章数：" + needFetchChapters.size());
         if (needFetchChapters == null
                 || needFetchChapters.size() == 0) {
             logger.info("书[" + bookBean.getName() + "]没有更新");
             return;
         }
-        for (BookChapterBean bookChapterBean :
-                needFetchChapters) {
+
+        int lastSort = BookChapterService.getChapterLastSort(bookBean.getId());
+
+        logger.info("书[" + bookBean.getName() + "]最新章序号：" + lastSort);
+
+        for (int i = 0; i<needFetchChapters.size(); i++) {
+            ++lastSort;
+            BookChapterBean bookChapterBean = needFetchChapters.get(i);
             String content = requestBookContent(bookChapterBean);
             bookChapterBean.setContent(content);
-            DBUtils.insertOrUpdate(bookChapterBean);
+            bookChapterBean.setSort(lastSort);
+            try {
+                DBUtils.insertOrUpdate(bookChapterBean);
+            } catch (Exception e) {
+                //重复跳过
+            }
         }
     }
 
@@ -97,7 +110,6 @@ public class BookFilterService {
 
     public static List<BookChapterBean> getNeedFetchChapters(BookBean bookBean) {
         List<BookChapterBean> apiChapterList = requestBookChapters(bookBean);
-
         if (apiChapterList == null
                 || apiChapterList.size() == 0) {
             logger.error("[book]书[" + bookBean.getName() + "]未获取到章节列表");
@@ -110,7 +122,7 @@ public class BookFilterService {
             return null;
         }
 
-        int startIndex = localChapterList.size() - 1 < 0 ? 0 : localChapterList.size() - 1;
+        int startIndex = localChapterList.size();
         int endIndex = apiChapterList.size() - 1 < 0 ? 0 : apiChapterList.size() - 1;
 
         return apiChapterList.subList(startIndex,

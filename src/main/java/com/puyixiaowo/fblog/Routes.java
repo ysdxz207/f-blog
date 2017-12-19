@@ -255,6 +255,13 @@ public class Routes {
         path("/book", () -> {
             get("/:data", ((request, response) ->
                     BookController.userBooks(request, response)));
+            post("/:data", ((request, response) ->
+                    BookController.userBooks(request, response)));
+
+            get("/chapter/:data", ((request, response) ->
+                    BookController.bookChapters(request, response)));
+            post("/chapter/:data", ((request, response) ->
+                    BookController.bookChapters(request, response)));
         });
     }
 }

@@ -18,11 +18,12 @@ public class BookChapterService {
     public static String getSelectSql(BookChapterBean bookChapterBean,
                                                       PageBean pageBean) {
 
-        StringBuilder sbSql = new StringBuilder("select t.* from book_chapter t where 1 = 1 ");
+        StringBuilder sbSql = new StringBuilder("select id,book_id,sort,name,status from book_chapter where 1 = 1 ");
 
         buildSqlParams(sbSql, bookChapterBean);
-        sbSql.append("group by t.id ");
-        sbSql.append("order by t.id desc ");
+        sbSql.append("order by " +
+                pageBean.getOrder() +
+                (pageBean.getReverse() ? " desc " : " asc "));
         sbSql.append("limit ");
         sbSql.append(pageBean.getRowBounds().getOffset());
         sbSql.append(", ");
@@ -35,24 +36,42 @@ public class BookChapterService {
     public static void buildSqlParams(StringBuilder sbSql,
                                                BookChapterBean bookChapterBean) {
         if (bookChapterBean.getName() != null) {
-            sbSql.append("and t.name like :name ");
+            sbSql.append("and name like :name ");
             bookChapterBean.setName("%" + bookChapterBean.getName() + "%");
         }
 
         if (bookChapterBean.getBookId() != null) {
-            sbSql.append("and t.book_id = :bookId ");
+            sbSql.append("and book_id = :bookId ");
         }
     }
 
     public static List<BookChapterBean> getBookChapterList(Long bookId) {
         BookChapterBean bookChapterBean = new BookChapterBean();
         bookChapterBean.setBookId(bookId);
-        List<BookChapterBean> list = selectBookChapterPageBean(bookChapterBean, new PageBean()).getList();
+
+        PageBean pageBean = new PageBean();
+        pageBean.setOrder("sort");
+        List<BookChapterBean> list = selectBookChapterPageBean(bookChapterBean, pageBean).getList();
         if (list != null
                 && list.size() > 0) {
             return list;
         }
         return new ArrayList<>();
+    }
+
+    public static int getChapterLastSort(Long bookId) {
+        BookChapterBean bookChapterBean = new BookChapterBean();
+        bookChapterBean.setBookId(bookId);
+        bookChapterBean = DBUtils.selectOne("select * from book_chapter where " +
+                        "book_id=:bookId order by sort desc limit 1",
+                bookChapterBean);
+
+        if (bookChapterBean == null) {
+
+            return 0;
+        }
+
+        return bookChapterBean.getSort();
     }
 
 //    public static BookChapterBean getBookLastChapter(Long bookId) {

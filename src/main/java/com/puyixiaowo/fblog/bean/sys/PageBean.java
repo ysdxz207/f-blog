@@ -21,6 +21,8 @@ public class PageBean<T> extends ResponseBean{
 	private int pageCurrent = 1;
 	private int totalCount = 0;
 	private int pageTotal = 0;
+	private String order = "id";
+	private Boolean reverse = false;
 	private RowBounds rowBounds;
 	private List<T> list = new ArrayList<>();
 
@@ -31,6 +33,8 @@ public class PageBean<T> extends ResponseBean{
 	public PageBean() {
 		this.rowBounds = new RowBounds();//默认查所有
 		this.setMessage("");//关闭成功提示框
+		this.order = "id";
+		this.reverse = true;
 	}
 	
 	/**
@@ -41,6 +45,14 @@ public class PageBean<T> extends ResponseBean{
 		this.pageSize = pageSize;
 		this.rowBounds = buidRowBounds();
 		this.setMessage("");//关闭成功提示框
+	}
+
+	public PageBean(int pageCurrent, int pageSize,
+					String order,
+					Boolean reverse) {
+		this(pageCurrent, pageSize);
+		this.order = order;
+		this.reverse = reverse;
 	}
 	
 	/**
@@ -79,8 +91,22 @@ public class PageBean<T> extends ResponseBean{
 		this.pageCurrent = pageCurrent;
 	}
 
-	
-	
+	public String getOrder() {
+		return order;
+	}
+
+	public void setOrder(String order) {
+		this.order = order;
+	}
+
+	public Boolean getReverse() {
+		return reverse;
+	}
+
+	public void setReverse(Boolean reverse) {
+		this.reverse = reverse;
+	}
+
 	public List<T> getList() {
 		return list;
 	}

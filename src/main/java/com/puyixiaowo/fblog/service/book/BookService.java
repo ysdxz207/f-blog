@@ -23,7 +23,6 @@ public class BookService {
         StringBuilder sbSql = new StringBuilder("select t.* from book t where 1 = 1 ");
 
         buildSqlParams(sbSql, bookBean);
-        sbSql.append("group by t.id ");
         sbSql.append("order by t.id desc ");
         sbSql.append("limit ");
         sbSql.append(pageBean.getRowBounds().getOffset());

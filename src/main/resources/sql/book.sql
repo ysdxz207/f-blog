@@ -35,9 +35,10 @@ DROP TABLE IF EXISTS `book_chapter`;
 CREATE TABLE `book_chapter` (
   `id`        INTEGER(20)  NOT NULL UNIQUE,
   `book_id`      INTEGER(20) NOT NULL,
-  `name`      VARCHAR(128) DEFAULT NULL,
-  `content`      VARCHAR(5000) DEFAULT NULL ,
-  `link`     VARCHAR (500) DEFAULT NULL,
+  `sort`         INTEGER(6) NOT NULL,
+  `name`          VARCHAR(128) DEFAULT NULL UNIQUE,
+  `content`      TEXT DEFAULT NULL ,
+  `link`        TEXT DEFAULT NULL UNIQUE,
   `status`     INTEGER(2) DEFAULT '1',
   PRIMARY KEY (`id`)
 );

@@ -112,6 +112,9 @@ public class BaseController {
 
         String pageCurrentStr = request.queryParams("pageCurrent");
         String pageSizeStr = request.queryParams("pageSize");
+        String order = request.queryParamOrDefault("order", "id");
+        Boolean reverse = Boolean.valueOf(request.queryParamOrDefault("reverse", "true"));
+
         int pageCurrent = 1;
         int pageSize = Constants.DEFAULT_PAGE_SIZE;
         if (StringUtils.isNotBlank(pageCurrentStr)) {
@@ -120,7 +123,7 @@ public class BaseController {
         if (StringUtils.isNotBlank(pageSizeStr)) {
             pageSize = Integer.valueOf(pageSizeStr);
         }
-        return new PageBean(pageCurrent, pageSize);
+        return new PageBean(pageCurrent, pageSize, order, reverse);
     }
 
 

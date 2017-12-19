@@ -29,7 +29,7 @@ public enum TypeEnums {
             jdbcType = jdbcType.substring(0, jdbcType.indexOf("("));
             if ((jdbcType.equalsIgnoreCase(TypeEnums.INT.jdbcType)
                     || jdbcType.equalsIgnoreCase(TypeEnums.INTEGER.jdbcType))
-                    && length > 4) {
+                    && length > 6) {
                 return "Long";
             }
         }

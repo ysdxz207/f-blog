@@ -23,7 +23,6 @@ public class BookshelfService {
         StringBuilder sbSql = new StringBuilder("select * from bookshelf t where 1 = 1 ");
 
         buildSqlParams(sbSql, bookshelfBean);
-        sbSql.append("group by t.id ");
         sbSql.append("order by t.id asc ");
         sbSql.append("limit ");
         sbSql.append(pageBean.getRowBounds().getOffset());
