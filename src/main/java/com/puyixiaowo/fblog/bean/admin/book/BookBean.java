@@ -9,6 +9,7 @@ public class BookBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	private String author;
 	private String aId;//api接口书ID
 	private String name;
 	private String url;
@@ -24,6 +25,14 @@ public class BookBean implements Serializable {
 
 	public void setId (Long id){
 		this.id = id;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 
 	public String getAId (){

@@ -1,6 +1,7 @@
 package com.puyixiaowo.fblog;
 
 import com.puyixiaowo.fblog.controller.IndexController;
+import com.puyixiaowo.fblog.controller.TestController;
 import com.puyixiaowo.fblog.controller.admin.*;
 import com.puyixiaowo.fblog.controller.admin.afu.AfuController;
 import com.puyixiaowo.fblog.controller.admin.afu.AfuTypeController;
@@ -20,6 +21,12 @@ public class Routes {
         Spark.staticFileLocation("static_resources");
 
         get("/", (request, response) -> IndexController.index(request, response));
+
+        path("/test", () -> {
+            get("", ((request, response) -> TestController.test(request, response)));
+            post("", ((request, response) -> TestController.test(request, response)));
+
+        });
 
         //fblog前台
         path("/yiyi", () -> {
