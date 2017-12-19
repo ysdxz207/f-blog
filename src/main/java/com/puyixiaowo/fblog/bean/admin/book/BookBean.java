@@ -1,11 +1,12 @@
 package com.puyixiaowo.fblog.bean.admin.book;
 
+import com.puyixiaowo.core.entity.Validatable;
 import com.puyixiaowo.fblog.annotation.Table;
 
 import java.io.Serializable;
 
 @Table("book")
-public class BookBean implements Serializable {
+public class BookBean extends Validatable implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private Long id;

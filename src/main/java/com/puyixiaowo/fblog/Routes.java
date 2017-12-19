@@ -8,6 +8,7 @@ import com.puyixiaowo.fblog.controller.admin.afu.AfuTypeController;
 import com.puyixiaowo.fblog.controller.afu.AfuApiController;
 import com.puyixiaowo.fblog.controller.fblog.FblogController;
 import com.puyixiaowo.fblog.controller.fnews.FNewsController;
+import com.puyixiaowo.fblog.controller.tools.books.BookController;
 import com.puyixiaowo.fblog.controller.tools.qrcode.QrcodeController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
 import com.puyixiaowo.fblog.filters.AdminPermissionsFilter;
@@ -248,6 +249,12 @@ public class Routes {
                     QrcodeController.makeQrcode(request, response)));
             get("/:id", ((request, response) ->
                     QrcodeController.showQrcodeLink(request, response)));
+        });
+
+        //qrcode
+        path("/book", () -> {
+            get("/:data", ((request, response) ->
+                    BookController.userBooks(request, response)));
         });
     }
 }

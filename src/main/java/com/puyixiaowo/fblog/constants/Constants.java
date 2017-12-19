@@ -3,6 +3,8 @@ package com.puyixiaowo.fblog.constants;
 import com.puyixiaowo.fblog.utils.ResourceUtils;
 
 public class Constants {
+
+    public static final String ENCODING = "UTF-8";
     /*
      * 后台用户session key
      */
@@ -35,4 +37,5 @@ public class Constants {
     public static final String SITE_ADMIN = ResourceUtils.load("conf/site.properties").getProperty("site.admin");
     public static final String SITE_YIYI = ResourceUtils.load("conf/site.properties").getProperty("site.yiyi");
     public static final String SITE_PUPU = ResourceUtils.load("conf/site.properties").getProperty("site.pupu");
+
 }
