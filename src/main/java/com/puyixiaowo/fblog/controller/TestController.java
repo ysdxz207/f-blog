@@ -1,5 +1,6 @@
 package com.puyixiaowo.fblog.controller;
 
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -18,7 +19,7 @@ public class TestController extends BaseController{
 
     public static Object test(Request request,
                        Response response) {
-        logger.info("[recieve test]");
-        return "test";
+        logger.info("test===========>" + JSON.toJSONString(request.queryMap().toMap()));
+        return "success";
     }
 }
