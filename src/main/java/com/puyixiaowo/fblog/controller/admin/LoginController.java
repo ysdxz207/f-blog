@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Producer;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
+import com.puyixiaowo.fblog.bean.admin.UserRoleBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.enums.EnumLoginType;
@@ -45,7 +46,6 @@ public class LoginController extends BaseController {
     public static Object loginPage(Request request, Response response) {
 
 
-
         return new FreeMarkerTemplateEngine()
                 .render(new ModelAndView(null, "admin/login.html"));
     }
@@ -72,6 +72,9 @@ public class LoginController extends BaseController {
      * @return
      */
     public static Object loginPageBook(Request request, Response response) {
+
+        UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
+
         return new FreeMarkerTemplateEngine()
                 .render(new ModelAndView(null, "tools/book/book_login.html"));
     }
@@ -114,27 +117,27 @@ public class LoginController extends BaseController {
                 response.redirect(loginPage);
                 return;
             }
-
-
-            String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
-            if (!captcha.equalsIgnoreCase(sessionCaptcha)) {
-                model.put("message", "验证码错误");
-                response.redirect(loginPage);
-                return;
-            }
+//
+//
+//            String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
+//            if (!captcha.equalsIgnoreCase(sessionCaptcha)) {
+//                model.put("message", "验证码错误");
+//                response.redirect(loginPage);
+//                return;
+//            }
 
             String loginname = request.queryParams("uname");
             String password = request.queryParams("upass");
             userBean = new UserBean();
             userBean.setLoginname(loginname);
-            userBean.setPassword(password);
+            userBean.setPassword(DesUtils.encrypt(password));
         }
 
 
         Map<String, Object> params = new HashMap<>();
 
         params.put("loginname", userBean.getLoginname());
-        params.put("password", DesUtils.encrypt(userBean.getPassword()));
+        params.put("password", userBean.getPassword());
 
         try {
             userBean = LoginService.login(params);
@@ -166,15 +169,14 @@ public class LoginController extends BaseController {
             if (StringUtils.isBlank(str)) {
                 return null;
             }
-            JSONObject json = JSON.parseObject(DesUtils.decrypt(str));
-            String username = json.getString("username");
-            String password = json.getString("password");
-            userBean.setLoginname(username);
-            userBean.setPassword(password);
+            String [] strArr = DesUtils.decrypt(str).split("_");
+            userBean.setLoginname(strArr[0]);
+            userBean.setPassword(strArr[1]);
             return userBean;
         }
+        String cookieStr = userBean.getLoginname() + "_" + userBean.getPassword();
         response.cookie(Constants.COOKIE_LOGIN_KEY,
-                DesUtils.encrypt(JSON.toJSONString(userBean)));
+                DesUtils.encrypt(cookieStr));
         return null;
     }
 
