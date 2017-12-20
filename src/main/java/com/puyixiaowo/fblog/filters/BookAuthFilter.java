@@ -1,8 +1,12 @@
 package com.puyixiaowo.fblog.filters;
 
+import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.constants.Constants;
+import com.puyixiaowo.fblog.controller.admin.LoginController;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.utils.RedisUtils;
+import spark.Request;
+import spark.Response;
 
 import java.util.List;
 
@@ -26,11 +30,12 @@ public class BookAuthFilter {
             if (!isIgnorePath(uri)
                     && (request.session().attribute(Constants.SESSION_USER_KEY) == null)) {
 
-                response.redirect("/book/loginPage");
+                LoginController.login(request, response);
                 halt();
             }
         });
     }
+
 
     private static boolean isIgnorePath(String uri) {
 

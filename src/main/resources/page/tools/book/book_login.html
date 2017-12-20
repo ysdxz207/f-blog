@@ -16,7 +16,7 @@
         });
 
         function changeCode() {
-            $("#captcha_img").attr("src", "/book/captcha.jpg?type=2&t=" + (new Date().getTime()));
+            $("#captcha_img").attr("src", "/book/captcha.jpg?type=book&t=" + (new Date().getTime()));
         }
 
         function choose_bg() {
@@ -33,6 +33,7 @@
         </div>
         <form action="/book/login" id="login_form" method="post">
             <input type="hidden" value="" id="j_randomKey"/>
+            <input type="hidden" value="book" name="type"/>
             <!--<p class="text-center logo"><img src="/images/logo.png" height="45"></p>-->
             <div class="login_msg text-center">
                 <font color="#ea2000">
@@ -61,7 +62,7 @@
                     <input type="text" class="form-control" id="j_captcha" name="captcha" placeholder="验证码"
                            aria-describedby="sizing-addon-password">
                     <span class="input-group-addon code" id="basic-addon-code"><img id="captcha_img"
-                                                                                    src="/book/captcha.jpg?type=2" alt="点击更换"
+                                                                                    src="/book/captcha.jpg?type=book" alt="点击更换"
                                                                                     title="点击更换" class="m"></span>
                 </div>
             </div>

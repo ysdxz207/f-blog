@@ -2,7 +2,7 @@ package com.puyixiaowo.fblog.utils.captcha;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
-import com.puyixiaowo.fblog.enums.EnumCaptchaType;
+import com.puyixiaowo.fblog.enums.EnumLoginType;
 import com.puyixiaowo.fblog.utils.ResourceUtils;
 
 /**
@@ -17,14 +17,14 @@ public class CaptchaProducer extends DefaultKaptcha {
     private static final String PATH_CAPTCHA_BOOK = "conf/captcha_book.properties";
     private Config config;
 
-    public CaptchaProducer(EnumCaptchaType enumCaptchaType) {
+    public CaptchaProducer(EnumLoginType enumLoginType) {
 
         String url = PATH_CAPTCHA_ADMIN;
-        switch (enumCaptchaType) {
-            case CAPTCHA_TYPE_ADMIN:
+        switch (enumLoginType) {
+            case LOGIN_TYPE_ADMIN:
                 url = PATH_CAPTCHA_ADMIN;
                 break;
-            case CAPTCHA_TYPE_BOOK:
+            case LOGIN_TYPE_BOOK:
                 url = PATH_CAPTCHA_BOOK;
                 break;
         }

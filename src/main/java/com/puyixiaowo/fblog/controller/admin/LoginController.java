@@ -1,10 +1,12 @@
 package com.puyixiaowo.fblog.controller.admin;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Producer;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
-import com.puyixiaowo.fblog.enums.EnumCaptchaType;
+import com.puyixiaowo.fblog.enums.EnumLoginType;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.LoginService;
 import com.puyixiaowo.fblog.utils.DesUtils;
@@ -30,8 +32,8 @@ import java.util.Map;
  */
 public class LoginController extends BaseController {
 
-    private static Producer captchaProducerAdmin = new CaptchaProducer(EnumCaptchaType.CAPTCHA_TYPE_ADMIN);
-    private static Producer captchaProducerBook= new CaptchaProducer(EnumCaptchaType.CAPTCHA_TYPE_BOOK);
+    private static Producer captchaProducerAdmin = new CaptchaProducer(EnumLoginType.LOGIN_TYPE_ADMIN);
+    private static Producer captchaProducerBook= new CaptchaProducer(EnumLoginType.LOGIN_TYPE_BOOK);
 
     /**
      * 登录页面
@@ -41,6 +43,9 @@ public class LoginController extends BaseController {
      * @return
      */
     public static Object loginPage(Request request, Response response) {
+
+
+
         return new FreeMarkerTemplateEngine()
                 .render(new ModelAndView(null, "admin/login.html"));
     }
@@ -55,9 +60,8 @@ public class LoginController extends BaseController {
     public static Object adminLogin(Request request,
                                        Response response) {
 
-        String loginPage = "admin/login.html";
-        String redirectPage = "/admin/";
-        return login(request, response, redirectPage, loginPage);
+        login(request, response);
+        return null;
     }
 
     /**
@@ -82,55 +86,96 @@ public class LoginController extends BaseController {
     public static Object bookLogin(Request request,
                                           Response response) {
 
-        String loginPage = "tools/book/book_login.html";
-        String redirectPage = "/book/index";
-        return login(request, response, redirectPage, loginPage);
+        login(request, response);
+        return null;
     }
 
-    public static Object login(Request request,
-                                Response response,
-                                String redirectPage,
-                                String loginPage) {
+    public static void login(Request request,
+                               Response response) {
+
+        String loginPage = "/admin/loginPage";
+        String redirectPage = "/admin/";
+
+        String uri = request.uri();
+
+        if (uri.toLowerCase().startsWith("/book")) {
+            loginPage = "/book/loginPage";
+            redirectPage = "/book/index";
+        }
+
+        UserBean userBean = rememberMe(request, response, null);
         Map<String, Object> model = new HashMap<>();
 
-        String captcha = request.queryParams("captcha");
-        if (StringUtils.isBlank(captcha)) {
-            model.put("message", "请输入验证码");
-            return new FreeMarkerTemplateEngine()
-                    .render(new ModelAndView(model, loginPage));
-        }
+        if (userBean == null) {
+
+            String captcha = request.queryParams("captcha");
+            if (StringUtils.isBlank(captcha)) {
+                model.put("message", "请输入验证码");
+                response.redirect(loginPage);
+                return;
+            }
 
 
-        String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
-        if (!captcha.equalsIgnoreCase(sessionCaptcha)) {
-            model.put("message", "验证码错误");
-            return new FreeMarkerTemplateEngine()
-                    .render(new ModelAndView(model, loginPage));
+            String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
+            if (!captcha.equalsIgnoreCase(sessionCaptcha)) {
+                model.put("message", "验证码错误");
+                response.redirect(loginPage);
+                return;
+            }
+
+            String loginname = request.queryParams("uname");
+            String password = request.queryParams("upass");
+            userBean = new UserBean();
+            userBean.setLoginname(loginname);
+            userBean.setPassword(password);
         }
+
 
         Map<String, Object> params = new HashMap<>();
 
-        params.put("loginname", request.queryParams("uname"));
-        params.put("password", DesUtils.encrypt(request.queryParams("upass")));
-
-        UserBean userBean = null;
+        params.put("loginname", userBean.getLoginname());
+        params.put("password", DesUtils.encrypt(userBean.getPassword()));
 
         try {
             userBean = LoginService.login(params);
             if (userBean == null) {
                 model.put("message", "用户名或密码不正确");
             } else {
-
+                //登录成功
                 request.session().attribute(Constants.SESSION_USER_KEY, userBean);
                 response.redirect(redirectPage);
+                rememberMe(request, response, userBean);
             }
         } catch (Exception e) {
             e.printStackTrace();
             model.put("message", e.getMessage());
         }
 
+        response.redirect(loginPage);
+        return;
+    }
 
-        return new FreeMarkerTemplateEngine().render(new ModelAndView(model, loginPage));
+    public static UserBean rememberMe(Request request,
+                                   Response response,
+                                   UserBean userBean) {
+
+
+        if (userBean == null) {
+            String str = request.cookie(Constants.COOKIE_LOGIN_KEY);
+
+            if (StringUtils.isBlank(str)) {
+                return null;
+            }
+            JSONObject json = JSON.parseObject(DesUtils.decrypt(str));
+            String username = json.getString("username");
+            String password = json.getString("password");
+            userBean.setLoginname(username);
+            userBean.setPassword(password);
+            return userBean;
+        }
+        response.cookie(Constants.COOKIE_LOGIN_KEY,
+                DesUtils.encrypt(JSON.toJSONString(userBean)));
+        return null;
     }
 
     /**
@@ -155,16 +200,13 @@ public class LoginController extends BaseController {
     public static Object captcha(Request request,
                         Response response) {
 
-        Integer type = Integer.valueOf(request.queryParamOrDefault("type", "1"));
+        String type = request.queryParamOrDefault("type", "admin");
 
-        EnumCaptchaType enumCaptchaType = EnumCaptchaType.getEnumType(type);
+        EnumLoginType enumLoginType = EnumLoginType.getEnumType(type);
         Producer producer = captchaProducerAdmin;
 
-        switch (enumCaptchaType) {
-            case CAPTCHA_TYPE_ADMIN:
-                producer = captchaProducerAdmin;
-                break;
-            case CAPTCHA_TYPE_BOOK:
+        switch (enumLoginType) {
+            case LOGIN_TYPE_BOOK:
                 producer = captchaProducerBook;
                 break;
         }
