@@ -22,7 +22,7 @@ var bookContent = {
             if ((tapY > (height / 3 * 2))
                 && !isBottom) {
                 console.log(bookContent.cy);
-                bookContent.cy += height-40;
+                bookContent.cy += height-160;
                 //向下滚动
                 $("html,body")
                     .animate({scrollTop:bookContent.cy},300);
@@ -32,7 +32,7 @@ var bookContent = {
             if (tapY < (height / 3 * 1)
                 && !isTop) {
                 //向上滚动
-                bookContent.cy -= height+40;
+                bookContent.cy -= height+160;
                 $("html,body")
                     .animate({scrollTop:bookContent.cy},300);
                 return;
