@@ -1,10 +1,10 @@
 <div class="col-sm-9 col-md-9 col-lg-9">
     <#if (((pageBean.list)??) && (((pageBean.list)?size) > 0))>
-        <#list pageBean.list as book>
+        <#list pageBean.list as chapter>
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <a href="/book/chapter?bookId=${(book.id)?c}" title="${(book.name)!}">
-                        ${(book.name)!}
+                    <a href="/book/chapter?id=${(chapter.id)?c}" title="${(chapter.name)!}">
+                        ${(chapter.name)!}
                     </a>
                 </div>
             </div>

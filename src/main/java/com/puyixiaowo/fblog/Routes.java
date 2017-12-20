@@ -250,7 +250,7 @@ public class Routes {
                     QrcodeController.showQrcodeLink(request, response)));
         });
 
-        //qrcode
+        //book
         path("/book", () -> {
             get("/loginPage", ((request, response) ->
                     LoginController.loginPageBook(request, response)));
@@ -262,10 +262,11 @@ public class Routes {
             get("/index", ((request, response) ->
                     BookController.userBooks(request, response)));
 
-            get("/chapter/:data", ((request, response) ->
+            get("/chapters", ((request, response) ->
                     BookController.bookChapters(request, response)));
-            post("/chapter/:data", ((request, response) ->
-                    BookController.bookChapters(request, response)));
+
+            get("/chapter", ((request, response) ->
+                    BookController.chapterContent(request, response)));
 
 
         });

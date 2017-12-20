@@ -9,6 +9,7 @@ import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.book.BookChapterService;
 import com.puyixiaowo.fblog.service.book.BookService;
+import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import spark.ModelAndView;
 import spark.Request;
@@ -45,22 +46,11 @@ public class BookController extends BaseController {
     }
 
     public static Object bookChapters(Request request, Response response) {
-        Boolean data = Boolean.valueOf(request.params(":data"));
-
-        if (!data) {
-            return new FreeMarkerTemplateEngine()
-                    .render(new ModelAndView(null,
-                            "tools/book/book_chapters.html"));
-        }
+        Map<String, Object> model = new HashMap<>();
 
 
         PageBean pageBean = getPageBean(request);
 
-        String bookIdStr = request.queryParams("bookId");
-        if (StringUtils.isBlank(bookIdStr)) {
-            pageBean.errorMessage("缺少bookId");
-            return pageBean.serialize();
-        }
         try {
             BookChapterBean bookChapterBean = getParamsEntity(request, BookChapterBean.class, false);
             pageBean = BookChapterService.selectBookChapterPageBean(bookChapterBean, pageBean);
@@ -68,6 +58,27 @@ public class BookController extends BaseController {
             pageBean.error(e);
         }
 
-        return pageBean.serialize();
+        model.put("pageBean", pageBean);
+
+        return new FreeMarkerTemplateEngine()
+                .render(new ModelAndView(model, "tools/book/book_chapter_list.html"));
+    }
+
+    public static Object chapterContent(Request request, Response response) {
+        Map<String, Object> model = new HashMap<>();
+
+        BookChapterBean bookChapterBean = null;
+        try {
+            bookChapterBean = getParamsEntity(request, BookChapterBean.class, false);
+
+            bookChapterBean = DBUtils.selectOne("select * from book_chapter where id =:id", bookChapterBean);
+        } catch (Exception e) {
+
+        }
+
+        model.put("model", bookChapterBean);
+
+        return new FreeMarkerTemplateEngine()
+                .render(new ModelAndView(model, "tools/book/book_chapter_content.html"));
     }
 }
