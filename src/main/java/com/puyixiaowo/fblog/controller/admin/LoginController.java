@@ -169,7 +169,7 @@ public class LoginController extends BaseController {
         if (userBean != null) {
             String cookieStr = userBean.getLoginname() + "_" + userBean.getPassword();
             response.cookie(Constants.COOKIE_LOGIN_KEY,
-                    DesUtils.encrypt(cookieStr));
+                    DesUtils.encrypt(cookieStr), 24*3600*365);
             return userBean;
         }
 
