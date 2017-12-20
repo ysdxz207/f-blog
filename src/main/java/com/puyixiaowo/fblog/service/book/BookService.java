@@ -48,11 +48,11 @@ public class BookService {
     public static List<BookBean> getUserBookList(Long userId) {
         BookshelfBean bookshelfBean = BookshelfService.getUserShelf(userId);
         Map<String, Object> params = new HashMap<>();
-        params.put("bookIds", bookshelfBean.getBookIds());
+//        params.put("bookIds", bookshelfBean.getBookIds());
 
         List<BookBean> bookBeanList = DBUtils.selectList(BookBean.class,
                 "select * from book where " +
-                "id in (:bookIds)", params);
+                "id in (" + bookShelBean.getBookIds() + ')', params);
         return bookBeanList;
     }
 }
