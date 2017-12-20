@@ -148,6 +148,7 @@ public class LoginController extends BaseController {
                 request.session().attribute(Constants.SESSION_USER_KEY, userBean);
                 response.redirect(redirectPage);
                 rememberMe(request, response, userBean);
+                return;
             }
         } catch (Exception e) {
             e.printStackTrace();
