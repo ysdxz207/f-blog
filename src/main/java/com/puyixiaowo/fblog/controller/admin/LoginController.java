@@ -105,18 +105,21 @@ public class LoginController extends BaseController {
             loginPage = "/book/loginPage";
             redirectPage = "/book/index";
         }
-
-        UserBean userBean = rememberMe(request, response, null);
         Map<String, Object> model = new HashMap<>();
 
-        if (userBean == null) {
+        UserBean userBean = rememberMe(request, response, null);
 
-            String captcha = request.queryParams("captcha");
-            if (StringUtils.isBlank(captcha)) {
-                model.put("message", "请输入验证码");
-                response.redirect(loginPage);
-                return;
-            }
+        if (userBean == null) {
+            response.redirect(loginPage);
+            return;
+        }
+
+        String captcha = request.queryParams("captcha");
+//            if (StringUtils.isBlank(captcha)) {
+//                model.put("message", "请输入验证码");
+//                response.redirect(loginPage);
+//                return;
+//            }
 //
 //
 //            String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
@@ -126,14 +129,14 @@ public class LoginController extends BaseController {
 //                return;
 //            }
 
-            String loginname = request.queryParams("uname");
-            String password = request.queryParams("upass");
-            userBean = new UserBean();
-            userBean.setLoginname(loginname);
-            userBean.setPassword(DesUtils.encrypt(password));
+        if (StringUtils.isBlank(userBean.getLoginname())) {
+            model.put("message", "用户名为空");
+            return;
         }
-
-
+        if (StringUtils.isBlank(userBean.getPassword())) {
+            model.put("message", "密码为空");
+            return;
+        }
         Map<String, Object> params = new HashMap<>();
 
         params.put("loginname", userBean.getLoginname());
@@ -146,8 +149,8 @@ public class LoginController extends BaseController {
             } else {
                 //登录成功
                 request.session().attribute(Constants.SESSION_USER_KEY, userBean);
-                response.redirect(redirectPage);
                 rememberMe(request, response, userBean);
+                response.redirect(redirectPage);
                 return;
             }
         } catch (Exception e) {
@@ -163,22 +166,34 @@ public class LoginController extends BaseController {
                                    Response response,
                                    UserBean userBean) {
 
+        if (userBean != null) {
+            String cookieStr = userBean.getLoginname() + "_" + userBean.getPassword();
+            response.cookie(Constants.COOKIE_LOGIN_KEY,
+                    DesUtils.encrypt(cookieStr));
+            return userBean;
+        }
 
-        if (userBean == null) {
-            String str = request.cookie(Constants.COOKIE_LOGIN_KEY);
+        userBean = new UserBean();
+        String str = request.cookie(Constants.COOKIE_LOGIN_KEY);
 
-            if (StringUtils.isBlank(str)) {
-                return null;
-            }
+        if (StringUtils.isNotBlank(str)) {
             String [] strArr = DesUtils.decrypt(str).split("_");
             userBean.setLoginname(strArr[0]);
             userBean.setPassword(strArr[1]);
             return userBean;
+        } else {
+            String uname = request.queryParams("uname");
+            String upass = request.queryParams("upass");
+            if (StringUtils.isBlank(uname)
+                    && StringUtils.isBlank(upass)) {
+                return null;
+            }
+            userBean.setLoginname(uname);
+            if (StringUtils.isNotBlank(upass)) {
+                userBean.setPassword(DesUtils.encrypt(upass));
+            }
         }
-        String cookieStr = userBean.getLoginname() + "_" + userBean.getPassword();
-        response.cookie(Constants.COOKIE_LOGIN_KEY,
-                DesUtils.encrypt(cookieStr));
-        return null;
+        return userBean;
     }
 
     /**

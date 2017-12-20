@@ -1,15 +1,19 @@
 package com.puyixiaowo.fblog.controller.tools.books;
 
+import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookChapterBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
+import com.puyixiaowo.fblog.bean.sys.ResponseBean;
+import com.puyixiaowo.fblog.constants.BookConstants;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.book.BookChapterService;
 import com.puyixiaowo.fblog.service.book.BookService;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.HttpUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import spark.ModelAndView;
 import spark.Request;
@@ -72,6 +76,7 @@ public class BookController extends BaseController {
             bookChapterBean = getParamsEntity(request, BookChapterBean.class, false);
 
             bookChapterBean = DBUtils.selectOne("select * from book_chapter where id =:id", bookChapterBean);
+            bookChapterBean.setContent("&nbsp;&nbsp;&nbsp;&nbsp;" + bookChapterBean.getContent().replaceAll("\n", "</br>&nbsp;&nbsp;&nbsp;&nbsp;"));
         } catch (Exception e) {
 
         }
@@ -80,5 +85,21 @@ public class BookController extends BaseController {
 
         return new FreeMarkerTemplateEngine()
                 .render(new ModelAndView(model, "tools/book/book_chapter_content.html"));
+    }
+
+
+    public static Object bookSource(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
+        String aId = request.queryParams("aId");
+
+        if (StringUtils.isBlank(aId)) {
+            responseBean.errorMessage("书源Id为空");
+            return responseBean.serialize();
+        }
+
+        String url = BookConstants.URL_BOOK_SOURCE + aId;
+        JSONObject json = HttpUtils.httpGet(url);
+        responseBean.setData(json);
+        return responseBean.serialize();
     }
 }

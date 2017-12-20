@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <title>章节内容</title>
     <#include "/public/public.html" />
+    <style>
+        body {
+            background-color: #817f79;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button">切换书源</button>
+        </div>
         <div class="col-md-12">
             <#include "/tools/book/layout/chapter/content.html" />
         </div>

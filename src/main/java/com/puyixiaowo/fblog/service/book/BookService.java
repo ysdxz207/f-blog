@@ -52,7 +52,7 @@ public class BookService {
 
         List<BookBean> bookBeanList = DBUtils.selectList(BookBean.class,
                 "select * from book where " +
-                "id in (" + bookShelfBean.getBookIds() + ")", params);
+                "id in (" + bookshelfBean.getBookIds() + ")", params);
         return bookBeanList;
     }
 }

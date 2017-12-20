@@ -1,5 +1,6 @@
 package com.puyixiaowo.fblog.service.book;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.core.thread.BookByFilterThread;
@@ -56,13 +57,12 @@ public class BookFilterService {
         List<BookBean> list = new ArrayList<>();
         logger.info("书[" + bookBean.getName() + "]开始获取...");
         List<BookChapterBean> needFetchChapters = getNeedFetchChapters(bookBean);
-
-        logger.info("书[" + bookBean.getName() + "]需要更新章数：" + needFetchChapters.size());
         if (needFetchChapters == null
                 || needFetchChapters.size() == 0) {
             logger.info("书[" + bookBean.getName() + "]没有更新");
             return;
         }
+        logger.info("书[" + bookBean.getName() + "]需要更新章数：" + needFetchChapters.size());
 
         int lastSort = BookChapterService.getChapterLastSort(bookBean.getId());
 
@@ -119,7 +119,7 @@ public class BookFilterService {
         }
 
         int startIndex = localChapterList.size();
-        int endIndex = apiChapterList.size() - 1 < 0 ? 0 : apiChapterList.size() - 1;
+        int endIndex = apiChapterList.size();
 
         return apiChapterList.subList(startIndex,
                 endIndex);
@@ -128,7 +128,7 @@ public class BookFilterService {
     private static List<BookChapterBean> requestBookChapters(BookBean bookBean) {
         List<BookChapterBean> list = new ArrayList<>();
         
-        String url = BookConstants.URL_CHAPTERS + bookBean.getAId();
+        String url = BookConstants.URL_CHAPTERS + bookBean.getAId() + "?view=chapters";
 
         JSONObject jsonObject = HttpUtils.httpGet(url);
 
@@ -137,7 +137,11 @@ public class BookFilterService {
             return list;
         }
 
-        JSONArray chapters = jsonObject.getJSONObject("mixToc").getJSONArray("chapters");
+        if (jsonObject.size() == 0) {
+            return list;
+        }
+
+        JSONArray chapters = jsonObject.getJSONArray("chapters");
         if (chapters == null) {
             logger.error("[book]未从api返回的数据中获取到章节列表:" + jsonObject);
             return list;
