@@ -127,7 +127,7 @@ public class BookFilterService {
     private static List<BookChapterBean> requestBookChapters(BookBean bookBean) {
         List<BookChapterBean> list = new ArrayList<>();
         
-        String url = BookConstants.URL_CHAPTERS + bookBean.getAId() + "?view=chapters";
+        String url = BookConstants.URL_CHAPTERS + bookBean.getSource() + "?view=chapters";
 
         JSONObject jsonObject = HttpUtils.httpGet(url);
         logger.info(jsonObject.toJSONString());

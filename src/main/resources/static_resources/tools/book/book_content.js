@@ -10,6 +10,7 @@ var bookContent = {
      */
     bookContent.tapScroll = function () {
         $('body').on('tap', function(e){
+
             var isTop = $(document).scrollTop() == 0;
             var isBottom = ($(document).height() -
                 ($(window).height()+$(document).scrollTop())) == 0;
@@ -36,6 +37,13 @@ var bookContent = {
                 $("html,body")
                     .animate({scrollTop:bookContent.cy},300);
                 return;
+            }
+
+            //点击屏幕中央唤起菜单
+            if (bookMenu.isShow()) {
+                bookMenu.hide();
+            } else {
+                bookMenu.show();
             }
         });
     };

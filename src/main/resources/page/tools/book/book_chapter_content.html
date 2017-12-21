@@ -12,13 +12,37 @@
             color: #000000;
             text-shadow: none;
         }
+        .book-menu-header {
+            z-index: 99;
+            position: fixed;
+            height: 100px;
+            top: 0;
+            width: 100%;
+        }
+        .book-menu-footer {
+            z-index: 99;
+            position: fixed;
+            height: 100px;
+            bottom: 0;
+            width: 100%;
+        }
     </style>
     <script src="https://cdn.bootcss.com/jquery-mobile/1.4.5/jquery.mobile.min.js"></script>
 </head>
 <body>
     <div class="row">
-        <div class="col-md-12">
-            <button type="button">切换书源</button>
+        <div class="col-xs-12">
+            <div class="book-menu-header">
+                <div class="col-xs-3">
+                    <button type="button" class="btn btn-default" id="btn_back"><-</button>
+                </div>
+                <div class="col-xs-3 pull-right">
+                    <button type="button" class="btn btn-default"><-</button>
+                </div>
+            </div>
+            <div class="book-menu-footer" style="z-index: 99;background-color: #EEEEEE">
+                    <button type="button" class="btn btn-default"><-</button>
+            </div>
         </div>
         <div class="col-md-12">
             <#include "/tools/book/layout/chapter/content.html" />
@@ -26,5 +50,6 @@
     </div>
 
 <script type="text/javascript" src="/tools/book/book_content.js"></script>
+<script type="text/javascript" src="/tools/book/book_menu.js"></script>
 </body>
 </html>
