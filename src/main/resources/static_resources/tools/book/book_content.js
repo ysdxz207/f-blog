@@ -19,20 +19,20 @@ var bookContent = {
                 bookContent.ty = tapY;
             }
             var height = screen.height;
-            if ((tapY > (height / 3 * 2))
+            if ((tapY > (height / 8 * 5))
                 && !isBottom) {
                 console.log(bookContent.cy);
-                bookContent.cy += height-160;
+                bookContent.cy += height-100;
                 //向下滚动
                 $("html,body")
                     .animate({scrollTop:bookContent.cy},300);
                 return;
             }
 
-            if (tapY < (height / 3 * 1)
+            if (tapY < (height / 8 * 3)
                 && !isTop) {
                 //向上滚动
-                bookContent.cy -= height+160;
+                bookContent.cy -= height+100;
                 $("html,body")
                     .animate({scrollTop:bookContent.cy},300);
                 return;
