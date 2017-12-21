@@ -40,9 +40,9 @@ public class BookByFilterThread extends RecursiveTask {
         }
         if (!isMainThread) {
             //子线程直接返回处理结果
-            BookFilterService.fetchUserBookUpdate(bookshelfBeanList.get(i).getUserId());
 
             try {
+                BookFilterService.fetchUserBookUpdate(bookshelfBeanList.get(i).getUserId());
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();

@@ -11,6 +11,7 @@ public class BookBean extends Validatable implements Serializable{
 
 	private Long id;
 	private String author;
+	private String source;
 	private String aId;//api接口书ID
 	private String name;
 	private String url;
@@ -34,6 +35,14 @@ public class BookBean extends Validatable implements Serializable{
 
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 	public String getAId (){

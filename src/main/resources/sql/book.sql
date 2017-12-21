@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS `book`;
 CREATE TABLE `book` (
   `id`        INTEGER(20)  NOT NULL UNIQUE,
   `author`      VARCHAR(64) NOT NULL,
+  `source`    VARCHAR(64) NOT NULL,
   `a_id`      VARCHAR(128) NOT NULL,
   `name`      VARCHAR(128) NOT NULL,
   `url`      VARCHAR(512)           DEFAULT NULL,

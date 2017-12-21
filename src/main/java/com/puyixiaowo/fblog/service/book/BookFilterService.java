@@ -1,6 +1,5 @@
 package com.puyixiaowo.fblog.service.book;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.core.thread.BookByFilterThread;
@@ -54,7 +53,6 @@ public class BookFilterService {
     }
 
     public static void requestFetchBookUpdate(BookBean bookBean) {
-        List<BookBean> list = new ArrayList<>();
         logger.info("书[" + bookBean.getName() + "]开始获取...");
         List<BookChapterBean> needFetchChapters = getNeedFetchChapters(bookBean);
         if (needFetchChapters == null
@@ -105,6 +103,7 @@ public class BookFilterService {
     }
 
     public static List<BookChapterBean> getNeedFetchChapters(BookBean bookBean) {
+
         List<BookChapterBean> apiChapterList = requestBookChapters(bookBean);
         if (apiChapterList == null
                 || apiChapterList.size() == 0) {
@@ -131,7 +130,7 @@ public class BookFilterService {
         String url = BookConstants.URL_CHAPTERS + bookBean.getAId() + "?view=chapters";
 
         JSONObject jsonObject = HttpUtils.httpGet(url);
-
+        logger.info(jsonObject.toJSONString());
         if (jsonObject == null) {
             logger.error("[book]api返回章节json为null");
             return list;
