@@ -1,5 +1,7 @@
 package com.puyixiaowo.fblog.service.book;
 
+import com.puyixiaowo.fblog.bean.admin.UserBean;
+import com.puyixiaowo.fblog.bean.admin.book.BookBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookshelfBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.utils.DBUtils;
@@ -41,5 +43,19 @@ public class BookshelfService {
         BookshelfBean bookshelfBean = new BookshelfBean();
         bookshelfBean.setUserId(userId);
         return DBUtils.selectOne("select * from bookshelf where user_id = :userId", bookshelfBean);
+    }
+
+    public static boolean isBookOnShelf(UserBean userBean,
+                                        BookBean bookBean) {
+        if (bookBean == null
+                || bookBean.getId() == null) {
+            return false;
+        }
+
+        BookshelfBean bookshelfBean = getUserShelf(userBean.getId());
+        if (bookshelfBean == null) {
+            return false;
+        }
+        return bookshelfBean.getBookIds().indexOf("" + bookBean.getId()) != -1;
     }
 }

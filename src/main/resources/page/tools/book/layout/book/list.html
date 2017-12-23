@@ -3,7 +3,7 @@
         <#list pageBean.list as book>
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <a href="/book/chapters?bookId=${(book.id)?c}" title="${(book.name)!}">
+                    <a href="/book/chapter?bookId=${(book.id)?c}" target="_self" data-prefetch="ture" title="${(book.name)!}">
                         ${(book.name)!}
                     </a>
                 </div>

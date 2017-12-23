@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS `book`;
 CREATE TABLE `book` (
   `id`        INTEGER(20)  NOT NULL UNIQUE,
   `author`      VARCHAR(64) NOT NULL,
-  `source`    VARCHAR(64) NOT NULL,
+  `source`    VARCHAR(128) NOT NULL,
   `a_id`      VARCHAR(128) NOT NULL,
   `name`      VARCHAR(128) NOT NULL,
   `url`      VARCHAR(512)           DEFAULT NULL,
@@ -32,14 +32,14 @@ CREATE TABLE `bookshelf` (
 -- ----------------------------
 -- Table structure for book_chapter
 -- ----------------------------
-DROP TABLE IF EXISTS `book_chapter`;
-CREATE TABLE `book_chapter` (
+DROP TABLE IF EXISTS `book_read`;
+CREATE TABLE `book_read` (
   `id`        INTEGER(20)  NOT NULL UNIQUE,
-  `book_id`      INTEGER(20) NOT NULL,
-  `sort`         INTEGER(6) NOT NULL,
-  `name`          VARCHAR(128) DEFAULT NULL UNIQUE,
-  `content`      TEXT DEFAULT NULL ,
-  `link`        TEXT DEFAULT NULL UNIQUE,
-  `status`     INTEGER(2) DEFAULT '1',
+  `user_id`      INTEGER(20) NOT NULL,
+  `book_id`      INTEGER(20) NOT NULL UNIQUE,
+  `last_reading_chapter`          VARCHAR(128) DEFAULT NULL,
+  `last_reading_chapter_link`     TEXT DEFAULT NULL,
+  `bg_color`      VARCHAR(64) DEFAULT '#817f79',
+  `font_size`        INTEGER(6) DEFAULT '24',
   PRIMARY KEY (`id`)
 );

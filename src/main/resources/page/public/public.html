@@ -17,3 +17,25 @@
 <style>
     html,body{overflow:hidden;overflow-y:auto;}
 </style>
+<script>
+    $(function(){
+
+        var mobile =false;
+        if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            mobile = true;
+        };
+
+        console.log(mobile);
+
+        if (mobile) {
+            $('a,button').bind('tap', function (e) {
+                $.mobile.loading( "show", {
+                    text: "加载中...",
+                    textVisible: true,
+                    theme: "b",
+                    html: ""
+                });
+            });
+        }
+    })
+</script>

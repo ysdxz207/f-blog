@@ -11,7 +11,9 @@ var bookContent = {
     bookContent.tapScroll = function () {
         $('body').on('tap', function(e){
 
-            var isTop = $(document).scrollTop() == 0;
+
+
+            var isTop = $(document).scrollTop() < 10;
             var isBottom = ($(document).height() -
                 ($(window).height()+$(document).scrollTop())) == 0;
 
@@ -20,6 +22,17 @@ var bookContent = {
                 bookContent.ty = tapY;
             }
             var height = screen.height;
+
+            //点击屏幕中央唤起菜单
+            if (tapY < (height / 8 * 5) && tapY > (height / 8 * 3)) {
+                bookMenu.toggle();
+                return;
+            }
+
+            if (bookMenu.isShow()) {
+                return;
+            }
+
             if ((tapY > (height / 8 * 5))
                 && !isBottom) {
                 console.log(bookContent.cy);
@@ -39,12 +52,6 @@ var bookContent = {
                 return;
             }
 
-            //点击屏幕中央唤起菜单
-            if (bookMenu.isShow()) {
-                bookMenu.hide();
-            } else {
-                bookMenu.show();
-            }
         });
     };
 

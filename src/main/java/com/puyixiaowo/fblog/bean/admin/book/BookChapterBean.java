@@ -5,24 +5,21 @@ import com.puyixiaowo.fblog.annotation.Table;
 
 import java.io.Serializable;
 
-@Table("book_chapter")
 public class BookChapterBean extends Validatable implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private String id;
     private Long bookId;
-    private Integer sort;
-    private String name;
+    private String title;
     private String content;
     private String link;
-    private Integer status;
 
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -34,20 +31,12 @@ public class BookChapterBean extends Validatable implements Serializable {
         this.bookId = bookId;
     }
 
-    public Integer getSort() {
-        return sort;
+    public String getTitle() {
+        return title;
     }
 
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getContent() {
@@ -64,13 +53,5 @@ public class BookChapterBean extends Validatable implements Serializable {
 
     public void setLink(String link) {
         this.link = link;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 }

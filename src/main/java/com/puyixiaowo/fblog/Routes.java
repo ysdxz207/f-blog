@@ -262,8 +262,8 @@ public class Routes {
             get("/index", ((request, response) ->
                     BookController.userBooks(request, response)));
 
-            get("/chapters", ((request, response) ->
-                    BookController.bookChapters(request, response)));
+            get("/detail", ((request, response) ->
+                    BookController.bookDetail(request, response)));
 
             get("/chapter", ((request, response) ->
                     BookController.chapterContent(request, response)));

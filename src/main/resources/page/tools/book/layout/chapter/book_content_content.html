@@ -1,0 +1,34 @@
+<style>
+    .book-content-main {
+        background-color: #817f79;
+        padding: 10px;
+    }
+    .book-chapter-content-title{
+        font-size: 16px;
+    }
+    .book-chapter-content{
+        font-size: 24px;
+    }
+    .book-chapter-content-error {
+        line-height: 400px;
+        color: #DDDDDD;
+        font-size: 20px;
+    }
+</style>
+
+<#if model??>
+<div class="book-content-main">
+    <p class="book-chapter-content-title">${(model.title)!}</p>
+
+    <p class="book-chapter-content">
+        ${(model.content)!}
+    </p>
+    <#include "/tools/book/layout/chapter/book_content_footer.html" />
+
+</div>
+    <#else>
+    <div class="text-center book-chapter-content-error">
+        <p>没有内容,点击右上角齿轮换源试试</p>
+    </div>
+    <#include "/tools/book/layout/chapter/book_content_footer.html" />
+</#if>

@@ -1,7 +1,9 @@
 package com.puyixiaowo.fblog.bean.admin.book;
 
+import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.core.entity.Validatable;
 import com.puyixiaowo.fblog.annotation.Table;
+import com.puyixiaowo.fblog.annotation.Transient;
 
 import java.io.Serializable;
 
@@ -20,6 +22,12 @@ public class BookBean extends Validatable implements Serializable{
 	private Long lastUpdateTime;
 	private Integer isOver;
 
+
+	//
+	@Transient
+	private BookInfo bookInfo;
+	@Transient
+	private Boolean onShelf;
 
 	public Long getId (){
 		return id;
@@ -99,5 +107,21 @@ public class BookBean extends Validatable implements Serializable{
 
 	public void setIsOver(Integer isOver) {
 		this.isOver = isOver;
+	}
+
+	public BookInfo getBookInfo() {
+		return bookInfo;
+	}
+
+	public void setBookInfo(BookInfo bookInfo) {
+		this.bookInfo = bookInfo;
+	}
+
+	public Boolean getOnShelf() {
+		return onShelf;
+	}
+
+	public void setOnShelf(Boolean onShelf) {
+		this.onShelf = onShelf;
 	}
 }

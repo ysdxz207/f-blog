@@ -24,6 +24,7 @@ public class BookConstants {
     /**
      * 书籍详情
      * http://api.zhuishushenqi.com/book/书籍id(_id)
+     * http://api.zhuishushenqi.com/book/57206c3539a913ad65d35c7b
      */
     public static final String URL_BOOK = HOST_API + "/book/";
 

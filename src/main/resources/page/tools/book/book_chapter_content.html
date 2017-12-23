@@ -4,52 +4,34 @@
     <meta charset="UTF-8">
     <title>章节内容</title>
     <#include "/public/public.html" />
-
     <link href="https://cdn.bootcss.com/jquery-mobile/1.4.5/jquery.mobile.min.css" rel="stylesheet">
     <style>
         .row {
-            background-color: #817f79;
             color: #000000;
             text-shadow: none;
         }
-        .book-menu-header {
-            z-index: 99;
-            position: fixed;
-            height: 100px;
-            top: 0;
-            width: 100%;
+
+        a {
+            width:100%;
         }
-        .book-menu-footer {
-            z-index: 99;
-            position: fixed;
-            height: 100px;
-            bottom: 0;
-            width: 100%;
-        }
+
+
     </style>
     <script src="https://cdn.bootcss.com/jquery-mobile/1.4.5/jquery.mobile.min.js"></script>
 </head>
 <body>
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="book-menu-header">
-                <div class="col-xs-3">
-                    <button type="button" class="btn btn-default" id="btn_back"><-</button>
-                </div>
-                <div class="col-xs-3 pull-right">
-                    <button type="button" class="btn btn-default"><-</button>
-                </div>
-            </div>
-            <div class="book-menu-footer" style="z-index: 99;background-color: #EEEEEE">
-                    <button type="button" class="btn btn-default"><-</button>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <#include "/tools/book/layout/chapter/content.html" />
-        </div>
-    </div>
+
+<!-- 内容 -->
+<div class="row" data-role="page">
+    <#include "/tools/book/layout/chapter/menu/book_content_menu.html" />
+    <#include "/tools/book/layout/chapter/book_content_content.html" />
+</div>
+
+<!-- 章节列表 -->
+<#include "/tools/book/layout/chapter/book_content_chapter_list.html"/>
 
 <script type="text/javascript" src="/tools/book/book_content.js"></script>
 <script type="text/javascript" src="/tools/book/book_menu.js"></script>
+
 </body>
 </html>

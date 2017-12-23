@@ -55,4 +55,10 @@ public class BookService {
                 "id in (" + bookshelfBean.getBookIds() + ")", params);
         return bookBeanList;
     }
+
+    public static BookBean selectBookBeanById(Long bookId) {
+        BookBean bookBean = new BookBean();
+        bookBean.setId(bookId);
+        return DBUtils.selectOne("select * from book where id=:id", bookBean);
+    }
 }

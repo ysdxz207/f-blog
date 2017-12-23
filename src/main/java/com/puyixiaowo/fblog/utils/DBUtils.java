@@ -192,7 +192,11 @@ public class DBUtils {
                     if (e1.getMessage() != null &&
                             e1.getMessage().indexOf("SQLITE_CONSTRAINT_UNIQUE") != -1) {
                         throw new DBObjectExistsException("重复插入对象");
+                    } else {
+                        throw new DBException(e1.getMessage());
                     }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
                 }
             }
 
