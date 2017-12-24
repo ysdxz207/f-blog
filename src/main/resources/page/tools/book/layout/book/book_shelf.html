@@ -1,0 +1,37 @@
+<style>
+    .book-shelf-content {
+        text-align: center;
+        width: 300px;
+        margin: 0 auto;
+    }
+    .book-shelf-books {
+        width: 80px;
+        height: 120px;
+        border: 1px solid #DDD;
+        line-height: 202px;
+        overflow: hidden;
+        float: left;
+        margin: 20px 10px;
+        position: relative;
+    }
+    .book-shelf-face-pic {
+        width: 80px;
+        height 120px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+</style>
+<div class="book-shelf-content">
+    <#if (((pageBean.list)??) && (((pageBean.list)?size) > 0))>
+        <#list pageBean.list as book>
+            <a href="/book/chapter?bookId=${(book.id)?c}" target="_self" data-prefetch="ture"
+                   title="${(book.name)!}">
+                <div class="book-shelf-books">
+                        <img src="/images/tools/book/face_pic.png" class="book-shelf-face-pic">
+                        ${(book.name)!}
+                </div>
+            </a>
+        </#list>
+    </#if>
+</div>

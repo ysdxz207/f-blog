@@ -6,6 +6,7 @@ CREATE TABLE `book` (
   `id`        INTEGER(20)  NOT NULL UNIQUE,
   `author`      VARCHAR(64) NOT NULL,
   `source`    VARCHAR(128) NOT NULL,
+  `face_url`    TEXT DEFAULT 'http://puyixiaowo.win/images/tools/book/face_pic.png',
   `a_id`      VARCHAR(128) NOT NULL,
   `name`      VARCHAR(128) NOT NULL,
   `url`      VARCHAR(512)           DEFAULT NULL,
