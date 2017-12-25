@@ -19,6 +19,7 @@ import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.HttpUtils;
 import com.puyixiaowo.fblog.utils.IdUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
@@ -138,19 +139,38 @@ public class BookController extends BaseController {
 
         model.put("bookChapterList", bookChapterBeanList);
 
-        //更新读书配置
-        if (bookReadBean == null) {
-            bookReadBean = new BookReadBean();
-        }
-
-        bookReadBean.setUserId(userBean.getId());
-        bookReadBean.setBookId(bookId);
-        bookReadBean.setLastReadingChapter(StringUtils.isNotBlank(chapterName) ? chapterName : bookChapterBean.getTitle());
-        bookReadBean.setLastReadingChapterLink(bookChapterBean.getLink());
-        DBUtils.insertOrUpdate(bookReadBean);
 
         return new FreeMarkerTemplateEngine()
                 .render(new ModelAndView(model, "tools/book/book_chapter_content.html"));
+    }
+
+    public static Object saveBookReadConfig(Request request,
+                                            Response response) {
+        ResponseBean responseBean = new ResponseBean();
+
+        try {
+            UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
+            BookReadBean bookReadBean = getParamsEntity(request, BookReadBean.class, false);
+
+            //读取读书配置
+            BookReadBean bookReadBeanDB = BookReadService.getUserReadConfig(userBean.getId(), bookReadBean.getBookId());
+
+
+            //更新读书配置
+            if (bookReadBean == null) {
+                bookReadBean = new BookReadBean();
+            }
+
+            BeanUtils.copyProperties(bookReadBean, bookReadBeanDB);
+
+            bookReadBean.setBookId(bookReadBean.getBookId());
+            DBUtils.insertOrUpdate(bookReadBean);
+
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+
+        return responseBean.serialize();
     }
 
 

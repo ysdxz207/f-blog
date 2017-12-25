@@ -1,17 +1,22 @@
 package com.puyixiaowo.fblog.bean.admin.book;
 
+import com.puyixiaowo.core.entity.Validatable;
+import com.puyixiaowo.fblog.annotation.NotNull;
 import com.puyixiaowo.fblog.annotation.Table;
 
 import java.io.Serializable;
 
 @Table("book_read")
-public class BookReadBean implements Serializable {
+public class BookReadBean extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	private Long userId;
+	@NotNull
 	private Long bookId;
+	@NotNull
 	private String lastReadingChapter;
+	@NotNull
 	private String lastReadingChapterLink;
 	private String bgColor;
 	private Integer fontSize;

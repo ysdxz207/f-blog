@@ -1,4 +1,7 @@
 var bookContent = {
+    bookId: undefined,
+    lastReadingChapter: '',
+    lastReadingChapterLink: '',
     ty: 0,
     cy: 0
 };
@@ -56,8 +59,35 @@ var bookContent = {
     };
 
 
+    bookContent.saveReading = function(){
+        var bookReading = {};
+            bookReading.bookId = bookContent.bookId;
+            bookReading.lastReadingChapterLink =  bookContent.lastReadingChapter;
+            bookReading.lastReadingChapterLink = bookContent.lastReadingChapterLink;
+        var storage = window.localStorage;
+        storage.setItem(bookContent.bookId, bookReading);
+        //保存到后端
+        $.ajax({
+            url: "/book/saveReading",
+            data: bookReading,
+            method: "POST",
+            dataType: "json",
+            success: function (result) {
+                if (result.statusCode == 200) {
+
+                } else {
+                    salert(result.message);
+                }
+            }
+        });
+    }
+
     bookContent.init = function () {
+
+        bookContent.bookId = $('#hidden_book_content_book_id').val();
         bookContent.tapScroll();
+
+        bookContent.saveReading();
     };
 
     bookContent.init();
