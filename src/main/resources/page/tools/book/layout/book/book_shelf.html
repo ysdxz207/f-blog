@@ -26,7 +26,7 @@
     <#if (((pageBean.list)??) && (((pageBean.list)?size) > 0))>
         <#list pageBean.list as book>
             <a href="/book/chapter?bookId=${(book.id)?c}" target="_self" data-prefetch="ture"
-                   title="${(book.name)!}">
+                   title="${(book.name)!}" style="color: #DDDDDD">
                 <div class="book-shelf-books">
                         <img src="/images/tools/book/face_pic.png" class="book-shelf-face-pic">
                         ${(book.name)!}

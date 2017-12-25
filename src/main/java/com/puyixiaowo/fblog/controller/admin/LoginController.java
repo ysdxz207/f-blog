@@ -103,14 +103,19 @@ public class LoginController extends BaseController {
 
         if (uri.toLowerCase().startsWith("/book")) {
             loginPage = "/book/loginPage";
-            String params = request.queryString();
+            if (!uri.equalsIgnoreCase("/book/login")) {
+                String params = request.queryString();
 
-            if (StringUtils.isBlank(params)) {
-                params = "";
+                if (StringUtils.isBlank(params)) {
+                    params = "";
+                } else {
+                    params = "?" + params;
+                }
+                redirectPage = request.url() + params;
             } else {
-                params = "?" + params;
+                redirectPage = "/book/index";
             }
-            redirectPage = request.url() + params;
+
         }
         Map<String, Object> model = new HashMap<>();
 
