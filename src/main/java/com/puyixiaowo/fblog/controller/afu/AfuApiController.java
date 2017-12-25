@@ -57,6 +57,14 @@ public class AfuApiController extends BaseController {
         try {
             afuBean = getParamsEntity(request, AfuBean.class, true);
 
+            //可以根据名称修改
+            AfuBean afuBeanDB = DBUtils.selectOne("select * from afu where name=:name", afuBean);
+
+            if (afuBeanDB != null) {
+                afuBeanDB.setContent(afuBean.getContent());
+                afuBean = afuBeanDB;
+            }
+
             //类别
             AfuTypeBean afuTypeBean = AfuTypeService.getAfuTypeById(afuBean.getType());
 
@@ -70,7 +78,7 @@ public class AfuApiController extends BaseController {
                 DBUtils.insertOrUpdate(afuBean);
             }
         } catch (DBObjectExistsException e) {
-            responseBean.errorMessage("当前类别下已有存在此阿福");
+            responseBean.errorMessage("当前类别下已存在此阿福");
         } catch (Exception e) {
             responseBean.errorMessage(e.getMessage());
         }
