@@ -21,3 +21,11 @@
 <div class="book-index-menu">
     <div class="btn-book-index-menu-add">+</div>
 </div>
+
+<script>
+    $(function () {
+        $('.btn-book-index-menu-add').on('tap', function (e) {
+            location.href = "/book/searchPage";
+        });
+    });
+</script>

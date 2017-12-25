@@ -271,6 +271,11 @@ public class Routes {
             post("/saveReading", ((request, response) ->
                     BookController.saveBookReadConfig(request, response)));
 
+            get("/searchPage", ((request, response) ->
+                    BookController.searchPage(request, response)));
+
+            get("/search", ((request, response) ->
+                    BookController.search(request, response)));
 
         });
     }

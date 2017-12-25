@@ -122,7 +122,7 @@ public class BookController extends BaseController {
 
                 if (StringUtils.isNotBlank(chapterName)) {
                     bookChapterBean.setTitle(chapterName);
-                } else if (bookReadBean != null){
+                } else if (bookReadBean != null) {
                     bookChapterBean.setTitle(bookReadBean.getLastReadingChapter());
                 }
             }
@@ -189,4 +189,22 @@ public class BookController extends BaseController {
         return responseBean.serialize();
     }
 
+    public static Object searchPage(Request request, Response response) {
+
+        return new FreeMarkerTemplateEngine()
+                .render(new ModelAndView(null, "tools/book/book_search.html"));
+    }
+
+    public static Object search(Request request, Response response) {
+
+        PageBean pageBean = getPageBean(request);
+        try {
+            String name = request.queryParams("name");
+
+            pageBean = BookService.requestSearchBook(name, pageBean);
+        } catch (Exception e) {
+            pageBean.error(e);
+        }
+        return pageBean.serialize();
+    }
 }

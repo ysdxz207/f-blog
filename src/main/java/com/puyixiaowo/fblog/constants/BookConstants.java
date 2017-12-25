@@ -19,7 +19,7 @@ public class BookConstants {
      * 模糊搜索
      * http://api.zhuishushenqi.com/book/fuzzy-search?query=一念&start=0&limit=2
      */
-    public static final String URL_SEARCH = HOST_API + "/book/fuzzy-search";
+    public static final String URL_SEARCH = HOST_API + "/book/fuzzy-search?query=";
 
     /**
      * 书籍详情

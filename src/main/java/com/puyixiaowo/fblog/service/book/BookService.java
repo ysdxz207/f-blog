@@ -1,9 +1,12 @@
 package com.puyixiaowo.fblog.service.book;
 
+import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fblog.bean.admin.book.BookBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookshelfBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
+import com.puyixiaowo.fblog.constants.BookConstants;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.HttpUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,5 +63,17 @@ public class BookService {
         BookBean bookBean = new BookBean();
         bookBean.setId(bookId);
         return DBUtils.selectOne("select * from book where id=:id", bookBean);
+    }
+
+    public static PageBean requestSearchBook(String name, PageBean pageBean) {
+
+        String url = BookConstants.URL_SEARCH + name +
+                "&start=" + pageBean.getRowBounds().getOffset()
+                + "&limit=" + pageBean.getRowBounds().getLimit();
+
+        JSONObject json = HttpUtils.httpGet(url);
+
+
+        return null;
     }
 }

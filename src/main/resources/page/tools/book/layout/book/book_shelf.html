@@ -14,9 +14,14 @@
         margin: 20px 10px;
         position: relative;
     }
+    .book-shelf-books p {
+        color: #888;
+        font-weight: 400;
+        overflow: hidden;
+    }
     .book-shelf-face-pic {
         width: 80px;
-        height 120px;
+        height: 120px;
         position: absolute;
         top: 0;
         left: 0;
@@ -26,10 +31,14 @@
     <#if (((pageBean.list)??) && (((pageBean.list)?size) > 0))>
         <#list pageBean.list as book>
             <a href="/book/chapter?bookId=${(book.id)?c}" target="_self" data-prefetch="ture"
-                   title="${(book.name)!}" style="color: #DDDDDD">
+                   title="${(book.name)!}">
                 <div class="book-shelf-books">
+                    <#if book.faceUrl ??>
+                        <img src="${(book.faceUrl)!}" class="book-shelf-face-pic">
+                    <#else>
                         <img src="/images/tools/book/face_pic.png" class="book-shelf-face-pic">
-                        ${(book.name)!}
+                    </#if>
+                        <p>${(book.name)!}</p>
                 </div>
             </a>
         </#list>
