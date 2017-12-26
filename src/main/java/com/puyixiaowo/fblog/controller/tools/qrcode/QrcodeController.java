@@ -109,7 +109,7 @@ public class QrcodeController {
 
         if (isLink != null && isLink) {
             if (content.toLowerCase().indexOf("http://") == -1
-                    || content.toLowerCase().indexOf("https://") == -1) {
+                    && content.toLowerCase().indexOf("https://") == -1) {
                 content = "http://" + content;
             }
             response.redirect(content);
