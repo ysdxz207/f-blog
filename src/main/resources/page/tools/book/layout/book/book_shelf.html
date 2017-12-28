@@ -30,9 +30,7 @@
 <div class="book-shelf-content">
     <#if (((pageBean.list)??) && (((pageBean.list)?size) > 0))>
         <#list pageBean.list as book>
-            <a href="/book/chapter?bookId=${(book.id)?c}" target="_self" data-prefetch="ture"
-                   title="${(book.name)!}">
-                <div class="book-shelf-books">
+                <div class="book-shelf-books" data-bookid="${(book.id)?c}">
                     <#if book.faceUrl ??>
                         <img src="${(book.faceUrl)!}" class="book-shelf-face-pic">
                     <#else>
@@ -40,7 +38,26 @@
                     </#if>
                         <p>${(book.name)!}</p>
                 </div>
-            </a>
         </#list>
     </#if>
 </div>
+
+<script>
+    $(function () {
+        $('.book-shelf-books').on('tap', function () {
+            var bookId = $(this).data('bookid');
+            var url = "/book/chapter?bookId=" + bookId;
+
+            var storage = window.localStorage;
+            var readingConfig = storage.getItem(bookId);
+
+            console.log(readingConfig);
+            if (readingConfig) {
+                url += "&lastReadingChapter=" + readingConfig.lastReadingChapter;
+                url += "&lastReadingChapterLink=" + readingConfig.lastReadingChapterLink;
+            }
+            console.log('url',url);
+            location.href = url;
+        });
+    });
+</script>
