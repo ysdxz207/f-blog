@@ -276,6 +276,8 @@ public class Routes {
 
             get("/search", ((request, response) ->
                     BookController.search(request, response)));
+            post("/chapters", ((request, response) ->
+                    BookController.chapters(request, response)));
 
         });
     }

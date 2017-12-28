@@ -65,8 +65,7 @@ var bookContent = {
         bookReading.lastReadingChapterLink = bookContent.lastReadingChapterLink;
 
         //保存到本地缓存
-        var storage = window.localStorage;
-        storage.setItem(bookContent.bookId, bookReading);
+        window.localStorage[bookContent.bookId] = JSON.stringify(bookReading);
         //保存到后端
         $.ajax({
             url: "/book/saveReading",

@@ -6,20 +6,39 @@
     <div class="col-xs-3 pull-right text-right" id="btn_reverse_book_chapters" style="margin-bottom: 30px;height: 40px;line-height: 60px"><i class="fa fa-sort"></i></div>
     <div class="col-xs-12 ui-content">
         <ul data-role="listview" id="book_chapters_ul" data-inset="false" class="ui-listview ui-corner-all ui-shadow">
-            <#list bookChapterList as bookChapter>
-                <li>
-                    <a href="/book/chapter?bookId=${(bookChapter.bookId)?c}&link=${(bookChapter.link)!}&chapterName=${(bookChapter.title)!}" target="_self" data-transition="slide" class="ui-btn ui-btn-icon-right ui-icon-carat-r">
-                    ${(bookChapter.title)!}
-                    </a>
-                </li>
-                <li data-role="list-divider"></li>
-            </#list>
         </ul>
     </div>
 </div>
 
 <script>
     $(function(){
+
+        var bookId = $('#hidden_book_content_book_id').val();
+
+        //章节列表
+        $.ajax({
+            url: "/book/chapters",
+            data: {bookId: bookId},
+            method: "POST",
+            dataType: "json",
+            success: function (result) {
+                if (result.statusCode == 200) {
+                    result.data.forEach(function (chapter, number) {
+                        var url = "/book/chapter?bookId=" + bookId + "&link=" +
+                            chapter.link + "&chapterName=" + chapter.title;
+                        var li = $('<li><a href="' + url +
+                            '" target="_self" data-transition="slide"' +
+                            ' class="ui-btn ui-btn-icon-right ui-icon-carat-r">'
+                            + chapter.title + '</a></li>')
+                        $('#book_chapters_ul').append(li);
+                    });
+
+                } else {
+                    salert(result.message);
+                }
+            }
+        });
+
         $('#btn_reverse_book_chapters').on('tap', function() {
             var ul = $('#book_chapters_ul');
             var lis = ul.find('li').get().reverse();

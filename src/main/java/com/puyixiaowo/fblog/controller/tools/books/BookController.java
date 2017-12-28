@@ -88,6 +88,8 @@ public class BookController extends BaseController {
         String bookIdStr = request.queryParams("bookId");
         String chapterName = request.queryParams("chapterName");
 
+        long start = System.currentTimeMillis();
+
         Integer page = Integer.valueOf(request.queryParamOrDefault("page", "0"));
 
         if (StringUtils.isBlank(bookIdStr)) {
@@ -102,11 +104,12 @@ public class BookController extends BaseController {
             BookReadBean bookReadBean = getParamsEntity(request, BookReadBean.class, false);
 
             if (bookReadBean == null
-                    || (bookReadBean.getBookId() == null
-                    && StringUtils.isBlank(bookReadBean.getLastReadingChapter())
+                    || (StringUtils.isBlank(bookReadBean.getLastReadingChapter())
                     && StringUtils.isBlank(bookReadBean.getLastReadingChapterLink()))) {
                 bookReadBean = BookReadService.getUserReadConfig(userBean.getId(), bookId);
             }
+
+
 
             if (StringUtils.isBlank(link)) {
 
@@ -137,11 +140,9 @@ public class BookController extends BaseController {
             bookChapterBean.setBookId(bookId);
             model.put("model", bookChapterBean);
 
-
             //查询章节列表
-            List<BookChapterBean> bookChapterBeanList = BookChapterService.requestBookChapters(bookId);
-
-            model.put("bookChapterList", bookChapterBeanList);
+//            List<BookChapterBean> bookChapterBeanList = BookChapterService.requestBookChapters(bookId);
+//            model.put("bookChapterList", bookChapterBeanList);
 
         } catch (Exception e) {
             logger.error("[书]获取章节内容异常：" + e.getMessage());
@@ -216,5 +217,24 @@ public class BookController extends BaseController {
             pageBean.error(e);
         }
         return pageBean.serialize();
+    }
+
+    public static Object chapters(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
+
+        try {
+            String bookIdStr = request.queryParams("bookId");
+
+            if (StringUtils.isBlank(bookIdStr)) {
+                responseBean.errorMessage("bookId不可为空");
+                return responseBean.serialize();
+            }
+            Long bookId = Long.valueOf(bookIdStr);
+            responseBean.setData(BookChapterService.requestBookChapters(bookId));
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+
+        return responseBean.serialize();
     }
 }

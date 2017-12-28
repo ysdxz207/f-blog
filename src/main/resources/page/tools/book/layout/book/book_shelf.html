@@ -48,15 +48,13 @@
             var bookId = $(this).data('bookid');
             var url = "/book/chapter?bookId=" + bookId;
 
-            var storage = window.localStorage;
-            var readingConfig = storage.getItem(bookId);
+            var strReadingConfig = window.localStorage[bookId];
+            var readingConfig = JSON.parse(strReadingConfig);
 
-            console.log(readingConfig);
             if (readingConfig) {
                 url += "&lastReadingChapter=" + readingConfig.lastReadingChapter;
                 url += "&lastReadingChapterLink=" + readingConfig.lastReadingChapterLink;
             }
-            console.log('url',url);
             location.href = url;
         });
     });
