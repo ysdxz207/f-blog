@@ -19,11 +19,11 @@ var bookMenu = {
 
     bookMenu.bind = function () {
 
-        $('.btn-back').on('tap', function (e) {
+        $('.btn-back').on('touchend', function (e) {
             history.back();
         });
 
-        $('#btn_book_menu_font_setup').on('tap', function () {
+        $('#btn_book_menu_font_setup').on('touchend', function () {
             // bookMenu.toggle();
         });
     };

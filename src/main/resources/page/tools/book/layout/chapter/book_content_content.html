@@ -5,9 +5,11 @@
     }
     .book-chapter-content-title{
         font-size: 16px;
+        padding-left: 16px;
     }
     .book-chapter-content{
-        font-size: 24px;
+        font-size: 23px;
+        padding: 4px 14px;
     }
     .book-chapter-content-error {
         line-height: 400px;
@@ -18,11 +20,11 @@
 
 <#if model??>
 <div class="book-content-main">
-    <p class="book-chapter-content-title">${(model.title)!}</p>
+    <div class="book-chapter-content-title">${(model.title)!}</div>
 
-    <p class="book-chapter-content">
-        <!--${(model.content)!}-->
-    </p>
+    <div class="book-chapter-content">
+        ${(model.content)!}
+    </div>
     <#include "/tools/book/layout/chapter/book_content_footer.html" />
 
 </div>

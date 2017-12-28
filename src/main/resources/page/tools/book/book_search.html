@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>我的书架</title>
     <#include "/public/public.html" />
-    <#include "/public/mobile.html" />
 
 
 </head>
@@ -16,7 +15,7 @@
 </body>
 <script>
     $(function () {
-        $('#btn_book_search').on('tap', function () {
+        $('#btn_book_search').on('touchend', function () {
             var name = $('#book_search_text').val();
 
             if (!name) {

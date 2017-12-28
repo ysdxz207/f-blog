@@ -12,14 +12,14 @@ var bookContent = {
      * 触摸滚动
      */
     bookContent.tapScroll = function () {
-        $('body').on('tap', function (e) {
+        $('body').on('touchend', function (e) {
 
 
             var isTop = $(document).scrollTop() < 10;
             var isBottom = ($(document).height() -
                 ($(window).height() + $(document).scrollTop())) == 0;
 
-            var tapY = e.clientY;
+            var tapY = e.originalEvent.changedTouches[0].clientY;
             if (!bookContent.ty) {
                 bookContent.ty = tapY;
             }
@@ -37,7 +37,6 @@ var bookContent = {
 
             if ((tapY > (height / 8 * 5))
                 && !isBottom) {
-                console.log(bookContent.cy);
                 bookContent.cy += height - 100;
                 //向下滚动
                 $("html,body")

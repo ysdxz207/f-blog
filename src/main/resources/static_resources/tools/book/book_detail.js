@@ -5,15 +5,15 @@ var bookDetail = {
 
     bookDetail.bind = function () {
 
-        $('.btn-back').on('tap', function (e) {
+        $('.btn-back').on('touchend', function (e) {
             history.back();
         });
 
-        $('.btn-add-book').on('tap', function () {
+        $('.btn-add-book').on('touchend', function () {
         });
-        $('.btn-del-book').on('tap', function () {
+        $('.btn-del-book').on('touchend', function () {
         });
-        $('.btn-read-book').on('tap', function () {
+        $('.btn-read-book').on('touchend', function () {
 
             location.href = "/book/chapter?bookId=" + bookDetail.bookId;
         });

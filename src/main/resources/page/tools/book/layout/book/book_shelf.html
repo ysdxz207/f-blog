@@ -44,13 +44,16 @@
 
 <script>
     $(function () {
-        $('.book-shelf-books').on('tap', function () {
+        $('.book-shelf-books').on('touchend', function () {
             var bookId = $(this).data('bookid');
             var url = "/book/chapter?bookId=" + bookId;
 
             var strReadingConfig = window.localStorage[bookId];
-            var readingConfig = JSON.parse(strReadingConfig);
+            var readingConfig = undefined;
 
+            if (strReadingConfig) {
+                readingConfig = JSON.parse(strReadingConfig);
+            }
             if (readingConfig) {
                 url += "&lastReadingChapter=" + readingConfig.lastReadingChapter;
                 url += "&lastReadingChapterLink=" + readingConfig.lastReadingChapterLink;
