@@ -23,9 +23,20 @@ var bookMenu = {
             history.back();
         });
 
+        $('.btn-back-content').on('touchend', function (e) {
+            $('#book_menu_chapters').hide();
+            $('.book-content-main').show(400);
+        });
+
         $('#btn_book_menu_font_setup').on('touchend', function () {
             // bookMenu.toggle();
         });
+        $('#btn_book_menu_font_chapters').on('touchend', function () {
+            $('.book-content-main').hide();
+            $('#book_menu_chapters').show(400);
+        });
+
+
     };
 
     /**
