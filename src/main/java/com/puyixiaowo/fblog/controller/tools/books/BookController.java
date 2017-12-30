@@ -138,11 +138,10 @@ public class BookController extends BaseController {
 
 
             bookChapterBean.setBookId(bookId);
+            String content = bookChapterBean
+                    .getContent().replaceAll("\n", "</p>\n<p>&nbsp;&nbsp;&nbsp;&nbsp;");
+            bookChapterBean.setContent(content);
             model.put("model", bookChapterBean);
-
-            //查询章节列表
-//            List<BookChapterBean> bookChapterBeanList = BookChapterService.requestBookChapters(bookId);
-//            model.put("bookChapterList", bookChapterBeanList);
 
         } catch (Exception e) {
             logger.error("[书]获取章节内容异常：" + e.getMessage());

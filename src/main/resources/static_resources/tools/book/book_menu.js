@@ -13,27 +13,24 @@ var bookMenu = {
         bookMenu.menuObj.toggle();
     };
 
-    bookMenu.makeMenu = function () {
-
-    };
-
     bookMenu.bind = function () {
 
-        $('.btn-back').on('touchend', function (e) {
+        $('.btn-back').on('click', function (e) {
             history.back();
         });
 
-        $('.btn-back-content').on('touchend', function (e) {
+        $('.btn-back-content').on('click', function (e) {
             $('#book_menu_chapters').hide();
-            $('.book-content-main').show(400);
+            $('.book-content-main').show();
         });
 
-        $('#btn_book_menu_font_setup').on('touchend', function () {
+        $('#btn_book_menu_font_setup').on('click', function () {
             // bookMenu.toggle();
         });
-        $('#btn_book_menu_font_chapters').on('touchend', function () {
+        $('#btn_book_menu_font_chapters').on('click', function () {
             $('.book-content-main').hide();
-            $('#book_menu_chapters').show(400);
+            $('#book_menu').hide();
+            $('#book_menu_chapters').show();
         });
 
 

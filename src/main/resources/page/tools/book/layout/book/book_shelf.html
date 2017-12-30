@@ -30,7 +30,7 @@
 <div class="book-shelf-content">
     <#if (((pageBean.list)??) && (((pageBean.list)?size) > 0))>
         <#list pageBean.list as book>
-                <div class="book-shelf-books" data-bookid="${(book.id)?c}">
+                <div class="book-shelf-books loading" data-bookid="${(book.id)?c}">
                     <#if book.faceUrl ??>
                         <img src="${(book.faceUrl)!}" class="book-shelf-face-pic">
                     <#else>
@@ -44,7 +44,7 @@
 
 <script>
     $(function () {
-        $('.book-shelf-books').on('touchend', function () {
+        $('.book-shelf-books').on('click', function () {
             var bookId = $(this).data('bookid');
             var url = "/book/chapter?bookId=" + bookId;
 

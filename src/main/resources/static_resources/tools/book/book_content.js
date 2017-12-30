@@ -2,8 +2,6 @@ var bookContent = {
     bookId: undefined,
     lastReadingChapter: '',
     lastReadingChapterLink: '',
-    ty: 0,
-    cy: 0
 };
 
 (function (bookContent) {
@@ -12,17 +10,16 @@ var bookContent = {
      * 触摸滚动
      */
     bookContent.tapScroll = function () {
-        $('body').on('touchend', function (e) {
 
+        $('.book-content-main').on('click', function (e) {
 
+            var lineHeight = 28;
             var isTop = $(document).scrollTop() < 10;
             var isBottom = ($(document).height() -
                 ($(window).height() + $(document).scrollTop())) == 0;
 
-            var tapY = e.originalEvent.changedTouches[0].clientY;
-            if (!bookContent.ty) {
-                bookContent.ty = tapY;
-            }
+            var tapY = e.clientY;
+
             var height = screen.height;
 
             //点击屏幕中央唤起菜单
@@ -37,19 +34,17 @@ var bookContent = {
 
             if ((tapY > (height / 8 * 5))
                 && !isBottom) {
-                bookContent.cy += height - 100;
                 //向下滚动
                 $("html,body")
-                    .animate({scrollTop: bookContent.cy}, 300);
+                    .animate({scrollTop: $(document).scrollTop() + height - lineHeight}, 300);
                 return;
             }
 
             if (tapY < (height / 8 * 3)
                 && !isTop) {
                 //向上滚动
-                bookContent.cy -= height + 100;
                 $("html,body")
-                    .animate({scrollTop: bookContent.cy}, 300);
+                    .animate({scrollTop: $(document).scrollTop() - height + lineHeight}, 300);
                 return;
             }
 

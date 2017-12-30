@@ -10,6 +10,7 @@
     .book-chapter-content{
         font-size: 23px;
         padding: 4px 14px;
+        line-height: 28px;
     }
     .book-chapter-content-error {
         line-height: 400px;
@@ -23,7 +24,7 @@
     <div class="book-chapter-content-title">${(model.title)!}</div>
 
     <div class="book-chapter-content">
-        ${(model.content)!}
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;${(model.content)!}
     </div>
     <#include "/tools/book/layout/chapter/book_content_footer.html" />
 

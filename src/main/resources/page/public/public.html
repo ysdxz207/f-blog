@@ -10,15 +10,21 @@
 <link href="/public_static/css/font-awesome-4.7.0.min.css" rel="stylesheet">
 <link href="/public_static/css/highlight-9.12.0.min.css" rel="stylesheet">
 <!-- jquery -->
-<script type="text/javascript" src="/public_static/js/jquery-2.2.4.min.js"></script>
+<script type="text/javascript" src="/public_static/js/lib/jquery-2.2.4.min.js"></script>
 
 <!-- bootstrap -->
-<script src="/public_static/js/bootstrap-3.3.7.min.js"></script>
+<script src="/public_static/js/lib/bootstrap-3.3.7.min.js"></script>
+<!--点透问题-->
+<script src="/public_static/js/lib/fastclick.js"></script>
 <style>
     html,body{overflow:hidden;overflow-y:auto;}
 </style>
 <script>
     $(function(){
+
+        //点透
+//        FastClick.attach(document.body);
+
 
         var mobile =false;
         if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -27,14 +33,9 @@
 
 
         if (mobile) {
-            $('a,button').bind('tap', function (e) {
-                $.mobile.loading( "show", {
-                    text: "加载中...",
-                    textVisible: true,
-                    theme: "b",
-                    html: ""
-                });
-            });
+//            $('.loading').on('click', function (e) {
+//                smask('<div class="text-center" style="color: #FFFFFF">加载中...</div>');
+//            });
         }
     })
 </script>
