@@ -52,7 +52,11 @@
             var readingConfig = undefined;
 
             if (strReadingConfig) {
-                readingConfig = JSON.parse(strReadingConfig);
+                try {
+                    readingConfig = JSON.parse(strReadingConfig);
+                } catch(e) {
+                    window.localStorage.removeItem(bookId);
+                }
             }
             if (readingConfig) {
                 url += "&lastReadingChapter=" + readingConfig.lastReadingChapter;
