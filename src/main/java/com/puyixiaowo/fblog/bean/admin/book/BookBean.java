@@ -1,7 +1,7 @@
 package com.puyixiaowo.fblog.bean.admin.book;
 
-import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.core.entity.Validatable;
+import com.puyixiaowo.fblog.annotation.NotNull;
 import com.puyixiaowo.fblog.annotation.Table;
 import com.puyixiaowo.fblog.annotation.Transient;
 
@@ -13,14 +13,13 @@ public class BookBean extends Validatable implements Serializable{
 
 	private Long id;
 	private String author;
-	private String source;
 	private String faceUrl;
+	@NotNull
 	private String aId;//api接口书ID
 	private String name;
 	private String url;
 	private String lastUpdateChapter;
 	private Long createTime;
-	private Long lastUpdateTime;
 	private Integer isOver;
 
 
@@ -46,14 +45,6 @@ public class BookBean extends Validatable implements Serializable{
 		this.author = author;
 	}
 
-	public String getSource() {
-		return source;
-	}
-
-	public void setSource(String source) {
-		this.source = source;
-	}
-
 	public String getFaceUrl() {
 		return faceUrl;
 	}
@@ -62,11 +53,11 @@ public class BookBean extends Validatable implements Serializable{
 		this.faceUrl = faceUrl;
 	}
 
-	public String getAId (){
+	public String getaId() {
 		return aId;
 	}
 
-	public void setAId (String aId){
+	public void setaId(String aId) {
 		this.aId = aId;
 	}
 
@@ -100,14 +91,6 @@ public class BookBean extends Validatable implements Serializable{
 
 	public void setCreateTime (Long createTime){
 		this.createTime = createTime;
-	}
-
-	public Long getLastUpdateTime (){
-		return lastUpdateTime;
-	}
-
-	public void setLastUpdateTime (Long lastUpdateTime){
-		this.lastUpdateTime = lastUpdateTime;
 	}
 
 	public Integer getIsOver() {

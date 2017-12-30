@@ -5,23 +5,68 @@
     <title>我的书架</title>
     <#include "/public/public.html" />
 
+    <style>
+        .book-search-list {
+            padding-left: 10px;
+        }
+        .book-search-list li {
+            list-style: none;
+            height: 80px;
+            line-height: 16px;
+            font-size: 14px;
+            margin: 10px;
+        }
+        .template-book-search-list {
+
+        }
+        .book-search-list-img {
+            float: left;
+            width: 50px;
+            height: 70px;
+        }
+        .book-search-list h5 {
+            overflow: hidden;
+            padding-left: 10px;
+        }
+        .book-search-list h4 {
+            color: #777777;
+            overflow: hidden;
+            padding-left: 10px;
+        }
+
+    </style>
 
 </head>
 <body>
+<#include "/tools/book/layout/book/book_common_header.html"/>
+
 <div class="col-xs-12 input-group">
-    <input type="text" class="col-xs-8 form-control" id="book_search_text"/>
-    <input type="button" value="搜索" id="btn_book_search" class="input-group-addon col-xs-4 form-control"/>
+    <input type="text" class="form-control" id="book_search_text"/>
+    <span type="button" id="btn_book_search" class="input-group-addon btn btn-warning">搜索</span>
 </div>
+<div class="">
+    <ul class="book-search-list">
+
+    </ul>
+</div>
+
+<li class="template-book-search-list hide" id="template_book_search_list">
+    <img class="book-search-list-img">
+    <h4>道君</h4>
+    <h5>作者：跃千愁</h5>
+</li>
 </body>
 <script>
     $(function () {
         $('#btn_book_search').on('click', function () {
             var name = $('#book_search_text').val();
+            var bookSearchListUl = $('.book-search-list');
 
             if (!name) {
                 return;
             }
 
+            bookSearchListUl.empty();
             $.ajax({
                 url: "/book/search",
                 data: {name: name},
@@ -29,9 +74,20 @@
                 dataType: "json",
                 success: function (result) {
                     if (result.statusCode == 200) {
-
+                        result.list.forEach(function (book, i) {
+                            console.log(book)
+                            var li = $('#template_book_search_list').clone(true).on('click', function () {
+                                location.href = "/book/detail?aId=" + book.aId;
+                            });
+                            li.find('img').attr('src', book.faceUrl);
+                            li.find('h4').text(book.name);
+                            li.find('h5').text( book.author);
+                            li.removeClass('hide');
+                            li.removeAttr('id');
+                            bookSearchListUl.append(li);
+                        })
                     } else {
-                        salert(result.message);
+                        alert(result.message);
                     }
                 }
             });

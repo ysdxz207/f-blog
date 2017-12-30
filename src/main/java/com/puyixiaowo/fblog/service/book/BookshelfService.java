@@ -2,9 +2,17 @@ package com.puyixiaowo.fblog.service.book;
 
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookBean;
+import com.puyixiaowo.fblog.bean.admin.book.BookReadBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookshelfBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.IdUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -48,14 +56,61 @@ public class BookshelfService {
     public static boolean isBookOnShelf(UserBean userBean,
                                         BookBean bookBean) {
         if (bookBean == null
-                || bookBean.getId() == null) {
+                || bookBean.getaId() == null) {
             return false;
         }
 
         BookshelfBean bookshelfBean = getUserShelf(userBean.getId());
-        if (bookshelfBean == null) {
+        if (bookshelfBean == null
+                || bookshelfBean.getBookIds() == null) {
             return false;
         }
-        return bookshelfBean.getBookIds().indexOf("" + bookBean.getId()) != -1;
+
+        Long bookId = bookBean.getId();
+
+
+        if (bookId == null) {
+            BookBean bookBeanDB = BookService.selectBookBeanByAId(bookBean.getaId());
+            if (bookBeanDB == null) {
+                return false;
+            }
+            bookId = bookBeanDB.getId();
+        }
+        return bookshelfBean.getBookIds().indexOf("" + bookId) != -1;
+    }
+
+    public static boolean addOrDelBookFromBookshelf(UserBean userBean, Long bookId) {
+        BookshelfBean bookshelfBean = getUserShelf(userBean.getId());
+        if (bookshelfBean == null) {
+            //创建书架并添加书籍
+            bookshelfBean = new BookshelfBean();
+            bookshelfBean.setCreateTime(System.currentTimeMillis());
+            bookshelfBean.setUserId(userBean.getId());
+        }
+        String [] bookIds = new String[0];
+        boolean isOnBookshelf = false;
+        if (StringUtils.isNotBlank(bookshelfBean.getBookIds())) {
+            bookIds = bookshelfBean.getBookIds().split(",");
+            isOnBookshelf = bookshelfBean.getBookIds().indexOf("" + bookId) != -1;
+        }
+
+        List<String> bookIdList = new ArrayList(Arrays.asList(bookIds));
+
+        Iterator it = bookIdList.iterator();
+        if (isOnBookshelf) {
+            while (it.hasNext()) {
+                if (it.next().equals(bookId + "")) {
+                    it.remove();
+                }
+            }
+        } else {
+            bookIdList.add(bookId + "");
+        }
+
+        bookshelfBean.setBookIds(StringUtils.join(bookIdList.toArray(), ","));
+
+        DBUtils.insertOrUpdate(bookshelfBean);
+
+        return !isOnBookshelf;
     }
 }

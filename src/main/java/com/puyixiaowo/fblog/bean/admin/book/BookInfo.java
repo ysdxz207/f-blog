@@ -2,16 +2,17 @@ package com.puyixiaowo.fblog.bean.admin.book;
 
 import java.io.Serializable;
 
+/**
+ * 仅用于前端展示，不写入数据库
+ */
 public class BookInfo implements Serializable{
     private static final long serialVersionUID = 1L;
 
     private Long bookId;
     private String description;
-    private String cover;
     private String rating;
     private String retentionRatio;
     private String updated;
-    private String lastChapter;
     private String category;
 
 
@@ -29,14 +30,6 @@ public class BookInfo implements Serializable{
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
     }
 
     public String getRating() {
@@ -61,14 +54,6 @@ public class BookInfo implements Serializable{
 
     public void setUpdated(String updated) {
         this.updated = updated;
-    }
-
-    public String getLastChapter() {
-        return lastChapter;
-    }
-
-    public void setLastChapter(String lastChapter) {
-        this.lastChapter = lastChapter;
     }
 
     public String getCategory() {

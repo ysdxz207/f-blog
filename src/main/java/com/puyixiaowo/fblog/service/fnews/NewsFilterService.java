@@ -127,7 +127,7 @@ public class NewsFilterService {
         params.put("showapi_appid", APPID);
         params.put("showapi_sign", APIKEY);
 
-        JSONObject jsonResult = HttpUtils.httpPost(NEWS_API_URL, params);
+        JSONObject jsonResult = JSON.parseObject(HttpUtils.httpPost(NEWS_API_URL, params));
 
         if (StringUtils.isBlank(jsonResult)) {
             logger.error("新闻接口返回结果为空");

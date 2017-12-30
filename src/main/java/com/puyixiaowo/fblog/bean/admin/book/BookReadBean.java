@@ -14,6 +14,7 @@ public class BookReadBean extends Validatable implements Serializable {
 	private Long userId;
 	@NotNull
 	private Long bookId;
+	private String source;
 	@NotNull
 	private String lastReadingChapter;
 	@NotNull
@@ -22,11 +23,11 @@ public class BookReadBean extends Validatable implements Serializable {
 	private Integer fontSize;
 
 
-	public Long getId (){
+	public Long getId() {
 		return id;
 	}
 
-	public void setId (Long id){
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -46,11 +47,19 @@ public class BookReadBean extends Validatable implements Serializable {
 		this.bookId = bookId;
 	}
 
-	public String getLastReadingChapter (){
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getLastReadingChapter() {
 		return lastReadingChapter;
 	}
 
-	public void setLastReadingChapter (String lastReadingChapter){
+	public void setLastReadingChapter(String lastReadingChapter) {
 		this.lastReadingChapter = lastReadingChapter;
 	}
 
@@ -62,19 +71,19 @@ public class BookReadBean extends Validatable implements Serializable {
 		this.lastReadingChapterLink = lastReadingChapterLink;
 	}
 
-	public String getBgColor (){
+	public String getBgColor() {
 		return bgColor;
 	}
 
-	public void setBgColor (String bgColor){
+	public void setBgColor(String bgColor) {
 		this.bgColor = bgColor;
 	}
 
-	public Integer getFontSize (){
+	public Integer getFontSize() {
 		return fontSize;
 	}
 
-	public void setFontSize (Integer fontSize){
+	public void setFontSize(Integer fontSize) {
 		this.fontSize = fontSize;
 	}
 }

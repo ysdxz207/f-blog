@@ -1,14 +1,13 @@
 package com.puyixiaowo.fblog.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fblog.exception.TimeoutException;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,8 +29,15 @@ public class HttpUtils {
      * @param params 参数
      * @return
      */
-    public static JSONObject httpPost(String url, Map<String, String> params) throws TimeoutException {
+    public static String httpPost(String url, Map<String, String> params) throws TimeoutException {
         PostMethod post = new PostMethod(url);
+        post.setRequestHeader("Content-Type",
+                "application/x-www-form-urlencoded;charset=UTF-8");
+
+        if (params != null && params.size() > 0) {
+            post.setRequestBody(getParams(params));
+        }
+
         return request(post);
     }
 
@@ -39,32 +45,46 @@ public class HttpUtils {
      * httpGet
      *
      * @param url    路径
-     * @param params 参数
      * @return
      */
-    public static JSONObject httpGet(String url) throws TimeoutException {
+    public static String httpGet(String url, Map<String, String> params) throws TimeoutException {
         GetMethod get = new GetMethod(url);
+
+        if (params != null && params.size() > 0) {
+
+            get.setQueryString(getParams(params));
+        }
         return request(get);
     }
 
-    private static JSONObject request(HttpMethod method) {
+
+    private static NameValuePair [] getParams(Map<String, String> params) {
+        List<NameValuePair> nvpList = new ArrayList<>();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            nvpList.add(new NameValuePair(entry.getKey(), entry.getValue()));
+        }
+        NameValuePair [] arr = new NameValuePair[nvpList.size()];
+        return nvpList.toArray(arr);
+    }
+
+    private static String request(HttpMethod method) {
         method.addRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-        JSONObject json = new JSONObject();
+        String str = null;
         HttpClient httpClient = new HttpClient();
 
         try {
             InputStream in = null;
             int statusCode = httpClient.executeMethod(method);
             if (statusCode != HttpStatus.SC_OK) {
-                return json;
+                return str;
             }
             in = method.getResponseBodyAsStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(in, CHARSET));
-            String str = reader.lines().collect(Collectors.joining("\n"));
+            str = reader.lines().collect(Collectors.joining("\n"));
             if (StringUtils.isBlank(str)) {
-                return json;
+                return str;
             }
-            return JSON.parseObject(str);
+            return str;
         } catch (IOException e) {
             throw new TimeoutException("请求失败");
         }

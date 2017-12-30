@@ -7,7 +7,7 @@ package com.puyixiaowo.fblog.constants;
  * 
  */
 public class BookConstants {
-    private static final String HOST_API = "http://api.zhuishushenqi.com";
+    public static final String HOST_API = "http://api.zhuishushenqi.com";
 
     /**
      * 书源信息
@@ -19,7 +19,7 @@ public class BookConstants {
      * 模糊搜索
      * http://api.zhuishushenqi.com/book/fuzzy-search?query=一念&start=0&limit=2
      */
-    public static final String URL_SEARCH = HOST_API + "/book/fuzzy-search?query=";
+    public static final String URL_SEARCH = HOST_API + "/book/fuzzy-search";
 
     /**
      * 书籍详情

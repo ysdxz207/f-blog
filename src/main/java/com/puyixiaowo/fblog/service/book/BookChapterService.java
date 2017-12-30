@@ -1,10 +1,13 @@
 package com.puyixiaowo.fblog.service.book;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookChapterBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookInfo;
+import com.puyixiaowo.fblog.bean.admin.book.BookReadBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.constants.BookConstants;
 import com.puyixiaowo.fblog.constants.Constants;
@@ -30,15 +33,20 @@ public class BookChapterService {
 
     private static final Logger logger = LoggerFactory.getLogger(BookChapterService.class);
 
-    public static List<BookChapterBean> requestBookChapters(Long bookId) {
+    public static List<BookChapterBean> requestBookChapters(Long userId, Long bookId) {
 
         List<BookChapterBean> list = new ArrayList<>();
 
-        BookBean bookBean = BookService.selectBookBeanById(bookId);
+        BookReadBean bookReadBean = BookReadService.getUserReadConfig(userId, bookId);
 
-        String url = BookConstants.URL_CHAPTERS + bookBean.getSource() + "?view=chapters";
+        String source = bookReadBean == null ? "" : bookReadBean.getSource();
 
-        JSONObject jsonObject = HttpUtils.httpGet(url);
+        if (StringUtils.isBlank(source)) {
+            source = BookService.getDefaultSource(bookId).get_id();
+        }
+        String url = BookConstants.URL_CHAPTERS + source + "?view=chapters";
+
+        JSONObject jsonObject = JSON.parseObject(HttpUtils.httpGet(url, null));
         if (jsonObject == null) {
             logger.error("[book]api返回章节json为null");
             return list;
@@ -59,7 +67,7 @@ public class BookChapterService {
                     chapters) {
                 JSONObject json = (JSONObject) obj;
                 BookChapterBean bookChapterBean = new BookChapterBean();
-                bookChapterBean.setBookId(bookBean.getId());
+                bookChapterBean.setBookId(bookId);
                 bookChapterBean.setTitle(json.getString("title"));
                 bookChapterBean.setLink(URLEncoder.encode(json.getString("link"), Constants.ENCODING));
                 list.add(bookChapterBean);
@@ -97,7 +105,7 @@ public class BookChapterService {
 
         BookChapterBean bookChapterBean = new BookChapterBean();
         String url = BookConstants.URL_CHAPTER_CONTENT + link;
-        JSONObject json = HttpUtils.httpGet(url);
+        JSONObject json = JSON.parseObject(HttpUtils.httpGet(url, null));
 
         if (json == null) {
             logger.error("[book]api返回章节内容json为null");
@@ -117,60 +125,10 @@ public class BookChapterService {
         return null;
     }
 
-    public static BookBean requestBookDetail(Long bookId) {
 
-        BookBean bookBean = BookService.selectBookBeanById(bookId);
+    public static BookChapterBean requestFirstBookChapters(Long userId, Long bookId) {
 
-        String url = BookConstants.URL_BOOK + bookBean.getAId();
-
-        JSONObject json = HttpUtils.httpGet(url);
-
-        Boolean ok = json.getBoolean("ok");;
-
-
-
-        if (ok != null && !ok) {
-            ok = false;
-        } else {
-            ok = true;
-        }
-
-        if (json == null && !ok) {
-            return null;
-        }
-
-        String description = json.getString("longIntro");
-        String cover = json.getString("cover");
-        try {
-            cover = URLDecoder.decode(cover, Constants.ENCODING);
-            cover = cover.replace("/agent/", "");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        String rating = json.getString("rating");
-        String retentionRatio = json.getString("retentionRatio");//读着留存率
-        String updated = json.getString("updated");
-        String lastChapter = json.getString("lastChapter");
-        String category = json.getString("cat");
-
-
-        BookInfo bookInfo = new BookInfo();
-        bookInfo.setBookId(bookId);
-        bookInfo.setDescription(description);
-        bookInfo.setCover(cover);
-        bookInfo.setRating(rating);
-        bookInfo.setRetentionRatio(retentionRatio);
-        bookInfo.setUpdated( updated);
-        bookInfo.setLastChapter(lastChapter);
-        bookInfo.setCategory(category);
-
-        bookBean.setBookInfo(bookInfo);
-        return bookBean;
-    }
-
-    public static BookChapterBean requestFirstBookChapters(Long bookId) {
-
-        List<BookChapterBean> list = requestBookChapters(bookId);
+        List<BookChapterBean> list = requestBookChapters(userId, bookId);
         return list.get(list.size()-1);
     }
 }

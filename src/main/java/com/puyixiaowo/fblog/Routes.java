@@ -279,6 +279,9 @@ public class Routes {
             post("/chapters", ((request, response) ->
                     BookController.chapters(request, response)));
 
+            post("/addOrDel", ((request, response) ->
+                    BookController.addOrDelBook(request, response)));
+
         });
     }
 }
