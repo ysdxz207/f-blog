@@ -244,10 +244,15 @@ public class BookService {
             if (bookSource.getSource().equalsIgnoreCase("my176")
                     || bookSource.getSource().equalsIgnoreCase("snwx")
                     || bookSource.getSource().equalsIgnoreCase("biquge")
-                    || bookSource.getSource().equalsIgnoreCase("sanjiangge")) {
+                    || bookSource.getSource().equalsIgnoreCase("sanjiangge")
+                    || bookSource.getSource().equalsIgnoreCase("abaidu")) {
                 return bookSource;
             }
         }
-        return null;
+
+        //读取书籍ID
+        BookSource bookSource = new BookSource();
+        bookSource.set_id(bookBean.getaId());
+        return bookSource;
     }
 }

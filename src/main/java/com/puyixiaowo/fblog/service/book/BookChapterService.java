@@ -130,6 +130,6 @@ public class BookChapterService {
     public static BookChapterBean requestFirstBookChapters(Long userId, Long bookId) {
 
         List<BookChapterBean> list = requestBookChapters(userId, bookId);
-        return list.get(list.size()-1);
+        return list.size() == 0 ? null : list.get(list.size()-1);
     }
 }

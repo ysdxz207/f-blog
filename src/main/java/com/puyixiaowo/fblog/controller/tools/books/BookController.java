@@ -131,6 +131,10 @@ public class BookController extends BaseController {
                     //获取第一章
                     BookChapterBean bookChapterBean = BookChapterService
                             .requestFirstBookChapters(userBean.getId(), bookId);
+
+                    if (bookChapterBean == null) {
+                        return "<div style='text-align:center;height:400px;line-height:400px'>无法获取书籍，请切换书源</div>";
+                    }
                     link = bookChapterBean.getLink();
                     source = bookChapterBean.getSource();
                 }
