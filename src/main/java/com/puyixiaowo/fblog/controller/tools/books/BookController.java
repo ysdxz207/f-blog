@@ -106,7 +106,7 @@ public class BookController extends BaseController {
 
         Long bookId = Long.valueOf(bookIdStr);
         Map<String, Object> model = new HashMap<>();
-
+        String source = "";
         try {
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
             //读取读书配置
@@ -129,6 +129,7 @@ public class BookController extends BaseController {
                     BookChapterBean bookChapterBean = BookChapterService
                             .requestFirstBookChapters(userBean.getId(), bookId);
                     link = bookChapterBean.getLink();
+                    source = bookChapterBean.getSource();
                 }
             }
 
@@ -151,6 +152,10 @@ public class BookController extends BaseController {
             String content = bookChapterBean
                     .getContent().replaceAll("\n", "</p>\n<p>&nbsp;&nbsp;&nbsp;&nbsp;");
             bookChapterBean.setContent(content);
+            if (StringUtils.isNotBlank(source)) {
+                //第一次读书可以获取到source
+                bookChapterBean.setSource(source);
+            }
             model.put("model", bookChapterBean);
 
         } catch (Exception e) {

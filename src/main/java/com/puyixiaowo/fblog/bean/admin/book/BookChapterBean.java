@@ -2,6 +2,7 @@ package com.puyixiaowo.fblog.bean.admin.book;
 
 import com.puyixiaowo.core.entity.Validatable;
 import com.puyixiaowo.fblog.annotation.Table;
+import com.puyixiaowo.fblog.annotation.Transient;
 
 import java.io.Serializable;
 
@@ -13,6 +14,10 @@ public class BookChapterBean extends Validatable implements Serializable {
     private String title;
     private String content;
     private String link;
+
+
+    @Transient
+    private String source;
 
 
     public String getId() {
@@ -53,5 +58,13 @@ public class BookChapterBean extends Validatable implements Serializable {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

@@ -15,17 +15,19 @@
 <input type="hidden" id="hidden_book_content_book_id" value="${(model.bookId)?c}" />
 <input type="hidden" id="hidden_book_content_reading_chapter" value="${(model.title)!}" />
 <input type="hidden" id="hidden_book_content_reading_chapter_link" value="${(model.link)!}" />
+<input type="hidden" id="hidden_book_content_reading_source" value="${(model.source)!}" />
 <!-- 内容 -->
 <div class="row" data-role="page">
     <#include "/tools/book/layout/chapter/menu/book_content_menu.html" />
     <#include "/tools/book/layout/chapter/book_content_content.html" />
 </div>
 
+
+
 <!-- 章节列表 -->
 <#include "/tools/book/layout/chapter/book_content_chapter_list.html"/>
+</body>
 
 <script type="text/javascript" src="/tools/book/book_content.js"></script>
 <script type="text/javascript" src="/tools/book/book_menu.js"></script>
-
-</body>
 </html>

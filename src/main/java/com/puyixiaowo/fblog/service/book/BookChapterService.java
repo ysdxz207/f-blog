@@ -71,6 +71,7 @@ public class BookChapterService {
                 bookChapterBean.setTitle(json.getString("title"));
                 bookChapterBean.setLink(URLEncoder.encode(json.getString("link"), Constants.ENCODING));
                 list.add(bookChapterBean);
+                bookChapterBean.setSource(source);
 
             }
         } catch (UnsupportedEncodingException e) {

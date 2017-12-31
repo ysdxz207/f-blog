@@ -11,7 +11,7 @@ var bookContent = {
      */
     bookContent.tapScroll = function () {
 
-        $('.book-content-main').on('click', function (e) {
+        $('.book-chapter-content').on('click', function (e) {
 
             var lineHeight = 28;
             var isTop = $(document).scrollTop() < 10;
@@ -35,7 +35,7 @@ var bookContent = {
             if ((tapY > (height / 8 * 5))
                 && !isBottom) {
                 //向下滚动
-                $("html,body")
+                $('html,body')
                     .animate({scrollTop: $(document).scrollTop() + height - lineHeight}, 300);
                 return;
             }
@@ -43,7 +43,7 @@ var bookContent = {
             if (tapY < (height / 8 * 3)
                 && !isTop) {
                 //向上滚动
-                $("html,body")
+                $('html,body')
                     .animate({scrollTop: $(document).scrollTop() - height + lineHeight}, 300);
                 return;
             }
@@ -57,6 +57,7 @@ var bookContent = {
         bookReading.bookId = bookContent.bookId;
         bookReading.lastReadingChapter = bookContent.lastReadingChapter;
         bookReading.lastReadingChapterLink = bookContent.lastReadingChapterLink;
+        bookReading.source = bookContent.source;
 
         //保存到本地缓存
         window.localStorage[bookContent.bookId] = JSON.stringify(bookReading);
@@ -81,6 +82,7 @@ var bookContent = {
         bookContent.bookId = $('#hidden_book_content_book_id').val();
         bookContent.lastReadingChapter = $('#hidden_book_content_reading_chapter').val();
         bookContent.lastReadingChapterLink = $('#hidden_book_content_reading_chapter_link').val();
+        bookContent.source = $('#hidden_book_content_reading_source').val();
         bookContent.tapScroll();
 
         bookContent.saveReading();
