@@ -27,42 +27,14 @@ body {
     .main_box .logo img{height:40px;}
 }
 </style>
-<script type="text/javascript">
+    <script type="text/javascript" src="/public_static/js/login.js"></script>
+
+    <script type="text/javascript">
 $(function() {
     choose_bg();
     changeCode();
     $("#captcha_img").click(function(){
         changeCode();
-    });
-    $("#login_form").submit(function(){
-        var issubmit = true;
-        var i_index  = 0;
-        $(this).find('.form-control').each(function(i){
-            if ($.trim($(this).val()).length == 0) {
-                $(this).css('border', '1px #ff0000 solid');
-                issubmit = false;
-                if (i_index == 0)
-                    i_index  = i;
-            }
-        });
-        if (!issubmit) {
-            $(this).find('.form-control').eq(i_index).focus();
-            return false;
-        }
-
-        $("#login_ok").attr("disabled", true).val('登录中..');
-        /*
-        var key = CryptoJS.enc.Base64.parse($("#j_randomKey").val());
-        var iv = CryptoJS.enc.Latin1.parse('0102030405060708');
-        var password = CryptoJS.AES.encrypt($("#j_password").val(), key, {iv:iv, mode:CryptoJS.mode.CBC, padding:CryptoJS.pad.Pkcs7 });
-        
-        $("#j_password").val(password)
-        */
-        
-        //return true;
-        
-        location.href = 'index.html'
-        
     });
 });
 function changeCode(){
@@ -86,13 +58,11 @@ function choose_bg() {
 <![endif]-->
 <div class="container">
     <div class="main_box">
-        <form action="/admin/login" id="login_form" method="post">
+        <form>
             <input type="hidden" value="" id="j_randomKey" />
             <!--<p class="text-center logo"><img src="/images/logo.png" height="45"></p>-->
             <div class="login_msg text-center">
-            <font color="#ea2000">
-            	${message!}
-            </font></div>
+                <p style="color: #ea2000" id="error_msg"></p>
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon" id="sizing-addon-user"><span class="glyphicon glyphicon-user"></span></span>
@@ -118,7 +88,7 @@ function choose_bg() {
                 </div>
             </div>-->
             <div class="text-center">
-                <button type="submit" id="login_ok" class="btn btn-primary btn-lg">&nbsp;登&nbsp;录&nbsp;</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" onclick="slogin('/admin/login', '/admin/', this)" class="btn btn-primary btn-lg">&nbsp;登&nbsp;录&nbsp;</button>&nbsp;&nbsp;&nbsp;&nbsp;
                 <button type="reset" class="btn btn-default btn-lg">&nbsp;重&nbsp;置&nbsp;</button>
             </div>
             <div class="text-center">
@@ -129,4 +99,5 @@ function choose_bg() {
     </div>
 </div>
 </body>
+
 </html>

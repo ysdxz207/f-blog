@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Producer;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.admin.UserRoleBean;
+import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.enums.EnumLoginType;
@@ -60,8 +61,7 @@ public class LoginController extends BaseController {
     public static Object adminLogin(Request request,
                                        Response response) {
 
-        login(request, response);
-        return null;
+        return login(request, response);
     }
 
     /**
@@ -72,8 +72,6 @@ public class LoginController extends BaseController {
      * @return
      */
     public static Object loginPageBook(Request request, Response response) {
-
-        UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
 
         return new FreeMarkerTemplateEngine()
                 .render(new ModelAndView(null, "tools/book/book_login.html"));
@@ -89,89 +87,70 @@ public class LoginController extends BaseController {
     public static Object bookLogin(Request request,
                                           Response response) {
 
-        login(request, response);
-        return null;
+        return login(request, response);
     }
 
-    public static void login(Request request,
-                               Response response) {
+    public static ResponseBean login(Request request,
+                                     Response response) {
 
-        String loginPage = "/admin/loginPage";
-        String redirectPage = "/admin/";
-
-        String uri = request.uri();
-
-        if (uri.toLowerCase().startsWith("/book")) {
-            loginPage = "/book/loginPage";
-            if (!uri.equalsIgnoreCase("/book/login")) {
-                String params = request.queryString();
-
-                if (StringUtils.isBlank(params)) {
-                    params = "";
-                } else {
-                    params = "?" + params;
-                }
-                redirectPage = request.url() + params;
-            } else {
-                redirectPage = "/book/index";
-            }
-
-        }
-        Map<String, Object> model = new HashMap<>();
-
-        UserBean userBean = rememberMe(request, response, null);
-
-        if (userBean == null) {
-            response.redirect(loginPage);
-            return;
-        }
+        ResponseBean responseBean = new ResponseBean();
 
         String captcha = request.queryParams("captcha");
-//            if (StringUtils.isBlank(captcha)) {
-//                model.put("message", "请输入验证码");
-//                response.redirect(loginPage);
-//                return;
-//            }
+//        if (StringUtils.isBlank(captcha)) {
+//            model.put("message", "请输入验证码");
+//            responseBean.errorMessage("请输入验证码");
+//            return responseBean;
+//        }
 //
 //
-//            String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
-//            if (!captcha.equalsIgnoreCase(sessionCaptcha)) {
-//                model.put("message", "验证码错误");
-//                response.redirect(loginPage);
-//                return;
-//            }
+//        String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
+//        if (!captcha.equalsIgnoreCase(sessionCaptcha)) {
+//            responseBean.errorMessage("验证码错误");
+//            return responseBean;
+//        }
 
-        if (StringUtils.isBlank(userBean.getLoginname())) {
-            model.put("message", "用户名为空");
-            return;
+        String uname = request.queryParams("uname");
+        String upass = request.queryParams("upass");
+
+        if (StringUtils.isBlank(uname)) {
+            responseBean.errorMessage("用户名为空");
+            return responseBean;
         }
-        if (StringUtils.isBlank(userBean.getPassword())) {
-            model.put("message", "密码为空");
-            return;
+        if (StringUtils.isBlank(upass)) {
+            responseBean.errorMessage("密码为空");
+            return responseBean;
         }
+        return doLogin(uname, DesUtils.encrypt(upass), request, response);
+    }
+
+    private static ResponseBean doLogin(String uname,
+                                String upassEncrypt,
+                                Request request,
+                                Response response) {
+
+        ResponseBean responseBean = new ResponseBean();
+
         Map<String, Object> params = new HashMap<>();
 
-        params.put("loginname", userBean.getLoginname());
-        params.put("password", userBean.getPassword());
+        params.put("loginname", uname);
+        params.put("password", upassEncrypt);
 
         try {
-            userBean = LoginService.login(params);
+            UserBean userBean = LoginService.login(params);
             if (userBean == null) {
-                model.put("message", "用户名或密码不正确");
+                responseBean.errorMessage("用户名或密码不正确");
+                return responseBean;
             } else {
                 //登录成功
                 request.session().attribute(Constants.SESSION_USER_KEY, userBean);
                 rememberMe(request, response, userBean);
-                response.redirect(redirectPage);
-                return;
+                return responseBean;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            model.put("message", e.getMessage());
+            responseBean.errorMessage("登录异常：" + e.getMessage());
+            return responseBean;
         }
-
-        response.redirect(loginPage);
-        return;
     }
 
     public static UserBean rememberMe(Request request,
@@ -216,10 +195,11 @@ public class LoginController extends BaseController {
      * @return
      */
     public static Object logout(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
         request.session().removeAttribute(Constants.SESSION_USER_KEY);
 
-        response.redirect("/admin/loginPage");
-        return "";
+        response.removeCookie("/book", Constants.COOKIE_LOGIN_KEY);
+        return responseBean;
     }
 
     /**
@@ -286,5 +266,43 @@ public class LoginController extends BaseController {
             }
         }
         return "";
+    }
+
+    public static void rememberMeLogin(Request request, Response response) {
+        String uri = request.uri();
+
+        String redirectPage = "/admin/";
+        String loginPage = "/admin/loginPage";
+        if (uri.toLowerCase().startsWith("/book")) {
+            if (!uri.equalsIgnoreCase("/book/login")) {
+                String params = request.queryString();
+
+                if (StringUtils.isBlank(params)) {
+                    params = "";
+                } else {
+                    params = "?" + params;
+                }
+                redirectPage = request.url() + params;
+            } else {
+                redirectPage = "/book/index";
+            }
+            loginPage = "/book/loginPage";
+        }
+
+        UserBean userBean = rememberMe(request, response, null);
+
+        if (userBean == null) {
+            response.redirect(loginPage);
+            return;
+        }
+
+        ResponseBean responseBean = doLogin(userBean.getLoginname(), userBean.getPassword(), request, response);
+
+        if (responseBean.getStatusCode() == Constants.RESPONSE_STATUS_CODE_SUCCESS) {
+            response.redirect(redirectPage);
+        } else {
+            response.redirect(loginPage);
+            return;
+        }
     }
 }

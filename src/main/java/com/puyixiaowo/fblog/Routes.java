@@ -54,6 +54,10 @@ public class Routes {
         //权限控制
         AdminPermissionsFilter.init();
 
+
+        get("/logout", ((request, response) ->
+                LoginController.logout(request, response)));
+
         //管理后台
         path("/admin", () -> {
             get("/", ((request, response) ->
@@ -64,10 +68,6 @@ public class Routes {
                             LoginController.adminLogin(request, response)));
             get("/captcha.jpg", ((request, response) ->
                             LoginController.captcha(request, response)));
-
-            get("/logout", ((request, response) ->
-                    LoginController.logout(request, response)));
-
             get("/main", ((request, response) ->
                             MainController.main(request, response)));
 

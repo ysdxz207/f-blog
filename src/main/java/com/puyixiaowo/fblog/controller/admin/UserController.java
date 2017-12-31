@@ -74,6 +74,7 @@ public class UserController extends BaseController{
                         responseBean.errorMessage("用户名已存在");
                         return responseBean.serialize();
                     }
+                    userBean.setCreateTime(System.currentTimeMillis());
                 }
 
                 if (StringUtils.isBlank(userBean.getNickname())) {

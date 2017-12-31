@@ -1,0 +1,26 @@
+<style>
+    .book-shelf-setup-page {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 2;
+        background-color: #FFFFFF;
+    }
+    .btn-logout {
+        width: 100%;
+    }
+    .book-shelf-setup-page p{
+        padding: 30px 20px;
+    }
+</style>
+
+<div class="hide book-shelf-setup-page">
+<#include "/tools/book/layout/book/book_common_header.html"/>
+    <p>${(userBean.nickname)!}</p>
+
+    <div class="navbar-fixed-bottom text-center">
+        <button type="button" class="btn btn-danger btn-logout" onclick="slogout('/book/loginPage',this)">退出登录</button>
+    </div>
+</div>

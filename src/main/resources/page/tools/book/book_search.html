@@ -16,9 +16,6 @@
             font-size: 14px;
             margin: 10px;
         }
-        .template-book-search-list {
-
-        }
         .book-search-list-img {
             float: left;
             width: 50px;
@@ -75,7 +72,6 @@
                 success: function (result) {
                     if (result.statusCode == 200) {
                         result.list.forEach(function (book, i) {
-                            console.log(book)
                             var li = $('#template_book_search_list').clone(true).on('click', function () {
                                 location.href = "/book/detail?aId=" + book.aId;
                             });

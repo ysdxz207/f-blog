@@ -30,7 +30,7 @@ public class BookAuthFilter {
             if (!isIgnorePath(uri)
                     && (request.session().attribute(Constants.SESSION_USER_KEY) == null)) {
 
-                LoginController.login(request, response);
+                LoginController.rememberMeLogin(request, response);
                 halt();
             }
         });

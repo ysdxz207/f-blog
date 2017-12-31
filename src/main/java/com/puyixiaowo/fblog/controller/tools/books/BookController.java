@@ -56,6 +56,9 @@ public class BookController extends BaseController {
             pageBean.error(e);
         }
 
+        UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
+
+        model.put("userBean", userBean);
         model.put("pageBean", pageBean);
         return new FreeMarkerTemplateEngine()
                 .render(new ModelAndView(model, "tools/book/book_index.html"));
