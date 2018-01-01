@@ -115,6 +115,8 @@ public class BookController extends BaseController {
             //读取读书配置
             BookReadBean bookReadBean = getParamsEntity(request, BookReadBean.class, false);
 
+            bookReadBean.setLastReadingChapterLink(
+                    URLEncoder.encode(bookReadBean.getLastReadingChapterLink()));
             if (bookReadBean == null
                     || (StringUtils.isBlank(bookReadBean.getLastReadingChapter())
                     && StringUtils.isBlank(bookReadBean.getLastReadingChapterLink()))) {
@@ -145,6 +147,11 @@ public class BookController extends BaseController {
 
             bookChapterBean = BookChapterService.requestBookContent(link);
 
+
+            if (bookChapterBean == null) {
+                //提示切换书源
+
+            }
             if (".".equals(bookChapterBean.getTitle()== null ? "" : bookChapterBean.getTitle().trim())) {
 
                 if (StringUtils.isNotBlank(chapterName)) {
