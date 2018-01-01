@@ -282,6 +282,9 @@ public class Routes {
             post("/addOrDel", ((request, response) ->
                     BookController.addOrDelBook(request, response)));
 
+            get("/source", ((request, response) ->
+                    BookController.bookSource(request, response)));
+
         });
     }
 }

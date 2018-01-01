@@ -15,4 +15,9 @@
 
 <div class="book-common-header">
     <a href="/book/index" class="fa fa-chevron-left"></a>
+    <#if (model.aId)??>
+        <a href="/book/source?aId=${(model.aId)!}" class="col-xs-3 pull-right text-right">
+            <i class="fa fa-cog"></i>
+        </a>
+    </#if>
 </div>

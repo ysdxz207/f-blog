@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>切换书源</title>
+    <#include "/public/public.html" />
+
+    <style>
+        .book-source-list {
+            padding-left: 10px;
+        }
+        .book-source-list li {
+            list-style: none;
+            height: 80px;
+            line-height: 16px;
+            margin: 10px;
+            border-bottom: 1px solid #DDDDDD;
+        }
+        .book-source-list h5 {
+            overflow: hidden;
+            padding-left: 10px;
+        }
+        .book-source-list h4 {
+            color: #777777;
+            overflow: hidden;
+            padding-left: 10px;
+        }
+
+    </style>
+
+</head>
+<body>
+<#include "/tools/book/layout/book/book_common_header.html"/>
+
+<div class="">
+    <ul class="book-source-list">
+        <#if (((list)??) && (((list)?size) > 0))>
+            <#list list as source>
+                <li data-id="${(source._id)!}">
+                    <h5>
+                        <strong>${(source.name)!}</strong>
+                        <!--<#if (source._id == )>-->
+                            <!--(当前书源)-->
+                        <!--</#if>-->
+                    </h5>
+                    <h5>${(source.lastChapter)!}</h5>
+                    <h5>${(source.updated)!}</h5>
+                </li>
+                <#else>
+                    没有资源？？
+            </#list>
+        </#if>
+    </ul>
+</div>
+
+</body>
+<script>
+    $(function () {
+        var source = $('#book_source_text').val();
+        var bookSourceListUl = $('.book-source-list');
+
+        if (!name) {
+            return;
+        }
+
+        bookSourceListUl.empty();
+        $.ajax({
+            url: "/book/source/change",
+            data: {aId: aId, source: source},
+            method: "POST",
+            dataType: "json",
+            success: function (result) {
+                if (result.statusCode == 200) {
+                    result.list.forEach(function (book, i) {
+                        var li = $('#template_book_source_list').clone(true).on('click', function () {
+                            location.href = "/book/detail?aId=" + book.aId;
+                        });
+                        li.find('img').attr('src', book.faceUrl);
+                        li.find('h4').text(book.name);
+                        li.find('h5').text( book.author);
+                        li.removeClass('hide');
+                        li.removeAttr('id');
+                        bookSourceListUl.append(li);
+                    })
+                } else {
+                    alert(result.message);
+                }
+            }
+        });
+    });
+</script>
+</html>

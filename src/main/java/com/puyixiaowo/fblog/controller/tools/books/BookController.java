@@ -6,6 +6,7 @@ import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookChapterBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookReadBean;
+import com.puyixiaowo.fblog.bean.admin.book.BookSource;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.constants.BookConstants;
@@ -107,6 +108,7 @@ public class BookController extends BaseController {
             return "bookId和aId不可同时为空";
         }
 
+        String HTML_CHANGE_SOURCE = "<div style='color: #DDD;text-align:center;height:400px;line-height:400px'>无法获取书籍，请切换书源</div>";
         Long bookId = Long.valueOf(bookIdStr);
         Map<String, Object> model = new HashMap<>();
         String source = "";
@@ -135,7 +137,7 @@ public class BookController extends BaseController {
                             .requestFirstBookChapters(userBean.getId(), bookId);
 
                     if (bookChapterBean == null) {
-                        return "<div style='text-align:center;height:400px;line-height:400px'>无法获取书籍，请切换书源</div>";
+                        return HTML_CHANGE_SOURCE;
                     }
                     link = bookChapterBean.getLink();
                     source = bookChapterBean.getSource();
@@ -150,7 +152,7 @@ public class BookController extends BaseController {
 
             if (bookChapterBean == null) {
                 //提示切换书源
-
+                return HTML_CHANGE_SOURCE;
             }
             if (".".equals(bookChapterBean.getTitle()== null ? "" : bookChapterBean.getTitle().trim())) {
 
@@ -213,19 +215,6 @@ public class BookController extends BaseController {
     }
 
 
-    public static Object bookSource(Request request, Response response) {
-        ResponseBean responseBean = new ResponseBean();
-        String aId = request.queryParams("aId");
-
-        if (StringUtils.isBlank(aId)) {
-            responseBean.errorMessage("书源Id为空");
-            return responseBean.serialize();
-        }
-
-
-        responseBean.setData(BookService.getBookSource(aId));
-        return responseBean.serialize();
-    }
 
     public static Object searchPage(Request request, Response response) {
 
@@ -296,6 +285,34 @@ public class BookController extends BaseController {
             responseBean.error(e);
             return responseBean;
         }
+        return responseBean.serialize();
+    }
+
+    public static Object bookSource(Request request, Response response) {
+
+        String aId = request.queryParams("aId");
+        if (StringUtils.isBlank(aId)) {
+            return "aId不可为空";
+        }
+
+        List<BookSource> list = BookService.getBookSource(aId);
+        Map<String, Object> model = new HashMap<>();
+        model.put("list", list);
+        return new FreeMarkerTemplateEngine()
+                .render(new ModelAndView(model, "tools/book/book_source.html"));
+    }
+
+    public static Object changeBookSource(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
+        String aId = request.queryParams("aId");
+
+        if (StringUtils.isBlank(aId)) {
+            responseBean.errorMessage("书源Id为空");
+            return responseBean.serialize();
+        }
+
+
+        responseBean.setData(BookService.getBookSource(aId));
         return responseBean.serialize();
     }
 }

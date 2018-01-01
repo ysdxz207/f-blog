@@ -17,8 +17,24 @@ var bookDetail = {
             bookDetail.addOrDelBook(this);
         });
         $('.btn-read-book').on('click', function () {
+            var url = "/book/chapter?bookId=" + bookDetail.bookId;
 
-            location.href = "/book/chapter?bookId=" + bookDetail.bookId;
+            var strReadingConfig = window.localStorage[bookDetail.bookId];
+            var readingConfig = undefined;
+
+            if (strReadingConfig) {
+                try {
+                    readingConfig = JSON.parse(strReadingConfig);
+                } catch(e) {
+                    window.localStorage.removeItem(bookDetail.bookId);
+                }
+            }
+            if (readingConfig) {
+                url += "&lastReadingChapter=" + readingConfig.lastReadingChapter;
+                url += "&lastReadingChapterLink=" + readingConfig.lastReadingChapterLink;
+                url += "&source=" + readingConfig.source;
+            }
+            location.href = url;
         });
     };
 

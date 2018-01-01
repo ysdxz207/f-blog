@@ -30,7 +30,7 @@
 <div class="book-shelf-content">
     <#if (((pageBean.list)??) && (((pageBean.list)?size) > 0))>
         <#list pageBean.list as book>
-                <div class="book-shelf-books loading" data-bookid="${(book.id)?c}">
+                <div class="book-shelf-books loading" data-aid="${(book.aId)!}" data-bookid="${(book.id)?c}">
                     <#if book.faceUrl ??>
                         <img src="${(book.faceUrl)!}" class="book-shelf-face-pic">
                     <#else>
@@ -46,23 +46,8 @@
     $(function () {
         $('.book-shelf-books').on('click', function () {
             var bookId = $(this).data('bookid');
-            var url = "/book/chapter?bookId=" + bookId;
-
-            var strReadingConfig = window.localStorage[bookId];
-            var readingConfig = undefined;
-
-            if (strReadingConfig) {
-                try {
-                    readingConfig = JSON.parse(strReadingConfig);
-                } catch(e) {
-                    window.localStorage.removeItem(bookId);
-                }
-            }
-            if (readingConfig) {
-                url += "&lastReadingChapter=" + readingConfig.lastReadingChapter;
-                url += "&lastReadingChapterLink=" + readingConfig.lastReadingChapterLink;
-                url += "&source=" + readingConfig.source;
-            }
+            var aId = $(this).data('aid');
+            var url = "/book/detail?id=" + bookId + "&aId=" + aId;
             location.href = url;
         });
     });
