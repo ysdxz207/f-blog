@@ -101,6 +101,8 @@ public class BookshelfService {
             while (it.hasNext()) {
                 if (it.next().equals(bookId + "")) {
                     it.remove();
+                    //删除读书配置
+                    BookReadService.deleteByBookId(bookId);
                 }
             }
         } else {

@@ -43,4 +43,11 @@ public class BookReadService {
 
         return bookReadBean;
     }
+
+    public static void deleteByBookId(Long bookId) {
+
+        BookReadBean bookReadBean = new BookReadBean();
+        bookReadBean.setBookId(bookId);
+        DBUtils.executeSql("delete from book_read where book_id=:bookId", bookReadBean);
+    }
 }

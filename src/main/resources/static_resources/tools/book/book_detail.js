@@ -61,6 +61,8 @@ var bookDetail = {
                         $('.btn-book-detail-add-del').removeClass('btn-del-book')
                             .addClass('btn-add-book')
                             .removeClass('btn-book-detail-disabled').text('+ 追书');
+                        //移出书架后删除书籍相关配置
+                        window.localStorage.removeItem(bookDetail.bookId);
                     }
                 } else {
                     alert("服务器内部错误：" + result.message);
