@@ -94,10 +94,10 @@ public class BookController extends BaseController {
     }
 
     public static Object chapterContent(Request request, Response response) {
-        String link = request.queryParams("link");
         String bookIdStr = request.queryParams("bookId");
         String chapterName = request.queryParams("chapterName");
         String aId = request.queryParams("aId");
+        String source = request.queryParams("source");
 
         long start = System.currentTimeMillis();
 
@@ -108,10 +108,11 @@ public class BookController extends BaseController {
             return "bookId和aId不可同时为空";
         }
 
+        String link = "";
+
         String HTML_CHANGE_SOURCE = "<div style='color: #DDD;text-align:center;height:400px;line-height:400px'>无法获取书籍，请切换书源</div>";
         Long bookId = Long.valueOf(bookIdStr);
         Map<String, Object> model = new HashMap<>();
-        String source = "";
         try {
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
             //读取读书配置
@@ -122,15 +123,11 @@ public class BookController extends BaseController {
                 bookReadBean.setLastReadingChapterLink(
                         URLEncoder.encode(bookReadBean.getLastReadingChapterLink(), Constants.ENCODING));
             }
+            //无本地化配置,读取服务器配置
             if (bookReadBean == null
                     || (StringUtils.isBlank(bookReadBean.getLastReadingChapter())
                     && StringUtils.isBlank(bookReadBean.getLastReadingChapterLink()))) {
                 bookReadBean = BookReadService.getUserReadConfig(userBean.getId(), bookId);
-            }
-
-
-
-            if (StringUtils.isBlank(link)) {
 
                 if (bookReadBean != null) {
                     link = bookReadBean.getLastReadingChapterLink();
@@ -145,8 +142,8 @@ public class BookController extends BaseController {
                     link = bookChapterBean.getLink();
                     source = bookChapterBean.getSource();
                 }
-            }
 
+            }
 
             BookChapterBean bookChapterBean = null;
 
