@@ -117,8 +117,11 @@ public class BookController extends BaseController {
             //读取读书配置
             BookReadBean bookReadBean = getParamsEntity(request, BookReadBean.class, false);
 
-            bookReadBean.setLastReadingChapterLink(
-                    URLEncoder.encode(bookReadBean.getLastReadingChapterLink()));
+            if (StringUtils.isNotBlank(bookReadBean
+                    .getLastReadingChapterLink())) {
+                bookReadBean.setLastReadingChapterLink(
+                        URLEncoder.encode(bookReadBean.getLastReadingChapterLink(), Constants.ENCODING));
+            }
             if (bookReadBean == null
                     || (StringUtils.isBlank(bookReadBean.getLastReadingChapter())
                     && StringUtils.isBlank(bookReadBean.getLastReadingChapterLink()))) {
