@@ -179,6 +179,7 @@ public class BookController extends BaseController {
 
         } catch (Exception e) {
             logger.error("[书]获取章节内容异常：" + e.getMessage());
+            e.printStackTrace();
         }
 
 
