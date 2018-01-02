@@ -26,12 +26,16 @@
             padding-left: 10px;
         }
 
+        .book-source-list-current {
+            color: #f9943b;
+        }
     </style>
 
 </head>
 <body>
 <#include "/tools/book/layout/book/book_common_header.html"/>
-
+<input type="hidden" id="hidden_source_book_id" value="${bookId?c}"/>
+<input type="hidden" id="hidden_source_book_aid" value="${aId!}"/>
 <div class="">
     <ul class="book-source-list">
         <#if (((list)??) && (((list)?size) > 0))>
@@ -39,9 +43,9 @@
                 <li data-id="${(source._id)!}">
                     <h5>
                         <strong>${(source.name)!}</strong>
-                        <!--<#if (source._id == )>-->
-                            <!--(当前书源)-->
-                        <!--</#if>-->
+                        <#if source.currentSource>
+                            <span class="book-source-list-current">(当前书源)</span>
+                        </#if>
                     </h5>
                     <h5>${(source.lastChapter)!}</h5>
                     <h5>${(source.updated)!}</h5>
@@ -56,36 +60,25 @@
 </body>
 <script>
     $(function () {
-        var source = $('#book_source_text').val();
-        var bookSourceListUl = $('.book-source-list');
 
-        if (!name) {
-            return;
-        }
-
-        bookSourceListUl.empty();
-        $.ajax({
-            url: "/book/source/change",
-            data: {aId: aId, source: source},
-            method: "POST",
-            dataType: "json",
-            success: function (result) {
-                if (result.statusCode == 200) {
-                    result.list.forEach(function (book, i) {
-                        var li = $('#template_book_source_list').clone(true).on('click', function () {
-                            location.href = "/book/detail?aId=" + book.aId;
-                        });
-                        li.find('img').attr('src', book.faceUrl);
-                        li.find('h4').text(book.name);
-                        li.find('h5').text( book.author);
-                        li.removeClass('hide');
-                        li.removeAttr('id');
-                        bookSourceListUl.append(li);
-                    })
-                } else {
-                    alert(result.message);
+        $('.book-source-list li').on('click', function () {
+            var source = $(this).data('id');
+            var aId = $('#hidden_source_book_aid').val();
+            var bookId = $('#hidden_source_book_id').val();
+            $.ajax({
+                url: "/book/source/change",
+                data: {aId: aId, bookId: bookId, source: source},
+                method: "POST",
+                dataType: "json",
+                success: function (result) {
+                    if (result.statusCode == 200) {
+                        window.localStorage.removeItem(bookId);
+                        location.href = "/book/chapter?bookId=" + bookId + "&aId=" + source;
+                    } else {
+                        alert(result.message);
+                    }
                 }
-            }
+            });
         });
     });
 </script>

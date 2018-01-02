@@ -285,6 +285,9 @@ public class Routes {
             get("/source", ((request, response) ->
                     BookController.bookSource(request, response)));
 
+            post("/source/change", ((request, response) ->
+                    BookController.changeBookSource(request, response)));
+
         });
     }
 }

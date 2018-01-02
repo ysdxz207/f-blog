@@ -299,9 +299,27 @@ public class BookController extends BaseController {
             return "aId不可为空";
         }
 
+        UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
+
         List<BookSource> list = BookService.getBookSource(aId);
+
+        //查询bookRead获取当前书源
+        BookBean bookBean = BookService.selectBookBeanByAId(aId);
+        for (BookSource bookSource : list) {
+            if (bookBean != null) {
+                BookReadBean bookReadBean = BookReadService.getUserReadConfig(userBean.getId(), bookBean.getId());
+                if (bookReadBean != null
+                        && bookSource.get_id().equals(bookReadBean.getSource())) {
+                    bookSource.setCurrentSource(true);
+                }
+            }
+        }
         Map<String, Object> model = new HashMap<>();
         model.put("list", list);
+
+        model.put("aId", aId);
+        model.put("bookId", bookBean.getId());
+
         return new FreeMarkerTemplateEngine()
                 .render(new ModelAndView(model, "tools/book/book_source.html"));
     }
@@ -309,12 +327,24 @@ public class BookController extends BaseController {
     public static Object changeBookSource(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
         String aId = request.queryParams("aId");
+        String source = request.queryParams("source");
+        String bookIdStr = request.queryParams("bookId");
 
         if (StringUtils.isBlank(aId)) {
             responseBean.errorMessage("书源Id为空");
             return responseBean.serialize();
         }
 
+        UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
+
+        try {
+            BookReadBean bookReadBean = BookReadService
+                    .getUserReadConfig(userBean.getId(), Long.valueOf(bookIdStr));
+            bookReadBean.setSource(source);
+            DBUtils.insertOrUpdate(bookReadBean);
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
 
         responseBean.setData(BookService.getBookSource(aId));
         return responseBean.serialize();

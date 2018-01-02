@@ -3,10 +3,7 @@ package com.puyixiaowo.fblog.service.book;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.puyixiaowo.fblog.bean.admin.book.BookBean;
-import com.puyixiaowo.fblog.bean.admin.book.BookInfo;
-import com.puyixiaowo.fblog.bean.admin.book.BookSource;
-import com.puyixiaowo.fblog.bean.admin.book.BookshelfBean;
+import com.puyixiaowo.fblog.bean.admin.book.*;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.constants.BookConstants;
 import com.puyixiaowo.fblog.constants.Constants;
@@ -226,10 +223,12 @@ public class BookService {
             return list;
         }
 
+
         for (Object obj : json) {
             JSONObject jsonObj = (JSONObject) obj;
             BookSource bookSource = jsonObj.toJavaObject(BookSource.class);
             bookSource.setUpdated(getUpdateDateString(bookSource.getUpdated()));
+
             list.add(bookSource);
         }
 

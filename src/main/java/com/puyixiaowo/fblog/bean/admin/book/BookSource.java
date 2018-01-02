@@ -15,6 +15,8 @@ public class BookSource implements Serializable{
     private String updated;
 
 
+    private boolean currentSource;
+
     public String get_id() {
         return _id;
     }
@@ -53,5 +55,13 @@ public class BookSource implements Serializable{
 
     public void setUpdated(String updated) {
         this.updated = updated;
+    }
+
+    public boolean isCurrentSource() {
+        return currentSource;
+    }
+
+    public void setCurrentSource(boolean currentSource) {
+        this.currentSource = currentSource;
     }
 }

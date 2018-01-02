@@ -118,8 +118,13 @@ public class BookChapterService {
 
             String title = chapter.getString("title");
             String content = chapter.getString("body");
+            String cpContent = chapter.getString("cpContent");
+
+            if (StringUtils.isNotBlank(cpContent)) {
+                content = cpContent;
+            }
             bookChapterBean.setTitle(title);
-            bookChapterBean.setContent(content);
+            bookChapterBean.setContent(content != null ? content.replace("<a href=\"", "") : content);
             bookChapterBean.setLink(link);
             return bookChapterBean;
         }
