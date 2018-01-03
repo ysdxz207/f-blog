@@ -48,30 +48,30 @@
 </head>
 <body>
 
-<input type="hidden" id="hidden_book_detail_book_id" value="${(model.id)?c}"/>
-<input type="hidden" id="hidden_book_detail_book_aid" value="${(model.aId)!}"/>
+<input type="hidden" id="hidden_book_detail_book_id" value="${(book.id)?c}"/>
+<input type="hidden" id="hidden_book_detail_book_aid" value="${(book.aId)!}"/>
 
 <#include "/tools/book/layout/book/book_common_header.html"/>
 
 <div class="row">
     <div class="col-xs-12">
         <div class="col-xs-4">
-            <img src="${(model.faceUrl)!}" height="100"/>
+            <img src="${(book.faceUrl)!}" height="100"/>
         </div>
         <div class="col-xs-8 book-detail-content-right">
-            <h4><strong>${(model.name)!}</strong></h4>
-            <h5><strong>${(model.author)!}</strong>|${(model.bookInfo.category)!}</h5>
-            <h5>更新：${(model.bookInfo.updated)!}</h5最后更新>
-            <h5>最新章：${(model.lastUpdateChapter)!}</h5>
+            <h4><strong>${(book.name)!}</strong></h4>
+            <h5><strong>${(book.author)!}</strong>|${(book.bookInfo.category)!}</h5>
+            <h5>更新：${(book.bookInfo.updated)!}</h5最后更新>
+            <h5>最新章：${(book.lastUpdateChapter)!}</h5>
         </div>
         <div class="col-xs-12 text-left">
-            <!--<h5>${(model.bookInfo.rating)!}</h5>-->
-            <h4>读者留存率：${(model.bookInfo.retentionRatio)!}%</h4>
+            <!--<h5>${(book.bookInfo.rating)!}</h5>-->
+            <h4>读者留存率：${(book.bookInfo.retentionRatio)!}%</h4>
         </div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-6">
-            <#if model.onShelf>
+            <#if book.onShelf>
                 <#assign classBtn = "btn-del-book"/>
                 <#assign btnText = "- 不追了"/>
             <#else>
@@ -88,7 +88,7 @@
     </div>
     <div class="col-xs-12">
         <div class="book-detail-description">
-            <p>${(model.bookInfo.description)!}..</p>
+            <p>${(book.bookInfo.description)!}..</p>
         </div>
     </div>
 

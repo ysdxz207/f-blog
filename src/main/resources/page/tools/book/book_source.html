@@ -36,6 +36,7 @@
 <#include "/tools/book/layout/book/book_common_header.html"/>
 <input type="hidden" id="hidden_source_book_id" value="${bookId?c}"/>
 <input type="hidden" id="hidden_source_book_aid" value="${aId!}"/>
+<input type="hidden" id="hidden_source_book_title" value="${title!}"/>
 <div class="">
     <ul class="book-source-list">
         <#if (((list)??) && (((list)?size) > 0))>
@@ -65,15 +66,17 @@
             var source = $(this).data('id');
             var aId = $('#hidden_source_book_aid').val();
             var bookId = $('#hidden_source_book_id').val();
+            var title = $('#hidden_source_book_title').val();
             $.ajax({
                 url: "/book/source/change",
-                data: {aId: aId, bookId: bookId, source: source},
+                data: {aId: aId, bookId: bookId, source: source, title: title},
                 method: "POST",
                 dataType: "json",
                 success: function (result) {
                     if (result.statusCode == 200) {
                         window.localStorage.removeItem(bookId);
-                        location.href = "/book/chapter?bookId=" + bookId + "&aId=" + source;
+                        location.href = "/book/chapter?bookId=" + bookId
+                            + "&aId=" + source + "&link=" + result.data.link;
                     } else {
                         alert(result.message);
                     }

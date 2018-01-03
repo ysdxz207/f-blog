@@ -19,8 +19,8 @@
 <div class="book-common-header">
     <span class="col-xs-3 fa fa-chevron-left btn-back" onclick="history.back()">
     </span>
-    <#if (model.aId)??>
-        <a href="/book/source?aId=${(model.aId)!}" class="col-xs-3 pull-right text-right">
+    <#if (book.aId)??>
+        <a href="/book/source?aId=${(book.aId)!}" class="col-xs-3 pull-right text-right">
             <i class="fa fa-cog"></i>
         </a>
     </#if>
