@@ -6,12 +6,10 @@
     <#include "/public/public.html" />
     <style>
 
-        h5 {
-            color: #9d9d9d;
-            line-height: 16px;
-            padding :0px;
-            margin: 0px;
+        .book-detail-main {
+            padding-top: 10px;
         }
+
         .btn-add-book,.btn-add-book.focus,.btn-add-book:focus,.btn-add-book:hover {
             background-color: #f9943b;
             color: #DDDDDD;
@@ -37,7 +35,16 @@
         }
         .book-detail-content-right {
             margin-left: 0px;
-            padding-left: 0px;
+            padding-left: 6px;
+        }
+        .book-detail-content-right .date {
+            font-size: 12px;
+        }
+        .book-detail-content-right .author {
+            font-size: 13px;
+        }
+        .book-detail-content-right .chapter {
+            font-size: 13px;
         }
         .book-detail-description {
             padding: 20px 14px;
@@ -53,16 +60,16 @@
 
 <#include "/tools/book/layout/book/book_common_header.html"/>
 
-<div class="row">
+<div class="book-detail-main">
     <div class="col-xs-12">
         <div class="col-xs-4">
             <img src="${(book.faceUrl)!}" height="100"/>
         </div>
         <div class="col-xs-8 book-detail-content-right">
-            <h4><strong>${(book.name)!}</strong></h4>
-            <h5><strong>${(book.author)!}</strong>|${(book.bookInfo.category)!}</h5>
-            <h5>更新：${(book.bookInfo.updated)!}</h5最后更新>
-            <h5>最新章：${(book.lastUpdateChapter)!}</h5>
+            <div><strong>${(book.name)!}</strong></div>
+            <div class="author"><strong>${(book.author)!}</strong>|${(book.bookInfo.category)!}</div>
+            <div class="date">更新：${(book.bookInfo.updated)!}</div>
+            <div class="chapter">最新章：${(book.lastUpdateChapter)!}</div>
         </div>
         <div class="col-xs-12 text-left">
             <!--<h5>${(book.bookInfo.rating)!}</h5>-->

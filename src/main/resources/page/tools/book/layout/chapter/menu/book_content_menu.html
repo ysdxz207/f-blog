@@ -14,6 +14,13 @@
         left:0;
     }
 
+    .book-menu-header a {
+        color: #DDDDDD;
+        height: 40px;
+        line-height: 40px;
+        text-decoration: none;
+    }
+
     .book-menu-footer {
         background-color: black;
         color: #DDDDDD;
@@ -35,12 +42,12 @@
 </style>
 <div id="book_menu">
     <div class="book-menu-header">
-        <div class="col-xs-3">
-            <a href="/book/index" style="color: #DDDDDD;" class="fa fa-chevron-left a-style loading"></a>
-        </div>
-        <div class="col-xs-3 pull-right text-right">
-            <i class="fa fa-cog"></i>
-        </div>
+        <a href="/book/detail?id=${(book.id)?c}&aId=${(book.aId)!}" class="btn-back fa fa-chevron-left col-xs-3 loading"></a>
+        <#if (book.aId)??>
+            <a href="/book/source?aId=${(book.aId)!}" class="col-xs-3 pull-right text-right">
+                <i class="fa fa-cog"></i>
+            </a>
+        </#if>
     </div>
     <div class="book-menu-footer">
         <div class="col-xs-3">

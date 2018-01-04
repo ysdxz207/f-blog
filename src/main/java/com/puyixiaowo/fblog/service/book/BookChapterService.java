@@ -33,7 +33,7 @@ public class BookChapterService {
 
     private static final Logger logger = LoggerFactory.getLogger(BookChapterService.class);
 
-    public static List<BookChapterBean> requestBookChapters(Long userId, Long bookId) {
+    public static List<BookChapterBean> requestBookChapters(Long userId, Long bookId, String aId) {
 
         List<BookChapterBean> list = new ArrayList<>();
 
@@ -42,7 +42,7 @@ public class BookChapterService {
         String source = bookReadBean == null ? "" : bookReadBean.getSource();
 
         if (StringUtils.isBlank(source)) {
-            source = BookService.getDefaultSource(bookId).get_id();
+            source = BookService.getDefaultSource(aId, bookId).get_id();
         }
         String url = BookConstants.URL_CHAPTERS + source + "?view=chapters";
 
@@ -132,9 +132,9 @@ public class BookChapterService {
     }
 
 
-    public static BookChapterBean requestFirstBookChapters(Long userId, Long bookId) {
+    public static BookChapterBean requestFirstBookChapters(Long userId, Long bookId, String aId) {
 
-        List<BookChapterBean> list = requestBookChapters(userId, bookId);
+        List<BookChapterBean> list = requestBookChapters(userId, bookId, aId);
         return list.size() == 0 ? null : list.get(list.size()-1);
     }
 }

@@ -235,9 +235,8 @@ public class BookService {
         return list;
     }
 
-    public static BookSource getDefaultSource(Long bookId) {
-        BookBean bookBean = selectBookBeanById(bookId);
-        List<BookSource> bookSourceList = getBookSource(bookBean.getaId());
+    public static BookSource getDefaultSource(String aId, Long bookId) {
+        List<BookSource> bookSourceList = getBookSource(aId);
 
         for (BookSource bookSource : bookSourceList) {
             if (bookSource.getSource().equalsIgnoreCase("my176")
@@ -251,7 +250,7 @@ public class BookService {
 
         //读取书籍ID
         BookSource bookSource = new BookSource();
-        bookSource.set_id(bookBean.getaId());
+        bookSource.set_id(aId);
         return bookSource;
     }
 }

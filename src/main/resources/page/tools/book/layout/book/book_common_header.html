@@ -1,3 +1,4 @@
+<script src="/tools/book/book_common.js" type="text/javascript"></script>
 <style>
     .book-common-header {
         height: 44px;
@@ -17,7 +18,7 @@
 </style>
 
 <div class="book-common-header">
-    <span class="col-xs-3 fa fa-chevron-left btn-back" onclick="history.back()">
+    <span class="col-xs-3 fa fa-chevron-left btn-back">
     </span>
     <#if (book.aId)??>
         <a href="/book/source?aId=${(book.aId)!}" class="col-xs-3 pull-right text-right">

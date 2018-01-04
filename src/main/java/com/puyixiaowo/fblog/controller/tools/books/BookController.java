@@ -132,6 +132,12 @@ public class BookController extends BaseController {
 
             }
 
+            BookBean bookBean = BookService.selectBookBeanById(bookId);
+
+            if (bookBean == null) {
+                return null;
+            }
+
             if (StringUtils.isBlank(link)) {
 
                 if (bookReadBean != null) {
@@ -139,7 +145,7 @@ public class BookController extends BaseController {
                 } else {
                     //获取第一章
                     BookChapterBean bookChapterBean = BookChapterService
-                            .requestFirstBookChapters(userBean.getId(), bookId);
+                            .requestFirstBookChapters(userBean.getId(), bookId, bookBean.getaId());
 
                     if (bookChapterBean == null) {
                         return HTML_CHANGE_SOURCE;
@@ -177,6 +183,7 @@ public class BookController extends BaseController {
                 bookChapterBean.setSource(source);
             }
             model.put("model", bookChapterBean);
+            model.put("book", bookBean);
 
         } catch (Exception e) {
             logger.error("[书]获取章节内容异常：" + e.getMessage());
@@ -254,9 +261,11 @@ public class BookController extends BaseController {
                 return responseBean.serialize();
             }
             Long bookId = Long.valueOf(bookIdStr);
+
+            BookBean bookBean = BookService.selectBookBeanById(bookId);
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
             responseBean.setData(BookChapterService
-                    .requestBookChapters(userBean.getId(), bookId));
+                    .requestBookChapters(userBean.getId(), bookId, bookBean.getaId()));
         } catch (Exception e) {
             responseBean.error(e);
         }
@@ -342,18 +351,19 @@ public class BookController extends BaseController {
 
         try {
             Long bookId = Long.valueOf(bookIdStr);
+            BookBean bookBean = BookService.selectBookBeanById(bookId);
             BookReadBean bookReadBean = BookReadService
                     .getUserReadConfig(userBean.getId(), bookId);
             bookReadBean.setSource(source);
             DBUtils.insertOrUpdate(bookReadBean);
             //切换书源后需要查询出当前章Link
             List<BookChapterBean> bookChapterBeanList = BookChapterService
-                    .requestBookChapters(userBean.getId(), bookId);
+                    .requestBookChapters(userBean.getId(), bookId, bookBean.getaId());
 
             //获取当前章
             BookChapterBean chapter = null;
             for (BookChapterBean bookChapterBean : bookChapterBeanList) {
-                if (StringUtils.getSimilarityRatio(bookReadBean.getLastReadingChapter(), bookChapterBean.getTitle()) > 0.9) {
+                if (StringUtils.getSimilarityRatio(bookReadBean.getLastReadingChapter(), bookChapterBean.getTitle()) > 0.8) {
                     chapter = bookChapterBean;
                     break;
                 }

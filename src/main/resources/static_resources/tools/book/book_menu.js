@@ -16,10 +16,6 @@ var bookMenu = {
 
     bookMenu.bind = function () {
 
-        $('.btn-back').on('click', function (e) {
-            history.back();
-        });
-
         $('.btn-back-content').on('click', function (e) {
             //滚动回内容记录位置,因为章节列表菜单和章节内容在统一页面，所以直接是html,body
             $('html,body').scrollTop(bookMenu.contentY);
