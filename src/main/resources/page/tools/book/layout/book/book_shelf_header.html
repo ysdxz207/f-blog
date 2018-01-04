@@ -24,6 +24,8 @@
 <script>
     $(function () {
         $('.btn-book-shelf-setup').on('click', function () {
+            window.localStorage['last_link'] = '/book/index';
+
             $('.book-shelf-setup-page').removeClass('hide');
         })
     });

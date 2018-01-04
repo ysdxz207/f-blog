@@ -5,10 +5,6 @@ var bookDetail = {
 
     bookDetail.bind = function () {
 
-        $('.btn-back').on('click', function (e) {
-            history.back();
-        });
-
         $('.btn-add-book').on('click', function () {
 
             bookDetail.addOrDelBook(this);
