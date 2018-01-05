@@ -253,14 +253,7 @@ public class DBUtils {
                     }
                     field.setAccessible(true);
                     String columnName = ORMUtils.getFieldColumnName(field);
-                    Object fieldValue = "";
-                    try {
-                        fieldValue = field.get(obj);
-                    } catch (IllegalAccessException e) {
-                    }
-                    if ("serialVersionUID".equals(columnName) ||
-                            fieldValue == null ||
-                            StringUtils.isBlank(fieldValue.toString())) {
+                    if ("serialVersionUID".equals(columnName)) {
                         continue;
                     }
                     sb1.append("`");
@@ -299,14 +292,7 @@ public class DBUtils {
                     }
                     field.setAccessible(true);
                     String columnName = ORMUtils.getFieldColumnName(field);
-                    Object fieldValue = "";
-                    try {
-                        fieldValue = field.get(obj);
-                    } catch (IllegalAccessException e) {
-                    }
                     if ("serialVersionUID".equals(columnName) ||
-                            fieldValue == null ||
-                            StringUtils.isBlank(fieldValue.toString()) ||
                             field.getAnnotation(Id.class) != null ||
                             "id".equalsIgnoreCase(columnName)) {
                         continue;
