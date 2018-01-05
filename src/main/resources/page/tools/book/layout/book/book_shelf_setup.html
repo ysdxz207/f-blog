@@ -8,6 +8,9 @@
         z-index: 2;
         background-color: #FFFFFF;
     }
+    .book-shelf-setup-page-main {
+        margin-top: 44px;
+    }
     .btn-logout {
         width: 100%;
     }
@@ -18,9 +21,11 @@
 
 <div class="hide book-shelf-setup-page">
 <#include "/tools/book/layout/book/book_common_header.html"/>
-    <p>${(userBean.nickname)!}</p>
+    <div class="book-shelf-setup-page-main">
+        <p>${(userBean.nickname)!}</p>
 
-    <div class="navbar-fixed-bottom text-center">
-        <button type="button" class="btn btn-danger btn-logout" onclick="slogout('/book/loginPage',this)">退出登录</button>
+        <div class="navbar-fixed-bottom text-center">
+            <button type="button" class="btn btn-danger btn-logout" onclick="slogout('/book/loginPage',this)">退出登录</button>
+        </div>
     </div>
 </div>

@@ -49,8 +49,6 @@
             var aId = $(this).data('aid');
             var url = "/book/detail?id=" + bookId + "&aId=" + aId;
 
-            window.localStorage['last_link'] = window.location.href;
-
             location.href = url;
         });
     });

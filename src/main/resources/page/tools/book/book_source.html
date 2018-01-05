@@ -8,6 +8,7 @@
     <style>
         .book-source-list {
             padding-left: 10px;
+            margin-top: 50px;
         }
         .book-source-list li {
             list-style: none;
@@ -63,6 +64,11 @@
     $(function () {
 
         $('.book-source-list li').on('click', function () {
+            //
+
+            var arr = JSON.parse(window.localStorage['last_link']);
+            arr.pop();
+            window.localStorage['last_link'] = JSON.stringify(arr);
             var source = $(this).data('id');
             var aId = $('#hidden_source_book_aid').val();
             var bookId = $('#hidden_source_book_id').val();

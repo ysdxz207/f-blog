@@ -3,6 +3,13 @@
         height: 44px;
         line-height: 44px;
         background-color: black;
+        z-index: 99;
+        position: fixed;
+        top: 0;
+        left:0;
+        width: 100%;
+        color: #DDDDDD;
+        font-size: 20px;
 
     }
     .book-common-header  .btn-back{
@@ -17,8 +24,7 @@
 </style>
 
 <div class="book-common-header">
-    <span class="col-xs-3 fa fa-chevron-left btn-back">
-    </span>
+    <span class="col-xs-3 fa fa-chevron-left btn-back"></span>
     <#if (book.aId)??>
         <span data-aid="${(book.aId)!}" class="btn-go-source col-xs-3 pull-right text-right">
             <i class="fa fa-cog"></i>

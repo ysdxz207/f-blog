@@ -13,6 +13,10 @@ var bookDetail = {
             bookDetail.addOrDelBook(this);
         });
         $('.btn-read-book').on('click', function () {
+            //
+            var arr = JSON.parse(window.localStorage['last_link']);
+            arr.push(window.location.href);
+            window.localStorage['last_link'] = JSON.stringify(arr);
             var url = "/book/chapter?bookId=" + bookDetail.bookId;
 
             var strReadingConfig = window.localStorage[bookDetail.bookId];

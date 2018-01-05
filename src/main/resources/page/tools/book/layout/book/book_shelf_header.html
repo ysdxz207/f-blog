@@ -1,20 +1,21 @@
 
 <style>
-    .book-common-header {
+    .book-shelf-header {
         height: 44px;
         line-height: 44px;
         background-color: black;
         padding-left: 20px;
         margin-bottom: 10px;
         color: #DDDDDD;
+        font-size: 20px;
     }
-    .book-common-header a, .book-common-header a:hover{
+    .book-shelf-header a, .book-shelf-header a:hover{
         text-decoration: none;
         color: #DDDDDD;
     }
 </style>
 
-<div class="book-common-header">
+<div class="book-shelf-header">
     <div class="col-xs-3 pull-right text-right btn-book-shelf-setup">
         <i class="fa fa-cog"></i>
     </div>
@@ -23,9 +24,9 @@
 <#include "/tools/book/layout/book/book_shelf_setup.html"/>
 <script>
     $(function () {
-        $('.btn-book-shelf-setup').on('click', function () {
-            window.localStorage['last_link'] = '/book/index';
+        window.localStorage['last_link'] = JSON.stringify(['/book/index']);
 
+        $('.btn-book-shelf-setup').on('click', function () {
             $('.book-shelf-setup-page').removeClass('hide');
         })
     });

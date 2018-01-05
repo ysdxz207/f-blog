@@ -1,19 +1,5 @@
 <style>
 
-    .book-menu-header {
-        background-color: black;
-        z-index: 99;
-        position: fixed;
-        height: 100px;
-        top: 0;
-        width: 100%;
-        color: #DDDDDD;
-        line-height: 40px;
-        height: 40px;
-        font-size: 20px;
-        left:0;
-    }
-
     .book-menu-header a {
         color: #DDDDDD;
         height: 40px;
@@ -41,14 +27,7 @@
 
 </style>
 <div id="book_menu">
-    <div class="book-menu-header">
-        <a href="/book/detail?id=${(book.id)?c}&aId=${(book.aId)!}" class="btn-back fa fa-chevron-left col-xs-3 loading"></a>
-        <#if (book.aId)??>
-            <a href="/book/source?aId=${(book.aId)!}" class="col-xs-3 pull-right text-right">
-                <i class="fa fa-cog"></i>
-            </a>
-        </#if>
-    </div>
+    <#include '/tools/book/layout/book/book_common_header.html'/>
     <div class="book-menu-footer">
         <div class="col-xs-3">
             <i class="fa fa-font" id="btn_book_menu_font_setup book-menu"></i>

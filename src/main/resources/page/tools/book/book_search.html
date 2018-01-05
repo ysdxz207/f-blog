@@ -6,6 +6,10 @@
     <#include "/public/public.html" />
 
     <style>
+        .book-search-btn-group {
+
+            margin-top: 50px;
+        }
         .book-search-list {
             padding-left: 10px;
         }
@@ -37,7 +41,7 @@
 <body>
 <#include "/tools/book/layout/book/book_common_header.html"/>
 
-<div class="col-xs-12 input-group">
+<div class="col-xs-12 input-group book-search-btn-group">
     <input type="text" class="form-control" id="book_search_text"/>
     <span type="button" id="btn_book_search" class="input-group-addon btn btn-warning">搜索</span>
 </div>
