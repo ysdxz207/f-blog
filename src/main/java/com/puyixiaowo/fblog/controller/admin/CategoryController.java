@@ -52,7 +52,7 @@ public class CategoryController extends BaseController {
 
             for (CategoryBean categoryBean :
                     categoryBeanList) {
-                DBUtils.insertOrUpdate(categoryBean);
+                DBUtils.insertOrUpdate(categoryBean, false);
             }
         } catch (Exception e) {
             responseBean.error(e);

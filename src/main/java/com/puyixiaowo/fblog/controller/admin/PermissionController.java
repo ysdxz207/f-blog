@@ -48,7 +48,7 @@ public class PermissionController extends BaseController {
 
             for (PermissionBean permissionBean :
                     permissionBeanList) {
-                DBUtils.insertOrUpdate(permissionBean);
+                DBUtils.insertOrUpdate(permissionBean, false);
             }
         } catch (Exception e) {
             responseBean.error(e);

@@ -126,7 +126,7 @@ public class ArticleController extends BaseController {
             }
             articleBean.setLastUpdateDate(System.currentTimeMillis());
 
-            DBUtils.insertOrUpdate(articleBean);
+            DBUtils.insertOrUpdate(articleBean, false);
             //标签
             TagService.insertArticleTags(articleBean);
             //lucene搜索引擎

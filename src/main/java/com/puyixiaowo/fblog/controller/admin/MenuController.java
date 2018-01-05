@@ -98,7 +98,7 @@ public class MenuController extends BaseController {
 
             for (MenuBean menuBean :
                     menuBeanList) {
-                DBUtils.insertOrUpdate(menuBean);
+                DBUtils.insertOrUpdate(menuBean, false);
             }
 
             //删除缓存，下次刷新

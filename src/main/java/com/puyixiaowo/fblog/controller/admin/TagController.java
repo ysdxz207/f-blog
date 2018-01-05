@@ -50,7 +50,7 @@ public class TagController extends BaseController {
 
             for (TagBean tagBean :
                     tagBeanList) {
-                DBUtils.insertOrUpdate(tagBean);
+                DBUtils.insertOrUpdate(tagBean, false);
             }
         } catch (Exception e) {
             responseBean.error(e);

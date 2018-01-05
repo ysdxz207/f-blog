@@ -111,7 +111,7 @@ public class BookshelfService {
 
         bookshelfBean.setBookIds(StringUtils.join(bookIdList.toArray(), ","));
 
-        DBUtils.insertOrUpdate(bookshelfBean);
+        DBUtils.insertOrUpdate(bookshelfBean, false);
 
         return !isOnBookshelf;
     }

@@ -42,7 +42,7 @@
     <ul class="book-source-list">
         <#if (((list)??) && (((list)?size) > 0))>
             <#list list as source>
-                <li data-id="${(source._id)!}">
+                <li data-id="${(source._id)!}" class="loading">
                     <h5>
                         <strong>${(source.name)!}</strong>
                         <#if source.currentSource>
@@ -88,7 +88,7 @@
                     }
                 }
             });
-        });b
+        });
     });
 </script>
 </html>

@@ -13,7 +13,6 @@ import com.puyixiaowo.fblog.controller.tools.qrcode.QrcodeController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
 import com.puyixiaowo.fblog.filters.AdminPermissionsFilter;
 import com.puyixiaowo.fblog.filters.BookAuthFilter;
-import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import spark.Spark;
 
 import static spark.Spark.*;

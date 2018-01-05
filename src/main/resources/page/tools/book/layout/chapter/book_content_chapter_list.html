@@ -14,7 +14,7 @@
     }
     #book_chapters_ul a {
         display:inline-block;
-        color: #999999;
+        color: #666666;
         width: 100%;
         line-height: 40px;
         height: 40px;
@@ -24,11 +24,15 @@
     }
     #book_chapters_ul a:hover{
         text-decoration: none;
-        color: #666666;
+        color: #000000;
     }
     #book_chapters_ul li {
         width: 100%;
         list-style: none;
+    }
+
+    #book_chapters_ul .has-read {
+        color: #CCCCCC;
     }
 
     .btn-back-content  {
@@ -46,39 +50,3 @@
         </ul>
     </div>
 </div>
-
-<script>
-    $(function(){
-
-        var bookId = $('#hidden_book_content_book_id').val();
-
-        //章节列表
-        $.ajax({
-            url: "/book/chapters",
-            data: {bookId: bookId},
-            method: "POST",
-            dataType: "json",
-            success: function (result) {
-                if (result.statusCode == 200) {
-                    result.data.forEach(function (chapter, number) {
-                        var url = "/book/chapter?bookId=" + bookId + "&link=" +
-                            chapter.link + "&chapterName=" + chapter.title;
-                        var li = $('<li><a href="' + url +
-                            '" target="_self">'
-                            + chapter.title + '</a></li>')
-                        $('#book_chapters_ul').append(li);
-                    });
-
-                } else {
-                    salert(result.message);
-                }
-            }
-        });
-
-        $('#btn_reverse_book_chapters').on('click', function() {
-            var ul = $('#book_chapters_ul');
-            var lis = ul.find('li').get().reverse();
-            ul.empty().append(lis);
-        });
-    })
-</script>

@@ -57,7 +57,8 @@ var bookContent = {
         bookReading.bookId = bookContent.bookId;
         bookReading.lastReadingChapter = bookContent.lastReadingChapter;
         bookReading.lastReadingChapterLink = bookContent.lastReadingChapterLink;
-        bookReading.source = bookContent.source;
+        bookReading.sort = window.localStorage['sort_' + bookContent.bookId] ? window.localStorage['sort_' + bookReading.bookId] : 0
+        ;
 
         //保存到本地缓存
         window.localStorage[bookContent.bookId] = JSON.stringify(bookReading);
@@ -75,14 +76,53 @@ var bookContent = {
                 }
             }
         });
-    }
+    };
+
+    bookContent.bind = function () {
+        //章节列表
+        $.ajax({
+            url: "/book/chapters",
+            data: {bookId: bookContent.bookId},
+            method: "POST",
+            dataType: "json",
+            success: function (result) {
+                if (result.statusCode == 200) {
+                    result.data.forEach(function (chapter, number) {
+                        var hasReadClass = chapter.hasRead ? 'has-read' : '';
+                        console.log(chapter.title, hasReadClass)
+                        var url = "/book/chapter?bookId=" + bookContent.bookId + "&link=" +
+                            chapter.link + "&chapterName=" + chapter.title;
+                        var li = $('<li><a href="' + url +
+                            '" target="_self" class="' + hasReadClass + '">'
+                            + chapter.title + '</a></li>');
+                        $('#book_chapters_ul').append(li);
+                    });
+
+                } else {
+                    salert(result.message);
+                }
+            }
+        });
+
+
+        $('#btn_reverse_book_chapters').on('click', function() {
+            var ul = $('#book_chapters_ul');
+            var lis = ul.find('li').get().reverse();
+            ul.empty().append(lis);
+            window.localStorage['sort_' + bookContent.bookId] = window.localStorage['sort_' + bookContent.bookId] ? 0 : 1;
+            //保存配置
+            bookContent.saveReading();
+        });
+    };
 
     bookContent.init = function () {
 
         bookContent.bookId = $('#hidden_book_content_book_id').val();
         bookContent.lastReadingChapter = $('#hidden_book_content_reading_chapter').val();
         bookContent.lastReadingChapterLink = $('#hidden_book_content_reading_chapter_link').val();
-        bookContent.source = $('#hidden_book_content_reading_source').val();
+
+
+        bookContent.bind();
         bookContent.tapScroll();
 
         bookContent.saveReading();

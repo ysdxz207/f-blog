@@ -69,7 +69,7 @@ public class RoleService {
             RolePermissionBean bean = new RolePermissionBean();
             bean.setRoleId(roleId);
             bean.setPermissionId(permissionId);
-            DBUtils.insertOrUpdate(bean);
+            DBUtils.insertOrUpdate(bean, false);
         }
     }
 

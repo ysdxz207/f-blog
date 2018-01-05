@@ -58,7 +58,7 @@ public class RoleController extends BaseController {
 
             for (RoleBean roleBean :
                     roleBeanList) {
-                DBUtils.insertOrUpdate(roleBean);
+                DBUtils.insertOrUpdate(roleBean, false);
             }
         } catch (Exception e) {
             responseBean.error(e);

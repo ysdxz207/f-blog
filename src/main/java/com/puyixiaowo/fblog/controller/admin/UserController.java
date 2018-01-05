@@ -83,13 +83,13 @@ public class UserController extends BaseController{
 
                 userBean.setPassword(DesUtils.encrypt(userBean.getPassword()));
 
-                DBUtils.insertOrUpdate(userBean);
+                DBUtils.insertOrUpdate(userBean, false);
                 //用户角色
                 UserRoleBean userRoleBean = new UserRoleBean();
                 userRoleBean.setRoleId(userBean.getRoleId());
                 userRoleBean.setUserId(userBean.getId());
                 DBUtils.executeSql("delete from user_role where user_id = :userId", userRoleBean);
-                DBUtils.insertOrUpdate(userRoleBean);
+                DBUtils.insertOrUpdate(userRoleBean, false);
             }
         } catch (Exception e) {
             responseBean.errorMessage(e.getMessage());
@@ -152,7 +152,7 @@ public class UserController extends BaseController{
                 if (StringUtils.isNotBlank(userBean.getPassword())) {
                     userBean.setPassword(DesUtils.encrypt(userBean.getPassword()));
                 }
-                DBUtils.insertOrUpdate(userBean);
+                DBUtils.insertOrUpdate(userBean, false);
             }
 
         } catch (Exception e) {

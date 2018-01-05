@@ -41,5 +41,6 @@ CREATE TABLE `book_read` (
   `last_reading_chapter_link`     TEXT DEFAULT NULL,
   `bg_color`      VARCHAR(64) DEFAULT '#817f79',
   `font_size`        INTEGER(6) DEFAULT '24',
+  `sort`        INTEGER(4) DEFAULT '0',
   PRIMARY KEY (`id`)
 );

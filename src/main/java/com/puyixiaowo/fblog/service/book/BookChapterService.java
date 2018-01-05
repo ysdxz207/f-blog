@@ -3,18 +3,13 @@ package com.puyixiaowo.fblog.service.book;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.puyixiaowo.fblog.bean.admin.UserBean;
-import com.puyixiaowo.fblog.bean.admin.book.BookBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookChapterBean;
-import com.puyixiaowo.fblog.bean.admin.book.BookInfo;
 import com.puyixiaowo.fblog.bean.admin.book.BookReadBean;
-import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.constants.BookConstants;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.HttpUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
-import freemarker.template.utility.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,10 +34,16 @@ public class BookChapterService {
 
         BookReadBean bookReadBean = BookReadService.getUserReadConfig(userId, bookId);
 
-        String source = bookReadBean == null ? "" : bookReadBean.getSource();
+        bookReadBean = bookReadBean == null ? new BookReadBean() : bookReadBean;
+
+        String source = bookReadBean.getSource();
 
         if (StringUtils.isBlank(source)) {
             source = BookService.getDefaultSource(aId, bookId).get_id();
+            //可能为第一次读书或配置被删除
+            bookReadBean.setSource(source);
+            bookReadBean.setBookId(bookId);
+            bookReadBean.setUserId(userId);
         }
         String url = BookConstants.URL_CHAPTERS + source + "?view=chapters";
 
@@ -62,6 +63,7 @@ public class BookChapterService {
             return list;
         }
 
+
         try {
             for (Object obj :
                     chapters) {
@@ -77,9 +79,36 @@ public class BookChapterService {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        Collections.reverse(list);
+
+        list = getChapterHasReadList(list, bookReadBean.getLastReadingChapter());
+
+
+        if (bookReadBean.getId() == null) {
+            //
+            BookChapterBean firstChapter = list.get(0);
+            bookReadBean.setLastReadingChapterLink(firstChapter.getLink());
+            bookReadBean.setLastReadingChapter(firstChapter.getTitle());
+            DBUtils.insertOrUpdate(bookReadBean, false);
+        }
+        if (bookReadBean.getSort() != null
+            && bookReadBean.getSort() == 0) {
+            Collections.reverse(list);
+        }
         return list;
     }
+
+    public static List<BookChapterBean> getChapterHasReadList(List<BookChapterBean> list, String lastReadingChapter) {
+        int lastReadingIndex = getReadingChapterIndex(list, lastReadingChapter);
+
+        for (int i = 0; i < list.size(); i++) {
+            BookChapterBean bookChapterBean = list.get(i);
+            if (i <= lastReadingIndex) {
+                bookChapterBean.setHasRead(true);
+            }
+        }
+        return list;
+    }
+
 
     public static BookChapterBean requestBookContent(String link) {
 
@@ -135,6 +164,64 @@ public class BookChapterService {
     public static BookChapterBean requestFirstBookChapters(Long userId, Long bookId, String aId) {
 
         List<BookChapterBean> list = requestBookChapters(userId, bookId, aId);
-        return list.size() == 0 ? null : list.get(list.size()-1);
+        return list.size() == 0 ? null : list.get(list.size() - 1);
+    }
+
+    /**
+     * 判断是否同一章
+     *
+     * @param lastReadingChapter
+     * @param title
+     * @return
+     */
+    public static boolean isSameChapterTitle(String lastReadingChapter, String title) {
+
+        String[] arr1 = lastReadingChapter.split("章");
+        String[] arr2 = title.split("章");
+        String title1 = lastReadingChapter;
+        String title2 = title;
+        if (arr1.length == 2
+                && arr2.length == 2) {
+            title1 = arr1[1];
+            title2 = arr2[1];
+        }
+        if (StringUtils.getSimilarityRatio(title1, title2) > 0.9) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 获取正在阅读的章节索引
+     * @param chapterBeanList
+     * @param lastReadingChapter
+     * @return
+     */
+    public static int getReadingChapterIndex(List<BookChapterBean> chapterBeanList,
+                                             String lastReadingChapter) {
+        if (chapterBeanList == null
+                || chapterBeanList.size() == 0
+                || StringUtils.isBlank(lastReadingChapter)) {
+            return 0;
+        }
+        for (int i = 0; i < chapterBeanList.size(); i++) {
+            BookChapterBean bookChapterBean = chapterBeanList.get(i);
+            if (isSameChapterTitle(lastReadingChapter, bookChapterBean.getTitle())) {
+                return i;
+            }
+        }
+
+        return 0;
+    }
+
+    public static BookChapterBean getNextChapter(Long userId,
+                                                 Long bookId,
+                                                 String aId,
+                                                 String lastReadingChapter) {
+
+        List<BookChapterBean> bookChapterBeanList = requestBookChapters(userId, bookId, aId);
+
+
+        return null;
     }
 }

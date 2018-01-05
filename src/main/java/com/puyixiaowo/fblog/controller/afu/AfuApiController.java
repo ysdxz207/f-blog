@@ -75,7 +75,7 @@ public class AfuApiController extends BaseController {
             } else {
                 afuBean.setType(afuTypeBean.getId());
                 afuBean.setCreateTime(System.currentTimeMillis());
-                DBUtils.insertOrUpdate(afuBean);
+                DBUtils.insertOrUpdate(afuBean, false);
             }
         } catch (DBObjectExistsException e) {
             responseBean.errorMessage("当前类别下已存在此阿福");

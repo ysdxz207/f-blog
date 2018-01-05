@@ -21,6 +21,7 @@ public class BookReadBean extends Validatable implements Serializable {
 	private String lastReadingChapterLink;
 	private String bgColor;
 	private Integer fontSize;
+	private Integer sort;
 
 
 	public Long getId() {
@@ -85,5 +86,13 @@ public class BookReadBean extends Validatable implements Serializable {
 
 	public void setFontSize(Integer fontSize) {
 		this.fontSize = fontSize;
+	}
+
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
 	}
 }

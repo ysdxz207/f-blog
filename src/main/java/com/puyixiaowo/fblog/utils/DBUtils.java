@@ -166,11 +166,12 @@ public class DBUtils {
 
     /**
      * insert or update
-     *
      * @param obj The object to insert or update.
+     * @param updateNull
      * @return
      */
-    public static Object insertOrUpdate(Object obj) {
+    public static Object insertOrUpdate(Object obj,
+                                        boolean updateNull) {
 
         String tableName = ORMUtils.getTableNameByClass(obj.getClass());
 
@@ -178,13 +179,13 @@ public class DBUtils {
             Object primaryKey = null;
             int lines = 0;
             try {
-                String sql_update = assembleSql(SQL_TYPE_UPDATE, tableName, obj);
+                String sql_update = assembleSql(SQL_TYPE_UPDATE, tableName, obj, updateNull);
                 Query queryUpdate = conn.createQuery(sql_update).throwOnMappingFailure(false).bind(obj);
                 lines = queryUpdate.executeUpdate().getResult();
             } catch (Exception e) {
                 try {
                     ORMUtils.setId(obj);
-                    String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, obj);
+                    String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, obj, updateNull);
                     System.out.println(sql_insert);
                     Query queryInsert = conn.createQuery(sql_insert).throwOnMappingFailure(false).bind(obj);
                     primaryKey = queryInsert.executeUpdate().getKey();
@@ -211,7 +212,8 @@ public class DBUtils {
 
     private static String assembleSql(int sqlType,
                                       String tableName,
-                                      Object obj) {
+                                      Object obj,
+                                      boolean updateNull) {
 
         //获取主键字段名和值map
         Map<String, Object> primaryKeyValueMap = ORMUtils.getPrimaryKeyValues(obj);
@@ -253,7 +255,14 @@ public class DBUtils {
                     }
                     field.setAccessible(true);
                     String columnName = ORMUtils.getFieldColumnName(field);
-                    if ("serialVersionUID".equals(columnName)) {
+                    Object fieldValue = "";
+                    try {
+                        fieldValue = field.get(obj);
+                    } catch (IllegalAccessException e) {
+                    }
+                    if ("serialVersionUID".equals(columnName) ||
+                            fieldValue == null ||
+                            StringUtils.isBlank(fieldValue)) {
                         continue;
                     }
                     sb1.append("`");
@@ -292,7 +301,14 @@ public class DBUtils {
                     }
                     field.setAccessible(true);
                     String columnName = ORMUtils.getFieldColumnName(field);
+                    Object fieldValue = "";
+                    try {
+                        fieldValue = field.get(obj);
+                    } catch (IllegalAccessException e) {
+                    }
                     if ("serialVersionUID".equals(columnName) ||
+                            (updateNull && fieldValue == null) ||
+                            StringUtils.isBlank(fieldValue) ||
                             field.getAnnotation(Id.class) != null ||
                             "id".equalsIgnoreCase(columnName)) {
                         continue;

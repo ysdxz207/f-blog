@@ -71,7 +71,7 @@ public class AfuTypeController extends BaseController {
                 afuTypeBean.setPrivateKey(StringUtils.replaceBlank(key.getPrivateKey()));
                 afuTypeBean.setPublicKey(StringUtils.replaceBlank(key.getPublicKey()));
             }
-            DBUtils.insertOrUpdate(afuTypeBean);
+            DBUtils.insertOrUpdate(afuTypeBean, false);
         } catch (Exception e) {
             responseBean.error(e);
         }

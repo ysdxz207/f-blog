@@ -41,7 +41,7 @@ public class TagService {
             tagBean.setName(tagName);
             TagBean tagDb = DBUtils.selectOne("select * from tag where name=:name", tagBean);
             if (tagDb == null) {
-                DBUtils.insertOrUpdate(tagBean);
+                DBUtils.insertOrUpdate(tagBean, false);
             } else {
                 tagBean = tagDb;
             }
@@ -49,7 +49,7 @@ public class TagService {
             ArticleTagBean articleTagBean = new ArticleTagBean();
             articleTagBean.setArticleId(articleBean.getId());
             articleTagBean.setTagId(tagBean.getId());
-            DBUtils.insertOrUpdate(articleTagBean);
+            DBUtils.insertOrUpdate(articleTagBean, false);
         }
     }
 

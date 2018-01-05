@@ -7,10 +7,7 @@
 ;
 jQuery.fn.smask = function(html){
 	//移除其他mask
-	var maskObj = window.maskObj;
-	if (maskObj) {
-		maskObj.modal('hide');
-	}
+    removeSmask();
 
 	var modalMain = $('<div>').attr('id', 'mask_modal').addClass('modal fade').addClass('text-center'),
 		htmlObj = $(html),
@@ -27,5 +24,14 @@ jQuery.fn.smask = function(html){
 		modalMain.remove();
 	});
 	window.maskObj = modalMain;
-}
+};
+
+jQuery.fn.removeSmask = function(){
+    //移除其他mask
+    var maskObj = window.maskObj;
+    if (maskObj) {
+        maskObj.modal('hide');
+    }
+};
 smask = jQuery.fn.smask;
+removeSmask = jQuery.fn.removeSmask;
