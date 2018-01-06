@@ -13,6 +13,7 @@
     }
     .btn-logout {
         width: 100%;
+        height: 40px;
     }
     .book-shelf-setup-page p{
         padding: 30px 20px;
@@ -22,7 +23,7 @@
 <div class="hide book-shelf-setup-page">
 <#include "/tools/book/layout/book/book_common_header.html"/>
     <div class="book-shelf-setup-page-main">
-        <p>${(userBean.nickname)!}</p>
+        <p>当前登录：${(userBean.nickname)!}</p>
 
         <div class="navbar-fixed-bottom text-center">
             <button type="button" class="btn btn-danger btn-logout" onclick="slogout('/book/loginPage',this)">退出登录</button>

@@ -8,6 +8,11 @@
     <title>登录书架</title>
     <#include "/public/public.html" />
 
+    <style>
+        .code {
+            padding: 0;
+        }
+    </style>
     <script type="text/javascript" src="/public_static/js/login.js"></script>
 
     <script type="text/javascript">
@@ -72,9 +77,10 @@
                     <label for="j_remember" class="m"><input id="j_remember" type="checkbox" name="rememberMe" value="true">&nbsp;记住登陆账号!</label>
                 </div>
             </div>-->
-            <div class="text-center">
-                <button type="button" onclick="slogin('/book/login', '/book/index', this)" class="btn btn-warning btn-lg">&nbsp;登&nbsp;录&nbsp;</button>&nbsp;&nbsp;&nbsp;&nbsp;
-                <button type="reset" class="btn btn-default btn-lg">&nbsp;重&nbsp;置&nbsp;</button>
+            <div>
+                <button type="button"
+                        onclick="slogin('/book/login', '/book/index', this)"
+                        class="btn btn-warning btn-lg col-xs-12">&nbsp;登&nbsp;录&nbsp;</button>&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
             <div class="text-center">
                 <hr>

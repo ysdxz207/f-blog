@@ -96,18 +96,17 @@ public class LoginController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
 
         String captcha = request.queryParams("captcha");
-//        if (StringUtils.isBlank(captcha)) {
-//            model.put("message", "请输入验证码");
-//            responseBean.errorMessage("请输入验证码");
-//            return responseBean;
-//        }
-//
-//
-//        String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
-//        if (!captcha.equalsIgnoreCase(sessionCaptcha)) {
-//            responseBean.errorMessage("验证码错误");
-//            return responseBean;
-//        }
+        if (StringUtils.isBlank(captcha)) {
+            responseBean.errorMessage("请输入验证码");
+            return responseBean;
+        }
+
+
+        String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
+        if (!captcha.equalsIgnoreCase(sessionCaptcha)) {
+            responseBean.errorMessage("验证码错误");
+            return responseBean;
+        }
 
         String uname = request.queryParams("uname");
         String upass = request.queryParams("upass");
