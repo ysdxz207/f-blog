@@ -3,8 +3,11 @@
     .book-chapter-content-footer {
         padding: 30px 0px;
     }
+    .book-chapter-content-footer {
+        color: #000;
+    }
 </style>
 <div class="book-chapter-content-footer">
-    <a href="/" target="_self" data-prefetch="ture" style="color: #DDDDDD" class="col-xs-4">上一章</a>
-    <a href="" target="_self" data-prefetch="ture" style="color: #DDDDDD" class="col-xs-4 pull-right">下一章</a>
+    <a href="/book/chapter?bookId=${(book.id)?c}&page=-1" target="_self" data-prefetch="ture" class="col-xs-4">上一章</a>
+    <a href="/book/chapter?bookId=${(book.id)?c}&page=1" target="_self" data-prefetch="ture" class="col-xs-4 pull-right">下一章</a>
 </div>

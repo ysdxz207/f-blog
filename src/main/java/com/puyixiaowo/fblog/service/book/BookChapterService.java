@@ -28,7 +28,10 @@ public class BookChapterService {
 
     private static final Logger logger = LoggerFactory.getLogger(BookChapterService.class);
 
-    public static List<BookChapterBean> requestBookChapters(Long userId, Long bookId, String aId) {
+    public static List<BookChapterBean> requestBookChapters(Long userId,
+                                                            Long bookId,
+                                                            String aId,
+                                                            boolean keepSort) {
 
         List<BookChapterBean> list = new ArrayList<>();
 
@@ -90,7 +93,8 @@ public class BookChapterService {
             bookReadBean.setLastReadingChapter(firstChapter.getTitle());
             DBUtils.insertOrUpdate(bookReadBean, false);
         }
-        if (bookReadBean.getSort() != null
+        if (!keepSort
+            && bookReadBean.getSort() != null
             && bookReadBean.getSort() == 0) {
             Collections.reverse(list);
         }
@@ -163,7 +167,7 @@ public class BookChapterService {
 
     public static BookChapterBean requestFirstBookChapters(Long userId, Long bookId, String aId) {
 
-        List<BookChapterBean> list = requestBookChapters(userId, bookId, aId);
+        List<BookChapterBean> list = requestBookChapters(userId, bookId, aId, true);
         return list.size() == 0 ? null : list.get(list.size() - 1);
     }
 
@@ -185,7 +189,7 @@ public class BookChapterService {
             title1 = arr1[1];
             title2 = arr2[1];
         }
-        if (StringUtils.getSimilarityRatio(title1, title2) > 0.9) {
+        if (StringUtils.getSimilarityRatio(title1.replaceAll("[\\pP\\p{Punct}]",""), title2.replaceAll("[\\pP\\p{Punct}]","")) > 0.9) {
             return true;
         }
         return false;
@@ -214,14 +218,21 @@ public class BookChapterService {
         return 0;
     }
 
-    public static BookChapterBean getNextChapter(Long userId,
+    public static BookChapterBean getNextChapter(int page,
+                                                 Long userId,
                                                  Long bookId,
                                                  String aId,
                                                  String lastReadingChapter) {
 
-        List<BookChapterBean> bookChapterBeanList = requestBookChapters(userId, bookId, aId);
+        List<BookChapterBean> bookChapterBeanList = requestBookChapters(userId, bookId, aId, true);
 
+        int i = getReadingChapterIndex(bookChapterBeanList, lastReadingChapter);
 
-        return null;
+        int index = i + page;
+        if (index < 0
+                || index >= bookChapterBeanList.size()) {
+            return null;
+        }
+        return bookChapterBeanList.get(index);
     }
 }

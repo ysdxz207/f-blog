@@ -4,6 +4,7 @@ var book = {};
 
     book.bind = function () {
         $('.btn-back').on('click', function (e) {
+            sloading();
             var urls = window.localStorage['last_link'];
             var url = '/book/index';
             if (urls) {

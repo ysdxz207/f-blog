@@ -89,12 +89,13 @@ var bookContent = {
                 if (result.statusCode == 200) {
                     result.data.forEach(function (chapter, number) {
                         var hasReadClass = chapter.hasRead ? 'has-read' : '';
-                        console.log(chapter.title, hasReadClass)
                         var url = "/book/chapter?bookId=" + bookContent.bookId + "&link=" +
                             chapter.link + "&chapterName=" + chapter.title;
-                        var li = $('<li><a href="' + url +
-                            '" target="_self" class="' + hasReadClass + '">'
-                            + chapter.title + '</a></li>');
+                        var li = $('<li class="' + hasReadClass + '">'+ chapter.title + '</li>')
+                            .on('click', function () {
+                                sloading();
+                                window.location.href = url;
+                            });
                         $('#book_chapters_ul').append(li);
                     });
 

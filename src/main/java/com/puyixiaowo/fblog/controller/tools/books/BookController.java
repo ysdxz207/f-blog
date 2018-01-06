@@ -101,7 +101,7 @@ public class BookController extends BaseController {
             return "bookId不可为空";
         }
 
-        String HTML_CHANGE_SOURCE = "<div style='color: #DDD;text-align:center;height:400px;line-height:400px'>无法获取书籍，请切换书源</div>";
+
         Long bookId = Long.valueOf(bookIdStr);
         Map<String, Object> model = new HashMap<>();
 
@@ -132,10 +132,17 @@ public class BookController extends BaseController {
 
             if (page != 0) {
                 //上一章或下一章
-                bookChapterBean = BookChapterService.getNextChapter(userBean.getId(),
+                bookChapterBean = BookChapterService.getNextChapter(page, userBean.getId(),
                         bookId,
                         bookBean.getaId(),
                         bookReadBean.getLastReadingChapter());
+
+                if (bookChapterBean == null) {
+                    //首页或尾页跳转到书籍详情页
+                    response.redirect("/book/detail?aId=" + bookBean.getaId());
+                    return null;
+                }
+
                 link = bookChapterBean.getLink();
             } else if (StringUtils.isBlank(link)) {
 
@@ -151,8 +158,9 @@ public class BookController extends BaseController {
 
             bookChapterBean = BookChapterService.requestBookContent(link);
 
-
             if (bookChapterBean == null) {
+                String HTML_CHANGE_SOURCE = "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no\">\n<div style='color: #DDD;text-align:center;height:400px;line-height:400px'>无法获取书籍，请<a href='/book/source?aId=" +
+                        bookBean.getaId() + "'>切换书源</a></div>";
                 //提示切换书源
                 return HTML_CHANGE_SOURCE;
             }
@@ -254,7 +262,7 @@ public class BookController extends BaseController {
             BookBean bookBean = BookService.selectBookBeanById(bookId);
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
             responseBean.setData(BookChapterService
-                    .requestBookChapters(userBean.getId(), bookId, bookBean.getaId()));
+                    .requestBookChapters(userBean.getId(), bookId, bookBean.getaId(), false));
         } catch (Exception e) {
             responseBean.error(e);
         }
@@ -347,7 +355,7 @@ public class BookController extends BaseController {
             DBUtils.insertOrUpdate(bookReadBean, false);
             //切换书源后需要查询出当前章Link
             List<BookChapterBean> bookChapterBeanList = BookChapterService
-                    .requestBookChapters(userBean.getId(), bookId, bookBean.getaId());
+                    .requestBookChapters(userBean.getId(), bookId, bookBean.getaId(), false);
 
             //获取当前章
             BookChapterBean chapter = null;
