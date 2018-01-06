@@ -54,7 +54,7 @@
 <form action="" id="form_book_search">
     <div class="col-xs-12 book-search-btn-group input-group">
             <input type="search" class="form-control" id="book_search_text"/>
-            <span type="button" id="btn_book_search" class="input-group-addon btn loading">搜索</span>
+            <span type="button" id="btn_book_search" class="input-group-addon btn">搜索</span>
     </div>
 </form>
 <div class="">
@@ -74,6 +74,7 @@
     $(function () {
 
         var search = function () {
+            sloading();
             var name = $('#book_search_text').val();
             var bookSearchListUl = $('.book-search-list');
 
@@ -81,7 +82,7 @@
                 removeSloading();
                 return;
             }
-
+            $('#book_search_text').blur();
             bookSearchListUl.empty();
             $.ajax({
                 url: "/book/search",
@@ -90,7 +91,6 @@
                 dataType: "json",
                 success: function (result) {
                     if (result.statusCode == 200) {
-                        $('#book_search_text').blur();
                         result.list.forEach(function (book, i) {
                             removeSloading();
                             var li = $('#template_book_search_list').clone(true).on('click', function () {
@@ -99,7 +99,8 @@
                             li.find('img').attr('src', book.faceUrl);
                             li.find('h4').text(book.name + "|" + book.bookInfo.category);
                             li.find('h5').text("作者：" + book.author);
-                            li.find('h6').text("读者留存率：" + book.bookInfo.retentionRatio + "%");
+                            li.find('h6').text("读者留存率："
+                                + (book.bookInfo.retentionRatio ? book.bookInfo.retentionRatio : 0) + "%");
                             li.removeClass('hide');
                             li.removeAttr('id');
                             bookSearchListUl.append(li);
