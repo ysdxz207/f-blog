@@ -94,6 +94,9 @@
                         result.list.forEach(function (book, i) {
                             removeSloading();
                             var li = $('#template_book_search_list').clone(true).on('click', function () {
+                                var urls = JSON.parse(window.localStorage['last_link']);
+                                urls.push(window.location.href);
+                                window.localStorage['last_link'] = JSON.stringify(urls);
                                 location.href = "/book/detail?aId=" + book.aId;
                             });
                             li.find('img').attr('src', book.faceUrl);
