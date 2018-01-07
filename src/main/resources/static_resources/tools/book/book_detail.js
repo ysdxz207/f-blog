@@ -32,7 +32,6 @@ var bookDetail = {
             if (readingConfig) {
                 url += "&lastReadingChapter=" + readingConfig.lastReadingChapter;
                 url += "&lastReadingChapterLink=" + readingConfig.lastReadingChapterLink;
-                url += "&source=" + readingConfig.source;
             }
             location.href = url;
         });
