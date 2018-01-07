@@ -35,7 +35,7 @@ DROP TABLE IF EXISTS `book_read`;
 CREATE TABLE `book_read` (
   `id`        INTEGER(20)  NOT NULL UNIQUE,
   `user_id`      INTEGER(20) NOT NULL,
-  `book_id`      INTEGER(20) NOT NULL UNIQUE,
+  `book_id`      INTEGER(20) NOT NULL,
   `source`    VARCHAR(128) NOT NULL,
   `last_reading_chapter`          VARCHAR(128) DEFAULT NULL,
   `last_reading_chapter_link`     TEXT DEFAULT NULL,

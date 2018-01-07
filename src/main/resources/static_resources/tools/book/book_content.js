@@ -18,12 +18,13 @@ var bookContent = {
             var isBottom = ($(document).height() -
                 ($(window).height() + $(document).scrollTop())) == 0;
 
-            var tapY = e.clientY;
+            var tapX = e.clientX;
 
+            var width = screen.width;
             var height = screen.height;
 
             //点击屏幕中央唤起菜单
-            if (tapY < (height / 8 * 5) && tapY > (height / 8 * 3)) {
+            if (tapX < (width / 3 * 2) && tapX > (width / 3 * 1)) {
                 bookMenu.toggle();
                 return;
             }
@@ -32,19 +33,19 @@ var bookContent = {
                 return;
             }
 
-            if ((tapY > (height / 8 * 5))
+            if ((tapX > (width / 3 * 2))
                 && !isBottom) {
                 //向下滚动
                 $('html,body')
-                    .animate({scrollTop: $(document).scrollTop() + height - lineHeight}, 300);
+                    .animate({scrollTop: $(document).scrollTop() + height - lineHeight}, 0);
                 return;
             }
 
-            if (tapY < (height / 8 * 3)
+            if (tapX < (width / 3 * 1)
                 && !isTop) {
                 //向上滚动
                 $('html,body')
-                    .animate({scrollTop: $(document).scrollTop() - height + lineHeight}, 300);
+                    .animate({scrollTop: $(document).scrollTop() - height + lineHeight}, 0);
                 return;
             }
 
