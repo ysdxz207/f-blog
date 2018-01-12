@@ -6,7 +6,7 @@
 
 ;
 $(function () {
-    jQuery.fn.slogin = function(loginUrl, successPage, btn){
+    slogin = function(loginUrl, successPage, btn){
 
         var $btn = $(btn);
         $btn.attr("disabled", true).val('登录中..');
@@ -27,7 +27,7 @@ $(function () {
         });
     };
 
-    jQuery.fn.slogout = function(redirectPage, btn){
+    slogout = function(redirectPage, btn){
 
         var $btn = $(btn);
         $btn.attr("disabled", true).val('退出中..');
@@ -49,9 +49,8 @@ $(function () {
     };
 
 
-
-
-    slogin = jQuery.fn.slogin;
-    slogout = jQuery.fn.slogout;
-
+    scleanCache = function () {
+        window.localStorage.clear()
+        alert('清理完成');
+    };
 });

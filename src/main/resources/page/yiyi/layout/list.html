@@ -1,7 +1,10 @@
-<div class="col-sm-9 col-md-9 col-lg-9">
+<div class="col-sm-9 col-md-9 col-lg-9 aos-all">
     <#if (((pageBean.list)??) && (((pageBean.list)?size) > 0))>
         <#list pageBean.list as article>
-            <div class="panel panel-default">
+            <div class="panel panel-default aos-item" data-aos="fade-in"
+                 data-aos-offset="0"
+                 data-aos-easing="ease-in-sine"
+                 data-aos-delay="100">
                 <div class="panel-heading">
                     <a href="${yiyi}/article/detail?id=${(article.id)?c}" title="${(article.title)!}" class="article-list-title">
                         <#assign title=(article.title!"")>

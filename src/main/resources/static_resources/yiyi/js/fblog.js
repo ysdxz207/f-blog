@@ -23,10 +23,10 @@ var fblog = {
                 return;
             }
             fblog.$containerWidgetTags.empty();
-            fblog.$containerWidgetTags.parent().delay('fast').fadeTo(500, 1);
 
            $.each(data, function (i, tag) {
-               var $tag = fblog.makeTag(tag)
+               var delay = 300 + 50 * i;
+               var $tag = fblog.makeTag(tag, delay)
                fblog.$containerWidgetTags.append($tag);
                $tag.fadeIn(700);
            });
@@ -61,17 +61,15 @@ var fblog = {
         }, function (data) {
             if (data.list.length > 0) {
                 fblog.$containerWidgetCategories.find('.more').remove();
-                fblog.$containerWidgetCategories.parent().fadeTo(300,1);
                 $.each(data.list, function (i, category) {
-                    var $category = fblog.makeCategory(category);
+                    var delay = 300 + i *50;
+                    var $category = fblog.makeCategory(category, delay);
                     fblog.$containerWidgetCategories.append($category);
-                    $category.fadeIn(500);
                 });
                 //加载更多
                 if (data.pageCurrent < data.pageTotal) {
                     var $category = $('<a href="javascript:fblog.loadCategories(' + (pageCurrent + 1) + ')" class="list-group-item text-center more">加载更多...</a>');
                     fblog.$containerWidgetCategories.append($category);
-                    $category.fadeIn(500);
                 }
             }
         });
@@ -99,12 +97,14 @@ var fblog = {
      * @param tag
      * @returns {*|jQuery}
      */
-    fblog.makeTag = function (tag) {
-        var $tag = $('<span class="label label-default" ' +
+    fblog.makeTag = function (tag, delay) {
+        var $tag = $('<span class="label label-default aos-item" ' +
+            'data-aos="flip-left" data-aos-once="true" ' +
+            'data-aos-offset="0" data-aos-delay="' + delay + '" ' +
             'style="display: inline-block;border-radius: 1em;' +
             'margin-left: 6px;margin-bottom: 4px;' +
             'font-size: 100%;font-weight: 100;' +
-            'line-height: inherit;"><a></a></span>').hide();
+            'line-height: inherit;"><a></a></span>');
         var color = fblog.getRandomColor();
         var href = fblog.BASE_PATH + '/?tags=' + tag.name;
         $tag.css('background-color', color);
@@ -117,8 +117,8 @@ var fblog = {
      * @param tag
      * @returns {*|jQuery}
      */
-    fblog.makeCategory = function (category) {
-        var $category = $('<a class="list-group-item"></a>').hide();
+    fblog.makeCategory = function (category, delay) {
+        var $category = $('<a class="list-group-item aos-item" data-aos="fade-left" data-aos-once="true" data-aos-offset="0" data-aos-delay="' + delay + '"></a>');
         var href = fblog.BASE_PATH + '/?category=' + category.name;
         $category.attr('href', href);
         $category.text(category.name);
@@ -126,7 +126,9 @@ var fblog = {
     };
 
     fblog.init = function () {
-
+        AOS.init({
+            easing: 'ease-in-out-sine'
+        });
         fblog.bind();
         fblog.loadTopTags();
         fblog.loadCategories(1);

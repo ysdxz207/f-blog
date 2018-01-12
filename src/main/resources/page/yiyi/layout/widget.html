@@ -1,23 +1,24 @@
-<style>
+<div class="aos-item" data-aos="fade-down" data-aos-delay="100">
+    <form class="form-group" role="search" action="${yiyi}/search" onsubmit="return fblog.checkSearch()">
+        <div class="input-group">
+            <input type="text" value="${search!}" name="search" id="input_fblog_search" class="form-control" placeholder="搜索文章">
+            <span id="btn_fblog_search" class="input-group-addon btn">搜索</span>
+        </div>
+    </form>
+</div>
+<div class="aos-item" data-aos="fade-left" data-aos-delay="340">
+    <div class="panel panel-default form-group">
+        <div class="panel-heading">分类</div>
+        <div class="list-group aos-all" id="container_widget_categories">
 
-</style>
-<form class="form-group" role="search" action="${yiyi}/search" onsubmit="return fblog.checkSearch()">
-    <div class="input-group">
-        <input type="text" value="${search!}" name="search" id="input_fblog_search" class="form-control" placeholder="搜索文章">
-        <span id="btn_fblog_search" class="input-group-addon btn">搜索</span>
-    </div>
-</form>
-
-<div class="panel panel-default form-group" style="opacity: 0">
-    <div class="panel-heading">分类</div>
-    <div class="list-group" id="container_widget_categories">
-
+        </div>
     </div>
 </div>
+<div class="aos-item" data-aos="fade-left" data-aos-delay="300" data-aos-once="true">
+    <div class="panel panel-default form-group">
+        <div class="panel-heading">热门标签</div>
+        <div class="panel-body fblog-tag-top" id="container_widget_tags">
 
-<div class="panel panel-default form-group" style="opacity: 0">
-    <div class="panel-heading">热门标签</div>
-    <div class="panel-body fblog-tag-top" id="container_widget_tags">
-
+        </div>
     </div>
 </div>
