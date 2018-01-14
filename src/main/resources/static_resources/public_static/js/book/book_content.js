@@ -61,8 +61,6 @@ var bookContent = {
         bookReading.sort = window.localStorage['sort_' + bookContent.bookId] ? window.localStorage['sort_' + bookReading.bookId] : 0
         ;
 
-        //保存到本地缓存
-        window.localStorage[bookContent.bookId] = JSON.stringify(bookReading);
         //保存到后端
         $.ajax({
             url: "/book/saveReading",
@@ -89,14 +87,12 @@ var bookContent = {
             success: function (result) {
                 if (result.statusCode == 200) {
                     result.data.forEach(function (chapter, number) {
-                        var hasReadClass = chapter.hasRead ? 'has-read' : '';
+                        var hasReadClass = (chapter.hasRead || chapter.title == bookContent.lastReadingChapter) ? 'has-read' : '';
+
                         var url = "/book/chapter?bookId=" + bookContent.bookId + "&link=" +
                             chapter.link + "&chapterName=" + chapter.title;
-                        var li = $('<li class="' + hasReadClass + '">'+ chapter.title + '</li>')
-                            .on('click', function () {
-                                sloading();
-                                window.location.href = url;
-                            });
+                        var li = $('<li class="' + hasReadClass + '"><a href="' + url + '" class="loading">'+ chapter.title + '</a></li>');
+
                         $('#book_chapters_ul').append(li);
                     });
 
@@ -108,10 +104,12 @@ var bookContent = {
 
 
         $('#btn_reverse_book_chapters').on('click', function() {
+            var sort = parseInt(window.localStorage['sort_' + bookContent.bookId]) ? 0 : 1;
+            console.log(sort);
             var ul = $('#book_chapters_ul');
             var lis = ul.find('li').get().reverse();
             ul.empty().append(lis);
-            window.localStorage['sort_' + bookContent.bookId] = window.localStorage['sort_' + bookContent.bookId] ? 0 : 1;
+            window.localStorage['sort_' + bookContent.bookId] = sort;
             //保存配置
             bookContent.saveReading();
         });

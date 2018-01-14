@@ -168,7 +168,7 @@ public class BookChapterService {
     public static BookChapterBean requestFirstBookChapters(Long userId, Long bookId, String aId) {
 
         List<BookChapterBean> list = requestBookChapters(userId, bookId, aId, true);
-        return list.size() == 0 ? null : list.get(list.size() - 1);
+        return list.size() == 0 ? null : list.get(0);
     }
 
     /**
@@ -179,6 +179,22 @@ public class BookChapterService {
      * @return
      */
     public static boolean isSameChapterTitle(String lastReadingChapter, String title) {
+
+        if (StringUtils.isBlank(lastReadingChapter)
+                && StringUtils.isBlank(title)) {
+            return true;
+        }
+
+        if (StringUtils.isBlank(lastReadingChapter)
+                && StringUtils.isNotBlank(title)) {
+            return false;
+        }
+
+        if (StringUtils.isNotBlank(lastReadingChapter)
+                && StringUtils.isBlank(title)) {
+            return false;
+        }
+
 
         String[] arr1 = lastReadingChapter.split("章");
         String[] arr2 = title.split("章");

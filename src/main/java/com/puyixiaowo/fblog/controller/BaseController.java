@@ -2,20 +2,24 @@ package com.puyixiaowo.fblog.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.core.entity.Validatable;
 import com.puyixiaowo.core.exceptions.ValidationException;
+import com.puyixiaowo.fblog.bean.AccessRecordBean;
 import com.puyixiaowo.fblog.bean.admin.afu.AfuTypeBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.constants.Constants;
+import com.puyixiaowo.fblog.controller.fblog.FblogController;
 import com.puyixiaowo.fblog.exception.BaseControllerException;
+import com.puyixiaowo.fblog.exception.DBObjectExistsException;
 import com.puyixiaowo.fblog.service.AfuTypeService;
-import com.puyixiaowo.fblog.utils.ReflectionUtils;
-import com.puyixiaowo.fblog.utils.ResourceUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
+import com.puyixiaowo.fblog.utils.*;
 import com.puyixiaowo.fblog.utils.sign.SignUtils;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.Request;
 
 import java.io.IOException;
@@ -26,11 +30,14 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 
 public class BaseController {
+    private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
+
 
     /**
      * @param request
@@ -78,7 +85,7 @@ public class BaseController {
         Map<String, String> mapReturn = new HashMap<>();
         for (Map.Entry entry : map.entrySet()) {
             String key = entry.getKey() == null ? "" : entry.getKey().toString();
-            String value = entry.getValue() == null ? "" : ((String [])entry.getValue())[0];
+            String value = entry.getValue() == null ? "" : ((String[]) entry.getValue())[0];
             mapReturn.put(key, value);
         }
 
@@ -105,6 +112,7 @@ public class BaseController {
 
     /**
      * 获取分页RowBouds
+     *
      * @param request
      * @return
      */
@@ -129,6 +137,7 @@ public class BaseController {
 
     /**
      * 验签
+     *
      * @param request
      * @return
      */
@@ -154,5 +163,52 @@ public class BaseController {
         String sign = request.queryParams("sign");
         Map<String, String> params = getParamsMap(request);
         return SignUtils.verify(params, sign, afuTypeBean.getPublicKey());
+    }
+
+    public static void saveAccessRecord(Request request,
+                                        Long articleId) {
+        ExecutorService exec = Executors.newFixedThreadPool(5);
+
+
+        FutureTask futureTask = new FutureTask(() -> {
+
+            String link = request.url()
+                    + (StringUtils.isNotBlank(request.queryString())
+                    ? "?" + request.queryString() : "");
+
+            String userAgentString = request.headers("user-agent");
+            UserAgent userAgent = UserAgent.parseUserAgentString(userAgentString);
+            String os = userAgent
+                    .getOperatingSystem().getName();
+
+            String browser = userAgent.getBrowser().getName()
+                            + " " + userAgent.getBrowserVersion();
+
+            AccessRecordBean accessRecordBean = new AccessRecordBean();
+
+            accessRecordBean.setArticleId(articleId);
+            accessRecordBean.setLink(link);
+            accessRecordBean.setIp(IpUtils.getIp(request));
+            accessRecordBean.setAccessDate(DateUtils.getTodayZeroMiliseconds());
+            accessRecordBean.setCreateDate(System.currentTimeMillis());
+            accessRecordBean.setUserAgent(userAgentString);
+            accessRecordBean.setOs(os);
+            accessRecordBean.setBrowser(browser);
+
+
+            try {
+                DBUtils.insertOrUpdate(accessRecordBean, false);
+            } catch (DBObjectExistsException e) {
+            } catch (Exception e) {
+                logger.error("[保存访问记录异常]:" + e.getMessage());
+            }
+            return null;
+        });
+        exec.submit(futureTask);
+        exec.shutdown();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(DateFormatUtils.format(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000), "yyyy-MM-dd HH:mm:ss", Locale.CHINA));
     }
 }

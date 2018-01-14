@@ -1,0 +1,27 @@
+<div class="bjui-pageContent">
+    <table class="table table-bordered" id="datagrid_access_record_list_filter" data-toggle="datagrid" data-options="{
+        height: '100%',
+        gridTitle : '访问记录',
+        showToolbar: true,
+        loadType: 'GET',
+        dataUrl: '/accessrecord/true?articleId=${articleId}',
+        dataType: 'json',
+        local: 'remote',
+        filterAll: true,
+        paging: {pageSize: 20,selectPageSize:'20,40,100'},
+        showCheckboxcol: true,
+        linenumberAll: true
+    }">
+        <thead>
+            <tr>
+                <th data-options="{name:'id',align:'center',quickfilter:false,width: 200,add:false,edit:false}">ID</th>
+                <th data-options="{name:'articleId',align:'center',width: 200}">文章ID</th>
+                <th data-options="{name:'link',align:'center',width: 200}">链接</th>
+                <th data-options="{name:'os',align:'center',width: 120}">操作系统</th>
+                <th data-options="{name:'browser',align:'center',width: 200}">浏览器</th>
+                <th data-options="{name:'createDate',align:'center',width: 200}">访问时间</th>
+
+            </tr>
+        </thead>
+    </table>
+</div>

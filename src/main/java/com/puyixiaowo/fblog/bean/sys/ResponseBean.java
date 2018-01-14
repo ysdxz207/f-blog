@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.puyixiaowo.fblog.constants.Constants;
+import com.puyixiaowo.fblog.utils.StringUtils;
 
 import java.io.Serializable;
 
@@ -111,7 +112,11 @@ public class ResponseBean implements Serializable {
 	}
 
 	public ResponseBean error(Exception e) {
-		errorMessage(e.getMessage());
+		String err = e.getMessage();
+		if (StringUtils.isBlank(err)) {
+			err = JSON.toJSONString(e);
+		}
+		errorMessage(err);
 		return this;
 	}
 

@@ -1,6 +1,7 @@
 package com.puyixiaowo.fblog.controller.admin;
 
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
+import com.puyixiaowo.fblog.bean.AccessRecordBean;
 import com.puyixiaowo.fblog.bean.ArticleBean;
 import com.puyixiaowo.fblog.bean.admin.CategoryBean;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
@@ -8,10 +9,12 @@ import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
+import com.puyixiaowo.fblog.domain.AccessRecord;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.ArticleService;
 import com.puyixiaowo.fblog.service.TagService;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.DateUtils;
 import com.puyixiaowo.fblog.utils.LuceneIndexUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import org.apache.commons.beanutils.BeanUtils;
@@ -58,6 +61,22 @@ public class ArticleController extends BaseController {
         try {
             ArticleBean params = getParamsEntity(request, ArticleBean.class, false);
             pageBean = ArticleService.selectArticlePageBean(params, pageBean);
+            for (Object obj : pageBean.getList()) {
+                String sqlAcccessCount = "select * from access_record where article_id=:articleId ";
+                ArticleBean articleBean = (ArticleBean) obj;
+                AccessRecordBean accessCountParams = new AccessRecordBean();
+                accessCountParams.setArticleId(articleBean.getId());
+
+                //总访问量
+                Integer accessCountAll = DBUtils.count(sqlAcccessCount, accessCountParams);
+
+                sqlAcccessCount += "and create_date=:createDate";
+                accessCountParams.setCreateDate(DateUtils.getTodayZeroMiliseconds());
+                //今天访问量
+                Integer accessCountToday = DBUtils.count(sqlAcccessCount, accessCountParams);
+                articleBean.setAccessCountAll(accessCountAll);
+                articleBean.setAccessCountToday(accessCountToday);
+            }
         } catch (Exception e) {
             pageBean.error(e);
         }

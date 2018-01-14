@@ -56,6 +56,9 @@ public class FblogController extends BaseController{
             logger.error(e.getMessage());
         }
         model.put("pageBean", pageBean);
+
+        saveAccessRecord(request, null);
+
         return new FreeMarkerTemplateEngine().render(
                 new ModelAndView(model, "yiyi/index.html")
         );
@@ -98,6 +101,7 @@ public class FblogController extends BaseController{
         articleBean.setContext(articleBean.getContext());
 
         model.put("model", articleBean);
+        saveAccessRecord(request, articleBean.getId());
         return new FreeMarkerTemplateEngine().render(
                 new ModelAndView(model, "yiyi/index.html")
         );

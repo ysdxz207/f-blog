@@ -243,7 +243,8 @@ public class BookService {
                     || bookSource.getSource().equalsIgnoreCase("snwx")
                     || bookSource.getSource().equalsIgnoreCase("biquge")
                     || bookSource.getSource().equalsIgnoreCase("sanjiangge")
-                    || bookSource.getSource().equalsIgnoreCase("abaidu")) {
+                    || bookSource.getSource().equalsIgnoreCase("abaidu")
+                    || bookSource.getSource().equalsIgnoreCase("hunhun")) {
                 return bookSource;
             }
         }

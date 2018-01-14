@@ -32,13 +32,27 @@
     }">
         <thead>
             <tr>
-                <th data-options="{name:'id',align:'center',quickfilter:false,width: 200,add:false,edit:false}">ID</th>
+                <th data-options="{name:'id',align:'center',width: 200,add:false,edit:false}">ID</th>
                 <th data-options="{name:'title',align:'center',width: 200}">标题</th>
                 <th data-options="{name:'categoryId',align:'center',width: 120,type:'select',items: function() {return $.getJSON('${admin}/category/all/array')},itemattr: {value:'id',label:'name'}}">分类</th>
                 <th data-options="{name:'tags',align:'center',width: 200}">标签</th>
                 <th data-options="{name:'createDate',align:'center',width: 200}">创建时间</th>
                 <th data-options="{name:'status',align:'center',width:160,type:'select',items:[{'1':'<font color=\'green\'>已发布</font>'},{'0':'<font color=\'#ea2000\'>未发布</font>'}]}">状态</th>
+                <th data-options="{name:'accessCountAll',align:'center',width: 80}">总访问量</th>
+                <th data-options="{name:'accessCountToday',align:'center',width: 80}">今日访问量</th>
+                <th data-options="{render:function(value, data) {
+                    return datagrid_tree_operation_article_list(data.id)
+                }}">操作</th>
             </tr>
         </thead>
     </table>
 </div>
+
+<script>
+    // 操作列
+    function datagrid_tree_operation_article_list(articleId) {
+        var html = '<button type="button" data-toggle="navtab" data-options="{id:\'nav_tab_access_list\', url:\'/accessrecord/false?articleId=' +
+            + articleId + '\', title:\'访问记录\'}" class="btn-orange" data-toggle="edit.datagrid.tr">访问列表</button>';
+        return html
+    }
+</script>

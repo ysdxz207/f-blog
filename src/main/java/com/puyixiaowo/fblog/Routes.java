@@ -29,6 +29,12 @@ public class Routes {
 
         });
 
+        path("/accessrecord", () -> {
+            get("/:data", ((request, response) -> AccessRecordController.accessRecords(request, response)));
+            post("/:data", ((request, response) -> AccessRecordController.accessRecords(request, response)));
+
+        });
+
         //fblog前台
         path("/yiyi", () -> {
             get("/", ((request, response) -> FblogController.articleList(request, response)));

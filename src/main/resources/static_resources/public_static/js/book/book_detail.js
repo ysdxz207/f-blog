@@ -18,21 +18,6 @@ var bookDetail = {
             arr.push(window.location.href);
             window.localStorage['last_link'] = JSON.stringify(arr);
             var url = "/book/chapter?bookId=" + bookDetail.bookId;
-
-            var strReadingConfig = window.localStorage[bookDetail.bookId];
-            var readingConfig = undefined;
-
-            if (strReadingConfig) {
-                try {
-                    readingConfig = JSON.parse(strReadingConfig);
-                } catch(e) {
-                    window.localStorage.removeItem(bookDetail.bookId);
-                }
-            }
-            if (readingConfig) {
-                url += "&lastReadingChapter=" + readingConfig.lastReadingChapter;
-                url += "&lastReadingChapterLink=" + readingConfig.lastReadingChapterLink;
-            }
             location.href = url;
         });
     };

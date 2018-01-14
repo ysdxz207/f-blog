@@ -35,6 +35,10 @@ public class ArticleBean extends Validatable implements Serializable {
 	private String category;
 	@Transient
 	private String tags;
+	@Transient
+	private Integer accessCountAll;
+	@Transient
+	private Integer accessCountToday;
 
 
 	public Long getId (){
@@ -123,5 +127,21 @@ public class ArticleBean extends Validatable implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public Integer getAccessCountAll() {
+		return accessCountAll;
+	}
+
+	public void setAccessCountAll(Integer accessCountAll) {
+		this.accessCountAll = accessCountAll;
+	}
+
+	public Integer getAccessCountToday() {
+		return accessCountToday;
+	}
+
+	public void setAccessCountToday(Integer accessCountToday) {
+		this.accessCountToday = accessCountToday;
 	}
 }

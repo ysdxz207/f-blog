@@ -108,19 +108,7 @@ public class BookController extends BaseController {
         try {
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
             //读取读书配置
-            BookReadBean bookReadBean = getParamsEntity(request, BookReadBean.class, false);
-
-            if (StringUtils.isNotBlank(bookReadBean
-                    .getLastReadingChapterLink())) {
-                bookReadBean.setLastReadingChapterLink(
-                        URLEncoder.encode(bookReadBean.getLastReadingChapterLink(), Constants.ENCODING));
-            }
-            //无本地化配置,读取服务器配置
-            if (bookReadBean == null
-                    || (StringUtils.isBlank(bookReadBean.getLastReadingChapter())
-                    && StringUtils.isBlank(bookReadBean.getLastReadingChapterLink()))) {
-                bookReadBean = BookReadService.getUserReadConfig(userBean.getId(), bookId);
-            }
+            BookReadBean bookReadBean = BookReadService.getUserReadConfig(userBean.getId(), bookId);
 
             BookBean bookBean = BookService.selectBookBeanById(bookId);
 
@@ -351,6 +339,12 @@ public class BookController extends BaseController {
             BookBean bookBean = BookService.selectBookBeanById(bookId);
             BookReadBean bookReadBean = BookReadService
                     .getUserReadConfig(userBean.getId(), bookId);
+
+            if (bookReadBean == null) {
+                bookReadBean = new BookReadBean();
+                bookReadBean.setUserId(userBean.getId());
+                bookReadBean.setBookId(bookId);
+            }
             bookReadBean.setSource(source);
             DBUtils.insertOrUpdate(bookReadBean, false);
             //切换书源后需要查询出当前章Link
@@ -366,6 +360,12 @@ public class BookController extends BaseController {
                 }
             }
 
+            if (chapter == null) {
+                //第一章
+                chapter = BookChapterService
+                        .requestFirstBookChapters(userBean.getId(), bookId, bookBean.getaId());
+
+            }
             responseBean.setData(chapter);
         } catch (Exception e) {
             responseBean.error(e);

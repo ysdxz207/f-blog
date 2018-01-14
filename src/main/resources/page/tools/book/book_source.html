@@ -80,7 +80,6 @@
                 dataType: "json",
                 success: function (result) {
                     if (result.statusCode == 200) {
-                        window.localStorage.removeItem(bookId);
                         location.href = "/book/chapter?bookId=" + bookId
                             + "&aId=" + source + "&link=" + result.data.link;
                     } else {

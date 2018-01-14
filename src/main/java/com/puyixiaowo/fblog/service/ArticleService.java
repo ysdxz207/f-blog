@@ -47,6 +47,11 @@ public class ArticleService {
 
     public static void buildSqlParams(StringBuilder sbSql,
                                       ArticleBean articleBean) {
+
+        if (articleBean.getId() != null) {
+            sbSql.append("and a.id = :id ");
+        }
+
         if (articleBean.getTitle() != null) {
             sbSql.append("and title like :title ");
             articleBean.setTitle("%" + articleBean.getTitle() + "%");
