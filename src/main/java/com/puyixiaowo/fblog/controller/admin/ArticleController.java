@@ -70,8 +70,8 @@ public class ArticleController extends BaseController {
                 //总访问量
                 Integer accessCountAll = DBUtils.count(sqlAcccessCount, accessCountParams);
 
-                sqlAcccessCount += "and create_date=:createDate";
-                accessCountParams.setCreateDate(DateUtils.getTodayZeroMiliseconds());
+                sqlAcccessCount += "and access_date=:accessDate";
+                accessCountParams.setAccessDate(DateUtils.getTodayZeroMiliseconds());
                 //今天访问量
                 Integer accessCountToday = DBUtils.count(sqlAcccessCount, accessCountParams);
                 articleBean.setAccessCountAll(accessCountAll);

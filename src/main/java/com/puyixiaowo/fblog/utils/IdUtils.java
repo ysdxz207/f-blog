@@ -1,5 +1,7 @@
 package com.puyixiaowo.fblog.utils;
 
+import java.util.UUID;
+
 /**
  * ID生成工具
  * @author feihong
@@ -17,7 +19,15 @@ public class IdUtils {
         return idWorker.nextId();
     }
 
+    public static String generateUUId(){
+
+        UUID uuid = UUID.randomUUID();
+
+        return uuid.toString().replaceAll("-", "");
+    }
+
     public static void main(String[] args) {
         System.out.println(generateId());
+        System.out.println(generateUUId());
     }
 }
