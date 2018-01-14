@@ -16,9 +16,13 @@ public class Constants {
     public static final String KAPTCHA_SESSION_KEY = "KAPTCHA_SESSION_KEY_FBLOG";
 
     /**
-     * 登录cookie key
+     * book登录cookie key
      */
-    public static final String COOKIE_LOGIN_KEY = "COOKIE_LOGIN_KEY_FBLOG";
+    public static final String COOKIE_LOGIN_KEY_BOOK = "COOKIE_LOGIN_KEY_BOOK";
+    /**
+     * fblog登录cookie key
+     */
+    public static final String COOKIE_LOGIN_KEY_FBLOG = "COOKIE_LOGIN_KEY_FBLOG";
     /*
      * 成功状态码
      */

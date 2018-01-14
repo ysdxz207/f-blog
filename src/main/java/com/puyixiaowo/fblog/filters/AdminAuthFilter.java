@@ -1,6 +1,7 @@
 package com.puyixiaowo.fblog.filters;
 
 import com.puyixiaowo.fblog.constants.Constants;
+import com.puyixiaowo.fblog.controller.admin.LoginController;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.utils.RedisUtils;
 
@@ -26,7 +27,8 @@ public class AdminAuthFilter {
             if (!isIgnorePath(uri)
                     && (request.session().attribute(Constants.SESSION_USER_KEY) == null)) {
 
-                response.redirect("/admin/loginPage");
+                LoginController.rememberMeLogin(Constants.COOKIE_LOGIN_KEY_FBLOG,
+                        request, response);
                 halt();
             }
         });

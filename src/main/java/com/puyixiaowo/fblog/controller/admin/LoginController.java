@@ -61,7 +61,8 @@ public class LoginController extends BaseController {
     public static Object adminLogin(Request request,
                                        Response response) {
 
-        return login(request, response);
+        return login(Constants.COOKIE_LOGIN_KEY_FBLOG,
+                request, response);
     }
 
     /**
@@ -87,10 +88,12 @@ public class LoginController extends BaseController {
     public static Object bookLogin(Request request,
                                           Response response) {
 
-        return login(request, response);
+        return login(Constants.COOKIE_LOGIN_KEY_BOOK,
+                request, response);
     }
 
-    public static ResponseBean login(Request request,
+    public static ResponseBean login(String cookieKey,
+                                     Request request,
                                      Response response) {
 
         ResponseBean responseBean = new ResponseBean();
@@ -119,10 +122,12 @@ public class LoginController extends BaseController {
             responseBean.errorMessage("密码为空");
             return responseBean;
         }
-        return doLogin(uname, DesUtils.encrypt(upass), request, response);
+        return doLogin(cookieKey,
+                uname, DesUtils.encrypt(upass), request, response);
     }
 
-    private static ResponseBean doLogin(String uname,
+    private static ResponseBean doLogin(String cookieKey,
+                                        String uname,
                                 String upassEncrypt,
                                 Request request,
                                 Response response) {
@@ -142,7 +147,7 @@ public class LoginController extends BaseController {
             } else {
                 //登录成功
                 request.session().attribute(Constants.SESSION_USER_KEY, userBean);
-                rememberMe(request, response, userBean);
+                rememberMe(cookieKey, request, response, userBean);
                 return responseBean;
             }
         } catch (Exception e) {
@@ -152,19 +157,27 @@ public class LoginController extends BaseController {
         }
     }
 
-    public static UserBean rememberMe(Request request,
+    public static UserBean rememberMe(String cookieKey,
+                                      Request request,
                                    Response response,
                                    UserBean userBean) {
+        String rememberMeStr = request.queryParams("rememberMe");
+
+        boolean rememberMe = StringUtils.isNotBlank(rememberMeStr)
+                && Boolean.valueOf(rememberMeStr);
 
         if (userBean != null) {
+            if (!rememberMe) {
+                return null;
+            }
             String cookieStr = userBean.getLoginname() + "_" + userBean.getPassword();
-            response.cookie(Constants.COOKIE_LOGIN_KEY,
+            response.cookie(cookieKey,
                     DesUtils.encrypt(cookieStr), 24*3600*365);
             return userBean;
         }
 
         userBean = new UserBean();
-        String str = request.cookie(Constants.COOKIE_LOGIN_KEY);
+        String str = request.cookie(cookieKey);
 
         if (StringUtils.isNotBlank(str)) {
             String [] strArr = DesUtils.decrypt(str).split("_");
@@ -197,7 +210,13 @@ public class LoginController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
         request.session().removeAttribute(Constants.SESSION_USER_KEY);
 
-        response.removeCookie("/book", Constants.COOKIE_LOGIN_KEY);
+        String uri = request.uri();
+
+        if (uri.toLowerCase().startsWith("/book")) {
+            response.removeCookie("/book", Constants.COOKIE_LOGIN_KEY_BOOK);
+        } else {
+            response.removeCookie("/admin", Constants.COOKIE_LOGIN_KEY_FBLOG);
+        }
         return responseBean;
     }
 
@@ -267,7 +286,9 @@ public class LoginController extends BaseController {
         return "";
     }
 
-    public static void rememberMeLogin(Request request, Response response) {
+    public static void rememberMeLogin(String cookieKey,
+                                       Request request,
+                                       Response response) {
         String uri = request.uri();
 
         String redirectPage = "/admin/";
@@ -288,14 +309,16 @@ public class LoginController extends BaseController {
             loginPage = "/book/loginPage";
         }
 
-        UserBean userBean = rememberMe(request, response, null);
+        UserBean userBean = rememberMe(cookieKey,
+                request, response, null);
 
         if (userBean == null) {
             response.redirect(loginPage);
             return;
         }
 
-        ResponseBean responseBean = doLogin(userBean.getLoginname(), userBean.getPassword(), request, response);
+        ResponseBean responseBean = doLogin(cookieKey,
+                userBean.getLoginname(), userBean.getPassword(), request, response);
 
         if (responseBean.getStatusCode() == Constants.RESPONSE_STATUS_CODE_SUCCESS) {
             response.redirect(redirectPage);
