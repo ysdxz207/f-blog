@@ -42,7 +42,7 @@ public class AccessRecordService {
             sbSql.append("and article_id = :articleId ");
         }
 
-        if (accessRecordBean.getOs() != null) {
+        if (accessRecordBean.getBrowser() != null) {
             sbSql.append("and browser like :browser ");
             accessRecordBean.setBrowser("%" + accessRecordBean.getBrowser() + "%");
         }
