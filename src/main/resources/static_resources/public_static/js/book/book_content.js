@@ -1,7 +1,7 @@
 var bookContent = {
     bookId: undefined,
     lastReadingChapter: '',
-    lastReadingChapterLink: '',
+    lastReadingChapterLink: ''
 };
 
 (function (bookContent) {
@@ -13,6 +13,7 @@ var bookContent = {
 
         $('.book-chapter-content').on('click', function (e) {
 
+            var delay = 10;
             var lineHeight = 28;
             var isTop = $(document).scrollTop() < 10;
             var isBottom = ($(document).height() -
@@ -37,7 +38,7 @@ var bookContent = {
                 && !isBottom) {
                 //向下滚动
                 $('html,body')
-                    .animate({scrollTop: $(document).scrollTop() + height - lineHeight}, 0);
+                    .animate({scrollTop: $(document).scrollTop() + height - lineHeight}, delay);
                 return;
             }
 
@@ -45,7 +46,7 @@ var bookContent = {
                 && !isTop) {
                 //向上滚动
                 $('html,body')
-                    .animate({scrollTop: $(document).scrollTop() - height + lineHeight}, 0);
+                    .animate({scrollTop: $(document).scrollTop() - height + lineHeight}, delay);
                 return;
             }
 
@@ -58,8 +59,12 @@ var bookContent = {
         bookReading.bookId = bookContent.bookId;
         bookReading.lastReadingChapter = bookContent.lastReadingChapter;
         bookReading.lastReadingChapterLink = bookContent.lastReadingChapterLink;
-        bookReading.sort = window.localStorage['sort_' + bookContent.bookId] ? window.localStorage['sort_' + bookReading.bookId] : 0
-        ;
+        bookReading.sort = window.localStorage['sort_' + bookContent.bookId]
+            ? window.localStorage['sort_' + bookReading.bookId] : 0;
+        bookReading.fontSize = bookContent.fontSize;
+        bookReading.bgColor = bookContent.bgColor;
+        bookReading.fontSize = bookContent.fontSize;
+        bookReading.lineHeight = bookContent.lineHeight;
 
         //保存到后端
         $.ajax({
@@ -102,19 +107,11 @@ var bookContent = {
             }
         });
 
-
-        $('#btn_reverse_book_chapters').on('click', function() {
-            var sort = parseInt(window.localStorage['sort_' + bookContent.bookId]) ? 0 : 1;
-            console.log(sort);
-            var ul = $('#book_chapters_ul');
-            var lis = ul.find('li').get().reverse();
-            ul.empty().append(lis);
-            window.localStorage['sort_' + bookContent.bookId] = sort;
-            //保存配置
-            bookContent.saveReading();
-        });
     };
 
+    bookContent.preloadNextPage = function () {
+        $('.btn-book-content-next-chapter').preload();
+    };
     bookContent.init = function () {
 
         bookContent.bookId = $('#hidden_book_content_book_id').val();
@@ -126,6 +123,8 @@ var bookContent = {
         bookContent.tapScroll();
 
         bookContent.saveReading();
+
+        bookContent.preloadNextPage();
     };
 
     bookContent.init();

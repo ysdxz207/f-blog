@@ -12,6 +12,8 @@ var bookMenu = {
 
     bookMenu.toggle = function () {
         bookMenu.menuObj.toggle();
+        $('.book-menu-footer-font-setup').hide();
+        $('.book-menu-footer').show();
     };
 
     bookMenu.bind = function () {
@@ -24,9 +26,6 @@ var bookMenu = {
             $('.book-content-main').show();
         });
 
-        $('#btn_book_menu_font_setup').on('click', function () {
-            // bookMenu.toggle();
-        });
         $('#btn_book_menu_font_chapters').on('click', function () {
             //记录一下当前内容滚动位置，当从章节列表返回时再滚动到这个位置
             bookMenu.contentY = $(document).scrollTop();
@@ -38,6 +37,97 @@ var bookMenu = {
             $('#book_menu_chapters').show();
         });
 
+
+
+        $('#btn_reverse_book_chapters').on('click', function() {
+            var sort = parseInt(window.localStorage['sort_' + bookContent.bookId]) ? 0 : 1;
+            console.log(sort);
+            var ul = $('#book_chapters_ul');
+            var lis = ul.find('li').get().reverse();
+            ul.empty().append(lis);
+            window.localStorage['sort_' + bookContent.bookId] = sort;
+            //保存配置
+            bookContent.saveReading();
+        });
+
+        //字体设置按钮
+        $('#btn_book_menu_font_setup').on('click', function () {
+            $('.book-menu-footer').hide();
+            $('.book-menu-footer-font-setup').show();
+        });
+
+        $('.btn-font-big').on('click', function () {
+            var chapterContent = $('.book-chapter-content');
+            var fontSize = chapterContent.css('font-size');
+            fontSize = parseInt(fontSize);
+            fontSize += 3;
+            if (fontSize > 29) {
+                salert('已经是最大字体了');
+                return;
+            }
+            chapterContent.css('font-size', fontSize + 'px');
+            bookContent.fontSize = fontSize;
+            //保存配置
+            bookContent.saveReading();
+        });
+
+        $('.btn-font-small').on('click', function () {
+            var chapterContent = $('.book-chapter-content');
+            var fontSize = chapterContent.css('font-size');
+            fontSize = parseInt(fontSize);
+            fontSize -= 3;
+            if (fontSize < 9) {
+                salert('已经是最小字体了');
+                return;
+            }
+            chapterContent.css('font-size', fontSize + 'px');
+            bookContent.fontSize = fontSize;
+            //保存配置
+            bookContent.saveReading();
+        });
+
+        $('.btn-line-height-small').on('click', function () {
+            var chapterContent = $('.book-chapter-content');
+            var lineHeight = chapterContent.css('line-height');
+            var fontSize = chapterContent.css('font-size');
+
+            lineHeight = parseInt(lineHeight);
+            lineHeight -= 1;
+            if (lineHeight < parseInt(fontSize)) {
+                salert('已经是最小行距了');
+                return;
+            }
+            chapterContent.css('line-height', lineHeight + 'px');
+            bookContent.lineHeight = lineHeight;
+            //保存配置
+            bookContent.saveReading();
+        });
+
+        $('.btn-line-height-big').on('click', function () {
+            var chapterContent = $('.book-chapter-content');
+            var lineHeight = chapterContent.css('line-height');
+            var fontSize = chapterContent.css('font-size');
+            lineHeight = parseInt(lineHeight);
+            lineHeight += 1;
+            if (lineHeight > parseInt(fontSize) * 2) {
+                salert('已经是最大行距了');
+                return;
+            }
+            chapterContent.css('line-height', lineHeight + 'px');
+            bookContent.lineHeight = lineHeight;
+            //保存配置
+            bookContent.saveReading();
+        });
+
+        $('.btn-color-group button').on('click', function () {
+            var btn = $(this);
+            var color = btn.css('background-color');
+            $('.book-content-main').css('background-color', color);
+
+            bookContent.bgColor = color;
+            //保存配置
+            bookContent.saveReading();
+        });
 
     };
 

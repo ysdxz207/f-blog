@@ -168,6 +168,7 @@ public class BookController extends BaseController {
             bookChapterBean.setContent(content);
             model.put("model", bookChapterBean);
             model.put("book", bookBean);
+            model.put("bookRead", bookReadBean);
 
         } catch (Exception e) {
             logger.error("[书]获取章节内容异常：" + e.getMessage());
