@@ -9,7 +9,6 @@ import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
-import com.puyixiaowo.fblog.domain.AccessRecord;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.ArticleService;
 import com.puyixiaowo.fblog.service.TagService;
@@ -17,7 +16,6 @@ import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.DateUtils;
 import com.puyixiaowo.fblog.utils.LuceneIndexUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +23,6 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,7 +136,7 @@ public class ArticleController extends BaseController {
 
                 articleBean.setCreateDate(bean.getCreateDate());
                 articleBean.setCreator(bean.getCreator());
-            } else  {
+            } else {
                 articleBean.setCreator(currentUser.getLoginname());
                 articleBean.setCreateDate(System.currentTimeMillis());
             }
