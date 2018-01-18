@@ -47,6 +47,6 @@ CREATE TABLE `access_record` (
   `ip` VARCHAR(32) NOT NULL,
 
   PRIMARY KEY (`id`),
-  UNIQUE (article_id, create_date, ip),
-  UNIQUE (link, create_date, ip)
+  UNIQUE (article_id, access_date, ip),
+  UNIQUE (link, access_date, ip)
 );

@@ -3,9 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>首页</title>
+    <style>
+        .link,.link:hover,.link:focus,.link:active {
+            color: #fcbe87;
+        }
+    </style>
 </head>
 <body>
-    <button id="btn_fblog_search_reindex" type="button" class="btn btn-default">重建搜索索引</button>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">首页访问量：</label>
+                <div class="col-sm-8">
+                    <button type="button" class="link btn-orange" data-toggle="navtab" data-options="{id:'nav_tab_access_list', url:'/accessrecord/false?articleId=0', title:'访问记录'}" >${indexCount}</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">总访问量：</label>
+                <div class="col-sm-8">
+                    123
+                </div>
+            </div>
+        </div>
+    </div>
+<button id="btn_fblog_search_reindex" type="button" class="btn btn-default">重建搜索索引</button>
 </body>
 <script>
     //重建搜索索引
@@ -14,7 +35,7 @@
             url: '/admin/article/lucene/reindex',
             loadingmask: true,
             type: 'get',
-            okCallback: function(data, options) {
+            okCallback: function (data, options) {
                 if (data.statusCode == 200) {
                     BJUI.alertmsg('ok', '重建成功！');
                 } else {

@@ -57,7 +57,7 @@ public class FblogController extends BaseController{
         }
         model.put("pageBean", pageBean);
 
-        saveAccessRecord(request, null);
+        saveAccessRecord(request, 0L);
 
         return new FreeMarkerTemplateEngine().render(
                 new ModelAndView(model, "yiyi/index.html")

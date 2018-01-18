@@ -165,14 +165,14 @@ public class BaseController {
         return SignUtils.verify(params, sign, afuTypeBean.getPublicKey());
     }
 
+
     public static void saveAccessRecord(Request request,
                                         Long articleId) {
         ExecutorService exec = Executors.newFixedThreadPool(5);
 
-
         FutureTask futureTask = new FutureTask(() -> {
 
-            String link = request.url()
+            String link = request.uri()
                     + (StringUtils.isNotBlank(request.queryString())
                     ? "?" + request.queryString() : "");
 
