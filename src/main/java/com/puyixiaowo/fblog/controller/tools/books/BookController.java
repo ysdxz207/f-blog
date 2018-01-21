@@ -142,6 +142,7 @@ public class BookController extends BaseController {
                     bookChapterBean = BookChapterService
                             .requestFirstBookChapters(userBean.getId(), bookId, bookBean.getaId());
                     link = bookChapterBean.getLink();
+                    chapterName = bookChapterBean.getTitle();
                 }
             }
             //保存读书配置
