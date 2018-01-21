@@ -132,8 +132,7 @@ public class BookController extends BaseController {
                 }
 
                 link = bookChapterBean.getLink();
-                bookReadBean.setLastReadingChapterLink(link);
-                bookReadBean.setLastReadingChapter(bookChapterBean.getTitle());
+                chapterName = bookChapterBean.getTitle();
             } else if (StringUtils.isBlank(link)) {
 
                 if (bookReadBean != null) {
@@ -146,6 +145,8 @@ public class BookController extends BaseController {
                 }
             }
             //保存读书配置
+            bookReadBean.setLastReadingChapterLink(link);
+            bookReadBean.setLastReadingChapter(chapterName);
             ResponseBean responseBean = BookReadService.saveBookRead(bookReadBean);
 
             System.out.println(responseBean);
