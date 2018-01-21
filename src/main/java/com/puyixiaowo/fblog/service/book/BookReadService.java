@@ -3,8 +3,10 @@ package com.puyixiaowo.fblog.service.book;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookReadBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
+import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
 import spark.Request;
 
 public class BookReadService {
@@ -49,5 +51,45 @@ public class BookReadService {
         BookReadBean bookReadBean = new BookReadBean();
         bookReadBean.setBookId(bookId);
         DBUtils.executeSql("delete from book_read where book_id=:bookId", bookReadBean);
+    }
+
+    public static ResponseBean saveBookRead(BookReadBean bookReadBean) {
+        ResponseBean responseBean = new ResponseBean();
+
+        //读书配置不存在
+        if (bookReadBean == null) {
+            return responseBean.errorMessage("读书配置不可为空");
+        }
+        if (StringUtils.isBlank(bookReadBean.getBookId())) {
+            return responseBean.errorMessage("{读书配置]书ID不可为空");
+        }
+        if (StringUtils.isBlank(bookReadBean.getUserId())) {
+            return responseBean.errorMessage("{读书配置]用户ID不可为空");
+        }
+        if (StringUtils.isBlank(bookReadBean.getLastReadingChapter())) {
+            return responseBean.errorMessage("{读书配置]最后读章不可为空");
+        }
+        if (StringUtils.isBlank(bookReadBean.getLastReadingChapterLink())) {
+            return responseBean.errorMessage("{读书配置]最后读章链接不可为空");
+        }
+        if (StringUtils.isBlank(bookReadBean.getSource())) {
+            return responseBean.errorMessage("{读书配置]书来源不可为空");
+        }
+        //读取读书配置
+        BookReadBean bookReadBeanDB = BookReadService
+                .getUserReadConfig(bookReadBean
+                        .getUserId(), bookReadBean.getBookId());
+
+
+
+        //更新读书配置
+        if (bookReadBeanDB != null) {
+            bookReadBean.setId(bookReadBeanDB.getId());
+        }
+
+        bookReadBean.setBookId(bookReadBean.getBookId());
+        DBUtils.insertOrUpdate(bookReadBean, false);
+
+        return responseBean;
     }
 }

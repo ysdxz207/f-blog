@@ -132,6 +132,8 @@ public class BookController extends BaseController {
                 }
 
                 link = bookChapterBean.getLink();
+                bookReadBean.setLastReadingChapterLink(link);
+                bookReadBean.setLastReadingChapter(bookChapterBean.getTitle());
             } else if (StringUtils.isBlank(link)) {
 
                 if (bookReadBean != null) {
@@ -143,6 +145,11 @@ public class BookController extends BaseController {
                     link = bookChapterBean.getLink();
                 }
             }
+            //保存读书配置
+            ResponseBean responseBean = BookReadService.saveBookRead(bookReadBean);
+
+            System.out.println(responseBean);
+
 
             bookChapterBean = BookChapterService.requestBookContent(link);
 
@@ -166,9 +173,14 @@ public class BookController extends BaseController {
             String content = bookChapterBean
                     .getContent().replaceAll("\n", "</p>\n<p>&nbsp;&nbsp;&nbsp;&nbsp;");
             bookChapterBean.setContent(content);
+
+            //章节列表
+            List<BookChapterBean> chapterBeanList = BookChapterService
+                    .requestBookChapters(userBean.getId(), bookId, bookBean.getaId(), false);
             model.put("model", bookChapterBean);
             model.put("book", bookBean);
             model.put("bookRead", bookReadBean);
+            model.put("bookChapters", chapterBeanList);
 
         } catch (Exception e) {
             logger.error("[书]获取章节内容异常：" + e.getMessage());

@@ -13,6 +13,9 @@ var bookContent = {
 
         $('.book-chapter-content').on('click', function (e) {
 
+            var pageMethod = window.localStorage['pageMethod']
+                ? window.localStorage['pageMethod'] : 1;
+
             var delay = 10;
             var lineHeight = 28;
             var isTop = $(document).scrollTop() < 10;
@@ -20,12 +23,17 @@ var bookContent = {
                 ($(window).height() + $(document).scrollTop())) == 0;
 
             var tapX = e.clientX;
+            var tapY = e.clientY;
+            var tap = pageMethod == "1" ? tapY : tapX;
 
             var width = screen.width;
             var height = screen.height;
+            var widthOrHeight = pageMethod == "1" ? height : width;
 
+            console.log(tap)
+            console.log(widthOrHeight)
             //点击屏幕中央唤起菜单
-            if (tapX < (width / 3 * 2) && tapX > (width / 3 * 1)) {
+            if (tap < (widthOrHeight / 3 * 2) && tap > (widthOrHeight / 3 * 1)) {
                 bookMenu.toggle();
                 return;
             }
@@ -34,7 +42,7 @@ var bookContent = {
                 return;
             }
 
-            if ((tapX > (width / 3 * 2))
+            if ((tap > (widthOrHeight / 3 * 2))
                 && !isBottom) {
                 //向下滚动
                 $('html,body')
@@ -42,7 +50,7 @@ var bookContent = {
                 return;
             }
 
-            if (tapX < (width / 3 * 1)
+            if (tap < (widthOrHeight / 3 * 1)
                 && !isTop) {
                 //向上滚动
                 $('html,body')
@@ -61,10 +69,13 @@ var bookContent = {
         bookReading.lastReadingChapterLink = bookContent.lastReadingChapterLink;
         bookReading.sort = window.localStorage['sort_' + bookContent.bookId]
             ? window.localStorage['sort_' + bookReading.bookId] : 0;
+
         bookReading.fontSize = bookContent.fontSize;
         bookReading.bgColor = bookContent.bgColor;
         bookReading.fontSize = bookContent.fontSize;
         bookReading.lineHeight = bookContent.lineHeight;
+        bookReading.pageMethod = window.localStorage['pageMethod']
+            ? window.localStorage['pageMethod'] : 1;
 
         //保存到后端
         $.ajax({
@@ -82,7 +93,7 @@ var bookContent = {
         });
     };
 
-    bookContent.bind = function () {
+    bookContent.loadChapters = function () {
         //章节列表
         $.ajax({
             url: "/book/chapters",
@@ -119,12 +130,12 @@ var bookContent = {
         bookContent.lastReadingChapterLink = $('#hidden_book_content_reading_chapter_link').val();
 
 
-        bookContent.bind();
+        // bookContent.loadChapters();
         bookContent.tapScroll();
 
-        bookContent.saveReading();
+        // bookContent.saveReading();
 
-        bookContent.preloadNextPage();
+        // bookContent.preloadNextPage();
     };
 
     bookContent.init();

@@ -129,6 +129,28 @@ var bookMenu = {
             bookContent.saveReading();
         });
 
+        //翻页方式
+        $("#check_page_method").bootstrapSwitch({
+            labelText: '翻页方式',
+            onText: '上下',
+            offText: '左右',
+            onColor: 'success',
+            offColor: 'warning',
+            size: 'mini',
+            labelWidth: '80',
+            state: $("#check_page_method").val() == 1 ? true : false,
+            onSwitchChange: function (event, state) {
+                var pageMethod = state ? '1' : '2';
+                window.localStorage['pageMethod'] = pageMethod;
+                //保存配置
+                bookContent.saveReading();
+            }
+        });
+
+    };
+
+    bookMenu.loada = function () {
+        console.log();
     };
 
     /**

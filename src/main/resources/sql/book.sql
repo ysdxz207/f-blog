@@ -42,6 +42,7 @@ CREATE TABLE `book_read` (
   `bg_color`      VARCHAR(64) DEFAULT '#817f79',
   `font_size`        INTEGER(6) DEFAULT '23',
   `line_height`        INTEGER(6) DEFAULT '28',
+  `page_method`        INTEGER(2) DEFAULT '1',
   `sort`        INTEGER(4) DEFAULT '0',
   PRIMARY KEY (`id`)
 );

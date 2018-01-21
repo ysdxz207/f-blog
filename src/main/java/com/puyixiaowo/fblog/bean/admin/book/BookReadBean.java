@@ -22,6 +22,7 @@ public class BookReadBean extends Validatable implements Serializable {
 	private String bgColor;
 	private Integer fontSize;
 	private Integer lineHeight;
+	private Integer pageMethod;
 	private Integer sort;
 
 
@@ -95,6 +96,14 @@ public class BookReadBean extends Validatable implements Serializable {
 
 	public void setLineHeight(Integer lineHeight) {
 		this.lineHeight = lineHeight;
+	}
+
+	public Integer getPageMethod() {
+		return pageMethod;
+	}
+
+	public void setPageMethod(Integer pageMethod) {
+		this.pageMethod = pageMethod;
 	}
 
 	public Integer getSort() {
