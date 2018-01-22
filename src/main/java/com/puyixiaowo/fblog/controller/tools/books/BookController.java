@@ -148,10 +148,7 @@ public class BookController extends BaseController {
             //保存读书配置
             bookReadBean.setLastReadingChapterLink(link);
             bookReadBean.setLastReadingChapter(chapterName);
-            ResponseBean responseBean = BookReadService.saveBookRead(bookReadBean);
-
-            System.out.println(responseBean);
-
+            BookReadService.saveBookRead(bookReadBean);
 
             bookChapterBean = BookChapterService.requestBookContent(link);
 
