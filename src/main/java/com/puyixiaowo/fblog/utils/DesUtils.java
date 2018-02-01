@@ -76,7 +76,7 @@ public class DesUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public final static String decrypt2(String data, String key) {
+	public final static String decrypt(String data, String key) {
 		try {
 			return new String(decrypt(hex2byte(data.getBytes()),
 					key.getBytes()));
@@ -92,7 +92,7 @@ public class DesUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public final static String encrypt2(String str, String key) {
+	public final static String encrypt(String str, String key) {
 		try {
 			return byte2hex(encrypt(str.getBytes(), key.getBytes()));
 		} catch (Exception e) {
