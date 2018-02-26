@@ -43,6 +43,12 @@ public class BookReadService {
         bookReadBean = DBUtils.selectOne("select * from book_read where " +
                 "user_id = :userId and book_id = :bookId", bookReadBean);
 
+        if (bookReadBean == null) {
+            bookReadBean = new BookReadBean();
+            bookReadBean.setUserId(userId);
+            bookReadBean.setBookId(bookId);
+            DBUtils.insertOrUpdate(bookReadBean, false);
+        }
         return bookReadBean;
     }
 
