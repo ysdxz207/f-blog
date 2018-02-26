@@ -30,8 +30,6 @@ var bookContent = {
             var height = screen.height;
             var widthOrHeight = pageMethod == "1" ? height : width;
 
-            console.log(tap)
-            console.log(widthOrHeight)
             //点击屏幕中央唤起菜单
             if (tap < (widthOrHeight / 3 * 2) && tap > (widthOrHeight / 3 * 1)) {
                 bookMenu.toggle();

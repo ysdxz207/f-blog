@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * 仅用于前端展示，不写入数据库
  */
-public class BookSource implements Serializable{
+public class BookSource implements Serializable,Comparable<BookSource>{
     private static final long serialVersionUID = 1L;
 
     private String _id;
@@ -16,6 +16,10 @@ public class BookSource implements Serializable{
 
 
     private boolean currentSource;
+    private int lastChapterNum;//最后一章的章节数字
+
+
+    
 
     public String get_id() {
         return _id;
@@ -63,5 +67,18 @@ public class BookSource implements Serializable{
 
     public void setCurrentSource(boolean currentSource) {
         this.currentSource = currentSource;
+    }
+
+    public int getLastChapterNum() {
+        return lastChapterNum;
+    }
+
+    public void setLastChapterNum(int lastChapterNum) {
+        this.lastChapterNum = lastChapterNum;
+    }
+
+    @Override
+    public int compareTo(BookSource o) {
+        return this.getLastChapterNum() > o.getLastChapterNum() ? 1 : 0;
     }
 }

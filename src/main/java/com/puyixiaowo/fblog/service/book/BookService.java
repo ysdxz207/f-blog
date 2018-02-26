@@ -7,10 +7,7 @@ import com.puyixiaowo.fblog.bean.admin.book.*;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.constants.BookConstants;
 import com.puyixiaowo.fblog.constants.Constants;
-import com.puyixiaowo.fblog.utils.DBUtils;
-import com.puyixiaowo.fblog.utils.HttpUtils;
-import com.puyixiaowo.fblog.utils.IdUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
+import com.puyixiaowo.fblog.utils.*;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.omg.CORBA.OBJ_ADAPTER;
@@ -229,29 +226,23 @@ public class BookService {
             BookSource bookSource = jsonObj.toJavaObject(BookSource.class);
             bookSource.setUpdated(getUpdateDateString(bookSource.getUpdated()));
 
-            list.add(bookSource);
+            bookSource.setLastChapterNum(BookChapterService.getChapterNum(bookSource.getLastChapter()));
+
+            if (!"zhuishuvip".equals(bookSource.getSource())) {
+                list.add(bookSource);
+            }
         }
 
         return list;
     }
 
-    public static BookSource getDefaultSource(String aId, Long bookId) {
+    public static BookSource getDefaultSource(String aId) {
         List<BookSource> bookSourceList = getBookSource(aId);
 
-        for (BookSource bookSource : bookSourceList) {
-            if (bookSource.getSource().equalsIgnoreCase("my176")
-                    || bookSource.getSource().equalsIgnoreCase("snwx")
-                    || bookSource.getSource().equalsIgnoreCase("biquge")
-                    || bookSource.getSource().equalsIgnoreCase("sanjiangge")
-                    || bookSource.getSource().equalsIgnoreCase("abaidu")
-                    || bookSource.getSource().equalsIgnoreCase("hunhun")) {
-                return bookSource;
-            }
+        if (bookSourceList.size() == 1) {
+            return bookSourceList.get(0);
         }
 
-        //读取书籍ID
-        BookSource bookSource = new BookSource();
-        bookSource.set_id(aId);
-        return bookSource;
+        return Collections.max(bookSourceList);
     }
 }

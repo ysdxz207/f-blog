@@ -15,8 +15,8 @@ public class NumberUtils {
     }
 
     private static Pattern CHN_NUM_PATTERN = Pattern.compile("[一二三四五六七八九][十百千]?");
-    private static Map<Character, Integer> CHN_UNITS = new HashMap<Character, Integer>();
-    private static Map<Character, Integer> CHN_NUMS = new HashMap<Character, Integer>();
+    private static Map<Character, Integer> CHN_UNITS = new HashMap<>();
+    private static Map<Character, Integer> CHN_NUMS = new HashMap<>();
     static {
         CHN_UNITS.put('十', 10);
         CHN_UNITS.put('百', 100);
@@ -58,7 +58,7 @@ public class NumberUtils {
     /**
      * 将汉字转换为数字
      * 
-     * @param num
+     * @param chnNum
      * @return
      */
     public static int convertToNumber(String chnNum) {

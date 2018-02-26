@@ -9,6 +9,7 @@ import com.puyixiaowo.fblog.constants.BookConstants;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.HttpUtils;
+import com.puyixiaowo.fblog.utils.NumberUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Moses
@@ -42,7 +45,7 @@ public class BookChapterService {
         String source = bookReadBean.getSource();
 
         if (StringUtils.isBlank(source)) {
-            source = BookService.getDefaultSource(aId, bookId).get_id();
+            source = BookService.getDefaultSource(aId).get_id();
             //可能为第一次读书或配置被删除
             bookReadBean.setSource(source);
             bookReadBean.setBookId(bookId);
@@ -252,5 +255,18 @@ public class BookChapterService {
             return null;
         }
         return bookChapterBeanList.get(index);
+    }
+
+    public static int getChapterNum(String lastChapter) {
+
+        Pattern pattern = Pattern.compile("第(.*)章");
+        Matcher matcher1 = pattern.matcher(lastChapter);
+        if (matcher1.find()) {
+            lastChapter = matcher1.group(1);
+        }
+
+        return NumberUtils.hasNumber(lastChapter) ?
+                StringUtils.parseInteger(lastChapter) :
+                NumberUtils.convertToNumber(lastChapter);
     }
 }
