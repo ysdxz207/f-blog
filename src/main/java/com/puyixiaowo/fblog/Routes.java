@@ -27,6 +27,9 @@ public class Routes {
             get("", ((request, response) -> TestController.test(request, response)));
             post("", ((request, response) -> TestController.test(request, response)));
 
+            get("/json", ((request, response) -> TestController.testJson(request, response)));
+            post("/json", ((request, response) -> TestController.testJson(request, response)));
+
         });
 
         path("/accessrecord", () -> {
