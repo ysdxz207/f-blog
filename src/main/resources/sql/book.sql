@@ -36,7 +36,7 @@ CREATE TABLE `book_read` (
   `id`        INTEGER(20)  NOT NULL UNIQUE,
   `user_id`      INTEGER(20) NOT NULL,
   `book_id`      INTEGER(20) NOT NULL,
-  `source`    VARCHAR(128) NOT NULL,
+  `source`    VARCHAR(128),
   `last_reading_chapter`          VARCHAR(128) DEFAULT NULL,
   `last_reading_chapter_link`     TEXT DEFAULT NULL,
   `bg_color`      VARCHAR(64) DEFAULT '#817f79',

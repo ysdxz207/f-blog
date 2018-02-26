@@ -135,7 +135,8 @@ public class BookController extends BaseController {
                 chapterName = bookChapterBean.getTitle();
             } else if (StringUtils.isBlank(link)) {
 
-                if (bookReadBean != null) {
+                if (bookReadBean != null
+                        && bookReadBean.getLastReadingChapterLink() != null) {
                     link = bookReadBean.getLastReadingChapterLink();
                 } else {
                     //获取第一章
@@ -145,10 +146,6 @@ public class BookController extends BaseController {
                     chapterName = bookChapterBean.getTitle();
                 }
             }
-            //保存读书配置
-            bookReadBean.setLastReadingChapterLink(link);
-            bookReadBean.setLastReadingChapter(chapterName);
-            BookReadService.saveBookRead(bookReadBean);
 
             bookChapterBean = BookChapterService.requestBookContent(link);
 
@@ -158,6 +155,13 @@ public class BookController extends BaseController {
                 //提示切换书源
                 return HTML_CHANGE_SOURCE;
             }
+
+            //保存读书配置
+            bookReadBean.setLastReadingChapterLink(link);
+            bookReadBean.setLastReadingChapter(bookChapterBean.getTitle());
+            BookReadService.saveBookRead(bookReadBean);
+
+
             if (".".equals(bookChapterBean.getTitle()== null ? "" : bookChapterBean.getTitle().trim())) {
 
                 if (StringUtils.isNotBlank(chapterName)) {

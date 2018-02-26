@@ -94,10 +94,11 @@ public class BookChapterService {
             DBUtils.insertOrUpdate(bookReadBean, false);
         }
         if (!keepSort
-            && bookReadBean.getSort() != null
-            && bookReadBean.getSort() == 0) {
+                && bookReadBean.getSort() != null
+                && bookReadBean.getSort() == 0) {
             Collections.reverse(list);
         }
+
         return list;
     }
 
@@ -205,7 +206,7 @@ public class BookChapterService {
             title1 = arr1[1];
             title2 = arr2[1];
         }
-        if (StringUtils.getSimilarityRatio(title1.replaceAll("[\\pP\\p{Punct}]",""), title2.replaceAll("[\\pP\\p{Punct}]","")) > 0.9) {
+        if (StringUtils.getSimilarityRatio(title1.replaceAll("[\\pP\\p{Punct}]", ""), title2.replaceAll("[\\pP\\p{Punct}]", "")) > 0.9) {
             return true;
         }
         return false;
@@ -213,6 +214,7 @@ public class BookChapterService {
 
     /**
      * 获取正在阅读的章节索引
+     *
      * @param chapterBeanList
      * @param lastReadingChapter
      * @return
