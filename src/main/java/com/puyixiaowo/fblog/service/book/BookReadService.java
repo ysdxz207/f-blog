@@ -75,9 +75,6 @@ public class BookReadService {
         if (StringUtils.isBlank(bookReadBean.getLastReadingChapter())) {
             return responseBean.errorMessage("{读书配置]最后读章不可为空");
         }
-        if (StringUtils.isBlank(bookReadBean.getLastReadingChapterLink())) {
-            return responseBean.errorMessage("{读书配置]最后读章链接不可为空");
-        }
         if (StringUtils.isBlank(bookReadBean.getSource())) {
             return responseBean.errorMessage("{读书配置]书来源不可为空");
         }

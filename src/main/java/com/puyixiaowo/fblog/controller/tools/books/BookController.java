@@ -89,19 +89,20 @@ public class BookController extends BaseController {
     }
 
     public static Object chapterContent(Request request, Response response) {
-        //章节列表选择章节时有link
-        String link = request.queryParams("link");
         //必传,书籍详情页面看书只有bookId
         String bookIdStr = request.queryParams("bookId");
         //仅用于接口获取到章节名为.时显示
         String chapterName = request.queryParams("chapterName");
-        //1下一章，-1上一章,0最后阅读章
-        Integer page = Integer.valueOf(request.queryParamOrDefault("page", "0"));
+        //章节号
+        Integer chapter = Integer.valueOf(request.queryParamOrDefault("chapter", "1"));
 
         if (StringUtils.isBlank(bookIdStr)) {
             return "bookId不可为空";
         }
 
+        if (StringUtils.isNotBlank(chapterName)) {
+            chapter = BookChapterService.getChapterNum(chapterName);
+        }
 
         Long bookId = Long.valueOf(bookIdStr);
         Map<String, Object> model = new HashMap<>();
@@ -117,39 +118,14 @@ public class BookController extends BaseController {
                 return null;
             }
 
-            BookChapterBean bookChapterBean = null;
+            //章节列表
+            List<BookChapterBean> chapterBeanList = BookChapterService
+                    .requestBookChapters(userBean.getId(), bookId, bookBean.getaId(), false);
 
-            if (page != 0) {
-                //上一章或下一章
-                bookChapterBean = BookChapterService.getNextChapter(page, userBean.getId(),
-                        bookId,
-                        bookBean.getaId(),
-                        bookReadBean);
 
-                if (bookChapterBean == null) {
-                    //首页或尾页跳转到书籍详情页
-                    response.redirect("/book/detail?aId=" + bookBean.getaId());
-                    return null;
-                }
-
-                link = bookChapterBean.getLink();
-                chapterName = bookChapterBean.getTitle();
-            } else if (StringUtils.isBlank(link)) {
-
-                if (bookReadBean != null
-                        && bookReadBean.getLastReadingChapterLink() != null) {
-                    link = bookReadBean.getLastReadingChapterLink();
-                } else {
-                    //获取第一章
-                    bookChapterBean = BookChapterService
-                            .requestFirstBookChapters(userBean.getId(), bookId, bookBean.getaId());
-                    link = bookChapterBean.getLink();
-                    chapterName = bookChapterBean.getTitle();
-                }
-            }
-
-            bookChapterBean = BookChapterService.requestBookContent(link);
-
+            BookChapterBean bookChapterBean = BookChapterService.getChapter(chapterBeanList,
+                        chapter,
+                        userBean.getId(), bookId, bookBean.getaId());
             if (bookChapterBean == null) {
                 String HTML_CHANGE_SOURCE = "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no\">\n<div style='color: #DDD;text-align:center;height:400px;line-height:400px'>无法获取书籍，请<a href='/book/source?aId=" +
                         bookBean.getaId() + "'>切换书源</a></div>";
@@ -157,20 +133,9 @@ public class BookController extends BaseController {
                 return HTML_CHANGE_SOURCE;
             }
 
-            if (".".equals(bookChapterBean.getTitle()== null ? "" : bookChapterBean.getTitle().trim())) {
-
-                if (StringUtils.isNotBlank(chapterName)) {
-                    bookChapterBean.setTitle(chapterName);
-                } else if (bookReadBean != null) {
-                    bookChapterBean.setTitle(bookReadBean.getLastReadingChapter());
-                }
-            }
-
-
             //保存读书配置
-            bookReadBean.setLastReadingChapterLink(link);
             bookReadBean.setLastReadingChapter(bookChapterBean.getTitle());
-            bookReadBean.setLastReadingChapterNum(BookChapterService.getChapterNum(bookChapterBean.getTitle()));
+            bookReadBean.setLastReadingChapterNum(chapter);
             BookReadService.saveBookRead(bookReadBean);
 
 
@@ -179,13 +144,11 @@ public class BookController extends BaseController {
                     .getContent().replaceAll("\n", "</p>\n<p>&nbsp;&nbsp;&nbsp;&nbsp;");
             bookChapterBean.setContent(content);
 
-            //章节列表
-            List<BookChapterBean> chapterBeanList = BookChapterService
-                    .requestBookChapters(userBean.getId(), bookId, bookBean.getaId(), false);
             model.put("model", bookChapterBean);
             model.put("book", bookBean);
             model.put("bookRead", bookReadBean);
             model.put("bookChapters", chapterBeanList);
+            model.put("currentChapter", bookReadBean.getLastReadingChapterNum());
 
         } catch (Exception e) {
             logger.error("[书]获取章节内容异常：" + e.getMessage());

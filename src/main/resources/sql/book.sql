@@ -38,7 +38,6 @@ CREATE TABLE `book_read` (
   `book_id`      INTEGER(20) NOT NULL,
   `source`    VARCHAR(128),
   `last_reading_chapter`          VARCHAR(128) DEFAULT NULL,
-  `last_reading_chapter_link`     TEXT DEFAULT NULL,
   `last_reading_chapter_num`        INTEGER(6) DEFAULT '0',
   `bg_color`      VARCHAR(64) DEFAULT '#817f79',
   `font_size`        INTEGER(6) DEFAULT '23',

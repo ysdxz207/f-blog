@@ -17,8 +17,6 @@ public class BookReadBean extends Validatable implements Serializable {
 	private String source;
 	@NotNull
 	private String lastReadingChapter;
-	@NotNull
-	private String lastReadingChapterLink;
 	private Integer lastReadingChapterNum;
 	private String bgColor;
 	private Integer fontSize;
@@ -65,14 +63,6 @@ public class BookReadBean extends Validatable implements Serializable {
 
 	public void setLastReadingChapter(String lastReadingChapter) {
 		this.lastReadingChapter = lastReadingChapter;
-	}
-
-	public String getLastReadingChapterLink() {
-		return lastReadingChapterLink;
-	}
-
-	public void setLastReadingChapterLink(String lastReadingChapterLink) {
-		this.lastReadingChapterLink = lastReadingChapterLink;
 	}
 
 	public String getBgColor() {

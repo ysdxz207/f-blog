@@ -92,7 +92,6 @@ public class BookChapterService {
         if (bookReadBean.getId() == null) {
             //
             BookChapterBean firstChapter = list.get(0);
-            bookReadBean.setLastReadingChapterLink(firstChapter.getLink());
             bookReadBean.setLastReadingChapter(firstChapter.getTitle());
             DBUtils.insertOrUpdate(bookReadBean, false);
         }
@@ -110,7 +109,7 @@ public class BookChapterService {
 
         for (int i = 0; i < list.size(); i++) {
             BookChapterBean bookChapterBean = list.get(i);
-            if (i <= lastReadingIndex) {
+            if (i < lastReadingIndex) {
                 bookChapterBean.setHasRead(true);
             }
         }
@@ -233,15 +232,37 @@ public class BookChapterService {
     }
 
     public static int getChapterNum(String chapterTitle) {
+        if (StringUtils.isBlank(chapterTitle)) {
+            return 0;
+        }
 
-        Pattern pattern = Pattern.compile("第(.*)章");
+        Pattern pattern = Pattern.compile("第(\\d+)|([一二三四五六七八九][十百千]?)章");
         Matcher matcher1 = pattern.matcher(chapterTitle);
         if (matcher1.find()) {
             chapterTitle = matcher1.group(1);
+            chapterTitle = chapterTitle == null ? matcher1.group(2) : chapterTitle;
         }
 
         return NumberUtils.hasNumber(chapterTitle) ?
                 StringUtils.parseInteger(chapterTitle) :
                 NumberUtils.convertToNumber(chapterTitle);
+    }
+
+    public static BookChapterBean getChapter(List<BookChapterBean> bookChapterBeanList,
+                                             int chapterNum,
+                                             Long userId,
+                                             Long bookId,
+                                             String aId) {
+
+        for (BookChapterBean bookChapterBean:
+             bookChapterBeanList) {
+            int num = BookChapterService.getChapterNum(bookChapterBean.getTitle());
+            if (num == chapterNum) {
+                BookChapterBean bookChapterBeanContent = BookChapterService.requestBookContent(bookChapterBean.getLink());
+                bookChapterBean.setContent(bookChapterBeanContent.getContent());
+                return bookChapterBean;
+            }
+        }
+        return null;
     }
 }
