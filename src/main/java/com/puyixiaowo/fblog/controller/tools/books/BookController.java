@@ -16,6 +16,7 @@ import com.puyixiaowo.fblog.service.book.BookReadService;
 import com.puyixiaowo.fblog.service.book.BookService;
 import com.puyixiaowo.fblog.service.book.BookshelfService;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.NumberUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +124,7 @@ public class BookController extends BaseController {
                 bookChapterBean = BookChapterService.getNextChapter(page, userBean.getId(),
                         bookId,
                         bookBean.getaId(),
-                        bookReadBean.getLastReadingChapter());
+                        bookReadBean);
 
                 if (bookChapterBean == null) {
                     //首页或尾页跳转到书籍详情页
@@ -156,12 +157,6 @@ public class BookController extends BaseController {
                 return HTML_CHANGE_SOURCE;
             }
 
-            //保存读书配置
-            bookReadBean.setLastReadingChapterLink(link);
-            bookReadBean.setLastReadingChapter(bookChapterBean.getTitle());
-            BookReadService.saveBookRead(bookReadBean);
-
-
             if (".".equals(bookChapterBean.getTitle()== null ? "" : bookChapterBean.getTitle().trim())) {
 
                 if (StringUtils.isNotBlank(chapterName)) {
@@ -170,6 +165,13 @@ public class BookController extends BaseController {
                     bookChapterBean.setTitle(bookReadBean.getLastReadingChapter());
                 }
             }
+
+
+            //保存读书配置
+            bookReadBean.setLastReadingChapterLink(link);
+            bookReadBean.setLastReadingChapter(bookChapterBean.getTitle());
+            bookReadBean.setLastReadingChapterNum(BookChapterService.getChapterNum(bookChapterBean.getTitle()));
+            BookReadService.saveBookRead(bookReadBean);
 
 
             bookChapterBean.setBookId(bookId);
@@ -219,6 +221,7 @@ public class BookController extends BaseController {
 
             bookReadBean.setUserId(userBean.getId());
             bookReadBean.setBookId(bookReadBean.getBookId());
+            bookReadBean.setLastReadingChapterNum(BookChapterService.getChapterNum(bookReadBean.getLastReadingChapter()));
             DBUtils.insertOrUpdate(bookReadBean, false);
         } catch (Exception e) {
             responseBean.error(e);
@@ -356,11 +359,6 @@ public class BookController extends BaseController {
             BookReadBean bookReadBean = BookReadService
                     .getUserReadConfig(userBean.getId(), bookId);
 
-            if (bookReadBean == null) {
-                bookReadBean = new BookReadBean();
-                bookReadBean.setUserId(userBean.getId());
-                bookReadBean.setBookId(bookId);
-            }
             bookReadBean.setSource(source);
             DBUtils.insertOrUpdate(bookReadBean, false);
             //切换书源后需要查询出当前章Link

@@ -86,7 +86,7 @@ public class BookChapterService {
             e.printStackTrace();
         }
 
-        list = getChapterHasReadList(list, bookReadBean.getLastReadingChapter());
+        list = getChapterHasReadList(list, bookReadBean);
 
 
         if (bookReadBean.getId() == null) {
@@ -105,8 +105,8 @@ public class BookChapterService {
         return list;
     }
 
-    public static List<BookChapterBean> getChapterHasReadList(List<BookChapterBean> list, String lastReadingChapter) {
-        int lastReadingIndex = getReadingChapterIndex(list, lastReadingChapter);
+    public static List<BookChapterBean> getChapterHasReadList(List<BookChapterBean> list, BookReadBean bookReadBean) {
+        int lastReadingIndex = bookReadBean.getLastReadingChapterNum();
 
         for (int i = 0; i < list.size(); i++) {
             BookChapterBean bookChapterBean = list.get(i);
@@ -215,41 +215,16 @@ public class BookChapterService {
         return false;
     }
 
-    /**
-     * 获取正在阅读的章节索引
-     *
-     * @param chapterBeanList
-     * @param lastReadingChapter
-     * @return
-     */
-    public static int getReadingChapterIndex(List<BookChapterBean> chapterBeanList,
-                                             String lastReadingChapter) {
-        if (chapterBeanList == null
-                || chapterBeanList.size() == 0
-                || StringUtils.isBlank(lastReadingChapter)) {
-            return 0;
-        }
-        for (int i = 0; i < chapterBeanList.size(); i++) {
-            BookChapterBean bookChapterBean = chapterBeanList.get(i);
-            if (isSameChapterTitle(lastReadingChapter, bookChapterBean.getTitle())) {
-                return i;
-            }
-        }
-
-        return 0;
-    }
 
     public static BookChapterBean getNextChapter(int page,
                                                  Long userId,
                                                  Long bookId,
                                                  String aId,
-                                                 String lastReadingChapter) {
+                                                 BookReadBean bookReadBean) {
 
         List<BookChapterBean> bookChapterBeanList = requestBookChapters(userId, bookId, aId, true);
 
-        int i = getReadingChapterIndex(bookChapterBeanList, lastReadingChapter);
-
-        int index = i + page;
+        int index = bookReadBean.getLastReadingChapterNum() - 1 + page;
         if (index < 0
                 || index >= bookChapterBeanList.size()) {
             return null;
@@ -257,16 +232,16 @@ public class BookChapterService {
         return bookChapterBeanList.get(index);
     }
 
-    public static int getChapterNum(String lastChapter) {
+    public static int getChapterNum(String chapterTitle) {
 
         Pattern pattern = Pattern.compile("第(.*)章");
-        Matcher matcher1 = pattern.matcher(lastChapter);
+        Matcher matcher1 = pattern.matcher(chapterTitle);
         if (matcher1.find()) {
-            lastChapter = matcher1.group(1);
+            chapterTitle = matcher1.group(1);
         }
 
-        return NumberUtils.hasNumber(lastChapter) ?
-                StringUtils.parseInteger(lastChapter) :
-                NumberUtils.convertToNumber(lastChapter);
+        return NumberUtils.hasNumber(chapterTitle) ?
+                StringUtils.parseInteger(chapterTitle) :
+                NumberUtils.convertToNumber(chapterTitle);
     }
 }

@@ -47,6 +47,7 @@ public class BookReadService {
             bookReadBean = new BookReadBean();
             bookReadBean.setUserId(userId);
             bookReadBean.setBookId(bookId);
+            bookReadBean.setLastReadingChapterNum(0);
         }
         return bookReadBean;
     }

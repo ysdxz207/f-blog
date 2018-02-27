@@ -19,6 +19,7 @@ public class BookReadBean extends Validatable implements Serializable {
 	private String lastReadingChapter;
 	@NotNull
 	private String lastReadingChapterLink;
+	private Integer lastReadingChapterNum;
 	private String bgColor;
 	private Integer fontSize;
 	private Integer lineHeight;
@@ -112,5 +113,13 @@ public class BookReadBean extends Validatable implements Serializable {
 
 	public void setSort(Integer sort) {
 		this.sort = sort;
+	}
+
+	public Integer getLastReadingChapterNum() {
+		return lastReadingChapterNum;
+	}
+
+	public void setLastReadingChapterNum(Integer lastReadingChapterNum) {
+		this.lastReadingChapterNum = lastReadingChapterNum;
 	}
 }
