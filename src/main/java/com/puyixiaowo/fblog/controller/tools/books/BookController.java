@@ -140,6 +140,7 @@ public class BookController extends BaseController {
 
             //保存读书配置
             bookReadBean.setLastReadingChapter(bookChapterBean.getTitle());
+            System.out.println(chapter);
             bookReadBean.setLastReadingChapterNum(chapter);
             BookReadService.saveBookRead(bookReadBean);
 

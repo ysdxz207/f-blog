@@ -90,4 +90,8 @@ public class NumberUtils {
         return m.matches();
     }
 
+    public static void main(String[] args) {
+
+        System.out.println(convertToNumber("第五百二十八章 辫子女孩与黑影男孩"));
+    }
 }

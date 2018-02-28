@@ -233,7 +233,7 @@ public class BookChapterService {
             return 0;
         }
 
-        Pattern pattern = Pattern.compile("第(\\d+)|([一二三四五六七八九][十百千]?)章");
+        Pattern pattern = Pattern.compile("第(\\d+)|([一二三四五六七八九十百千]+)章");
         Matcher matcher1 = pattern.matcher(chapterTitle);
         if (matcher1.find()) {
             chapterTitle = matcher1.group(1);
