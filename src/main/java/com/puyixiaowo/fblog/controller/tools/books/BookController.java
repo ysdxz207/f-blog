@@ -94,7 +94,8 @@ public class BookController extends BaseController {
         //仅用于接口获取到章节名为.时显示
         String chapterName = request.queryParams("chapterName");
         //章节号
-        Integer chapter = Integer.valueOf(request.queryParamOrDefault("chapter", "1"));
+        Integer chapter = request.queryParams("chapter") != null ?
+                Integer.valueOf(request.queryParams("chapter")) : null;
 
         if (StringUtils.isBlank(bookIdStr)) {
             return "bookId不可为空";
@@ -104,6 +105,8 @@ public class BookController extends BaseController {
             chapter = BookChapterService.getChapterNum(chapterName);
         }
 
+
+
         Long bookId = Long.valueOf(bookIdStr);
         Map<String, Object> model = new HashMap<>();
 
@@ -111,7 +114,9 @@ public class BookController extends BaseController {
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
             //读取读书配置
             BookReadBean bookReadBean = BookReadService.getUserReadConfig(userBean.getId(), bookId);
-
+            if (chapter == null) {
+                chapter = bookReadBean.getLastReadingChapterNum();
+            }
             BookBean bookBean = BookService.selectBookBeanById(bookId);
 
             if (bookBean == null) {
@@ -144,11 +149,14 @@ public class BookController extends BaseController {
                     .getContent().replaceAll("\n", "</p>\n<p>&nbsp;&nbsp;&nbsp;&nbsp;");
             bookChapterBean.setContent(content);
 
+
+            //已读
+            chapterBeanList = BookChapterService.getChapterHasReadList(chapterBeanList, bookReadBean);
+
             model.put("model", bookChapterBean);
             model.put("book", bookBean);
             model.put("bookRead", bookReadBean);
             model.put("bookChapters", chapterBeanList);
-            model.put("currentChapter", bookReadBean.getLastReadingChapterNum());
 
         } catch (Exception e) {
             logger.error("[书]获取章节内容异常：" + e.getMessage());

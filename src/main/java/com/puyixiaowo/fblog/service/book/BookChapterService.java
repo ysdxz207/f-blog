@@ -86,8 +86,6 @@ public class BookChapterService {
             e.printStackTrace();
         }
 
-        list = getChapterHasReadList(list, bookReadBean);
-
 
         if (bookReadBean.getId() == null) {
             //
@@ -105,11 +103,10 @@ public class BookChapterService {
     }
 
     public static List<BookChapterBean> getChapterHasReadList(List<BookChapterBean> list, BookReadBean bookReadBean) {
-        int lastReadingIndex = bookReadBean.getLastReadingChapterNum();
 
         for (int i = 0; i < list.size(); i++) {
             BookChapterBean bookChapterBean = list.get(i);
-            if (i < lastReadingIndex) {
+            if (getChapterNum(bookChapterBean.getTitle()) <= bookReadBean.getLastReadingChapterNum()) {
                 bookChapterBean.setHasRead(true);
             }
         }
