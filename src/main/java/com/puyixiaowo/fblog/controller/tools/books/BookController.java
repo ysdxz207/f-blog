@@ -1,5 +1,6 @@
 package com.puyixiaowo.fblog.controller.tools.books;
 
+import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.core.entity.RowBounds;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookBean;
@@ -159,8 +160,7 @@ public class BookController extends BaseController {
             model.put("bookChapters", chapterBeanList);
 
         } catch (Exception e) {
-            logger.error("[书]获取章节内容异常：" + e.getMessage());
-            e.printStackTrace();
+            logger.error("[书]获取章节内容异常：" + e.getMessage() == null ? JSON.toJSONString(e.getMessage()) : e.getMessage());
         }
 
 
