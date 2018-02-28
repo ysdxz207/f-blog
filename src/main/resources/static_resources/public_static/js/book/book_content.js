@@ -60,25 +60,22 @@ var bookContent = {
     };
 
 
-    bookContent.saveReading = function () {
-        var bookReading = {};
-        bookReading.bookId = bookContent.bookId;
-        bookReading.lastReadingChapter = bookContent.lastReadingChapter;
-        bookReading.lastReadingChapterLink = bookContent.lastReadingChapterLink;
-        bookReading.sort = window.localStorage['sort_' + bookContent.bookId]
-            ? window.localStorage['sort_' + bookReading.bookId] : 0;
+    bookContent.saveReadSetting = function () {
+        var bookReadSetting = {};
+        bookReadSetting.sort = window.localStorage['sort_' + bookContent.bookId]
+            ? window.localStorage['sort_' + bookReadSetting.bookId] : 0;
 
-        bookReading.fontSize = bookContent.fontSize;
-        bookReading.bgColor = bookContent.bgColor;
-        bookReading.fontSize = bookContent.fontSize;
-        bookReading.lineHeight = bookContent.lineHeight;
-        bookReading.pageMethod = window.localStorage['pageMethod']
+        bookReadSetting.fontSize = bookContent.fontSize;
+        bookReadSetting.bgColor = bookContent.bgColor;
+        bookReadSetting.fontSize = bookContent.fontSize;
+        bookReadSetting.lineHeight = bookContent.lineHeight;
+        bookReadSetting.pageMethod = window.localStorage['pageMethod']
             ? window.localStorage['pageMethod'] : 1;
 
         //保存到后端
         $.ajax({
-            url: "/book/saveReading",
-            data: bookReading,
+            url: "/book/saveReadingSetting",
+            data: bookReadSetting,
             method: "POST",
             dataType: "json",
             success: function (result) {
@@ -131,7 +128,7 @@ var bookContent = {
         // bookContent.loadChapters();
         bookContent.tapScroll();
 
-        // bookContent.saveReading();
+        // bookContent.saveReadSetting();
 
         // bookContent.preloadNextPage();
     };

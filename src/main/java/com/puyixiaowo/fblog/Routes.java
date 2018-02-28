@@ -276,8 +276,8 @@ public class Routes {
             get("/chapter", ((request, response) ->
                     BookController.chapterContent(request, response)));
 
-            post("/saveReading", ((request, response) ->
-                    BookController.saveBookReadConfig(request, response)));
+            post("/saveReadingSetting", ((request, response) ->
+                    BookController.saveBookReadSetting(request, response)));
 
             get("/searchPage", ((request, response) ->
                     BookController.searchPage(request, response)));

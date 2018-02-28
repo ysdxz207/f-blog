@@ -47,7 +47,7 @@ var bookMenu = {
             ul.empty().append(lis);
             window.localStorage['sort_' + bookContent.bookId] = sort;
             //保存配置
-            bookContent.saveReading();
+            bookContent.saveReadSetting();
         });
 
         //字体设置按钮
@@ -68,7 +68,7 @@ var bookMenu = {
             chapterContent.css('font-size', fontSize + 'px');
             bookContent.fontSize = fontSize;
             //保存配置
-            bookContent.saveReading();
+            bookContent.saveReadSetting();
         });
 
         $('.btn-font-small').on('click', function () {
@@ -83,7 +83,7 @@ var bookMenu = {
             chapterContent.css('font-size', fontSize + 'px');
             bookContent.fontSize = fontSize;
             //保存配置
-            bookContent.saveReading();
+            bookContent.saveReadSetting();
         });
 
         $('.btn-line-height-small').on('click', function () {
@@ -100,7 +100,7 @@ var bookMenu = {
             chapterContent.css('line-height', lineHeight + 'px');
             bookContent.lineHeight = lineHeight;
             //保存配置
-            bookContent.saveReading();
+            bookContent.saveReadSetting();
         });
 
         $('.btn-line-height-big').on('click', function () {
@@ -116,7 +116,7 @@ var bookMenu = {
             chapterContent.css('line-height', lineHeight + 'px');
             bookContent.lineHeight = lineHeight;
             //保存配置
-            bookContent.saveReading();
+            bookContent.saveReadSetting();
         });
 
         $('.btn-color-group button').on('click', function () {
@@ -126,7 +126,7 @@ var bookMenu = {
 
             bookContent.bgColor = color;
             //保存配置
-            bookContent.saveReading();
+            bookContent.saveReadSetting();
         });
 
         //翻页方式
@@ -140,10 +140,10 @@ var bookMenu = {
             labelWidth: '80',
             state: $("#check_page_method").val() == 1 ? true : false,
             onSwitchChange: function (event, state) {
-                var pageMethod = state ? '1' : '2';
+                var pageMethod = state ? '1' : '0';
                 window.localStorage['pageMethod'] = pageMethod;
                 //保存配置
-                bookContent.saveReading();
+                bookContent.saveReadSetting();
             }
         });
 

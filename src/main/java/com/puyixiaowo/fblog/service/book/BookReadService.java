@@ -1,13 +1,10 @@
 package com.puyixiaowo.fblog.service.book;
 
-import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookReadBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
-import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
-import spark.Request;
 
 public class BookReadService {
 
@@ -35,8 +32,8 @@ public class BookReadService {
         }
     }
 
-    public static BookReadBean getUserReadConfig(Long userId,
-                                                 Long bookId) {
+    public static BookReadBean getUserBookRead(Long userId,
+                                               Long bookId) {
         BookReadBean bookReadBean = new BookReadBean();
         bookReadBean.setUserId(userId);
         bookReadBean.setBookId(bookId);
@@ -47,10 +44,11 @@ public class BookReadService {
             bookReadBean = new BookReadBean();
             bookReadBean.setUserId(userId);
             bookReadBean.setBookId(bookId);
-            bookReadBean.setLastReadingChapterNum(0);
+            bookReadBean.setLastReadingChapterNum(1);
         }
         return bookReadBean;
     }
+
 
     public static void deleteByBookId(Long bookId) {
 
@@ -80,7 +78,7 @@ public class BookReadService {
         }
         //读取读书配置
         BookReadBean bookReadBeanDB = BookReadService
-                .getUserReadConfig(bookReadBean
+                .getUserBookRead(bookReadBean
                         .getUserId(), bookReadBean.getBookId());
 
 

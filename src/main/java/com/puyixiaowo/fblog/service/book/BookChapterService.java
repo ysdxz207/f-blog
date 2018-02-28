@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fblog.bean.admin.book.BookChapterBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookReadBean;
+import com.puyixiaowo.fblog.bean.admin.book.BookReadSettingBean;
 import com.puyixiaowo.fblog.constants.BookConstants;
 import com.puyixiaowo.fblog.constants.Constants;
+import com.puyixiaowo.fblog.domain.BookReadSetting;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.HttpUtils;
 import com.puyixiaowo.fblog.utils.NumberUtils;
@@ -38,8 +40,9 @@ public class BookChapterService {
 
         List<BookChapterBean> list = new ArrayList<>();
 
-        BookReadBean bookReadBean = BookReadService.getUserReadConfig(userId, bookId);
+        BookReadBean bookReadBean = BookReadService.getUserBookRead(userId, bookId);
 
+        BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userId);
         bookReadBean = bookReadBean == null ? new BookReadBean() : bookReadBean;
 
         String source = bookReadBean.getSource();
@@ -94,8 +97,8 @@ public class BookChapterService {
             DBUtils.insertOrUpdate(bookReadBean, false);
         }
         if (!keepSort
-                && bookReadBean.getSort() != null
-                && bookReadBean.getSort() == 0) {
+                && bookReadSettingBean.getSort() != null
+                && bookReadSettingBean.getSort() == 0) {
             Collections.reverse(list);
         }
 

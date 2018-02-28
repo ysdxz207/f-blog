@@ -3,21 +3,14 @@ package com.puyixiaowo.fblog.controller.tools.books;
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.core.entity.RowBounds;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
-import com.puyixiaowo.fblog.bean.admin.book.BookBean;
-import com.puyixiaowo.fblog.bean.admin.book.BookChapterBean;
-import com.puyixiaowo.fblog.bean.admin.book.BookReadBean;
-import com.puyixiaowo.fblog.bean.admin.book.BookSource;
+import com.puyixiaowo.fblog.bean.admin.book.*;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
-import com.puyixiaowo.fblog.service.book.BookChapterService;
-import com.puyixiaowo.fblog.service.book.BookReadService;
-import com.puyixiaowo.fblog.service.book.BookService;
-import com.puyixiaowo.fblog.service.book.BookshelfService;
+import com.puyixiaowo.fblog.service.book.*;
 import com.puyixiaowo.fblog.utils.DBUtils;
-import com.puyixiaowo.fblog.utils.NumberUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +18,6 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,7 +106,7 @@ public class BookController extends BaseController {
         try {
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
             //读取读书配置
-            BookReadBean bookReadBean = BookReadService.getUserReadConfig(userBean.getId(), bookId);
+            BookReadBean bookReadBean = BookReadService.getUserBookRead(userBean.getId(), bookId);
             if (chapter == null) {
                 chapter = bookReadBean.getLastReadingChapterNum();
             }
@@ -154,9 +146,11 @@ public class BookController extends BaseController {
             //已读
             chapterBeanList = BookChapterService.getChapterHasReadList(chapterBeanList, bookReadBean);
 
+            BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userBean.getId());
             model.put("model", bookChapterBean);
             model.put("book", bookBean);
             model.put("bookRead", bookReadBean);
+            model.put("bookReadSetting", bookReadSettingBean);
             model.put("bookChapters", chapterBeanList);
 
         } catch (Exception e) {
@@ -168,32 +162,30 @@ public class BookController extends BaseController {
                 .render(new ModelAndView(model, "tools/book/book_chapter_content.html"));
     }
 
-    public static Object saveBookReadConfig(Request request,
+    public static Object saveBookReadSetting(Request request,
                                             Response response) {
         ResponseBean responseBean = new ResponseBean();
 
         try {
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
-            BookReadBean bookReadBean = getParamsEntity(request, BookReadBean.class, false);
+            BookReadSettingBean bookReadSettingBean = getParamsEntity(request, BookReadSettingBean.class, false);
 
             //读取读书配置
-            BookReadBean bookReadBeanDB = BookReadService.getUserReadConfig(userBean.getId(), bookReadBean.getBookId());
+            BookReadSettingBean bookReadSettingBeanDB = BookReadSettingService.getUserReadSetting(userBean.getId());
 
 
             //读书配置不存在
-            if (bookReadBean == null) {
+            if (bookReadSettingBean == null) {
                 responseBean.errorMessage("配置不存在");
                 return responseBean.serialize();
             }
             //更新读书配置
-            if (bookReadBeanDB != null) {
-                bookReadBean.setId(bookReadBeanDB.getId());
+            if (bookReadSettingBeanDB != null) {
+                bookReadSettingBean.setId(bookReadSettingBeanDB.getId());
             }
 
-            bookReadBean.setUserId(userBean.getId());
-            bookReadBean.setBookId(bookReadBean.getBookId());
-            bookReadBean.setLastReadingChapterNum(BookChapterService.getChapterNum(bookReadBean.getLastReadingChapter()));
-            DBUtils.insertOrUpdate(bookReadBean, false);
+            bookReadSettingBean.setUserId(userBean.getId());
+            DBUtils.insertOrUpdate(bookReadSettingBean, false);
         } catch (Exception e) {
             responseBean.error(e);
         }
@@ -293,7 +285,7 @@ public class BookController extends BaseController {
         BookBean bookBean = BookService.selectBookBeanByAId(aId);
         for (BookSource bookSource : list) {
             if (bookBean != null) {
-                BookReadBean bookReadBean = BookReadService.getUserReadConfig(userBean.getId(), bookBean.getId());
+                BookReadBean bookReadBean = BookReadService.getUserBookRead(userBean.getId(), bookBean.getId());
                 if (bookReadBean != null
                         && bookSource.get_id().equals(bookReadBean.getSource())) {
                     bookSource.setCurrentSource(true);
@@ -328,7 +320,7 @@ public class BookController extends BaseController {
             Long bookId = Long.valueOf(bookIdStr);
             BookBean bookBean = BookService.selectBookBeanById(bookId);
             BookReadBean bookReadBean = BookReadService
-                    .getUserReadConfig(userBean.getId(), bookId);
+                    .getUserBookRead(userBean.getId(), bookId);
 
             bookReadBean.setSource(source);
             DBUtils.insertOrUpdate(bookReadBean, false);

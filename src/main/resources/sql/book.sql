@@ -24,6 +24,7 @@ CREATE TABLE `bookshelf` (
   `user_id`      INTEGER(20) NOT NULL UNIQUE,
   `book_ids`      VARCHAR(128) DEFAULT '',
   `create_time`     INTEGER(13) DEFAULT '0',
+
   PRIMARY KEY (`id`)
 );
 
@@ -38,11 +39,25 @@ CREATE TABLE `book_read` (
   `book_id`      INTEGER(20) NOT NULL,
   `source`    VARCHAR(128),
   `last_reading_chapter`          VARCHAR(128) DEFAULT NULL,
-  `last_reading_chapter_num`        INTEGER(6) DEFAULT '0',
+  `last_reading_chapter_num`        INTEGER(6) DEFAULT '1',
+  PRIMARY KEY (`id`)
+);
+
+
+
+-- ----------------------------
+-- Table structure for book_read_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `book_read_setting`;
+CREATE TABLE `book_read_setting` (
+  `id`        INTEGER(20)  NOT NULL UNIQUE,
+  `user_id`      INTEGER(20) NOT NULL UNIQUE,
+  `create_time`     INTEGER(13) DEFAULT '0',
+  `page_method`        INTEGER(2) DEFAULT '1',
   `bg_color`      VARCHAR(64) DEFAULT '#817f79',
   `font_size`        INTEGER(6) DEFAULT '23',
   `line_height`        INTEGER(6) DEFAULT '28',
-  `page_method`        INTEGER(2) DEFAULT '1',
   `sort`        INTEGER(4) DEFAULT '0',
+
   PRIMARY KEY (`id`)
 );

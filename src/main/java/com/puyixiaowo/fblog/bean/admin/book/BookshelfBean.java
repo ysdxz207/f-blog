@@ -12,6 +12,8 @@ public class BookshelfBean implements Serializable {
 	private Long userId;
 	private String bookIds;
 	private Long createTime;
+	private Integer pageMethod;
+
 
 
 	public Long getId (){
@@ -44,5 +46,13 @@ public class BookshelfBean implements Serializable {
 
 	public void setCreateTime (Long createTime){
 		this.createTime = createTime;
+	}
+
+	public Integer getPageMethod() {
+		return pageMethod;
+	}
+
+	public void setPageMethod(Integer pageMethod) {
+		this.pageMethod = pageMethod;
 	}
 }
