@@ -30,7 +30,7 @@ CREATE TABLE `bookshelf` (
 
 
 -- ----------------------------
--- Table structure for book_chapter
+-- Table structure for book_read
 -- ----------------------------
 DROP TABLE IF EXISTS `book_read`;
 CREATE TABLE `book_read` (

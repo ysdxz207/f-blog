@@ -8,7 +8,6 @@ import com.puyixiaowo.fblog.bean.admin.book.BookReadBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookReadSettingBean;
 import com.puyixiaowo.fblog.constants.BookConstants;
 import com.puyixiaowo.fblog.constants.Constants;
-import com.puyixiaowo.fblog.domain.BookReadSetting;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.HttpUtils;
 import com.puyixiaowo.fblog.utils.NumberUtils;
@@ -24,6 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.regex.Pattern.*;
 
 /**
  * @author Moses
@@ -168,12 +169,6 @@ public class BookChapterService {
     }
 
 
-    public static BookChapterBean requestFirstBookChapters(Long userId, Long bookId, String aId) {
-
-        List<BookChapterBean> list = requestBookChapters(userId, bookId, aId, true);
-        return list.size() == 0 ? null : list.get(0);
-    }
-
     /**
      * 判断是否同一章
      *
@@ -236,7 +231,7 @@ public class BookChapterService {
             return 0;
         }
 
-        Pattern pattern = Pattern.compile("第(\\d+)|([一二三四五六七八九十百千]+)章");
+        Pattern pattern = compile("第(\\d+)|([零一二三四五六七八九十百千]+)章");
         Matcher matcher1 = pattern.matcher(chapterTitle);
         if (matcher1.find()) {
             chapterTitle = matcher1.group(1);
@@ -249,10 +244,7 @@ public class BookChapterService {
     }
 
     public static BookChapterBean getChapter(List<BookChapterBean> bookChapterBeanList,
-                                             int chapterNum,
-                                             Long userId,
-                                             Long bookId,
-                                             String aId) {
+                                             int chapterNum) {
 
         for (BookChapterBean bookChapterBean:
              bookChapterBeanList) {
@@ -265,4 +257,5 @@ public class BookChapterService {
         }
         return null;
     }
+
 }

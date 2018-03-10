@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.regex.Pattern.*;
+
 /**
  * 将汉字数字转换为数字
  * 
@@ -14,7 +16,7 @@ public class NumberUtils {
     private NumberUtils() {
     }
 
-    private static Pattern CHN_NUM_PATTERN = Pattern.compile("[一二三四五六七八九][十百千]?");
+    private static Pattern CHN_NUM_PATTERN = compile("[一二三四五六七八九][十百千]?");
     private static Map<Character, Integer> CHN_UNITS = new HashMap<>();
     private static Map<Character, Integer> CHN_NUMS = new HashMap<>();
     static {
@@ -63,7 +65,7 @@ public class NumberUtils {
      */
     public static int convertToNumber(String chnNum) {
         chnNum = chnNum.replaceAll("(?<![一二三四五六七八九])十", "一十").replaceAll("零", "");
-        Pattern pattern = Pattern.compile("[万亿]");
+        Pattern pattern = compile("[万亿]");
         Matcher m = pattern.matcher(chnNum);
         BigInteger result = BigInteger.valueOf(0);
         int index = 0;
@@ -85,13 +87,13 @@ public class NumberUtils {
      * @return
      */
     public static boolean hasNumber(String str) {
-        Pattern p = Pattern.compile(".*\\d+.*");
+        Pattern p = compile(".*\\d+.*");
         Matcher m = p.matcher(str);
         return m.matches();
     }
 
     public static void main(String[] args) {
 
-        System.out.println(convertToNumber("第五百二十八章 辫子女孩与黑影男孩"));
+        System.out.println(convertToNumber("第五百零一章 打爆师祖"));
     }
 }
