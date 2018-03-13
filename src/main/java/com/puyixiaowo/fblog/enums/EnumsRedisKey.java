@@ -2,6 +2,7 @@ package com.puyixiaowo.fblog.enums;
 
 public enum  EnumsRedisKey {
     REDIS_KEY_404_PAGE("REDIS_KEY_404_PAGE_", "404页面"),
+    REDIS_KEY_500_PAGE("REDIS_KEY_500_PAGE_", "500页面"),
     REDIS_KEY_IGNORE_CONF("REDIS_KEY_IGNORE_CONF_", "admin忽略路径配置"),
     REDIS_KEY_IGNORE_CONF_BOOK("REDIS_KEY_IGNORE_CONF_BOOK_", "book忽略路径配置"),
     REDIS_KEY_MENU_LIST("REDIS_KEY_MENU_LIST_", "菜单列表"),
