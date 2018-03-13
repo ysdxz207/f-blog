@@ -86,7 +86,7 @@ public class HttpUtils {
             }
             return str;
         } catch (IOException e) {
-            throw new TimeoutException("请求失败");
+            throw new TimeoutException("请求接口失败:" + e.getMessage());
         }
     }
 

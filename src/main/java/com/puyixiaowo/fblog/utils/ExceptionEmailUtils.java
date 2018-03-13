@@ -21,15 +21,14 @@ import java.util.Properties;
  */
 public class ExceptionEmailUtils {
 
-    private static final String USERNAME = "sysinfo@lamic.cn";
-    private static final String PASSWORD = "Hltx2018";
-    private static final String HOST = "smtp.exmail.qq.com";
+    private static final String USERNAME = "feihongblog@163.com";
+    private static final String PASSWORD = "fblog207";//163授权码
+    private static final String HOST = "smtp.163.com";
     private static final String PORT = "465";
 
-    private static final String[] PACKAGE_LAMIC = {"cn.wemew.wisdom",
-    "com.hltx.lamic"};
+    private static final String[] PACKAGE_LAMIC = {"com.puyixiaowo"};
 
-    private static String EMAIL_ADDRESS_EXCEPTION;
+    private static String EMAIL_ADDRESS_EXCEPTION = "ysdxz207@qq.com";
 
 
     public static void sendException(String title,
@@ -43,7 +42,7 @@ public class ExceptionEmailUtils {
         } else {
             to = EMAIL_ADDRESS_EXCEPTION.split(";");
         }
-        send("莱米异常报告", to, title, ex);
+        send("飞鸿异常报告", to, title, ex);
     }
 
     private static void send(String sendername,

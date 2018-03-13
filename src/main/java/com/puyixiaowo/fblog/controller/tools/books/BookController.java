@@ -36,8 +36,6 @@ public class BookController extends BaseController {
 
         PageBean pageBean = getPageBean(request);
 
-String str = null;
-        System.out.println(str.equals(""));
         try {
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
             List<BookBean> list = BookService.getUserBookList(userBean.getId());
