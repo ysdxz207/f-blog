@@ -63,6 +63,8 @@ public class AfuController extends BaseController {
                 if (afuBean.getId() != null) {
                     afuBean = DBUtils.selectOne("select a.*,at.name as typeName from afu a " +
                             "left join afu_type at on a.type = at.id where a.id=:id", afuBean);
+                } else {
+                    afuBean = new AfuBean();
                 }
 
                 //阿福类别
@@ -78,6 +80,9 @@ public class AfuController extends BaseController {
             }
 
             AfuBean afuBean = getParamsEntity(request, AfuBean.class, false);
+            if (afuBean.getId() == null) {
+                afuBean.setCreateTime(System.currentTimeMillis());
+            }
             DBUtils.insertOrUpdate(afuBean, false);
         } catch (Exception e) {
             responseBean.error(e);
