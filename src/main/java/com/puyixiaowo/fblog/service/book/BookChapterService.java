@@ -8,6 +8,7 @@ import com.puyixiaowo.fblog.bean.admin.book.BookReadBean;
 import com.puyixiaowo.fblog.bean.admin.book.BookReadSettingBean;
 import com.puyixiaowo.fblog.constants.BookConstants;
 import com.puyixiaowo.fblog.constants.Constants;
+import com.puyixiaowo.fblog.enums.EnumSort;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.HttpUtils;
 import com.puyixiaowo.fblog.utils.NumberUtils;
@@ -99,7 +100,7 @@ public class BookChapterService {
         }
         if (!keepSort
                 && bookReadSettingBean.getSort() != null
-                && bookReadSettingBean.getSort() == 0) {
+                && bookReadSettingBean.getSort() == EnumSort.SORT_REVERSE.sort) {
             Collections.reverse(list);
         }
 
@@ -271,6 +272,10 @@ public class BookChapterService {
             int num = BookChapterService.getChapterNum(bookChapterBeanList, bookChapterBean.getTitle());
             if (num == chapterNum) {
                 BookChapterBean bookChapterBeanContent = BookChapterService.requestBookContent(bookChapterBean.getLink());
+                if (bookChapterBeanContent == null) {
+                    //接口没返回内容，可能源有问题
+                    return null;
+                }
                 bookChapterBean.setContent(bookChapterBeanContent.getContent());
                 return bookChapterBean;
             }

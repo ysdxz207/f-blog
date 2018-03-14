@@ -8,6 +8,7 @@ import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
+import com.puyixiaowo.fblog.enums.EnumSort;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.book.*;
 import com.puyixiaowo.fblog.utils.DBUtils;
@@ -18,6 +19,7 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,7 +111,7 @@ public class BookController extends BaseController {
             }
             //章节列表
             List<BookChapterBean> chapterBeanList = BookChapterService
-                    .requestBookChapters(userBean.getId(), bookId, bookBean.getaId(), false);
+                    .requestBookChapters(userBean.getId(), bookId, bookBean.getaId(), true);
 
             if (StringUtils.isNotBlank(chapterName)) {
                 chapter = BookChapterService.getChapterNum(chapterBeanList, chapterName);
@@ -144,6 +146,10 @@ public class BookController extends BaseController {
             chapterBeanList = BookChapterService.getChapterHasReadList(chapterBeanList, bookReadBean);
 
             BookReadSettingBean bookReadSettingBean = BookReadSettingService.getUserReadSetting(userBean.getId());
+
+            if (bookReadSettingBean.getSort() == EnumSort.SORT_REVERSE.sort) {
+                Collections.reverse(chapterBeanList);
+            }
             model.put("model", bookChapterBean);
             model.put("book", bookBean);
             model.put("bookRead", bookReadBean);

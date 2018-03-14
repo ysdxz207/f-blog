@@ -13,8 +13,8 @@ var bookContent = {
 
         $('.book-chapter-content').on('click', function (e) {
 
-            var pageMethod = window.localStorage['pageMethod']
-                ? window.localStorage['pageMethod'] : 1;
+            var pageMethod = window.localStorage['fblog_tools_book_pageMethod']
+                ? window.localStorage['fblog_tools_book_pageMethod'] : 1;
 
             var delay = 10;
             var lineHeight = 28;
@@ -62,15 +62,15 @@ var bookContent = {
 
     bookContent.saveReadSetting = function () {
         var bookReadSetting = {};
-        bookReadSetting.sort = window.localStorage['sort_' + bookContent.bookId]
-            ? window.localStorage['sort_' + bookReadSetting.bookId] : 0;
+        bookReadSetting.sort = window.localStorage['fblog_tools_book_sort']
+            ? window.localStorage['fblog_tools_book_sort'] : 0;
 
         bookReadSetting.fontSize = bookContent.fontSize;
         bookReadSetting.bgColor = bookContent.bgColor;
         bookReadSetting.fontSize = bookContent.fontSize;
         bookReadSetting.lineHeight = bookContent.lineHeight;
-        bookReadSetting.pageMethod = window.localStorage['pageMethod']
-            ? window.localStorage['pageMethod'] : 1;
+        bookReadSetting.pageMethod = window.localStorage['fblog_tools_book_pageMethod']
+            ? window.localStorage['fblog_tools_book_pageMethod'] : 1;
 
         //保存到后端
         $.ajax({

@@ -40,12 +40,12 @@ var bookMenu = {
 
 
         $('#btn_reverse_book_chapters').on('click', function() {
-            var sort = parseInt(window.localStorage['sort_' + bookContent.bookId]) ? 0 : 1;
+            var sort = parseInt(window.localStorage['fblog_tools_book_sort']) ? 0 : 1;
             console.log(sort);
             var ul = $('#book_chapters_ul');
             var lis = ul.find('li').get().reverse();
             ul.empty().append(lis);
-            window.localStorage['sort_' + bookContent.bookId] = sort;
+            window.localStorage['fblog_tools_book_sort'] = sort;
             //保存配置
             bookContent.saveReadSetting();
         });
@@ -141,7 +141,7 @@ var bookMenu = {
             state: $("#check_page_method").val() == 1 ? true : false,
             onSwitchChange: function (event, state) {
                 var pageMethod = state ? '1' : '0';
-                window.localStorage['pageMethod'] = pageMethod;
+                window.localStorage['fblog_tools_book_pageMethod'] = pageMethod;
                 //保存配置
                 bookContent.saveReadSetting();
             }
