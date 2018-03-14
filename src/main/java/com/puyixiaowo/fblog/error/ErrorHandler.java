@@ -1,27 +1,16 @@
 package com.puyixiaowo.fblog.error;
 
-import com.puyixiaowo.fblog.bean.sys.ErrorPagesBean;
-import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.exception.NoPermissionsException;
 import com.puyixiaowo.fblog.utils.ExceptionEmailUtils;
-import com.puyixiaowo.fblog.utils.RedisUtils;
-import com.puyixiaowo.fblog.utils.ResourceUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
 import static spark.Spark.exception;
-import static spark.Spark.internalServerError;
 import static spark.Spark.notFound;
 
 public class ErrorHandler {
-    private static ErrorPagesBean[] ERROR_PAGES = {
-            new ErrorPagesBean("404", EnumsRedisKey.REDIS_KEY_404_PAGE.key, "page/error/404.html", "阿狸找不到页面了")
-    };
 
     public static void init() {
 
