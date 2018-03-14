@@ -139,6 +139,18 @@ public class BookService {
         return DBUtils.selectOne("select * from book where a_id=:aId", bookBean);
     }
 
+    public static Date getBookDate(String dateStr) {
+        try {
+            return DateUtils
+                    .parseDate(dateStr,
+                            Locale.CHINA,
+                            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public static BookBean requestBookDetail(BookBean bookBean) {
 
@@ -197,17 +209,10 @@ public class BookService {
     }
 
     private static String getUpdateDateString(String updated) {
-        try {
-            return DateFormatUtils
-                    .format(DateUtils
-                                    .parseDate(updated,
-                                            Locale.CHINA,
-                                            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
+            updated = DateFormatUtils
+                    .format(getBookDate(updated),
                             "yyyy-MM-dd HH:mm:ss");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return "";
+        return StringUtils.isBlank(updated) ? "" : updated;
     }
 
     public static List<BookSource> getBookSource(String aId) {
@@ -225,8 +230,6 @@ public class BookService {
             JSONObject jsonObj = (JSONObject) obj;
             BookSource bookSource = jsonObj.toJavaObject(BookSource.class);
             bookSource.setUpdated(getUpdateDateString(bookSource.getUpdated()));
-
-            bookSource.setLastChapterNum(BookChapterService.getChapterNum(bookSource.getLastChapter()));
 
             if (!"zhuishuvip".equals(bookSource.getSource())) {
                 list.add(bookSource);

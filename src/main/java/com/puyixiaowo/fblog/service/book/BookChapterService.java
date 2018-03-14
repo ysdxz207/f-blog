@@ -110,7 +110,7 @@ public class BookChapterService {
 
         for (int i = 0; i < list.size(); i++) {
             BookChapterBean bookChapterBean = list.get(i);
-            if (getChapterNum(bookChapterBean.getTitle()) <= bookReadBean.getLastReadingChapterNum()) {
+            if (getChapterNum(list, bookChapterBean.getTitle()) <= bookReadBean.getLastReadingChapterNum()) {
                 bookChapterBean.setHasRead(true);
             }
         }
@@ -226,6 +226,12 @@ public class BookChapterService {
         return bookChapterBeanList.get(index);
     }
 
+    /**
+     * 可能发生分篇，每篇有n章情况
+     * @param chapterTitle
+     * @return
+     */
+    @Deprecated
     public static int getChapterNum(String chapterTitle) {
         if (StringUtils.isBlank(chapterTitle)) {
             return 0;
@@ -243,12 +249,26 @@ public class BookChapterService {
                 NumberUtils.convertToNumber(chapterTitle);
     }
 
+    public static int getChapterNum(List<BookChapterBean> chapterBeanList, String chapterTitle) {
+
+        if (StringUtils.isBlank(chapterTitle)) {
+            return 1;
+        }
+        for (int i = 0; i < chapterBeanList.size(); i++) {
+            BookChapterBean bookChapterBean = chapterBeanList.get(i);
+            if (chapterTitle.equals(bookChapterBean.getTitle())) {
+                return i + 1;
+            }
+        }
+        return 1;
+    }
+
     public static BookChapterBean getChapter(List<BookChapterBean> bookChapterBeanList,
                                              int chapterNum) {
 
         for (BookChapterBean bookChapterBean:
              bookChapterBeanList) {
-            int num = BookChapterService.getChapterNum(bookChapterBean.getTitle());
+            int num = BookChapterService.getChapterNum(bookChapterBeanList, bookChapterBean.getTitle());
             if (num == chapterNum) {
                 BookChapterBean bookChapterBeanContent = BookChapterService.requestBookContent(bookChapterBean.getLink());
                 bookChapterBean.setContent(bookChapterBeanContent.getContent());

@@ -1,6 +1,9 @@
 package com.puyixiaowo.fblog.bean.admin.book;
 
+import com.puyixiaowo.fblog.service.book.BookService;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 仅用于前端展示，不写入数据库
@@ -16,7 +19,6 @@ public class BookSource implements Serializable,Comparable<BookSource>{
 
 
     private boolean currentSource;
-    private int lastChapterNum;//最后一章的章节数字
 
 
     
@@ -69,16 +71,13 @@ public class BookSource implements Serializable,Comparable<BookSource>{
         this.currentSource = currentSource;
     }
 
-    public int getLastChapterNum() {
-        return lastChapterNum;
-    }
-
-    public void setLastChapterNum(int lastChapterNum) {
-        this.lastChapterNum = lastChapterNum;
-    }
-
     @Override
     public int compareTo(BookSource o) {
-        return this.getLastChapterNum() > o.getLastChapterNum() ? 1 : 0;
+        Date thisUpdated = BookService.getBookDate(this.getUpdated());
+        Date objUpdated = BookService.getBookDate(o.getUpdated());
+
+        thisUpdated = thisUpdated == null ? new Date() : thisUpdated;
+        objUpdated = objUpdated== null ? new Date() : objUpdated;
+        return thisUpdated.compareTo(objUpdated) >= 0 ? 1 : 0;
     }
 }

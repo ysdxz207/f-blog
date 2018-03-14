@@ -93,11 +93,6 @@ public class BookController extends BaseController {
             return "bookId不可为空";
         }
 
-        if (StringUtils.isNotBlank(chapterName)) {
-            chapter = BookChapterService.getChapterNum(chapterName);
-        }
-
-
 
         Long bookId = Long.valueOf(bookIdStr);
         Map<String, Object> model = new HashMap<>();
@@ -106,19 +101,23 @@ public class BookController extends BaseController {
             UserBean userBean = request.session().attribute(Constants.SESSION_USER_KEY);
             //读取读书配置
             BookReadBean bookReadBean = BookReadService.getUserBookRead(userBean.getId(), bookId);
-            if (chapter == null) {
-                chapter = bookReadBean.getLastReadingChapterNum();
-            }
+
             BookBean bookBean = BookService.selectBookBeanById(bookId);
 
             if (bookBean == null) {
                 return null;
             }
-
             //章节列表
             List<BookChapterBean> chapterBeanList = BookChapterService
                     .requestBookChapters(userBean.getId(), bookId, bookBean.getaId(), false);
 
+            if (StringUtils.isNotBlank(chapterName)) {
+                chapter = BookChapterService.getChapterNum(chapterBeanList, chapterName);
+            }
+
+            if (chapter == null) {
+                chapter = bookReadBean.getLastReadingChapterNum();
+            }
 
             BookChapterBean bookChapterBean = BookChapterService.getChapter(chapterBeanList,
                         chapter);
