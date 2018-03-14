@@ -22,6 +22,8 @@ public class HttpUtils {
 
     private static final String CHARSET = "UTF-8";
     private static final int TIMEOUT_REQUEST = 5000;
+    private static final int TIMEOUT_CONNECTION = 5000;
+    private static final int TIMEOUT_READ_DATA = 12000;
 
     /**
      * httpPost
@@ -73,7 +75,8 @@ public class HttpUtils {
         method.addRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
         String str = null;
         HttpClient httpClient = new HttpClient();
-
+        httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(TIMEOUT_CONNECTION);
+        httpClient.getHttpConnectionManager().getParams().setSoTimeout(TIMEOUT_READ_DATA);
         try {
             InputStream in = null;
             int statusCode = httpClient.executeMethod(method);
