@@ -1,5 +1,6 @@
 package com.puyixiaowo.fblog.controller.admin.afu;
 
+import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.admin.afu.AfuBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
@@ -8,6 +9,7 @@ import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.AfuService;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
@@ -45,25 +47,36 @@ public class AfuController extends BaseController {
         return pageBean.serialize();
     }
 
-    @RequiresPermissions(value = {"afu:view"})
-    public static String detail(Request request, Response response) {
+    @RequiresPermissions(value = {"afu:edit"})
+    public static String edit(Request request, Response response) {
 
-        AfuBean afuBean = new AfuBean();
-        try {
-            afuBean.setId(Long.valueOf(request.params(":id")));
-            afuBean = DBUtils.selectOne("select a.*,at.name as typeName from afu a " +
-                    "left join afu_type at on a.type = at.id where a.id=:id", afuBean);
-        }catch (Exception e) {
-            logger.error("查看阿福详情异常：" + e.getMessage());
+        Boolean data = Boolean.valueOf(request.params(":data"));
+
+        if (!data) {
+            AfuBean afuBean = new AfuBean();
+            try {
+                afuBean.setId(Long.valueOf(request.params("id")));
+                afuBean = DBUtils.selectOne("select a.*,at.name as typeName from afu a " +
+                        "left join afu_type at on a.type = at.id where a.id=:id", afuBean);
+            }catch (Exception e) {
+                logger.error("编辑阿福异常：" + (StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : JSON.toJSONString(e)));
+            }
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("model", afuBean);
+            return new FreeMarkerTemplateEngine()
+                    .render(new ModelAndView(map,
+                            "admin/afu/afu_edit.html"));
         }
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("model", afuBean);
-
-        return new FreeMarkerTemplateEngine()
-                .render(new ModelAndView(map,
-                        "admin/afu/afu_detail.html"));
-
+        ResponseBean responseBean = new ResponseBean();
+        try {
+            AfuBean afuBean = getParamsEntity(request, AfuBean.class, false);
+            DBUtils.insertOrUpdate(afuBean, false);
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+        return responseBean.serialize();
     }
 
     @RequiresPermissions(value = {"afu:delete"})

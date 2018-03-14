@@ -2,15 +2,26 @@ package com.puyixiaowo.fblog.error;
 
 import com.puyixiaowo.fblog.exception.NoPermissionsException;
 import com.puyixiaowo.fblog.utils.ExceptionEmailUtils;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
+import java.util.concurrent.*;
 
 import static spark.Spark.exception;
 import static spark.Spark.notFound;
+/**
+ *
+ * @author Moses
+ * @date 2018-03-14 14:54:58
+ * @copyright Copyright by www.lamic.cn
+ *
+ *
+ */
 
 public class ErrorHandler {
+    private static final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
+
 
     public static void init() {
 
@@ -20,7 +31,7 @@ public class ErrorHandler {
     /**
      * 处理错误信息
      */
-    public static void handleErrors() {
+    public static void handleSystemErrors() {
 
         handle404();
         handle500();
@@ -38,7 +49,10 @@ public class ErrorHandler {
     private static void handle500(){
 
         exception(Exception.class, (exception, request, response) -> {
-            ExecutorService exec = Executors.newFixedThreadPool(5);
+
+            ScheduledExecutorService exec = new ScheduledThreadPoolExecutor(1,
+                    new BasicThreadFactory.Builder().namingPattern("handle500-schedule-pool-%d")
+            .daemon(true).build());
 
             FutureTask futureTask = new FutureTask(() -> {
 
@@ -63,6 +77,5 @@ public class ErrorHandler {
             response.body("您没有访问权限！");
         });
     }
-
 
 }

@@ -17,6 +17,7 @@ import com.puyixiaowo.fblog.utils.sign.SignUtils;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
+import java.util.concurrent.*;
 
 public class BaseController {
     private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
@@ -168,7 +167,9 @@ public class BaseController {
 
     public static void saveAccessRecord(Request request,
                                         Long articleId) {
-        ExecutorService exec = Executors.newFixedThreadPool(5);
+        ScheduledExecutorService exec = new ScheduledThreadPoolExecutor(1,
+                new BasicThreadFactory.Builder().namingPattern("saveAccessRecord-schedule-pool-%d")
+                        .daemon(true).build());
 
         FutureTask futureTask = new FutureTask(() -> {
 

@@ -3,7 +3,7 @@
         height: '100%',
         gridTitle : '配置列表',
         showToolbar: true,
-        toolbarItem: '',
+        toolbarItem: 'add,save,cancel,edit,del',
         loadType: 'GET',
         dataUrl: '${admin}/afu/true',
         dataType: 'json',
@@ -11,7 +11,7 @@
         editMode: {
         	navtab: {
         		id : 'afu_edit',
-				title : '编辑配置',
+				title : '编辑阿福',
 				fresh : true
         	}
         },
@@ -55,8 +55,8 @@
     function openAfuDetail(id) {
         BJUI.navtab({
             id : 'afu_detail',
-            url : '/admin/afu/detail/' + id,
-            title : '阿福详情',
+            url : '/admin/afu/edit/' + id,
+            title : '编辑阿福',
             fresh : true,
             data : {}
         })

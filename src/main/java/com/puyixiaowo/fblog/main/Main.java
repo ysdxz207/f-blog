@@ -29,7 +29,7 @@ public class Main {
 
         ConfigUtils.init();
 
-        ErrorHandler.handleErrors();
+        ErrorHandler.handleSystemErrors();
         Routes.init();
         //ID序列化为字符串类型
         SerializeConfig.getGlobalInstance().put(Long.class, new CustomIdSerializer());

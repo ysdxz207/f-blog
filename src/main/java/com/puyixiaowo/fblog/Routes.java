@@ -215,8 +215,8 @@ public class Routes {
             path("/afu", () -> {
                 get("/:data", ((request, response) ->
                         AfuController.afus(request, response)));
-                get("/detail/:id", ((request, response) ->
-                        AfuController.detail(request, response)));
+                post("/edit/:data", ((request, response) ->
+                        AfuController.edit(request, response)));
                 post("/delete", ((request, response) ->
                         AfuController.delete(request, response)));
 

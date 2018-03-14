@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.mail.util.MailSSLSocketFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -21,6 +23,9 @@ import java.util.Set;
  * @date 2017-11-01 10:53
  */
 public class ExceptionEmailUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(ExceptionEmailUtils.class);
+
 
     private static final String USERNAME = "xxxx@sina.com";
     /**
@@ -53,7 +58,14 @@ public class ExceptionEmailUtils {
         } else {
             to = EMAIL_ADDRESS_EXCEPTION.split(";");
         }
-        send("飞鸿异常报告", to, title, ex);
+        try {
+
+            send("飞鸿异常报告", to, title, ex);
+        } catch (AuthenticationFailedException e) {
+            //邮箱配置错误
+            logger.error("[异常报告]邮箱配置错误");
+        }
+        logger.error("[异常报告]" + ex.getMessage() == null ? JSON.toJSONString(ex) : ex.getMessage());
     }
 
     private static void send(String sendername,

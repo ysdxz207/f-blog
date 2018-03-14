@@ -39,21 +39,3 @@
         </thead>
     </table>
 </div>
-
-<script>
-
-    function optBtn(id) {
-        var afuDetail = '<a href="javascript:openAfuDetail(\'' + id + '\')" class="btn btn-success">详情</a>';
-        return afuDetail;
-    }
-
-    function openAfuDetail(id) {
-        BJUI.navtab({
-            id : 'afu_detail',
-            url : '/admin/afu/detail/' + id,
-            title : '阿福详情',
-            fresh : true,
-            data : {}
-        })
-    }
-</script>
