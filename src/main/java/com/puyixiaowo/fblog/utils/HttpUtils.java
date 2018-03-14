@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class HttpUtils {
 
     private static final String CHARSET = "UTF-8";
+    private static final int TIMEOUT_REQUEST = 5000;
 
     /**
      * httpPost
@@ -68,6 +69,7 @@ public class HttpUtils {
     }
 
     private static String request(HttpMethod method) {
+        method.getParams().setParameter(HttpMethodParams.SO_TIMEOUT,TIMEOUT_REQUEST);
         method.addRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
         String str = null;
         HttpClient httpClient = new HttpClient();
