@@ -14,6 +14,7 @@ import javax.mail.internet.MimeMultipart;
 import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author Moses
@@ -21,9 +22,12 @@ import java.util.Properties;
  */
 public class ExceptionEmailUtils {
 
-    private static final String USERNAME = "feihongblog@163.com";
-    private static final String PASSWORD = "fblog207";//163授权码
-    private static final String HOST = "smtp.163.com";
+    private static final String USERNAME = "xxxx@sina.com";
+    /**
+     * 授权码或密码
+     */
+    private static final String PASSWORD = "邮箱授权码或密码";
+    private static final String HOST = "smtp.sina.com";
     private static final String PORT = "465";
 
     private static final String[] PACKAGE_LAMIC = {"com.puyixiaowo"};
@@ -31,12 +35,19 @@ public class ExceptionEmailUtils {
     private static String EMAIL_ADDRESS_EXCEPTION = "ysdxz207@qq.com";
 
 
+    /**
+     * styles
+     */
+    private static final String STYLE_TH_TD = "font-size: 0.95em;text-align: center;padding: 4px;border-collapse: collapse;  border: 1px solid #cff8fe;border-width: 1px 0 1px 0;";
+    private static final String STYLE_TH = "background-color: #ACF3FF;color: #000000;";
+
+
     public static void sendException(String title,
                                      Throwable ex) throws Exception {
         if (StringUtils.isEmpty(EMAIL_ADDRESS_EXCEPTION)) {
             EMAIL_ADDRESS_EXCEPTION = USERNAME;
         }
-        String [] to;
+        String[] to;
         if (EMAIL_ADDRESS_EXCEPTION.indexOf(",") != -1) {
             to = EMAIL_ADDRESS_EXCEPTION.split(",");
         } else {
@@ -134,71 +145,51 @@ public class ExceptionEmailUtils {
             sb.append(type);
 
 
-            sbTable.append("<style>table{width:70%;margin:15px0;border:0;}th{background-color:#ACF3FF;color:#000000}th,td{font-size:0.95em;text-align:center;padding:4px;border-collapse:collapse;border:1pxsolid#cff8fe;border-width:1px01px0}tr{border:1pxsolid#cff8fe;}tr:nth-child(odd){background-color:#e3fbfe;}tr:nth-child(even){background-color:#fdfdfd;}</style>");
-            sbTable.append("<table>");
-            sbTable.append("<tr>");
-            sbTable.append("<th>");
-            sbTable.append("className");
-            sbTable.append("</th>");
+            JSONArray stackTraceArr = exJson.getJSONArray("stackTrace");
 
-            sbTable.append("<th>");
-            sbTable.append("fileName");
-            sbTable.append("</th>");
-
-            sbTable.append("<th>");
-            sbTable.append("lineNumber");
-            sbTable.append("</th>");
-
-            sbTable.append("<th>");
-            sbTable.append("methodName");
-            sbTable.append("</th>");
-
-            sbTable.append("<th>");
-            sbTable.append("nativeMethod");
-            sbTable.append("</th>");
-
+            Set<String> keys = ((JSONObject) stackTraceArr.get(0)).keySet();
+            sbTable.append("<table  style=\"width: 70%;margin: 15px 0;border: 0;\">");
+            sbTable.append("<tr style=\"border: 1px solid #cff8fe;\">");
+            for (String key : keys) {
+                sbTable.append("<th style=\"");
+                sbTable.append(STYLE_TH_TD);
+                sbTable.append(STYLE_TH);
+                sbTable.append("\">");
+                sbTable.append(key);
+                sbTable.append("</th>");
+            }
             sbTable.append("</tr>");
 
 
+            for (int i = 0; i < stackTraceArr.size(); i++) {
+                Object stackTrace = stackTraceArr.get(i);
 
-            JSONArray stackTraceArr = exJson.getJSONArray("stackTrace");
+                if (i % 2 == 0) {
+                    sbTable.append("<tr style=\"background-color: #e3fbfe;\">");
+                } else {
+                    sbTable.append("<tr style=\"background-color: #fdfdfd;\">");
+                }
 
-            for (Object stackTrace : stackTraceArr) {
-                if (stackTrace instanceof JSONObject) {
-                    sbTable.append("<tr>");
+                JSONObject jsonStackTrace = (JSONObject) stackTrace;
+                String className = jsonStackTrace.getString("className");
+                String lineNumber = jsonStackTrace.getString("lineNumber");
 
-                    JSONObject jsonStackTrace = (JSONObject) stackTrace;
-                    String className = jsonStackTrace.getString("className");
-                    String lineNumber = jsonStackTrace.getString("lineNumber");
-                    sbTable.append("<td>");
-                    sbTable.append(className);
+                for (String key : keys) {
+                    sbTable.append("<td style=\"");
+                    sbTable.append(STYLE_TH_TD);
+                    sbTable.append("\">");
+                    sbTable.append(jsonStackTrace.getString(key));
                     sbTable.append("</td>");
+                }
 
-                    sbTable.append("<td>");
-                    sbTable.append(jsonStackTrace.getString("fileName"));
-                    sbTable.append("</td>");
+                sbTable.append("</tr>");
 
-                    sbTable.append("<td>");
-                    sbTable.append(lineNumber);
-                    sbTable.append("</td>");
-
-                    sbTable.append("<td>");
-                    sbTable.append(jsonStackTrace.getString("methodName"));
-                    sbTable.append("</td>");
-
-                    sbTable.append("<td>");
-                    sbTable.append(jsonStackTrace.getString("nativeMethod"));
-                    sbTable.append("</td>");
-
-                    sbTable.append("</tr>");
-
-                    //检测莱米异常发生类：
-                    for (String packageName : PACKAGE_LAMIC) {
-                        if (className.indexOf(packageName) != -1) {
-                            happendClass = className;
-                            happendNum = lineNumber;
-                            break;
-                        }
+                //检测莱米异常发生类：
+                for (String packageName : PACKAGE_LAMIC) {
+                    if (className.indexOf(packageName) != -1) {
+                        happendClass = className;
+                        happendNum = lineNumber;
+                        break;
                     }
                 }
             }
