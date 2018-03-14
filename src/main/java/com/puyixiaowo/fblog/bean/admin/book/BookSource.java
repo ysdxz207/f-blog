@@ -1,8 +1,10 @@
 package com.puyixiaowo.fblog.bean.admin.book;
 
 import com.puyixiaowo.fblog.service.book.BookService;
+import org.apache.commons.lang3.time.DateUtils;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.Date;
 
 /**
@@ -73,11 +75,15 @@ public class BookSource implements Serializable,Comparable<BookSource>{
 
     @Override
     public int compareTo(BookSource o) {
-        Date thisUpdated = BookService.getBookDate(this.getUpdated());
-        Date objUpdated = BookService.getBookDate(o.getUpdated());
+        Date thisUpdated = new Date();
+        Date objUpdated = new Date();
+        try {
+            thisUpdated = DateUtils.parseDate(this.getUpdated(), "yyyy-MM-dd HH:mm:ss");
+            objUpdated = DateUtils.parseDate(o.getUpdated(), "yyyy-MM-dd HH:mm:ss");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-        thisUpdated = thisUpdated == null ? new Date() : thisUpdated;
-        objUpdated = objUpdated== null ? new Date() : objUpdated;
         return thisUpdated.compareTo(objUpdated) >= 0 ? 1 : 0;
     }
 }

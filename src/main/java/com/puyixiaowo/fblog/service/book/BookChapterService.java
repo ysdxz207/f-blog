@@ -144,8 +144,13 @@ public class BookChapterService {
 
         BookChapterBean bookChapterBean = new BookChapterBean();
         String url = BookConstants.URL_CHAPTER_CONTENT + link;
-        JSONObject json = JSON.parseObject(HttpUtils.httpGet(url, null));
+        JSONObject json;
+        try {
+            json = JSON.parseObject(HttpUtils.httpGet(url, null));
 
+        } catch (Exception e) {
+            return null;
+        }
         if (json == null) {
             logger.error("[book]api返回章节内容json为null");
             return null;
