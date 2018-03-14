@@ -3,11 +3,13 @@ package com.puyixiaowo.fblog.controller.admin.afu;
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.admin.afu.AfuBean;
+import com.puyixiaowo.fblog.bean.admin.afu.AfuTypeBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.AfuService;
+import com.puyixiaowo.fblog.service.AfuTypeService;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import spark.Request;
 import spark.Response;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,28 +52,31 @@ public class AfuController extends BaseController {
 
     @RequiresPermissions(value = {"afu:edit"})
     public static String edit(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
 
         Boolean data = Boolean.valueOf(request.params(":data"));
+        Map<String, Object> map = new HashMap<>();
+        try {
 
-        if (!data) {
-            AfuBean afuBean = new AfuBean();
-            try {
-                afuBean.setId(Long.valueOf(request.params("id")));
-                afuBean = DBUtils.selectOne("select a.*,at.name as typeName from afu a " +
-                        "left join afu_type at on a.type = at.id where a.id=:id", afuBean);
-            }catch (Exception e) {
-                logger.error("编辑阿福异常：" + (StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : JSON.toJSONString(e)));
+            if (!data) {
+                AfuBean afuBean = getParamsEntity(request, AfuBean.class, false);
+                if (afuBean.getId() != null) {
+                    afuBean = DBUtils.selectOne("select a.*,at.name as typeName from afu a " +
+                            "left join afu_type at on a.type = at.id where a.id=:id", afuBean);
+                }
+
+                //阿福类别
+                PageBean afuTypePageBean = AfuTypeService.selectAfuTypePageBean(new AfuTypeBean(), new PageBean());
+
+
+                map.put("afuTypeList", afuTypePageBean.getList());
+                map.put("model", afuBean);
+
+                return new FreeMarkerTemplateEngine()
+                        .render(new ModelAndView(map,
+                                "admin/afu/afu_edit.html"));
             }
 
-            Map<String, Object> map = new HashMap<>();
-            map.put("model", afuBean);
-            return new FreeMarkerTemplateEngine()
-                    .render(new ModelAndView(map,
-                            "admin/afu/afu_edit.html"));
-        }
-
-        ResponseBean responseBean = new ResponseBean();
-        try {
             AfuBean afuBean = getParamsEntity(request, AfuBean.class, false);
             DBUtils.insertOrUpdate(afuBean, false);
         } catch (Exception e) {

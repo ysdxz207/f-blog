@@ -36,29 +36,7 @@
                 <th data-options="{name:'name',align:'center',width: 200}">名称</th>
                 <th data-options="{name:'type',align:'center',width: 120,type:'select',items: function() {return $.getJSON('${admin}/afu/type/all/array')},itemattr: {value:'id',label:'name'}}">分类</th>
                 <th data-options="{name:'createTime',align:'center',width: 200}">创建时间</th>
-                <th data-options="{name:'id', align: 'center',width:100, render:function(value, data){
-
-                    return optBtn(value)
-                }}">操作</th>
             </tr>
         </thead>
     </table>
 </div>
-
-<script>
-
-    function optBtn(id) {
-        var afuDetail = '<a href="javascript:openAfuDetail(\'' + id + '\')" class="btn btn-success">详情</a>';
-        return afuDetail;
-    }
-
-    function openAfuDetail(id) {
-        BJUI.navtab({
-            id : 'afu_detail',
-            url : '/admin/afu/edit/' + id,
-            title : '编辑阿福',
-            fresh : true,
-            data : {}
-        })
-    }
-</script>

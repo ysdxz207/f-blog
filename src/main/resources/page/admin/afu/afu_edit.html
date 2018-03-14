@@ -1,10 +1,23 @@
 <div class="bjui-pageContent">
+    <form method="post" action="/admin/afu/edit/true" class="datagrid-edit-form" data-toggle="validate" data-data-type="jsonp">
+
     <label>名称：</label>
     <p><input name="name" value="${(model.name)!}" size="25"/></p>
-    <label>类别名称：</label>
-    <p><input value="${(model.typeName)!}" size="25"/></p>
+    <label>类别：</label>
+    <p>
+        <div class="row-input required">
+            <select name="type" data-toggle="selectpicker" data-rule="required">
+                <option value="">请选择</option>
+                <#if ((afuTypeList??) && ((afuTypeList?size) > 0))>
+                    <#list afuTypeList as afuType>
+                        <option value="${(afuType.id)?c}" ${((model.type)?? && model.type == afuType.id)?string('selected','')}>${afuType.name}</option>
+                    </#list>
+                </#if>
+            </select>
+        </div>
+    </p>
     <label>内容：</label>
-    <p><textarea readonly rows="18" cols="80">${(model.content)!}</textarea></p>
+    <p><textarea name="content" rows="18" cols="80">${(model.content)!}</textarea></p>
 
     <#if (model.id)??>
         <div>
@@ -21,4 +34,12 @@
         </div>
     </#if>
     <br/><br/><br/>
+    </form>
+</div>
+
+<div class="bjui-pageFooter">
+    <ul>
+        <li><button type="button" class="btn-close" data-icon="close">取消</button></li>
+        <li><button type="submit" class="btn-default" data-icon="save">发布</button></li>
+    </ul>
 </div>
