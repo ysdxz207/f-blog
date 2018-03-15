@@ -16,11 +16,6 @@
       <onMismatch>DENY</onMismatch>
     </filter>
     <file>${DEV_HOME}/${startTime}/error.log</file>
-    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <Pattern>
-        %d{yyyy-MM-dd HH:mm:ss} - %msg%n
-      </Pattern>
-    </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
         <fileNamePattern>${DEV_HOME}/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
         <maxFileSize>10MB</maxFileSize>
@@ -37,11 +32,6 @@
       <onMismatch>DENY</onMismatch>
     </filter>
     <file>${DEV_HOME}/${startTime}/info.log</file>
-    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <Pattern>
-        %d{yyyy-MM-dd HH:mm:ss} - %msg%n
-      </Pattern>
-    </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
       <fileNamePattern>${DEV_HOME}/info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
       <maxFileSize>10MB</maxFileSize>
