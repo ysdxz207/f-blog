@@ -100,8 +100,7 @@ var bookContent = {
                     result.data.forEach(function (chapter, number) {
                         var hasReadClass = (chapter.hasRead || chapter.title == bookContent.lastReadingChapter) ? 'has-read' : '';
 
-                        var url = "/book/chapter?bookId=" + bookContent.bookId + "&link=" +
-                            chapter.link + "&chapterName=" + chapter.title;
+                        var url = "/book/chapter?bookId=" + bookContent.bookId + "&chapterName=" + chapter.title;
                         var li = $('<li class="' + hasReadClass + '"><a href="' + url + '" class="loading">'+ chapter.title + '</a></li>');
 
                         $('#book_chapters_ul').append(li);

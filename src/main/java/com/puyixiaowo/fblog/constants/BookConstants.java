@@ -36,7 +36,7 @@ public class BookConstants {
 
     /**
      * 根据链接获取章节内容，链接需encodeurl
-     * chapter2.zhuishushenqi.com/chapter/章节link(从章节列表中获得)?k=2124b73d7e2e1945&t=1468223717
+     * http://chapter2.zhuishushenqi.com/chapter/章节link(从章节列表中获得)?k=2124b73d7e2e1945&t=1468223717
      */
     public static final String URL_CHAPTER_CONTENT = "http://chapter2.zhuishushenqi.com/chapter/";
 }

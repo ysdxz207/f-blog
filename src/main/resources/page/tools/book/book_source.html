@@ -81,7 +81,7 @@
                 success: function (result) {
                     if (result.statusCode == 200) {
                         location.href = "/book/chapter?bookId=" + bookId
-                            + "&aId=" + source + "&link=" + result.data.link;
+                            + "&aId=" + source;
                     } else {
                         alert(result.message);
                     }
