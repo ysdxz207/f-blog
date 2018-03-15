@@ -334,8 +334,8 @@ public class BookController extends BaseController {
             //获取当前章
             BookChapterBean chapter = null;
             for (BookChapterBean bookChapterBean : bookChapterBeanList) {
-                if (BookChapterService.isSameChapterTitle(bookReadBean.getLastReadingChapter(),
-                        bookChapterBean.getTitle())) {
+                if (bookReadBean.getLastReadingChapter()
+                        .equals(bookChapterBean.getTitle())) {
                     chapter = bookChapterBean;
                 }
             }

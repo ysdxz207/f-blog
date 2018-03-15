@@ -182,6 +182,7 @@ public class BookChapterService {
      * @param title
      * @return
      */
+    @Deprecated
     public static boolean isSameChapterTitle(String lastReadingChapter, String title) {
 
         if (StringUtils.isBlank(lastReadingChapter)
