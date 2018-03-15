@@ -329,7 +329,7 @@ public class BookController extends BaseController {
             DBUtils.insertOrUpdate(bookReadBean, false);
             //切换书源后需要查询出当前章Link
             List<BookChapterBean> bookChapterBeanList = BookChapterService
-                    .requestBookChapters(userBean.getId(), bookId, bookBean.getaId(), false);
+                    .requestBookChapters(userBean.getId(), bookId, bookBean.getaId(), true);
 
             //获取当前章
             BookChapterBean chapter = null;
