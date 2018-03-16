@@ -5,6 +5,7 @@ import com.puyixiaowo.fblog.utils.StringUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +17,8 @@ import java.util.Scanner;
 
 public class LoginTest {
     private static final String URL_PAGE_LOGIN = "http://my.jjwxc.net/login.php";
-    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:29.0) Gecko/20100101 Firefox/29.0";
+    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36";
     private static final String URL_CAPTCHA = "http://my.jjwxc.net/include/checkImage.php?random=" + Math.random();
-    private static final String FILE_NAME_TEMP_CAPTCHA_IMG = "D:/captcha.jpg";
-//    private static final String FILE_NAME_TEMP_CAPTCHA_IMG = System.getProperty("java.io.tmpdir") + "fblog/tools/autopublish/captcha.jpg";
 
     public static void main(String[] args) throws Exception {
         LoginTest loginDemo = new LoginTest();
@@ -38,12 +37,11 @@ public class LoginTest {
 
 
         Connection connection = Jsoup.connect(URL_PAGE_LOGIN + "?action=login&referer=http://my.jjwxc.net/backend/logininfo.php")
-                .header("User-Agent",
-                        USER_AGENT)
                 .data(params)
+                .userAgent(USER_AGENT)
                 .cookie("token", "")
+                .cookie("login_need_authnum", "")
                 .method(Connection.Method.POST);
-
 
         Connection.Response res = connection.execute();
 
@@ -98,8 +96,12 @@ public class LoginTest {
         if (loginSuccess) {
             return res;
         }
-        if (needCaptcha) {
+        if (needCaptcha && reTry) {
             return loginWithCaptcha(username, password, reTry);
+        }
+
+        if (!needCaptcha && reTry) {
+            return login(username, password, reTry);
         }
         return res;
     }
@@ -114,12 +116,17 @@ public class LoginTest {
             InputStream is = con.getInputStream();
             File file = FileUtils.stream2file(is);
 
-            File captchaFile = new File(FILE_NAME_TEMP_CAPTCHA_IMG);
-            if (!captchaFile.getParentFile().exists()) {
-                captchaFile.getParentFile().mkdirs();
-            }
-            FileUtils.copyFile(file, captchaFile);
+            String captchaBase64 = "data:image/png;base64," + FileUtils.file2Base64(file);
 
+            //以下测试
+
+            File fileCaptcha = new File("D:/captcha.jpg");
+            FileUtils.copyFile(file, fileCaptcha);
+            //判断是否支持Desktop扩展,如果支持则进行下一步
+            if (Desktop.isDesktopSupported()){
+                Desktop desktop = Desktop.getDesktop(); //创建desktop对象
+                desktop.open(fileCaptcha);
+            }
 
         } catch (Exception e) {
 
