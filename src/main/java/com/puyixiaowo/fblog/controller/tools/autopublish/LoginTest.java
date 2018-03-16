@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -31,9 +32,10 @@ public class LoginTest {
     public static Connection.Response login(String username,
                                             String password,
                                             boolean reTry) throws IOException {
+        //http://static.jjwxc.net/scripts/jjlogin.js?ver=20180211
         Map<String, String> params = new HashMap<>();
         params.put("loginname", username);
-        params.put("loginpassword", password);
+        params.put("loginpassword", URLEncoder.encode("logindev" + password, "UTF-8"));
 
 
         Connection connection = Jsoup.connect(URL_PAGE_LOGIN + "?action=login&referer=http://my.jjwxc.net/backend/logininfo.php")
