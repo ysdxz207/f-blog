@@ -44,6 +44,28 @@ public class HttpUtils {
         return request(post);
     }
 
+    public static String httpPost(String url, Map<String, String> params,
+                                  Map<String, String> headers) throws TimeoutException {
+        PostMethod post = new PostMethod(url);
+
+        if (params != null && params.size() > 0) {
+            post.setRequestBody(getParams(params));
+        }
+
+        if (headers != null && headers.size() > 0) {
+            for (Map.Entry entry: headers.entrySet()) {
+                if (StringUtils.isBlank(entry.getKey())
+                        || StringUtils.isBlank(entry.getValue())) {
+
+                    continue;
+                }
+                post.setRequestHeader(entry.getKey().toString(), entry.getValue().toString());
+            }
+        }
+
+        return request(post);
+    }
+
     /**
      * httpGet
      *
@@ -72,7 +94,6 @@ public class HttpUtils {
 
     private static String request(HttpMethod method) {
         method.getParams().setParameter(HttpMethodParams.SO_TIMEOUT,TIMEOUT_REQUEST);
-        method.addRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
         String str = null;
         HttpClient httpClient = new HttpClient();
         httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(TIMEOUT_CONNECTION);
@@ -80,6 +101,14 @@ public class HttpUtils {
         try {
             InputStream in = null;
             int statusCode = httpClient.executeMethod(method);
+
+            if (statusCode == HttpStatus.SC_MOVED_TEMPORARILY) {
+
+                HttpMethod method302 = new GetMethod(method.getResponseHeader("Location").getValue());
+                statusCode = httpClient.executeMethod(method302);
+                method = method302;
+            }
+
             if (statusCode != HttpStatus.SC_OK) {
                 return str;
             }
@@ -94,6 +123,8 @@ public class HttpUtils {
             throw new TimeoutException("请求接口失败:" + e.getMessage());
         }
     }
+
+
 
 
 }

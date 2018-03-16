@@ -1,11 +1,15 @@
 package com.puyixiaowo.fblog.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.sql2o.Connection;
 import org.sql2o.Query;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
@@ -98,5 +102,21 @@ public class FileUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public static String file2Base64(File file) {
+        String format = "jpg";
+        try {
+            BufferedImage bufferedImage = ImageIO.read(file);
+            final ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+            ImageIO.write(bufferedImage, format, os);
+            return Base64.encodeBase64String(os.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
     }
 }
