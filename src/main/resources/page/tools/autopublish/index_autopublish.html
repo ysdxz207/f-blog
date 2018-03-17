@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>自动发布</title>
+    <#include "/public/public.html" />
+    <script src="/public_static/js/lib/laydate/laydate.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="col-md-12">
+        <form class="col-md-6">
+            <div class="form-group">
+                <h3>发布设置</h3>
+                <br/>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><span
+                            class="glyphicon glyphicon-user"></span></span>
+                    <input class="form-control" name="jjusername" placeholder="用户名"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><span
+                            class="glyphicon glyphicon-lock"></span></span>
+                    <input class="form-control" name="jjpassword" type="password" placeholder="密码"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><span
+                            class="glyphicon glyphicon-time"></span></span>
+                    <input class="form-control" name="jjpubtime" placeholder="发布时间"/>
+                </div>
+            </div>
+            <div class="form-group pull-right">
+                <div class="input-group">
+                    <button type="button" class="btn btn-success" id="btn_confirm_autopublish">确认设定</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+
+<script src="/public_static/js/sdate.js"></script>
+<script src="/public_static/js/bootstrap-alert.js"></script>
+
+<script>
+    $(function () {
+        laydate.render({
+            theme: '#393D49',
+            elem: 'input[name=jjpubtime]',
+            type: 'datetime',
+            value: sdate.getNowDate(1, 'yyyy-MM-dd') + ' 01:59:59',
+            min: new Date().formatDate("yyyy-MM-dd HH:mm:ss")
+        });
+
+        $('#btn_confirm_autopublish').on('click', function () {
+            if (checkConfig()) {
+
+            }
+        });
+        
+        function checkConfig() {
+
+            salert('在设置自动发布前将进行帐号密码以及系统检测，若提示设置失败，则需要检查配置。', '提示', null, null, function(ok) {
+                if (ok) {
+                    $.ajax({
+                        url: "/autopublish/check",
+                        data: $('form').serialize(),
+                        method: "GET",
+                        dataType: "json",
+                        success: function (result) {
+                            if (result.statusCode == 200) {
+                                salert('成功了')
+                            } else {
+                                salert("[未能通过检测]：" + result.message)
+                            }
+                        },
+                        error: function (a, b) {
+                            salert("服务器内部错误：" + a + "\n" + b);
+                        }
+                    });
+                }
+            });
+
+
+        }
+    })
+
+</script>
+</html>

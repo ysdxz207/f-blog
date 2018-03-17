@@ -48,17 +48,33 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
-                    <include>**/*.*</include>
+                    <include>**/*.html</include>
+                    <include>**/*.js</include>
+                    <include>**/*.css</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.yaml</include>
+                    <include>**/*.sql</include>
+                    <include>**/*.map</include>
                 </includes>
                 <excludes>
-                    <exclude>**/fonts/**</exclude>
+                    <exclude>**/*.woff</exclude>
+                    <exclude>**/*.ttf</exclude>
+                    <exclude>**/*.woff2</exclude>
+                    <exclude>**/*.otf</exclude>
+                    <exclude>**/*.eot</exclude>
+                    <exclude>**/*.svg</exclude>
                 </excludes>
                 <filtering>true</filtering>
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
-                    <include>**/fonts/**</include>
+                    <include>**/*.woff</include>
+                    <include>**/*.ttf</include>
+                    <include>**/*.woff2</include>
+                    <include>**/*.otf</include>
+                    <include>**/*.eot</include>
+                    <include>**/*.svg</include>
                 </includes>
                 <filtering>false</filtering>
             </resource>

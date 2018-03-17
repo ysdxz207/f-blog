@@ -9,6 +9,7 @@ import com.puyixiaowo.fblog.controller.admin.afu.AfuTypeController;
 import com.puyixiaowo.fblog.controller.afu.AfuApiController;
 import com.puyixiaowo.fblog.controller.fblog.FblogController;
 import com.puyixiaowo.fblog.controller.fnews.FNewsController;
+import com.puyixiaowo.fblog.controller.tools.autopublish.JJAutoPublishController;
 import com.puyixiaowo.fblog.controller.tools.books.BookController;
 import com.puyixiaowo.fblog.controller.tools.qrcode.QrcodeController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
@@ -307,6 +308,14 @@ public class Routes {
             post("/source/change", ((request, response) ->
                     BookController.changeBookSource(request, response)));
 
+        });
+
+        //auto publish
+        path("/autopublish", () -> {
+            get("", ((request, response) ->
+                    JJAutoPublishController.autoPublish(request, response)));
+            get("/check", ((request, response) ->
+                    JJAutoPublishController.checkConfig(request, response)));
         });
     }
 }
