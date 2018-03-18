@@ -128,24 +128,19 @@ public class JJAutoPublishController {
                 return responseBean.errorMessage("服务器内部错误");
             }
 
-            Connection.Response res = jsonLogin.getObject("response", Connection.Response.class);
-            Document document = jsonLogin.getObject("document", Document.class);
-            //检测页面是否正确
-            Elements elements = document.select("#publish_click");
 
-            if (elements == null || elements.size() == 0) {
-                return responseBean.errorMessage("未能检测通过：发布页面不正确，找不到发布按钮。");
-            }
 
             if (responseBean.getStatusCode() == 200) {
 
-//                Connection.Response res = (Connection.Response) responseBean.getData();
-//                //检测页面是否正确
-//                Elements elements = res.parse().select("#publish_click");
-//
-//                if (elements == null || elements.size() == 0) {
-//                    return responseBean.errorMessage("未能检测通过：发布页面不正确，找不到发布按钮。");
-//                }
+                Connection.Response res = jsonLogin.getObject("response", Connection.Response.class);
+                Document document = jsonLogin.getObject("document", Document.class);
+                //检测页面是否正确
+                Elements elements = document.select("#publish_click");
+
+                if (elements == null || elements.size() == 0) {
+                    responseBean.setData(null);
+                    return responseBean.errorMessage("未能检测通过：发布页面不正确，找不到发布按钮。");
+                }
 
                 //保存cookie到阿福
                 AfuTypeBean afuTypeBean = new AfuTypeBean();

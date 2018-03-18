@@ -85,6 +85,7 @@
                         method: "GET",
                         dataType: "json",
                         success: function (result) {
+                            salert(result)
                             if (result.statusCode == 200) {
                                 runAutoPublish();
                             } else {
@@ -94,7 +95,7 @@
                             btnConfirm.attr('disabled', false);
                         },
                         error: function (a, b) {
-                            salert("服务器内部错误：" + a + "\n" + b);
+                            salert("服务器内部错误：" + JSON.stringify(a) + "\n" + b);
                         }
                     });
                 }
