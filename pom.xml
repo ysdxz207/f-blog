@@ -371,5 +371,12 @@
             <version>1.11.2</version>
         </dependency>
 
+        <!-- 验证码识别 -->
+        <dependency>
+            <groupId>net.sourceforge.tess4j</groupId>
+            <artifactId>tess4j</artifactId>
+            <version>3.4.4</version>
+        </dependency>
+
     </dependencies>
 </project>

@@ -11,6 +11,7 @@ public class AfuTypeBean extends Validatable implements Serializable {
 
 	private Long id;
 	private String name;
+	private String tag;
 	private String privateKey;
 	private String publicKey;
 	private Integer status;
@@ -30,6 +31,14 @@ public class AfuTypeBean extends Validatable implements Serializable {
 
 	public void setName (String name){
 		this.name = name;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 
 	public String getPrivateKey() {

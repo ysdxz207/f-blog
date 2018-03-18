@@ -10,6 +10,7 @@
 <div class="container">
     <div class="col-md-12">
         <form class="col-md-6">
+            <input type="hidden" name="data" value="true"/>
             <div class="form-group">
                 <h3>发布设置</h3>
                 <br/>
@@ -32,7 +33,14 @@
                 <div class="input-group">
                     <span class="input-group-addon"><span
                             class="glyphicon glyphicon-time"></span></span>
-                    <input class="form-control" name="jjpubtime" placeholder="发布时间"/>
+                    <input class="form-control" readonly name="jjpubtime" placeholder="发布时间"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><span
+                            class="glyphicon glyphicon-link"></span></span>
+                    <input class="form-control" name="jjpubpage" placeholder="发布页面链接"/>
                 </div>
             </div>
             <div class="form-group pull-right">
@@ -65,9 +73,12 @@
         });
         
         function checkConfig() {
-
+            var btnConfirm = $('#btn_confirm_autopublish');
+            var btnConfirmText = btnConfirm.text();
             salert('在设置自动发布前将进行帐号密码以及系统检测，若提示设置失败，则需要检查配置。', '提示', null, null, function(ok) {
                 if (ok) {
+                    btnConfirm.text('检测中...');
+                    btnConfirm.attr('disabled', true);
                     $.ajax({
                         url: "/autopublish/check",
                         data: $('form').serialize(),
@@ -75,10 +86,12 @@
                         dataType: "json",
                         success: function (result) {
                             if (result.statusCode == 200) {
-                                salert('成功了')
+                                runAutoPublish();
                             } else {
                                 salert("[未能通过检测]：" + result.message)
                             }
+                            btnConfirm.text(btnConfirmText);
+                            btnConfirm.attr('disabled', false);
                         },
                         error: function (a, b) {
                             salert("服务器内部错误：" + a + "\n" + b);
@@ -88,6 +101,31 @@
             });
 
 
+        }
+        
+        function runAutoPublish() {
+            var btnConfirm = $('#btn_confirm_autopublish');
+            var btnConfirmText = btnConfirm.text();
+            btnConfirm.text('启动中...');
+            btnConfirm.attr('disabled', true);
+            $.ajax({
+                url: "/autopublish",
+                data: $('form').serialize(),
+                method: "GET",
+                dataType: "json",
+                success: function (result) {
+                    if (result.statusCode == 200) {
+                        salert("设置成功！！！");
+                    } else {
+                        salert("[未能启动自动发布]：" + result.message)
+                    }
+                    btnConfirm.text(btnConfirmText);
+                    btnConfirm.attr('disabled', false);
+                },
+                error: function (a, b) {
+                    salert("服务器内部错误：" + a + "\n" + b);
+                }
+            });
         }
     })
 

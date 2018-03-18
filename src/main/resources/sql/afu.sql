@@ -17,6 +17,7 @@ DROP TABLE IF EXISTS `afu_type`;
 CREATE TABLE `afu_type` (
   `id`   INTEGER(20)  NOT NULL UNIQUE,
   `name` VARCHAR(128) NOT NULL UNIQUE,
+  `tag` VARCHAR(128) DEFAULT NULL,
   `private_key` VARCHAR(1024) NOT NULL,
   `public_key` VARCHAR(1024) NOT NULL,
   `status` INTEGER(4) NOT NULL DEFAULT 1,
