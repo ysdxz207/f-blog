@@ -2,16 +2,19 @@ package com.puyixiaowo.fblog.controller.tools.autopublish.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
+import com.puyixiaowo.fblog.controller.tools.autopublish.timer.SchedualJJPublish;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.utils.RedisUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -128,5 +131,20 @@ public class JJAutoPushUtils {
         Connection.Response response = connection.execute();
         response.charset(ENCODING);
         return response;
+    }
+
+    public static void checkAndRunAutoPublishSchedual() {
+        String dateStr = RedisUtils.get(EnumsRedisKey.REDIS_KEY_TOOLS_AUTOPUBLISH_PUBDATE.key);
+
+        if (StringUtils.isBlank(dateStr)) {
+            return;
+        }
+
+        try {
+            new SchedualJJPublish(DateUtils.parseDate(dateStr, "yyyy-MM-dd HH:mm:ss"))
+                .start();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }

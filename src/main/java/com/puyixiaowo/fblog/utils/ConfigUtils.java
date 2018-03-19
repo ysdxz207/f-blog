@@ -3,6 +3,7 @@ package com.puyixiaowo.fblog.utils;
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.core.timer.TimerBackupDB;
 import com.puyixiaowo.fblog.constants.Constants;
+import com.puyixiaowo.fblog.controller.tools.autopublish.utils.JJAutoPushUtils;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.error.ErrorHandler;
 import org.yaml.snakeyaml.Yaml;
@@ -33,6 +34,8 @@ public class ConfigUtils {
 
         new TimerBackupDB().start();//启动备数据库份
 //        new TimerFetchNews().start();//启动新闻获取定时器
+        //检查自动发布
+        JJAutoPushUtils.checkAndRunAutoPublishSchedual();
     }
 
     /**
