@@ -40,8 +40,13 @@ public class JJAutoPublishController {
         Boolean data = Boolean.valueOf(request.queryParamOrDefault("data", "false"));
 
         if (!data) {
+
+            Map<String, Object> model = new HashMap<>();
+
+            model.put("jjusername", RedisUtils.get(EnumsRedisKey.REDIS_KEY_TOOLS_AUTOPUBLISH_LOGIN_USERNAME.key));
+            model.put("jjpubpage", RedisUtils.get(EnumsRedisKey.REDIS_KEY_TOOLS_AUTOPUBLISH_LOGIN_PUBPAGE.key));
             return new FreeMarkerTemplateEngine()
-                    .render(new ModelAndView(null,
+                    .render(new ModelAndView(model,
                             "tools/autopublish/index_autopublish.html"));
         }
 
@@ -104,13 +109,23 @@ public class JJAutoPublishController {
             return responseBean.errorMessage("请选择发布时间");
         }
 
-        int retryTimes = 2;
+        //处理protocal
+        if (pubPage.indexOf("http://") == -1
+                && pubPage.indexOf("https://") == -1) {
+            return responseBean.errorMessage("发布页面格式不正确");
+        }
 
+        //记住帐号
+        RedisUtils.set(EnumsRedisKey.REDIS_KEY_TOOLS_AUTOPUBLISH_LOGIN_USERNAME.key,
+                username);
+        RedisUtils.set(EnumsRedisKey.REDIS_KEY_TOOLS_AUTOPUBLISH_LOGIN_PUBPAGE.key,
+                pubPage);
 
         try {
-            responseBean = JJAutoPushUtils.login(username, password, captcha, retryTimes);
+            responseBean = JJAutoPushUtils.login(username, password, captcha);
 
             if (responseBean.getStatusCode() == 200) {
+
 
                 //检测发布页面
                 Connection.Response res = JJAutoPushUtils.accessPage((Map<String, String>)responseBean.getData(),

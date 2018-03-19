@@ -1,6 +1,5 @@
 package com.puyixiaowo.fblog.controller.tools.autopublish.utils;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
@@ -23,8 +22,6 @@ public class JJAutoPushUtils {
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36";
     public static final String ENCODING = "GB2312";
 
-    private static int RETRY_TIMES_LAST = 0;
-
 
     /**
      * actions
@@ -34,23 +31,19 @@ public class JJAutoPushUtils {
 
     public static ResponseBean login(String username,
                                      String password,
-                                     String captcha,
-                                     int retryTimes) throws IOException {
+                                     String captcha) throws IOException {
         ResponseBean responseBean = new ResponseBean();
 
         //如果已经登录成功过则直接取cookies
-        Map<String, String> cookiesLogin = RedisUtils.get(EnumsRedisKey.REDIS_KEY_TOOLS_AUTOPUBLISH_LOGIN_COOKIES.key,
-                Map.class);
+//        Map<String, String> cookiesLogin = RedisUtils.get(EnumsRedisKey.REDIS_KEY_TOOLS_AUTOPUBLISH_LOGIN_COOKIES.key,
+//                Map.class);
+//
+//        if (cookiesLogin != null && cookiesLogin.size() > 0) {
+//
+//            responseBean.setData(cookiesLogin);
+//            return responseBean;
+//        }
 
-        if (cookiesLogin != null && cookiesLogin.size() > 0) {
-
-            responseBean.setData(cookiesLogin);
-            return responseBean;
-        }
-
-        RETRY_TIMES_LAST = retryTimes > 0 ? retryTimes - 1 : RETRY_TIMES_LAST - 1;
-
-        JSONObject json = new JSONObject();
 
         //登录
 
@@ -84,15 +77,12 @@ public class JJAutoPushUtils {
         String token = response.cookie("token");
 
         responseBean.setStatusCode(StringUtils.isNotBlank(token) ? 200 : 300);
-        json.put("response", response);
         Document document = response.parse();
 
-        json.put("document", document);
-
-
         if (responseBean.getStatusCode() == 200) {
-            RedisUtils.set(EnumsRedisKey.REDIS_KEY_TOOLS_AUTOPUBLISH_LOGIN_COOKIES.key,
-                    JSON.toJSONString(response.cookies()), 60 * 60 * 24);
+            responseBean.setData(response.cookies());
+//            RedisUtils.set(EnumsRedisKey.REDIS_KEY_TOOLS_AUTOPUBLISH_LOGIN_COOKIES.key,
+//                    JSON.toJSONString(response.cookies()), 60 * 60 * 24);
         } else {
             //错误信息
             String message = "登录失败！";
@@ -104,13 +94,8 @@ public class JJAutoPushUtils {
                 message = "登录失败，" + elements.get(0).child(0).text();
             }
             responseBean.setMessage(message);
-            if (RETRY_TIMES_LAST > 0) {
-                System.out.println("尝试:" + RETRY_TIMES_LAST);
-                return login(username, password, captcha, RETRY_TIMES_LAST);
-            }
         }
 
-        responseBean.setData(json);
         return responseBean;
     }
 

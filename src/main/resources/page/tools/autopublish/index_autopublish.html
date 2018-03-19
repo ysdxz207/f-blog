@@ -19,7 +19,8 @@
                 <div class="input-group">
                     <span class="input-group-addon"><span
                             class="glyphicon glyphicon-user"></span></span>
-                    <input class="form-control" name="jjusername" placeholder="用户名"/>
+                    <input class="form-control" name="jjusername" disabled style="display: none" placeholder=防止谷歌浏览器自动填充/>
+                    <input class="form-control" name="jjusername" value="${jjusername!}" autocomplete="false" placeholder="用户名"/>
                 </div>
             </div>
             <div class="form-group">
@@ -40,7 +41,7 @@
                 <div class="input-group">
                     <span class="input-group-addon"><span
                             class="glyphicon glyphicon-link"></span></span>
-                    <input class="form-control" name="jjpubpage" placeholder="发布页面链接"/>
+                    <input class="form-control" name="jjpubpage" value="${jjpubpage!}" placeholder="发布页面链接"/>
                 </div>
             </div>
             <div class="form-group">
