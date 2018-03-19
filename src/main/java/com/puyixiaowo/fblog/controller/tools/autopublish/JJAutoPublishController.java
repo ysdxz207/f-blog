@@ -7,6 +7,7 @@ import com.puyixiaowo.fblog.bean.admin.afu.AfuBean;
 import com.puyixiaowo.fblog.bean.admin.afu.AfuTypeBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
+import com.puyixiaowo.fblog.controller.tools.autopublish.timer.TimerKeepJJSession;
 import com.puyixiaowo.fblog.controller.tools.autopublish.utils.JJAutoPushUtils;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
@@ -53,7 +54,7 @@ public class JJAutoPublishController {
         try {
             if (responseBean.getStatusCode() == 200) {
                 //进入定时发布
-
+                new TimerKeepJJSession().start();
 
             } else {
                 System.out.println("[信息]登录失败");
