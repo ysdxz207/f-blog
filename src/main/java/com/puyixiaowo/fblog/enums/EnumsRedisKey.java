@@ -8,7 +8,8 @@ public enum  EnumsRedisKey {
 
     REDIS_KEY_REFRESH_MENU_LIST("REDIS_KEY_REFRESH_MENU_LIST_", "是否刷新菜单缓存"),
     REDIS_KEY_FNEWS_LIST("REDIS_KEY_FNEWS_LIST_", "新闻列表"),
-    REDIS_KEY_SHORT_LINK("REDIS_KEY_SHORT_LINK_", "短链接");
+    REDIS_KEY_SHORT_LINK("REDIS_KEY_SHORT_LINK_", "短链接"),
+    REDIS_KEY_TOOLS_AUTOPUBLISH_CAPTCHA("REDIS_KEY_TOOLS_AUTOPUBLISH_CAPTCHA", "自动发布验证码response");
 
 
     EnumsRedisKey(String key, String description) {

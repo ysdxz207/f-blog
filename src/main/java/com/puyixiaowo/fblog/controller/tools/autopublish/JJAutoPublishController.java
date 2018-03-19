@@ -7,9 +7,11 @@ import com.puyixiaowo.fblog.bean.admin.afu.AfuBean;
 import com.puyixiaowo.fblog.bean.admin.afu.AfuTypeBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
+import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.AfuTypeService;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.RedisUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import com.puyixiaowo.fblog.utils.sign.RSAKeyUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -95,39 +97,39 @@ public class JJAutoPublishController {
     public static Object checkConfig(Request request, Response response) {
         String username = request.queryParams("jjusername");
         String password = request.queryParams("jjpassword");
-        String pubPage = request.queryParams("pubPage");
-        String pubTime = request.queryParams("pubTime");
+        String pubPage = request.queryParams("jjpubpage");
+        String pubTime = request.queryParams("jjpubtime");
+        String captcha = request.queryParams("captcha");
 
         ResponseBean responseBean = new ResponseBean();
         //参数校验
         if (StringUtils.isBlank(username)) {
-            responseBean.errorMessage("请输入晋江登录用户名");
+            return responseBean.errorMessage("请输入晋江登录用户名");
         }
 
         if (StringUtils.isBlank(password)) {
-            responseBean.errorMessage("请输入晋江登录密码");
+            return responseBean.errorMessage("请输入晋江登录密码");
         }
 
         if (StringUtils.isBlank(pubPage)) {
-            responseBean.errorMessage("请输入发布页面");
+            return responseBean.errorMessage("请输入发布页面");
         }
 
         if (StringUtils.isBlank(pubTime)) {
-            responseBean.errorMessage("请选择发布时间");
+            return responseBean.errorMessage("请选择发布时间");
         }
 
         int retryTimes = 2;
 
 
         try {
-            responseBean = login(username, password, retryTimes);
+            responseBean = login(username, password, captcha, retryTimes);
 
             JSONObject jsonLogin = (JSONObject) responseBean.getData();
 
             if (jsonLogin == null) {
                 return responseBean.errorMessage("服务器内部错误");
             }
-
 
 
             if (responseBean.getStatusCode() == 200) {
@@ -180,6 +182,7 @@ public class JJAutoPublishController {
 
     public static ResponseBean login(String username,
                                             String password,
+                                            String captcha,
                                             int retryTimes) throws IOException {
 
         RETRY_TIMES_LAST = retryTimes > 0 ? retryTimes - 1 : RETRY_TIMES_LAST - 1;
@@ -188,7 +191,7 @@ public class JJAutoPublishController {
 
         JSONObject json = new JSONObject();
 
-        Connection.Response response = login(username, password);
+        Connection.Response response = login(username, password, captcha);
         response.charset(ENCODING);
 
         //根据cookie中是否有token判断登录是否成功
@@ -207,12 +210,12 @@ public class JJAutoPublishController {
             if (elements != null
                     && elements.size() > 0) {
 
-                message = elements.get(0).child(0).text();
+                message = "登录失败，" + elements.get(0).child(0).text();
             }
             responseBean.setMessage(message);
             if (RETRY_TIMES_LAST > 0) {
                 System.out.println("尝试:" + RETRY_TIMES_LAST);
-                return login(username, password, RETRY_TIMES_LAST);
+                return login(username, password, captcha, RETRY_TIMES_LAST);
             }
         }
 
@@ -221,15 +224,8 @@ public class JJAutoPublishController {
     }
 
     public static Connection.Response login(String username,
-                                            String password) throws IOException {
-
-        String captchaNum = "";
-        ResponseBean captchaPicBean = getCaptchaPic();
-
-        Scanner sc = new Scanner(System.in);
-        System.out.print("[信息]请输入验证码：");
-        captchaNum = sc.next();
-
+                                            String password,
+                                            String captcha) throws IOException {
 
         Map<String, String> params = new HashMap<>();
         params.put("action", ACTION_LOGIN);
@@ -237,11 +233,16 @@ public class JJAutoPublishController {
         params.put("loginpassword", password);
         params.put("cookietime", "0");
         params.put("client_time", System.currentTimeMillis() / 1000 + "");
-        params.put("auth_num", captchaNum);
+        params.put("auth_num", captcha);
 
+        //获取验证码cookie
+        Connection.Response response = RedisUtils.get(EnumsRedisKey.REDIS_KEY_TOOLS_AUTOPUBLISH_CAPTCHA.key, Connection.Response.class);
 
+        if (response == null) {
+            return null;
+        }
         Connection connection = Jsoup.connect(URL_LOGIN_BASE)
-                .cookies(((Connection.Response)captchaPicBean.getData()).cookies())
+                .cookies(response.cookies())
                 .userAgent(USER_AGENT)
                 .data(params)
                 .method(Connection.Method.GET);
