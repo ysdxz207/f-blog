@@ -314,6 +314,8 @@ public class Routes {
         path("/autopublish", () -> {
             get("", ((request, response) ->
                     JJAutoPublishController.autoPublish(request, response)));
+            get("/captcha", ((request, response) ->
+                    JJAutoPublishController.getCaptcha(request, response)));
             get("/check", ((request, response) ->
                     JJAutoPublishController.checkConfig(request, response)));
         });

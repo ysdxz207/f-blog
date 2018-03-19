@@ -7,6 +7,7 @@ import com.puyixiaowo.fblog.bean.admin.afu.AfuBean;
 import com.puyixiaowo.fblog.bean.admin.afu.AfuTypeBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
+import com.puyixiaowo.fblog.controller.tools.autopublish.utils.JJAutoPushUtils;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.AfuTypeService;
@@ -15,7 +16,6 @@ import com.puyixiaowo.fblog.utils.RedisUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import com.puyixiaowo.fblog.utils.sign.RSAKeyUtils;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -25,11 +25,7 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
-import java.awt.*;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,18 +33,9 @@ import java.util.Scanner;
 
 public class JJAutoPublishController {
 //    private static String URL_LOGIN_BASE = "http://puyixiaowo.win/test";
-    private static String URL_LOGIN_BASE = "http://my.jjwxc.net/login.php";
-    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36";
-    private static final String URL_CAPTCHA = "http://my.jjwxc.net/include/checkImage.php?random=" + Math.random();
-
-    private static final String ENCODING = "GB2312";
 
     private static int RETRY_TIMES_LAST = 0;
 
-    /**
-     * actions
-     */
-    private static final String ACTION_LOGIN = "login";
 
 
     public static Object autoPublish(Request request, Response response) {
@@ -72,7 +59,7 @@ public class JJAutoPublishController {
                 System.out.println("[信息]请粘贴编辑(发布)文章页面：");
                 String editArticlePage = new Scanner(System.in).next();
                 Connection.Response loginResponse = (Connection.Response) responseBean.getData();
-                Connection.Response res = accessPage(loginResponse, editArticlePage);
+                Connection.Response res = JJAutoPushUtils.accessPage(loginResponse, editArticlePage);
 
                 //检测页面是否正确
                 Elements elements = res.parse().select("#publish_click");
@@ -93,6 +80,26 @@ public class JJAutoPublishController {
         }
         return responseBean;
     }
+
+
+    public static Object getCaptcha(Request request, Response response) {
+
+        ResponseBean responseBean = new ResponseBean();
+
+        try {
+            responseBean = JJAutoPushUtils.getCaptchaPic();
+            if (responseBean.getStatusCode() == 200) {
+                //存入redis
+                RedisUtils.set(EnumsRedisKey.REDIS_KEY_TOOLS_AUTOPUBLISH_CAPTCHA.key,
+                        JSON.toJSONString(((Connection.Response)responseBean.getData()).cookies()),
+                        60);
+            }
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+        return responseBean;
+    }
+
 
     public static Object checkConfig(Request request, Response response) {
         String username = request.queryParams("jjusername");
@@ -128,7 +135,7 @@ public class JJAutoPublishController {
             JSONObject jsonLogin = (JSONObject) responseBean.getData();
 
             if (jsonLogin == null) {
-                return responseBean.errorMessage("服务器内部错误");
+                return responseBean.errorMessage("[检测不通过]服务器内部错误");
             }
 
 
@@ -136,6 +143,11 @@ public class JJAutoPublishController {
 
                 Connection.Response res = jsonLogin.getObject("response", Connection.Response.class);
                 Document document = jsonLogin.getObject("document", Document.class);
+
+                if (res == null
+                        || document == null) {
+                    return responseBean.errorMessage("[检测不通过]res或document为空，服务器内部错误");
+                }
                 //检测页面是否正确
                 Elements elements = document.select("#publish_click");
 
@@ -191,8 +203,8 @@ public class JJAutoPublishController {
 
         JSONObject json = new JSONObject();
 
-        Connection.Response response = login(username, password, captcha);
-        response.charset(ENCODING);
+        Connection.Response response = JJAutoPushUtils.login(username, password, captcha);
+        response.charset(JJAutoPushUtils.ENCODING);
 
         //根据cookie中是否有token判断登录是否成功
         String token = response.cookie("token");
@@ -223,75 +235,6 @@ public class JJAutoPublishController {
         return responseBean;
     }
 
-    public static Connection.Response login(String username,
-                                            String password,
-                                            String captcha) throws IOException {
-
-        Map<String, String> params = new HashMap<>();
-        params.put("action", ACTION_LOGIN);
-        params.put("loginname", username);
-        params.put("loginpassword", password);
-        params.put("cookietime", "0");
-        params.put("client_time", System.currentTimeMillis() / 1000 + "");
-        params.put("auth_num", captcha);
-
-        //获取验证码cookie
-        Connection.Response response = RedisUtils.get(EnumsRedisKey.REDIS_KEY_TOOLS_AUTOPUBLISH_CAPTCHA.key, Connection.Response.class);
-
-        if (response == null) {
-            return null;
-        }
-        Connection connection = Jsoup.connect(URL_LOGIN_BASE)
-                .cookies(response.cookies())
-                .userAgent(USER_AGENT)
-                .data(params)
-                .method(Connection.Method.GET);
 
 
-        return connection.execute();
-    }
-
-    public static ResponseBean getCaptchaPic() throws IOException {
-
-        ResponseBean responseBean = new ResponseBean();
-        Connection connection = Jsoup.connect(URL_CAPTCHA)
-                .userAgent(USER_AGENT)
-                .ignoreContentType(true)
-                .method(Connection.Method.GET);
-
-        Connection.Response response = connection.execute();
-
-        responseBean.setData(response);
-
-        //获取图片
-        responseBean.setMessage(Base64.encodeBase64String(response.bodyAsBytes()));
-
-        //以下测试
-
-        File file = new File("D:/captcha.jpg");
-
-        OutputStream outputStream = new FileOutputStream(file);
-        IOUtils.write(response.bodyAsBytes(), outputStream);
-        //判断是否支持Desktop扩展,如果支持则进行下一步
-        if (Desktop.isDesktopSupported()){
-            Desktop desktop = Desktop.getDesktop(); //创建desktop对象
-            desktop.open(file);
-        }
-
-        return responseBean;
-    }
-
-    public static Connection.Response accessPage(Connection.Response loginResponse,
-                                                 String url) throws IOException {
-        Connection connection = Jsoup.connect(url)
-                .cookies(loginResponse.cookies())
-                .userAgent(USER_AGENT)
-                .ignoreContentType(true)
-                .method(Connection.Method.GET);
-
-        Connection.Response response = connection.execute();
-        response.charset(ENCODING);
-        System.out.println(response.body());
-        return response;
-    }
 }
