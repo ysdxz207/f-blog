@@ -15,7 +15,6 @@ import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.RedisUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import com.puyixiaowo.fblog.utils.sign.RSAKeyUtils;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -32,15 +31,9 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class JJAutoPublishController {
-//    private static String URL_LOGIN_BASE = "http://puyixiaowo.win/test";
-
-    private static int RETRY_TIMES_LAST = 0;
-
 
 
     public static Object autoPublish(Request request, Response response) {
-        String username = "dx87fi@163.com";
-        String password = "meixianghao";
 
         ResponseBean responseBean = new ResponseBean();
 
@@ -53,22 +46,7 @@ public class JJAutoPublishController {
         }
 
         try {
-            //获取检测时登录的cookie
-
             if (responseBean.getStatusCode() == 200) {
-                System.out.println("[信息]请粘贴编辑(发布)文章页面：");
-                String editArticlePage = new Scanner(System.in).next();
-                Connection.Response loginResponse = (Connection.Response) responseBean.getData();
-                Connection.Response res = JJAutoPushUtils.accessPage(loginResponse, editArticlePage);
-
-                //检测页面是否正确
-                Elements elements = res.parse().select("#publish_click");
-
-                if (elements.size() == 0) {
-                    responseBean.errorMessage("[错误]发布页面不正确");
-//                return responseBean;
-                }
-
                 //进入定时发布
 
 
@@ -90,9 +68,9 @@ public class JJAutoPublishController {
             responseBean = JJAutoPushUtils.getCaptchaPic();
             if (responseBean.getStatusCode() == 200) {
                 //存入redis
-                RedisUtils.set(EnumsRedisKey.REDIS_KEY_TOOLS_AUTOPUBLISH_CAPTCHA.key,
+                RedisUtils.set(EnumsRedisKey.REDIS_KEY_TOOLS_AUTOPUBLISH_CAPTCHA_COOKIES.key,
                         JSON.toJSONString(((Connection.Response)responseBean.getData()).cookies()),
-                        60);
+                        60 * 60);
             }
         } catch (Exception e) {
             responseBean.error(e);
@@ -130,26 +108,16 @@ public class JJAutoPublishController {
 
 
         try {
-            responseBean = login(username, password, captcha, retryTimes);
-
-            JSONObject jsonLogin = (JSONObject) responseBean.getData();
-
-            if (jsonLogin == null) {
-                return responseBean.errorMessage("[检测不通过]服务器内部错误");
-            }
-
+            responseBean = JJAutoPushUtils.login(username, password, captcha, retryTimes);
 
             if (responseBean.getStatusCode() == 200) {
 
-                Connection.Response res = jsonLogin.getObject("response", Connection.Response.class);
-                Document document = jsonLogin.getObject("document", Document.class);
+                //检测发布页面
+                Connection.Response res = JJAutoPushUtils.accessPage((Map<String, String>)responseBean.getData(),
+                        pubPage);
 
-                if (res == null
-                        || document == null) {
-                    return responseBean.errorMessage("[检测不通过]res或document为空，服务器内部错误");
-                }
                 //检测页面是否正确
-                Elements elements = document.select("#publish_click");
+                Elements elements = res.parse().select("#publish_click");
 
                 if (elements == null || elements.size() == 0) {
                     responseBean.setData(null);
@@ -190,51 +158,5 @@ public class JJAutoPublishController {
         }
         return responseBean;
     }
-
-
-    public static ResponseBean login(String username,
-                                            String password,
-                                            String captcha,
-                                            int retryTimes) throws IOException {
-
-        RETRY_TIMES_LAST = retryTimes > 0 ? retryTimes - 1 : RETRY_TIMES_LAST - 1;
-
-        ResponseBean responseBean = new ResponseBean();
-
-        JSONObject json = new JSONObject();
-
-        Connection.Response response = JJAutoPushUtils.login(username, password, captcha);
-        response.charset(JJAutoPushUtils.ENCODING);
-
-        //根据cookie中是否有token判断登录是否成功
-        String token = response.cookie("token");
-
-        responseBean.setStatusCode(StringUtils.isNotBlank(token) ? 200 : 300);
-        json.put("response", response);
-
-        if (responseBean.getStatusCode() == 300) {
-            //错误信息
-            String message = "登录失败！";
-            Document document = response.parse();
-
-            json.put("document", document);
-            Elements elements = document.select(".loginStyle");
-            if (elements != null
-                    && elements.size() > 0) {
-
-                message = "登录失败，" + elements.get(0).child(0).text();
-            }
-            responseBean.setMessage(message);
-            if (RETRY_TIMES_LAST > 0) {
-                System.out.println("尝试:" + RETRY_TIMES_LAST);
-                return login(username, password, captcha, RETRY_TIMES_LAST);
-            }
-        }
-
-        responseBean.setData(json);
-        return responseBean;
-    }
-
-
 
 }
