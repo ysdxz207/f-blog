@@ -14,9 +14,6 @@ import static spark.Spark.notFound;
  *
  * @author Moses
  * @date 2018-03-14 14:54:58
- * @copyright Copyright by www.lamic.cn
- *
- *
  */
 
 public class ErrorHandler {
