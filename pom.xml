@@ -51,6 +51,7 @@
                     <include>**/*.html</include>
                     <include>**/*.js</include>
                     <include>**/*.css</include>
+                    <include>**/*.xml</include>
                     <include>**/*.properties</include>
                     <include>**/*.yaml</include>
                     <include>**/*.sql</include>
@@ -208,6 +209,12 @@
             <groupId>com.sparkjava</groupId>
             <artifactId>spark-core</artifactId>
             <version>2.6.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.sparkjava</groupId>
@@ -252,6 +259,12 @@
             <groupId>org.sql2o</groupId>
             <artifactId>sql2o</artifactId>
             <version>1.6.0-RC3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--sqlite driver-->
         <dependency>
