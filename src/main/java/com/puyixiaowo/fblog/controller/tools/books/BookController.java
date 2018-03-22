@@ -124,6 +124,10 @@ public class BookController extends BaseController {
             BookChapterBean bookChapterBean = BookChapterService.getChapter(chapterBeanList,
                         chapter);
             if (bookChapterBean == null) {
+                //是否最后一章
+
+
+
                 String HTML_CHANGE_SOURCE = "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no\">\n<div style='color: #DDD;text-align:center;height:400px;line-height:400px'>无法获取书籍，请<a href='/book/source?aId=" +
                         bookBean.getaId() + "'>切换书源</a></div>";
                 //提示切换书源
