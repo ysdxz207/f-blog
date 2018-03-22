@@ -35,7 +35,7 @@ public class ExceptionEmailUtils {
     private static final String HOST = "smtp.sina.com";
     private static final String PORT = "465";
 
-    private static final String[] PACKAGE_LAMIC = {"com.puyixiaowo"};
+    private static final String[] PACKAGE_NAMES = {"com.puyixiaowo"};
 
     private static String EMAIL_ADDRESS_EXCEPTION = "ysdxz207@qq.com";
 
@@ -198,8 +198,8 @@ public class ExceptionEmailUtils {
 
                 sbTable.append("</tr>");
 
-                //检测莱米异常发生类：
-                for (String packageName : PACKAGE_LAMIC) {
+                //检测异常发生类：
+                for (String packageName : PACKAGE_NAMES) {
                     if (className.indexOf(packageName) != -1) {
                         happendClass = className;
                         happendNum = lineNumber;
