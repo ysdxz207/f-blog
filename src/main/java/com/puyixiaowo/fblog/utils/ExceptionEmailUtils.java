@@ -27,11 +27,11 @@ public class ExceptionEmailUtils {
     private static final Logger logger = LoggerFactory.getLogger(ExceptionEmailUtils.class);
 
 
-    private static final String USERNAME = "xxxx@sina.com";
+    private static final String USERNAME = "ysdxz207@sina.com";
     /**
      * 授权码或密码
      */
-    private static final String PASSWORD = "邮箱授权码或密码";
+    private static final String PASSWORD = "//hupubao207";
     private static final String HOST = "smtp.sina.com";
     private static final String PORT = "465";
 
@@ -49,6 +49,7 @@ public class ExceptionEmailUtils {
 
     public static void sendException(String title,
                                      Throwable ex) throws Exception {
+        System.out.println("发送异常邮件");
         if (StringUtils.isEmpty(EMAIL_ADDRESS_EXCEPTION)) {
             EMAIL_ADDRESS_EXCEPTION = USERNAME;
         }
@@ -61,6 +62,7 @@ public class ExceptionEmailUtils {
         try {
 
             send("飞鸿异常报告", to, title, ex);
+            logger.info("[异常报告]异常邮件已发送！");
         } catch (AuthenticationFailedException e) {
             //邮箱配置错误
             logger.error("[异常报告]邮箱配置错误");

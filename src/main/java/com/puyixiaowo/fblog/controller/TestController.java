@@ -1,15 +1,10 @@
 package com.puyixiaowo.fblog.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.puyixiaowo.fblog.controller.tools.autopublish.timer.SchedualJJPublish;
-import com.puyixiaowo.fblog.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sqlite.date.DateFormatUtils;
 import spark.Request;
 import spark.Response;
-
-import java.text.ParseException;
 
 
 /**
@@ -24,7 +19,7 @@ public class TestController extends BaseController{
 
     public static Object test(Request request,
                        Response response) {
-        logger.info("test===========>" + JSON.toJSONString(request.queryMap().toMap()));
+        logger.error("test===========>" + JSON.toJSONString(request.queryMap().toMap()));
         return "success";
     }
 
@@ -34,11 +29,4 @@ public class TestController extends BaseController{
         return "{\"awesome\":true,\"bogus\":false,\"chinese\":\"这是中文。\",\"notLink\":\"http://www.htmleaf.com/ is great\",\"multiline\":[\"Much like me, you make your way forward,\",\"Walking with downturned eyes.\",\"Well, I too kept mine lowered.\",\"Passer-by, stop here, please.\"],\"link\":\"http://img.1391.com/api/v1/bookcenter/cover/1/1127281/_1127281_685974.jpg/\",\"anobject\":{\"anarray\":[1,2,\"three\"],\"whoa\":\"nuts\",\"more\":\"stuff\"},\"hey\":\"guy\",\"anumber\":243}";
     }
 
-    public static Object testPub(Request request,
-                                  Response response) throws ParseException {
-
-        new SchedualJJPublish(org.apache.commons.lang3.time.DateUtils.parseDate("2018-03-19 16:04:30",
-                "yyyy-MM-dd HH:mm:ss")).start();
-        return "";
-    }
 }
