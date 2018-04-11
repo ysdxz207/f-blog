@@ -1,15 +1,13 @@
 package com.puyixiaowo.core.timer;
 
 import com.puyixiaowo.fblog.constants.Constants;
+import com.puyixiaowo.fblog.utils.ConfigUtils;
 import com.puyixiaowo.fblog.utils.FileUtils;
-import com.puyixiaowo.fblog.utils.ResourceUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -29,6 +27,7 @@ public class TimerBackupDB extends TimerTask{
     private static Date FIRST_DATE;
 
 
+
     public TimerBackupDB() {
         FIRST_DATE = getTomorrowDate();
     }
@@ -36,7 +35,7 @@ public class TimerBackupDB extends TimerTask{
     @Override
     public void run() {
         logger.info("开始数据库备份...");
-        String SOURCE_FILE_NAME = Constants.DB_HOST;
+        String SOURCE_FILE_NAME = ConfigUtils.DB_FILE_NAME;
         String TARGET_FILE_NAME = Constants.BACK_UP_DB_FILE_PATH
                 + "/"
                 + DateFormatUtils.format(new Date(), "yyyy-MM-dd")

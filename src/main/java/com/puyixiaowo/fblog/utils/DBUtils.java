@@ -10,13 +10,12 @@ import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.exception.DBException;
 import com.puyixiaowo.fblog.exception.DBObjectExistsException;
 import com.puyixiaowo.fblog.exception.DBSqlException;
-import org.sql2o.Connection;
-import org.sql2o.Query;
-import org.sql2o.Sql2o;
-import org.sql2o.Sql2oException;
+import org.sql2o.*;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -25,68 +24,78 @@ import java.util.*;
  */
 public class DBUtils {
 
-    private static final String FOLDER_SQL = "sql";
     private static final int SQL_TYPE_INSERT = 1;//添加
     private static final int SQL_TYPE_UPDATE = 2;//更新
 
     private static Sql2o sql2o;
-
+    private static Properties dbProperties = new Properties();
     public static Sql2o getSql2o() {
         return sql2o;
     }
 
-    /**
-     * 初始化数据库
-     */
-    public static void initDB() {
-        //设置临时目录路径
-        String sqliteTempDir = System.getProperty("user.dir") + "/sqlite_temp";
-        File tempFile = new File(sqliteTempDir);
-        if (!tempFile.exists()) {
-            tempFile.mkdirs();
-        }
-        System.setProperty("org.sqlite.tmpdir",
-                sqliteTempDir);
-        String dbHost = Constants.DB_HOST;
-
-        if (StringUtils.isBlank(dbHost)) {
-            throw new DBException("There is no db host found.");
-        }
-
-        initDBConnection(dbHost);
-
-        if (!new File(dbHost).exists()) {
-            //创建数据库文件
-            try (Connection conn = sql2o.open()) {
-
-                String[] filenames = ResourceUtils.getResourceFolderFiles(FOLDER_SQL);
-                FileUtils.runResourcesSql(conn, FOLDER_SQL, filenames);
-            }
-            //清空redis
-            EnumsRedisKey[] enumsRedisKeys = EnumsRedisKey.values();
-            String[] keys = new String[enumsRedisKeys.length];
-            for (int i = 0; i < enumsRedisKeys.length; i++) {
-                keys[i] = enumsRedisKeys[i].key + "*";
-            }
-            RedisUtils.delete(keys);
-        }
-
+    public static Properties getDbProperties() {
+        return dbProperties;
     }
 
     /**
-     * 初始化数据库连接
-     *
-     * @param dbHost
+     * 初始化DB
+     * @param jdbcPropertyFilePath
+     * @throws Exception
      */
-    private static void initDBConnection(String dbHost) {
+    public static void initDB(String jdbcPropertyFilePath) throws Exception {
 
-        sql2o = new Sql2o("jdbc:sqlite:" + dbHost, null, null);
+        dbProperties.load(DBUtils.class.getResourceAsStream("/" + jdbcPropertyFilePath));
 
+        initDB(dbProperties);
+    }
+
+    /**
+     * 初始化DB
+     * @param url
+     *          包含端口号的数据库地址
+     * @param username
+     * @param password
+     * @throws Exception
+     */
+    public static void initDB(String url,
+                              String username,
+                              String password) throws Exception {
+
+        Properties properties = new Properties();
+        properties.setProperty("url", url);
+        properties.setProperty("user", username);
+        properties.setProperty("password", password);
+        initDB(properties);
+    }
+
+    /**
+     * 初始化DB
+     * @param dbProperties
+     * @throws Exception
+     */
+    public static void initDB(Properties dbProperties) throws Exception {
+
+        String url = dbProperties.getProperty("url");
+        if (url == null
+                || "".equals(url.trim())
+                || "null".equals(url.trim())) {
+            throw new RuntimeException("数据库属性文件中属性[url]的值不正确");
+        }
+
+        if (dbProperties.containsKey("username")) {
+            dbProperties.setProperty("user", dbProperties.getProperty("username"));
+            dbProperties.remove("username");
+        }
+
+        DataSource dataSource = new GenericDatasource(url, dbProperties);
+
+        sql2o = new Sql2o(dataSource);
         if (sql2o == null) {
-            throw new DBException("Can not find db " + dbHost);
+            throw new RuntimeException("数据库连接错误");
         }
 
     }
+
 
     public static <T> T selectOne(Class<T> clazz,
                                   String sql,
@@ -455,7 +464,7 @@ public class DBUtils {
 
     public static void main(String[] args) throws Exception {
 
-        DBUtils.initDBConnection("D:\\workspace\\idea\\f-blog\\f_blog.db");
+        DBUtils.initDB("D:\\workspace\\idea\\f-blog\\f_blog.db");
 
         UserBean userBean = new UserBean();
         userBean.setLoginname("feihong");
