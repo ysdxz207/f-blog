@@ -187,14 +187,14 @@ public class BaseController {
 
             AccessRecordBean accessRecordBean = new AccessRecordBean();
 
-            accessRecordBean.setArticleId(articleId);
+            accessRecordBean.setArticleId(articleId == null ? 0L : articleId);
             accessRecordBean.setLink(link == null ? "未知" : link);
             accessRecordBean.setIp(IpUtils.getIp(request));
             accessRecordBean.setAccessDate(DateUtils.getTodayZeroMiliseconds());
             accessRecordBean.setCreateDate(System.currentTimeMillis());
-            accessRecordBean.setUserAgent(userAgentString);
-            accessRecordBean.setOs(os);
-            accessRecordBean.setBrowser(browser);
+            accessRecordBean.setUserAgent(userAgentString == null ? "未知" : userAgentString);
+            accessRecordBean.setOs(os == null ? "未知" : os);
+            accessRecordBean.setBrowser(browser == null ? "未知" : browser);
 
 
             try {

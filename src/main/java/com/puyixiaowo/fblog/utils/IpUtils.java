@@ -25,6 +25,6 @@ public class IpUtils {
                 ip = realIp + "/" + forwarded.replaceAll(", " + realIp, "");
             }
         }
-        return ip;
+        return ip == null ? "" : ip;
     }
 }
