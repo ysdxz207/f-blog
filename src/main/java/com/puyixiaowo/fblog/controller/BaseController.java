@@ -188,7 +188,7 @@ public class BaseController {
             AccessRecordBean accessRecordBean = new AccessRecordBean();
 
             accessRecordBean.setArticleId(articleId);
-            accessRecordBean.setLink(link);
+            accessRecordBean.setLink(link == null ? "未知" : link);
             accessRecordBean.setIp(IpUtils.getIp(request));
             accessRecordBean.setAccessDate(DateUtils.getTodayZeroMiliseconds());
             accessRecordBean.setCreateDate(System.currentTimeMillis());
