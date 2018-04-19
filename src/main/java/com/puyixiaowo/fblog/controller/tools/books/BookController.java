@@ -164,6 +164,7 @@ public class BookController extends BaseController {
             model.put("bookChapters", chapterBeanList);
 
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error("[书]获取章节内容异常：" + e.getMessage() == null ? JSON.toJSONString(e.getMessage()) : e.getMessage());
         }
 
