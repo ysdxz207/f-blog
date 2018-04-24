@@ -6,10 +6,11 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.*;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import static spark.Spark.exception;
-import static spark.Spark.notFound;
 /**
  *
  * @author Moses
@@ -37,10 +38,9 @@ public class ErrorHandler {
 
     private static void handle404(){
 
-        notFound((request, response) -> {
-            response.redirect("/error/error404");
-            return null;
-        });
+//        notFound((request, response) -> {
+//            return "404";
+//        });
     }
 
     private static void handle500(){

@@ -1,6 +1,5 @@
 package com.puyixiaowo.fblog;
 
-import com.puyixiaowo.fblog.controller.ErrorController;
 import com.puyixiaowo.fblog.controller.IndexController;
 import com.puyixiaowo.fblog.controller.TestController;
 import com.puyixiaowo.fblog.controller.admin.*;
@@ -40,17 +39,7 @@ public class Routes {
 
         });
 
-        path("/error", () -> {
-            get("/error404", ((request, response) ->
-                    ErrorController.error404(request, response)));
-
-            get("/error500", ((request, response) ->
-                    ErrorController.error500(request, response)));
-
-
-        });
-
-                    //fblog前台
+        //fblog前台
         path("/yiyi", () -> {
             get("/", ((request, response) -> FblogController.articleList(request, response)));
             get("/category/list", (request, response) -> FblogController.categoryList(request, response));
