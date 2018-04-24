@@ -5,8 +5,10 @@ import com.puyixiaowo.core.timer.TimerBackupDB;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.error.ErrorHandler;
+import org.sql2o.Connection;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -21,18 +23,63 @@ public class ConfigUtils {
     private static final String IGNORE_LIST = "ignore_list";
     private static final String PASS_DES_KEY = "pass_des_key";
 
+    private static final String PATH_JDBC_PROPERTIES = "jdbc.properties";
+    private static final String FOLDER_SQL = "sql";
+
+    public static String DB_FILE_NAME = "";
+
     /**
      * 初始化配置有顺序
      */
     public static void init() {
         initRedis();
-        DBUtils.initDB();
+        initDB();
         initAdminConf();
         initBookConfig();
         ErrorHandler.init();
 
         new TimerBackupDB().start();//启动备数据库份
 //        new TimerFetchNews().start();//启动新闻获取定时器
+    }
+
+    /**
+     * 初始化数据库
+     */
+    public static void initDB() {
+        //设置临时目录路径
+        String sqliteTempDir = System.getProperty("user.dir") + "/sqlite_temp";
+        File tempFile = new File(sqliteTempDir);
+        if (!tempFile.exists()) {
+            tempFile.mkdirs();
+        }
+        System.setProperty("org.sqlite.tmpdir",
+                sqliteTempDir);
+
+        try {
+            DBUtils.initDB(PATH_JDBC_PROPERTIES);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String url = DBUtils.getDbProperties().getProperty("url");
+
+        DB_FILE_NAME = url.substring(url.lastIndexOf(":") + 1);
+
+        if (!new File(DB_FILE_NAME).exists()) {
+            //创建数据库文件
+            try (Connection conn = DBUtils.getSql2o().open()) {
+
+                String[] filenames = ResourceUtils.getResourceFolderFiles(FOLDER_SQL);
+                FileUtils.runResourcesSql(conn, FOLDER_SQL, filenames);
+            }
+            //清空redis
+            EnumsRedisKey[] enumsRedisKeys = EnumsRedisKey.values();
+            String[] keys = new String[enumsRedisKeys.length];
+            for (int i = 0; i < enumsRedisKeys.length; i++) {
+                keys[i] = enumsRedisKeys[i].key + "*";
+            }
+            RedisUtils.delete(keys);
+        }
     }
 
     /**
