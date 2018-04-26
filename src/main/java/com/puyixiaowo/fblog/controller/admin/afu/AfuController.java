@@ -1,6 +1,7 @@
 package com.puyixiaowo.fblog.controller.admin.afu;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.admin.afu.AfuBean;
 import com.puyixiaowo.fblog.bean.admin.afu.AfuTypeBean;
@@ -97,6 +98,47 @@ public class AfuController extends BaseController {
         try {
             DBUtils.deleteByIds(AfuBean.class,
                     request.queryParams("id"));
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+
+        return responseBean.serialize();
+    }
+
+    @RequiresPermissions(value = {"afu:view"})
+    public static String text(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
+
+        try {
+            AfuBean afuBean = getParamsEntity(request, AfuBean.class, false);
+            StringBuilder sb = new StringBuilder();
+            afuBean = DBUtils.selectOne("select * from afu where id = :id", afuBean);
+
+            int num = 1;
+            if (afuBean != null) {
+
+                for (Object o :
+                        JSON.parseArray(afuBean.getContent())) {
+
+                    JSONArray array = (JSONArray) o;
+                    String content = array.getString(1);
+                    Integer wanchengdu = array.getJSONObject(3).getInteger("percent");
+                    String wanchengduDescription = array.getJSONObject(3).getString("description");
+                    if (wanchengdu != 0) {
+                        sb.append(num);
+                        sb.append("、");
+                        sb.append(content);
+                        sb.append("[");
+                        sb.append(wanchengduDescription);
+                        sb.append("]");
+                        sb.append("\n");
+                        num ++;
+                    }
+                }
+            }
+
+            responseBean.setMessage(null);
+            responseBean.setData(sb.toString());
         } catch (Exception e) {
             responseBean.error(e);
         }

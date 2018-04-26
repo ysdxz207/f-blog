@@ -210,6 +210,9 @@ public class Routes {
                 post("/delete", ((request, response) ->
                         AfuController.delete(request, response)));
 
+                post("/text", ((request, response) ->
+                        AfuController.text(request, response)));
+
                 path("/type", () -> {
 
                     get("/:data", ((request, response) ->

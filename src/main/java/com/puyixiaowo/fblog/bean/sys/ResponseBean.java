@@ -5,7 +5,6 @@ package com.puyixiaowo.fblog.bean.sys;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.utils.StringUtils;
@@ -21,7 +20,6 @@ public class ResponseBean implements Serializable {
 	private static final long serialVersionUID = -5266170746828998914L;
 	private int statusCode = Constants.RESPONSE_STATUS_CODE_SUCCESS;
 	private String message = Constants.RESPONSE_SUCCESS_MESSAGE;
-	@JSONField(serialize=false)//防止调serialize()时因取消循环引用而内存溢出
 	private Object data;
 
 	//////////
