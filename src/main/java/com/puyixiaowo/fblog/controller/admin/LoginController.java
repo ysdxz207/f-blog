@@ -1,14 +1,10 @@
 package com.puyixiaowo.fblog.controller.admin;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Producer;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
-import com.puyixiaowo.fblog.bean.admin.UserRoleBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
-import com.puyixiaowo.fblog.enums.EnumLoginType;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.LoginService;
 import com.puyixiaowo.fblog.utils.DesUtils;
@@ -34,8 +30,7 @@ import java.util.Map;
  */
 public class LoginController extends BaseController {
 
-    private static Producer captchaProducerAdmin = new CaptchaProducer(EnumLoginType.LOGIN_TYPE_ADMIN);
-    private static Producer captchaProducerBook= new CaptchaProducer(EnumLoginType.LOGIN_TYPE_BOOK);
+    private static Producer producer = new CaptchaProducer();
 
     /**
      * 登录页面
@@ -62,33 +57,6 @@ public class LoginController extends BaseController {
                                        Response response) {
 
         return login(Constants.COOKIE_LOGIN_KEY_FBLOG,
-                request, response);
-    }
-
-    /**
-     * 书登录页面
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    public static Object loginPageBook(Request request, Response response) {
-
-        return new FreeMarkerTemplateEngine()
-                .render(new ModelAndView(null, "tools/book/book_login.html"));
-    }
-
-    /**
-     * 书登录
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    public static Object bookLogin(Request request,
-                                          Response response) {
-
-        return login(Constants.COOKIE_LOGIN_KEY_BOOK,
                 request, response);
     }
 
@@ -212,11 +180,7 @@ public class LoginController extends BaseController {
 
         String uri = request.uri();
 
-        if (uri.toLowerCase().startsWith("/book")) {
-            response.removeCookie("/book", Constants.COOKIE_LOGIN_KEY_BOOK);
-        } else {
-            response.removeCookie("/admin", Constants.COOKIE_LOGIN_KEY_FBLOG);
-        }
+        response.removeCookie("/admin", Constants.COOKIE_LOGIN_KEY_FBLOG);
         return responseBean;
     }
 
@@ -229,15 +193,6 @@ public class LoginController extends BaseController {
                         Response response) {
 
         String type = request.queryParamOrDefault("type", "admin");
-
-        EnumLoginType enumLoginType = EnumLoginType.getEnumType(type);
-        Producer producer = captchaProducerAdmin;
-
-        switch (enumLoginType) {
-            case LOGIN_TYPE_BOOK:
-                producer = captchaProducerBook;
-                break;
-        }
 
         HttpSession session = request.session().raw();
         HttpServletResponse res = response.raw();
@@ -289,25 +244,8 @@ public class LoginController extends BaseController {
     public static void rememberMeLogin(String cookieKey,
                                        Request request,
                                        Response response) {
-        String uri = request.uri();
-
         String redirectPage = "/admin/";
         String loginPage = "/admin/loginPage";
-        if (uri.toLowerCase().startsWith("/book")) {
-            if (!uri.equalsIgnoreCase("/book/login")) {
-                String params = request.queryString();
-
-                if (StringUtils.isBlank(params)) {
-                    params = "";
-                } else {
-                    params = "?" + params;
-                }
-                redirectPage = request.url() + params;
-            } else {
-                redirectPage = "/book/index";
-            }
-            loginPage = "/book/loginPage";
-        }
 
         UserBean userBean = rememberMe(cookieKey,
                 request, response, null);

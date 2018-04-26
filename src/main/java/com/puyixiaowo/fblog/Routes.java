@@ -8,11 +8,9 @@ import com.puyixiaowo.fblog.controller.admin.afu.AfuTypeController;
 import com.puyixiaowo.fblog.controller.afu.AfuApiController;
 import com.puyixiaowo.fblog.controller.fblog.FblogController;
 import com.puyixiaowo.fblog.controller.fnews.FNewsController;
-import com.puyixiaowo.fblog.controller.tools.books.BookController;
 import com.puyixiaowo.fblog.controller.tools.qrcode.QrcodeController;
 import com.puyixiaowo.fblog.filters.AdminAuthFilter;
 import com.puyixiaowo.fblog.filters.AdminPermissionsFilter;
-import com.puyixiaowo.fblog.filters.BookAuthFilter;
 import spark.Spark;
 
 import static spark.Spark.*;
@@ -58,8 +56,6 @@ public class Routes {
 
         //后台管理
         AdminAuthFilter.init();
-        ///书
-        BookAuthFilter.init();
         //权限控制
         AdminPermissionsFilter.init();
 
@@ -262,44 +258,5 @@ public class Routes {
                     QrcodeController.showQrcodeLink(request, response)));
         });
 
-        //book
-        path("/book", () -> {
-            get("/loginPage", ((request, response) ->
-                    LoginController.loginPageBook(request, response)));
-            get("/captcha.jpg", ((request, response) ->
-                    LoginController.captcha(request, response)));
-            post("/login", ((request, response) ->
-                    LoginController.bookLogin(request, response)));
-
-            get("/index", ((request, response) ->
-                    BookController.userBooks(request, response)));
-
-            get("/detail", ((request, response) ->
-                    BookController.bookDetail(request, response)));
-
-            get("/chapter", ((request, response) ->
-                    BookController.chapterContent(request, response)));
-
-            post("/saveReadingSetting", ((request, response) ->
-                    BookController.saveBookReadSetting(request, response)));
-
-            get("/searchPage", ((request, response) ->
-                    BookController.searchPage(request, response)));
-
-            get("/search", ((request, response) ->
-                    BookController.search(request, response)));
-            post("/chapters", ((request, response) ->
-                    BookController.chapters(request, response)));
-
-            post("/addOrDel", ((request, response) ->
-                    BookController.addOrDelBook(request, response)));
-
-            get("/source", ((request, response) ->
-                    BookController.bookSource(request, response)));
-
-            post("/source/change", ((request, response) ->
-                    BookController.changeBookSource(request, response)));
-
-        });
     }
 }
