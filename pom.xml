@@ -25,6 +25,8 @@
                 <site.pupu>/pupu</site.pupu>
                 <site.admin>/admin</site.admin>
                 <db.backup.path>./dbbackup</db.backup.path>
+                <origin.access.allow.url>http://192.168.3.2:1234,http://localhost:1234,http://192.168.20.179:1234</origin.access.allow.url>
+
             </properties>
         </profile>
         <profile>
@@ -36,6 +38,8 @@
                 <site.pupu></site.pupu>
                 <site.admin>/admin</site.admin>
                 <db.backup.path>/root/fblog_db_backup</db.backup.path>
+                <origin.access.allow.url></origin.access.allow.url>
+
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>

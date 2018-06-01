@@ -42,4 +42,9 @@ public class Constants {
     public static final String SITE_YIYI = ResourceUtils.load("conf/site.properties").getProperty("site.yiyi");
     public static final String SITE_PUPU = ResourceUtils.load("conf/site.properties").getProperty("site.pupu");
 
+    /**
+     * 跨域允许
+     */
+    public static String [] ALLOWED_ORIGINS = new String[0];
+
 }

@@ -4,7 +4,9 @@ import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.admin.LoginController;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.utils.RedisUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static spark.Spark.before;
@@ -23,6 +25,19 @@ public class AdminAuthFilter {
     public static void init() {
         //后台管理
         before("/admin/*", (request, response) -> {
+
+            String origin = request.headers("Origin");
+            if (StringUtils.isNotBlank(origin)
+                    && Constants.ALLOWED_ORIGINS.length != 0) {
+                String originAllowed = Arrays.asList(Constants.ALLOWED_ORIGINS).contains(origin) ? origin : "";
+//                logger.info("[" + origin + "][" + originAllowed + "]");
+                response.header("Access-Control-Allow-Origin", originAllowed);
+                response.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+                response.header("Access-Control-Allow-Headers", "X-Requested-With,Content-Type");
+                response.header("Access-Control-Allow-Credentials", "true");
+
+            }
+
             String uri = request.uri();
             if (!isIgnorePath(uri)
                     && (request.session().attribute(Constants.SESSION_USER_KEY) == null)) {
