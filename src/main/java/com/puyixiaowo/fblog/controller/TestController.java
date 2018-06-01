@@ -19,7 +19,7 @@ public class TestController extends BaseController{
 
     public static Object test(Request request,
                        Response response) {
-        logger.error("test===========>" + JSON.toJSONString(request.queryMap().toMap()));
+        logger.info("[test]：" + JSON.toJSONString(getParamsMap(request)));
         return "success";
     }
 

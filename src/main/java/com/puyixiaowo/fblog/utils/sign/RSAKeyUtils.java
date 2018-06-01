@@ -119,6 +119,9 @@ public class RSAKeyUtils {
     public static void main(String[] args) throws Exception {
         RSAKey rsaKey = generateRSAKey();
 
+        System.out.println(rsaKey.getPrivateKey());
+        System.out.println(rsaKey.getPublicKey());
+
         System.out.println(testSign(rsaKey.getPrivateKey(), rsaKey.getPublicKey()));
     }
 }  

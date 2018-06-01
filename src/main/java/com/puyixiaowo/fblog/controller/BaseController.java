@@ -8,7 +8,6 @@ import com.puyixiaowo.fblog.bean.AccessRecordBean;
 import com.puyixiaowo.fblog.bean.admin.afu.AfuTypeBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.constants.Constants;
-import com.puyixiaowo.fblog.controller.fblog.FblogController;
 import com.puyixiaowo.fblog.exception.BaseControllerException;
 import com.puyixiaowo.fblog.exception.DBObjectExistsException;
 import com.puyixiaowo.fblog.service.AfuTypeService;
@@ -32,7 +31,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 public class BaseController {
     private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
@@ -49,7 +50,7 @@ public class BaseController {
     public static <T extends Validatable> T getParamsEntity(Request request,
                                                             Class<T> clazz,
                                                             boolean validate) throws ValidationException, ClassNotFoundException, InvocationTargetException, IllegalAccessException, InstantiationException {
-        Map<String, String[]> map = request.queryMap().toMap();
+        Map<String, String> map = getParamsMap(request);
 
         T obj = (T) Class.forName(clazz.getName()).newInstance();
         BeanUtilsBean.getInstance().getConvertUtils().register(false, false, 0);
@@ -80,33 +81,19 @@ public class BaseController {
     }
 
     public static Map<String, String> getParamsMap(Request request) {
-        Map<String, String[]> map = request.queryMap().toMap();
+
         Map<String, String> mapReturn = new HashMap<>();
-        for (Map.Entry entry : map.entrySet()) {
-            String key = entry.getKey() == null ? "" : entry.getKey().toString();
-            String value = entry.getValue() == null ? "" : ((String[]) entry.getValue())[0];
+        Set<String> params = request.queryParams();
+
+        Iterator<String> it = params.iterator();
+
+        while (it.hasNext()) {
+            String key = it.next();
+            String value = request.queryParams(key);
             mapReturn.put(key, value);
         }
 
         return mapReturn;
-    }
-
-    public static String renderHTML(String htmlFile) {
-        try {
-            // If you are using maven then your files
-            // will be in a folder called resources.
-            // getResource() gets that folder
-            // and any files you specify.
-            URL url = ResourceUtils.getResource(htmlFile);
-
-            // Return a String which has all
-            // the contents of the file.
-            Path path = Paths.get(url.toURI());
-            return new String(Files.readAllBytes(path), Charset.defaultCharset());
-        } catch (IOException | URISyntaxException e) {
-            // Add your own exception handlers here.
-        }
-        return null;
     }
 
     /**
@@ -165,6 +152,7 @@ public class BaseController {
     }
 
 
+    @SuppressWarnings("unchecked")
     public static void saveAccessRecord(Request request,
                                         Long articleId) {
         ScheduledExecutorService exec = new ScheduledThreadPoolExecutor(1,
@@ -183,18 +171,18 @@ public class BaseController {
                     .getOperatingSystem().getName();
 
             String browser = userAgent.getBrowser().getName()
-                            + " " + userAgent.getBrowserVersion();
+                    + " " + userAgent.getBrowserVersion();
 
             AccessRecordBean accessRecordBean = new AccessRecordBean();
 
             accessRecordBean.setArticleId(articleId == null ? 0L : articleId);
-            accessRecordBean.setLink(link == null ? "未知" : link);
+            accessRecordBean.setLink(link);
             accessRecordBean.setIp(IpUtils.getIp(request));
             accessRecordBean.setAccessDate(DateUtils.getTodayZeroMiliseconds());
             accessRecordBean.setCreateDate(System.currentTimeMillis());
             accessRecordBean.setUserAgent(userAgentString == null ? "未知" : userAgentString);
             accessRecordBean.setOs(os == null ? "未知" : os);
-            accessRecordBean.setBrowser(browser == null ? "未知" : browser);
+            accessRecordBean.setBrowser(browser);
 
 
             try {
