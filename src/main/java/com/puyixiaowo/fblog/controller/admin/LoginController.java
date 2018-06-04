@@ -79,7 +79,7 @@ public class LoginController extends BaseController {
 
         String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
 
-        logger.info("[登录验证码]：" + sessionCaptcha + "[收到验证码]：" + captcha);
+        logger.info("[" + request.session().id() + "][登录验证码]：" + sessionCaptcha + "[收到验证码]：" + captcha);
 
         if (!captcha.equalsIgnoreCase(sessionCaptcha)) {
             responseBean.errorMessage("验证码错误");
@@ -223,7 +223,7 @@ public class LoginController extends BaseController {
         // create the text for the image
         String capText = producer.createText();
 
-        logger.info("[生成验证码]：" + capText);
+        logger.info("[" + session.getId() + "][生成验证码]：" + capText);
 
         // store the text in the session
         session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
