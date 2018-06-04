@@ -10,6 +10,8 @@ import com.puyixiaowo.fblog.service.LoginService;
 import com.puyixiaowo.fblog.utils.DesUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import com.puyixiaowo.fblog.utils.captcha.CaptchaProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -29,6 +31,8 @@ import java.util.Map;
  * 登录
  */
 public class LoginController extends BaseController {
+
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     private static Producer producer = new CaptchaProducer();
 
@@ -74,6 +78,9 @@ public class LoginController extends BaseController {
 
 
         String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
+
+        logger.info("[登录验证码]：" + sessionCaptcha + "[收到验证码]：" + captcha);
+
         if (!captcha.equalsIgnoreCase(sessionCaptcha)) {
             responseBean.errorMessage("验证码错误");
             return responseBean;
@@ -215,6 +222,8 @@ public class LoginController extends BaseController {
 
         // create the text for the image
         String capText = producer.createText();
+
+        logger.info("[生成验证码]：" + capText);
 
         // store the text in the session
         session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
