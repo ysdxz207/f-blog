@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.bean.admin.MenuBean;
 import com.puyixiaowo.fblog.bean.admin.other.MenuPermissionBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
+import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.RedisUtils;
@@ -19,7 +20,7 @@ import java.util.List;
 public class MenuService {
 
     public static List<MenuBean> selectMenuListRedis(long pid,
-                                                      int type) {
+                                                     String type) {
 
         //redis
         String menuListStr = RedisUtils.get(EnumsRedisKey.REDIS_KEY_MENU_LIST.key + pid + "_" + type);
@@ -41,13 +42,15 @@ public class MenuService {
 
         if (!menuBeanList.isEmpty()) {
             //更新redis
-            RedisUtils.set(EnumsRedisKey.REDIS_KEY_MENU_LIST.key + pid + "_" + type, JSON.toJSONString(menuBeanList));
+            RedisUtils.set(EnumsRedisKey.REDIS_KEY_MENU_LIST.key + pid + "_" + type,
+                    JSON.toJSONString(menuBeanList),
+                    Constants.ONE_DAY);
         }
 
         return menuBeanList;
     }
 
-    private static List<MenuBean> selectNestedMenuList(long pid, int type){
+    private static List<MenuBean> selectNestedMenuList(long pid, String type){
         //父级
         List<MenuBean> parentMenuList = selectMenuListRedis(pid, type);
 
@@ -61,7 +64,7 @@ public class MenuService {
         return parentMenuList;
     }
 
-    public static List<MenuBean> selectNavMenuList(int type) {
+    public static List<MenuBean> selectNavMenuList(String type) {
         return selectNestedMenuList(0L, type);
     }
 

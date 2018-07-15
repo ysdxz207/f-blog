@@ -20,7 +20,7 @@ public class MenuBean extends Validatable implements Serializable {
 	private String href;
 	private Integer status;
 	private String remark;
-	private Integer type;
+	private String type;
 	@NotNull
 	private String code;
 	@NotNull
@@ -87,11 +87,11 @@ public class MenuBean extends Validatable implements Serializable {
 		this.remark = remark;
 	}
 
-	public Integer getType (){
+	public String getType (){
 		return type;
 	}
 
-	public void setType (Integer type){
+	public void setType (String type){
 		this.type = type;
 	}
 

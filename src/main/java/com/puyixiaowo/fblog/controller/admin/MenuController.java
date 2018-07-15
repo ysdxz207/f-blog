@@ -1,8 +1,6 @@
 package com.puyixiaowo.fblog.controller.admin;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.admin.MenuBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
@@ -29,45 +27,22 @@ public class MenuController extends BaseController {
 
 
     public static Object navMenus(Request request, Response response) {
-        String typeStr = request.params(":type");
-        if (StringUtils.isBlank(typeStr)) {
+
+        ResponseBean responseBean = new ResponseBean();
+        String type = request.params(":type");
+        if (StringUtils.isBlank(type)) {
             throw new MenuException("菜单类型不可为空");
         }
-        Integer type = Integer.parseInt(typeStr);
 
-        List<MenuBean> menuBeanList = MenuService.selectNavMenuList(type);
-
-        return buildMenus(menuBeanList);
-    }
-
-    /**
-     * @param list
-     * @return
-     */
-    private static JSONArray buildMenus(List<MenuBean> list) {
-        JSONArray result = new JSONArray();
-
-        for (MenuBean menuBean : list) {
-            JSONObject menus = new JSONObject();
-            if (StringUtils.isNotBlank(menuBean.getCode())) {
-                menus.put("id", menuBean.getCode());
-            }
-            if (StringUtils.isNotBlank(menuBean.getMenuName())) {
-                menus.put("name", menuBean.getMenuName());
-            }
-            menus.put("target", "navtab");
-            if (StringUtils.isNotBlank(menuBean.getHref())) {
-                menus.put("url", menuBean.getHref());
-            }
-            List<MenuBean> menuList = menuBean.getMenuBeanList();
-            if (menuList != null && menuList.size() > 0) {
-                JSONArray children = buildMenus(menuList);
-                menus.put("children", children);
-            }
-            result.add(menus);
+        try {
+            List<MenuBean> menuBeanList = MenuService.selectNavMenuList(type);
+            responseBean.success(menuBeanList);
+        } catch (Exception e) {
+            responseBean.error(e);
         }
-        return result;
+        return responseBean;
     }
+
 
     @RequiresPermissions(value = {"menu:view"})
     public static String menus(Request request, Response response) {

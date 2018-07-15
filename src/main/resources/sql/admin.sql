@@ -22,7 +22,7 @@ CREATE TABLE `menu` (
   `href`      VARCHAR(2000)         DEFAULT NULL,
   `status`    INTEGER(1)            DEFAULT '1',
   `remark`    VARCHAR(256)          DEFAULT NULL,
-  `type`      INTEGER(4)   NOT NULL DEFAULT '2',
+  `type`      VARCHAR(32)   NOT NULL DEFAULT 'blog',
   `code`      VARCHAR(128)          DEFAULT NULL,
   `pid`       INTEGER(20)  NOT NULL DEFAULT '0',
   `expand`    INTEGER(1)            DEFAULT '0',

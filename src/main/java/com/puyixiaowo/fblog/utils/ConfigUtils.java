@@ -111,6 +111,10 @@ public class ConfigUtils {
         }
 
         RedisUtils.set(EnumsRedisKey.REDIS_KEY_IGNORE_CONF.key, JSON.toJSONString(ignores));
+
+        //跨域
+        String allowString = ResourceUtils.load("conf/common.properties").getProperty("origin.access.allow.url").trim();
+        Constants.ALLOWED_ORIGINS = StringUtils.isNotBlank(allowString) ? allowString.split(",") : new String[0];
     }
 
 

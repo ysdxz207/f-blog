@@ -1,7 +1,12 @@
 package com.puyixiaowo.fblog.service;
 
 import com.puyixiaowo.fblog.bean.admin.UserBean;
+import com.puyixiaowo.fblog.constants.Constants;
+import com.puyixiaowo.fblog.error.LoginError;
 import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
+import win.hupubao.common.error.Throws;
+import win.hupubao.common.utils.DesUtils;
 
 import java.util.Map;
 
@@ -11,9 +16,21 @@ import java.util.Map;
  */
 public class LoginService {
 
-    public static UserBean login(Map<String ,Object> params){
-        UserBean userBean = DBUtils.selectOne(UserBean.class,
-                "SELECT\n" +
+    public static UserBean login(UserBean userBean) throws Exception{
+
+        if (StringUtils.isBlank(userBean.getCaptcha())) {
+            Throws.throwError(LoginError.EMPTY_CAPTCHA_ERROR);
+        }
+
+
+        if (!userBean.getCaptcha().equalsIgnoreCase(userBean.getSessionCaptcha())) {
+            Throws.throwError(LoginError.WRONG_CAPTCHA_ERROR);
+        }
+
+        userBean.setPassword(DesUtils.encrypt(userBean.getPassword(),
+                Constants.PASS_DES_KEY));
+
+        userBean = DBUtils.selectOne("SELECT\n" +
                         "  u.*,\n" +
                         "  r.id AS role_id\n" +
                         "FROM user u\n" +
@@ -24,7 +41,30 @@ public class LoginService {
                         "WHERE loginname = :loginname\n" +
                         "      AND password = :password\n" +
                         "      AND status = 1;",
-                params);
+                userBean);
+
+        if (userBean == null) {
+            Throws.throwError(LoginError.WRONG_USERNAME_OR_PASSWORD_ERROR);
+        }
+        userBean.setPassword(null);
+        return userBean;
+    }
+
+    public static UserBean cookieLogin(Map<String, String> cookies,
+                                       String sessionCaptcha) throws Exception{
+
+        UserBean userBean = null;
+        String str = cookies.get(Constants.COOKIE_LOGIN_KEY_FBLOG);
+
+        if (StringUtils.isNotBlank(str)) {
+            userBean = new UserBean();
+            String[] strArr = DesUtils.decrypt(str, Constants.PASS_DES_KEY).split("_");
+            userBean.setLoginname(strArr[0]);
+            userBean.setPassword(strArr[1]);
+            userBean.setCaptcha(sessionCaptcha);
+            userBean.setSessionCaptcha(sessionCaptcha);
+            userBean = login(userBean);
+        }
         return userBean;
     }
 }

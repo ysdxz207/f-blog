@@ -12,11 +12,11 @@ import com.puyixiaowo.fblog.service.RolePermissionService;
 import com.puyixiaowo.fblog.service.UserRoleService;
 import com.puyixiaowo.fblog.service.UserService;
 import com.puyixiaowo.fblog.utils.DBUtils;
-import com.puyixiaowo.fblog.utils.DesUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import win.hupubao.common.utils.DesUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +46,7 @@ public class UserController extends BaseController{
             pageBean = UserService.selectUserPageBean(params, pageBean);
             for (UserBean userBean :
                     pageBean.getList()) {
-                userBean.setPassword(DesUtils.decrypt(userBean.getPassword()));
+                userBean.setPassword(DesUtils.decrypt(userBean.getPassword(), Constants.PASS_DES_KEY));
             }
         } catch (Exception e) {
             pageBean.error(e);
@@ -81,7 +81,7 @@ public class UserController extends BaseController{
                     userBean.setNickname("大帅比");
                 }
 
-                userBean.setPassword(DesUtils.encrypt(userBean.getPassword()));
+                userBean.setPassword(DesUtils.encrypt(userBean.getPassword(), Constants.PASS_DES_KEY));
 
                 DBUtils.insertOrUpdate(userBean, false);
                 //用户角色
@@ -150,7 +150,7 @@ public class UserController extends BaseController{
 
             if (userBean.getId().equals(currentUserBean.getId())) {
                 if (StringUtils.isNotBlank(userBean.getPassword())) {
-                    userBean.setPassword(DesUtils.encrypt(userBean.getPassword()));
+                    userBean.setPassword(DesUtils.encrypt(userBean.getPassword(), Constants.PASS_DES_KEY));
                 }
                 DBUtils.insertOrUpdate(userBean, false);
             }

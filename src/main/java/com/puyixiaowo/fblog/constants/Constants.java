@@ -31,6 +31,13 @@ public class Constants {
      * 成功描述
      */
     public static final String RESPONSE_SUCCESS_MESSAGE = "操作成功";
+    /*
+     * 成功码
+     */
+    public static final String RESPONSE_SUCCESS_ERROR_CODE = "SUCCESS";
+
+
+    public static final int ONE_DAY = 24 * 60 * 60;
 
 
     /*

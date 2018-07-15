@@ -3,24 +3,15 @@
  */
 package com.puyixiaowo.fblog.bean.sys;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.puyixiaowo.fblog.constants.Constants;
-import com.puyixiaowo.fblog.utils.StringUtils;
-
-import java.io.Serializable;
+import win.hupubao.common.beans.ResponseBase;
 
 /**
  * @author huangfeihong
  * @date 2016年12月6日 下午9:24:25
  */
-public class ResponseBean implements Serializable {
+public class ResponseBean extends ResponseBase {
 
 	private static final long serialVersionUID = -5266170746828998914L;
-	private int statusCode = Constants.RESPONSE_STATUS_CODE_SUCCESS;
-	private String message = Constants.RESPONSE_SUCCESS_MESSAGE;
-	private Object data;
 
 	//////////
 	private boolean closeCurrent = true;//默认关闭当前对话框
@@ -28,31 +19,6 @@ public class ResponseBean implements Serializable {
 	private String datagrids;
 	private String forward;
 	private String forwardConfirm;
-
-
-	public int getStatusCode() {
-		return statusCode;
-	}
-
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public Object getData() {
-		return data;
-	}
-
-	public void setData(Object data) {
-		this.data = data;
-	}
 
 	public boolean isCloseCurrent() {
 		return closeCurrent;
@@ -68,6 +34,14 @@ public class ResponseBean implements Serializable {
 
 	public void setTabid(String tabid) {
 		this.tabid = tabid;
+	}
+
+	public String getDatagrids() {
+		return datagrids;
+	}
+
+	public void setDatagrids(String datagrids) {
+		this.datagrids = datagrids;
 	}
 
 	public String getForward() {
@@ -86,51 +60,7 @@ public class ResponseBean implements Serializable {
 		this.forwardConfirm = forwardConfirm;
 	}
 
-	public String getDatagrids() {
-		return datagrids;
-	}
-
-	public void setDatagrids(String datagrids) {
-		this.datagrids = datagrids;
-	}
 
 	//////////////////////////////
 
-	/**
-	 * 序列化
-	 *
-	 * @param data
-	 */
-	public void setSerializeData(Object data) {
-		this.data = JSONObject.parse(JSON.toJSONString(data, SerializerFeature.DisableCircularReferenceDetect));
-	}
-
-	public ResponseBean errorMessage(String message) {
-		this.message = message;
-		this.statusCode = Constants.RESPONSE_STATUS_CODE_ERROR;
-		return this;
-	}
-
-	public ResponseBean error(Exception e) {
-		String err = e.getMessage();
-		if (StringUtils.isBlank(err)) {
-			err = JSON.toJSONString(e);
-		}
-		errorMessage(err);
-		return this;
-	}
-
-	/**
-	 * 序列化
-	 *
-	 * @return
-	 */
-	public String serialize() {
-		return JSON.toJSONString(this, SerializerFeature.DisableCircularReferenceDetect);
-	}
-
-	@Override
-	public String toString() {
-		return serialize();
-	}
 }

@@ -23,7 +23,14 @@ public class UserBean extends Validatable implements Serializable {
 	//////////////////////
 	@Transient
 	private Long roleId;
+	@Transient
 	private String roleName;
+	@Transient
+	private String captcha;
+	@Transient
+	private String sessionCaptcha;
+	@Transient
+	private String token;
 
 	public Long getId() {
 		return id;
@@ -95,5 +102,29 @@ public class UserBean extends Validatable implements Serializable {
 
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
+	}
+
+	public String getCaptcha() {
+		return captcha;
+	}
+
+	public void setCaptcha(String captcha) {
+		this.captcha = captcha;
+	}
+
+	public String getSessionCaptcha() {
+		return sessionCaptcha;
+	}
+
+	public void setSessionCaptcha(String sessionCaptcha) {
+		this.sessionCaptcha = sessionCaptcha;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

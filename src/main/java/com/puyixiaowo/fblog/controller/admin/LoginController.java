@@ -1,29 +1,25 @@
 package com.puyixiaowo.fblog.controller.admin;
 
-import com.google.code.kaptcha.Producer;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
+import com.puyixiaowo.fblog.error.LoginError;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.LoginService;
-import com.puyixiaowo.fblog.utils.DesUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
-import com.puyixiaowo.fblog.utils.captcha.CaptchaProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import win.hupubao.common.annotations.LogReqResArgs;
+import win.hupubao.common.utils.Captcha;
+import win.hupubao.common.utils.DesUtils;
+import win.hupubao.common.utils.LoggerUtils;
 
-import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+
+import static spark.Spark.halt;
 
 /**
  * @author Moses
@@ -32,9 +28,10 @@ import java.util.Map;
  */
 public class LoginController extends BaseController {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private static final Captcha captcha = Captcha.getInstance()
+            .height(40)
+            .width(80);
 
-    private static Producer producer = new CaptchaProducer();
 
     /**
      * 登录页面
@@ -50,92 +47,43 @@ public class LoginController extends BaseController {
                 .render(new ModelAndView(null, "admin/login.html"));
     }
 
-    /**
-     * 管理后台登录
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    public static Object adminLogin(Request request,
-                                       Response response) {
 
-        return login(Constants.COOKIE_LOGIN_KEY_FBLOG,
-                request, response);
-    }
-
-    public static ResponseBean login(String cookieKey,
-                                     Request request,
+    @LogReqResArgs
+    public static ResponseBean login(Request request,
                                      Response response) {
 
         ResponseBean responseBean = new ResponseBean();
 
-        String captcha = request.queryParams("captcha");
-        if (StringUtils.isBlank(captcha)) {
-            responseBean.errorMessage("请输入验证码");
-            return responseBean;
-        }
-
-
-        String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
-
-        logger.info("[" + request.session().id() + "][登录验证码]：" + sessionCaptcha + "[收到验证码]：" + captcha);
-
-        if (!captcha.equalsIgnoreCase(sessionCaptcha)) {
-            responseBean.errorMessage("验证码错误");
-            return responseBean;
-        }
-
-        String uname = request.queryParams("uname");
-        String upass = request.queryParams("upass");
-
-        if (StringUtils.isBlank(uname)) {
-            responseBean.errorMessage("用户名为空");
-            return responseBean;
-        }
-        if (StringUtils.isBlank(upass)) {
-            responseBean.errorMessage("密码为空");
-            return responseBean;
-        }
-        return doLogin(cookieKey,
-                uname, DesUtils.encrypt(upass), request, response);
-    }
-
-    private static ResponseBean doLogin(String cookieKey,
-                                        String uname,
-                                String upassEncrypt,
-                                Request request,
-                                Response response) {
-
-        ResponseBean responseBean = new ResponseBean();
-
-        Map<String, Object> params = new HashMap<>();
-
-        params.put("loginname", uname);
-        params.put("password", upassEncrypt);
-
         try {
-            UserBean userBean = LoginService.login(params);
-            if (userBean == null) {
-                responseBean.errorMessage("用户名或密码不正确");
-                return responseBean;
-            } else {
-                //登录成功
-                request.session().attribute(Constants.SESSION_USER_KEY, userBean);
-                rememberMe(cookieKey, request, response, userBean);
-                return responseBean;
-            }
+            UserBean userBean = getParamsEntity(request, UserBean.class, true);
+
+            String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
+            userBean.setSessionCaptcha(sessionCaptcha);
+
+
+            LoggerUtils.info("[{0}][登录验证码]：{1}[收到验证码]：{2}",
+                    request.session().id(),
+                    sessionCaptcha,
+                    captcha);
+
+            userBean = LoginService.login(userBean);
+            //登录成功
+            userBean.setToken(request.session().id());
+            responseBean.success(userBean);
+            request.session().attribute(Constants.SESSION_USER_KEY, userBean);
+            rememberMe(Constants.COOKIE_LOGIN_KEY_FBLOG, request, response, userBean);
         } catch (Exception e) {
-            e.printStackTrace();
-            responseBean.errorMessage("登录异常：" + e.getMessage());
-            return responseBean;
+            responseBean.error(e);
         }
+
+        return responseBean;
     }
+
 
     public static UserBean rememberMe(String cookieKey,
                                       Request request,
-                                   Response response,
-                                   UserBean userBean) {
+                                      Response response,
+                                      UserBean userBean) {
         String rememberMeStr = request.queryParams("rememberMe");
 
         boolean rememberMe = StringUtils.isNotBlank(rememberMeStr)
@@ -147,7 +95,7 @@ public class LoginController extends BaseController {
             }
             String cookieStr = userBean.getLoginname() + "_" + userBean.getPassword();
             response.cookie(cookieKey,
-                    DesUtils.encrypt(cookieStr), 24*3600*365);
+                    DesUtils.encrypt(cookieStr, Constants.PASS_DES_KEY), 24 * 3600 * 365);
             return userBean;
         }
 
@@ -155,7 +103,7 @@ public class LoginController extends BaseController {
         String str = request.cookie(cookieKey);
 
         if (StringUtils.isNotBlank(str)) {
-            String [] strArr = DesUtils.decrypt(str).split("_");
+            String[] strArr = DesUtils.decrypt(str, Constants.PASS_DES_KEY).split("_");
             userBean.setLoginname(strArr[0]);
             userBean.setPassword(strArr[1]);
             return userBean;
@@ -168,7 +116,7 @@ public class LoginController extends BaseController {
             }
             userBean.setLoginname(uname);
             if (StringUtils.isNotBlank(upass)) {
-                userBean.setPassword(DesUtils.encrypt(upass));
+                userBean.setPassword(DesUtils.encrypt(upass, Constants.PASS_DES_KEY));
             }
         }
         return userBean;
@@ -193,15 +141,13 @@ public class LoginController extends BaseController {
 
     /**
      * 验证码
+     *
      * @param request
      * @param response
      */
     public static Object captcha(Request request,
-                        Response response) {
-
-        String type = request.queryParamOrDefault("type", "admin");
-
-        HttpSession session = request.session().raw();
+                                 Response response) {
+        ResponseBean responseBean = new ResponseBean();
         HttpServletResponse res = response.raw();
 
         res.setDateHeader("Expires", 0);
@@ -216,62 +162,38 @@ public class LoginController extends BaseController {
         res.setHeader("Pragma", "no-cache");
 
         // return a jpeg
-        res.setContentType("image/jpeg");
+//        res.setContentType("image/jpeg");
 
-
-
-        // create the text for the image
-        String capText = producer.createText();
-
-        logger.info("[" + session.getId() + "][生成验证码]：" + capText);
-
-        // store the text in the session
-        session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
-
-        // create the image with the text
-        ServletOutputStream out = null;
-        try {
-            BufferedImage bi = producer.createImage(capText);
-            out = res.getOutputStream();
-            // write the data out
-            ImageIO.write(bi, "jpg", out);
-            out.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally{
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return "";
+        Captcha.CaptchaImage captchaImage = generateCaptcha(request);
+        responseBean.success(captchaImage.getBase64Image());
+        return responseBean;
     }
 
-    public static void rememberMeLogin(String cookieKey,
-                                       Request request,
-                                       Response response) {
-        String redirectPage = "/admin/";
-        String loginPage = "/admin/loginPage";
+    private static Captcha.CaptchaImage generateCaptcha(Request request) {
+        Captcha.CaptchaImage captchaImage = captcha.generate();
+        HttpSession session = request.session().raw();
 
-        UserBean userBean = rememberMe(cookieKey,
-                request, response, null);
+        LoggerUtils.info("[{0}][生成验证码]：{1}", session.getId(), captchaImage.getCaptchaCode());
 
-        if (userBean == null) {
-            response.redirect(loginPage);
-            return;
+        // store the text in the session
+        session.setAttribute(Constants.KAPTCHA_SESSION_KEY, captchaImage.getCaptchaCode());
+
+        return captchaImage;
+    }
+
+    public static void cookieLogin(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
+        try {
+            UserBean userBean = LoginService.cookieLogin(request.cookies(), request.session().attribute(Constants.KAPTCHA_SESSION_KEY));
+            if (userBean == null) {
+                responseBean.error(LoginError.NO_AUTH_ERROR);
+            } else {
+                responseBean.success(userBean);
+            }
+        } catch (Exception e) {
+            responseBean.error(e);
         }
 
-        ResponseBean responseBean = doLogin(cookieKey,
-                userBean.getLoginname(), userBean.getPassword(), request, response);
-
-        if (responseBean.getStatusCode() == Constants.RESPONSE_STATUS_CODE_SUCCESS) {
-            response.redirect(redirectPage);
-        } else {
-            response.redirect(loginPage);
-            return;
-        }
+        halt(responseBean.serialize());
     }
 }
