@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class MenuService {
 
-    public static List<MenuBean> selectMenuListRedis(long pid,
+    public static List<MenuBean> selectMenuListRedis(String pid,
                                                      String type) {
 
         //redis
@@ -50,7 +50,7 @@ public class MenuService {
         return menuBeanList;
     }
 
-    private static List<MenuBean> selectNestedMenuList(long pid, String type){
+    private static List<MenuBean> selectNestedMenuList(String pid, String type){
         //父级
         List<MenuBean> parentMenuList = selectMenuListRedis(pid, type);
 
@@ -65,7 +65,7 @@ public class MenuService {
     }
 
     public static List<MenuBean> selectNavMenuList(String type) {
-        return selectNestedMenuList(0L, type);
+        return selectNestedMenuList("root", type);
     }
 
 
@@ -112,7 +112,7 @@ public class MenuService {
         }
     }
 
-    public static List<MenuPermissionBean> selectValidMenuPermissions(Long roleId) {
+    public static List<MenuPermissionBean> selectValidMenuPermissions(String roleId) {
 
         String sql = "SELECT *\n" +
                 "FROM (\n" +
@@ -156,5 +156,8 @@ public class MenuService {
                 });
     }
 
+    public static List<String> selectMenuTypeList() {
+        return DBUtils.selectList(String.class, "select type from menu group bytype",null);
+    }
 
 }

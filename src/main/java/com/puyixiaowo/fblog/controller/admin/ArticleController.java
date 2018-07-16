@@ -167,7 +167,7 @@ public class ArticleController extends BaseController {
                 //删除lucene索引
                 for (String id :
                         ids.split(",")) {
-                    LuceneIndexUtils.deleteLuceneIndex(Long.valueOf(id));
+                    LuceneIndexUtils.deleteLuceneIndex(id);
                 }
             }
 

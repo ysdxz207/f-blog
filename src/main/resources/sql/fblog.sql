@@ -1,10 +1,10 @@
 DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article` (
-  `id`               INTEGER(20)  NOT NULL UNIQUE,
+  `id`               VARCHAR(32)  NOT NULL UNIQUE,
   `creator`          VARCHAR(128) NOT NULL,
   `title`            VARCHAR(256) NOT NULL,
   `context`          TEXT         NULL,
-  `category_id`      INTEGER(20)  NULL,
+  `category_id`      VARCHAR(32)  NULL,
   `create_date`      INTEGER(13)  NOT NULL,
   `last_update_date` INTEGER(13)  NULL,
   `type`             VARCHAR(10)   NOT NULL DEFAULT 'yiyi',
@@ -14,30 +14,30 @@ CREATE TABLE `article` (
 
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
-  `id`   INTEGER(20)  NOT NULL UNIQUE,
+  `id`   VARCHAR(32)  NOT NULL UNIQUE,
   `name` VARCHAR(128) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
 DROP TABLE IF EXISTS `tag`;
 CREATE TABLE `tag` (
-  `id`   INTEGER(20)  NOT NULL UNIQUE,
+  `id`   VARCHAR(32)  NOT NULL UNIQUE,
   `name` VARCHAR(128) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
 DROP TABLE IF EXISTS `article_tag`;
 CREATE TABLE `article_tag` (
-  `id`         INTEGER(20) NOT NULL UNIQUE,
-  `article_id` INTEGER(20) NOT NULL,
-  `tag_id`     INTEGER(20) NOT NULL,
+  `id`         VARCHAR(32) NOT NULL UNIQUE,
+  `article_id` VARCHAR(32) NOT NULL,
+  `tag_id`     VARCHAR(32) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
 DROP TABLE IF EXISTS `access_record`;
 CREATE TABLE `access_record` (
-  `id`         INTEGER(20) NOT NULL UNIQUE,
-  `article_id` INTEGER(20),
+  `id`         VARCHAR(32) NOT NULL UNIQUE,
+  `article_id` VARCHAR(32),
   `link`     TEXT NOT NULL,
   `user_agent`     TEXT NOT NULL,
   `os`     VARCHAR(128) NOT NULL,

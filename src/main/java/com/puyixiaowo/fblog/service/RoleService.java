@@ -3,7 +3,6 @@ package com.puyixiaowo.fblog.service;
 import com.puyixiaowo.fblog.bean.admin.RoleBean;
 import com.puyixiaowo.fblog.bean.admin.RolePermissionBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
-import com.puyixiaowo.fblog.utils.ArrayUtils;
 import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 
@@ -53,7 +52,7 @@ public class RoleService {
                 });
     }
 
-    public static void setPermission(Long roleId, String permissionIds) {
+    public static void setPermission(String roleId, String permissionIds) {
 
         if (StringUtils.isBlank(permissionIds)) {
             return;
@@ -62,10 +61,10 @@ public class RoleService {
         //删除角色权限
         RolePermissionService.deleteByRoleIds(roleId.toString());
 
-        long [] ids = ArrayUtils.parseToLongArray(permissionIds);
+        String [] ids = permissionIds.split(",");
 
         //添加角色权限
-        for (Long permissionId : ids) {
+        for (String permissionId : ids) {
             RolePermissionBean bean = new RolePermissionBean();
             bean.setRoleId(roleId);
             bean.setPermissionId(permissionId);

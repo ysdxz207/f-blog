@@ -82,7 +82,7 @@ public class CategoryController extends BaseController {
                 null);
 
         CategoryBean categoryBean = new CategoryBean();
-        categoryBean.setId(0L);
+        categoryBean.setId("");
         categoryBean.setName("默认分类");
         list.add(0, categoryBean);
         return JSON.toJSONString(list);

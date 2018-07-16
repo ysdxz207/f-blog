@@ -11,7 +11,7 @@ import java.util.List;
 public class MenuBean extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
+	private String id;
 	@NotNull
 	private String menuName;
 	private String icon;
@@ -31,11 +31,11 @@ public class MenuBean extends Validatable implements Serializable {
 	private List<MenuBean> menuBeanList;
 
 
-	public Long getId (){
+	public String getId (){
 		return id;
 	}
 
-	public void setId (Long id){
+	public void setId (String id){
 		this.id = id;
 	}
 

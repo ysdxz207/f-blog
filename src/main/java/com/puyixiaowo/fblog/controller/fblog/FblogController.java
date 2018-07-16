@@ -21,7 +21,6 @@ import spark.Request;
 import spark.Response;
 import spark.Spark;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +56,7 @@ public class FblogController extends BaseController{
         }
         model.put("pageBean", pageBean);
 
-        saveAccessRecord(request, 0L);
+        saveAccessRecord(request, "0");
 
         return new FreeMarkerTemplateEngine().render(
                 new ModelAndView(model, "yiyi/index.html")

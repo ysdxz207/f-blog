@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class TagBean extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
+	private String id;
 	@NotNull(message = "标签名不能为空")
 	private String name;
 
@@ -19,11 +19,11 @@ public class TagBean extends Validatable implements Serializable {
 	@Transient
 	private Long articleId;
 
-	public Long getId (){
+	public String getId (){
 		return id;
 	}
 
-	public void setId (Long id){
+	public void setId (String id){
 		this.id = id;
 	}
 

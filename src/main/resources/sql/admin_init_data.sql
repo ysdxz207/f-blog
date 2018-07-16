@@ -3,18 +3,19 @@
 -- ----------------------------
 -- Records of menu
 -- ----------------------------
-UPDATE menu SET menu_name = '博客管理', icon = 'element-icons el-icon-blog', sort = '1', href = null, status = 1, remark = '博客管理', type = 'blog', code = 'blog_manage', pid = 0, expand = 0 WHERE id = 1;
-UPDATE menu SET menu_name = '权限管理', icon = 'element-icons el-icon-permission', sort = '2', href = null, status = 1, remark = '权限管理', type = 'permission', code = 'role_manage', pid = 0, expand = 0 WHERE id = 2;
-UPDATE menu SET menu_name = '文章列表', icon = 'element-icons el-icon-article', sort = '3', href = '/blog/article', status = 1, remark = '文章列表', type = 'blog', code = 'article', pid = 1, expand = 0 WHERE id = 3;
-UPDATE menu SET menu_name = '用户信息', icon = 'element-icons el-icon-users', sort = '4', href = '/permission/user', status = 1, remark = '用户信息', type = 'permission', code = 'user', pid = 2, expand = 0 WHERE id = 4;
-UPDATE menu SET menu_name = '角色信息', icon = 'element-icons el-icon-role', sort = '5', href = '/permission/role', status = 1, remark = '角色信息', type = 'permission', code = 'role', pid = 2, expand = 0 WHERE id = 5;
-UPDATE menu SET menu_name = '菜单信息', icon = 'element-icons el-icon-menu', sort = '6', href = '/permission/menu', status = 1, remark = '菜单信息', type = 'permission', code = 'menu', pid = 2, expand = 0 WHERE id = 6;
-UPDATE menu SET menu_name = '权限信息', icon = 'element-icons el-icon-permissions', sort = '7', href = '/permission/permisson', status = 1, remark = '权限信息', type = 'permission', code = 'permission', pid = 2, expand = 0 WHERE id = 7;
-UPDATE menu SET menu_name = '文章分类', icon = 'element-icons el-icon-category', sort = '8', href = '/blog/category', status = 1, remark = '文章分类', type = 'blog', code = 'category', pid = 1, expand = 0 WHERE id = 8;
-UPDATE menu SET menu_name = '文章标签', icon = 'element-icons el-icon-tag', sort = '9', href = '/blog/tag', status = 1, remark = '文章标签', type = 'blog', code = 'tag', pid = 1, expand = 0 WHERE id = 9;
-UPDATE menu SET menu_name = '阿福管理', icon = 'element-icons el-icon-afu', sort = '10', href = null, status = 1, remark = '阿福管理', type = 'afu', code = 'afu_manage', pid = 0, expand = 0 WHERE id = 10;
-UPDATE menu SET menu_name = '阿福信息', icon = 'element-icons el-icon-afus', sort = '11', href = 'afu/afu', status = 1, remark = '阿福管理', type = 'afu', code = 'afu', pid = 10, expand = 0 WHERE id = 11;
-UPDATE menu SET menu_name = '阿福类别', icon = 'element-icons el-icon-type', sort = '12', href = 'afu/type', status = 1, remark = '阿福类别管理', type = 'afu', code = 'afu_type', pid = 10, expand = 0 WHERE id = 12;
+INSERT INTO menu (id, menu_name, icon, sort, href, status, remark, type, code, pid, expand) VALUES ('blog', '博客管理', 'element-icons el-icon-blog', '1', null, 1, '博客管理', 'blog', 'blog_manage', 'root', 0);
+INSERT INTO menu (id, menu_name, icon, sort, href, status, remark, type, code, pid, expand) VALUES ('access', '权限管理', 'element-icons el-icon-permission', '2', null, 1, '权限管理', 'access', 'role_manage', 'root', 0);
+INSERT INTO menu (id, menu_name, icon, sort, href, status, remark, type, code, pid, expand) VALUES ('blog_article_list', '文章列表', 'element-icons el-icon-article', '3', '/blog/article', 1, '文章列表', 'blog', 'article', 'blog', 0);
+INSERT INTO menu (id, menu_name, icon, sort, href, status, remark, type, code, pid, expand) VALUES ('access_user', '用户信息', 'element-icons el-icon-users', '4', '/access/user', 1, '用户信息', 'access', 'user', 'access', 0);
+INSERT INTO menu (id, menu_name, icon, sort, href, status, remark, type, code, pid, expand) VALUES ('access_role', '角色信息', 'element-icons el-icon-role', '5', '/access/role', 1, '角色信息', 'access', 'role', 'access', 0);
+INSERT INTO menu (id, menu_name, icon, sort, href, status, remark, type, code, pid, expand) VALUES ('access_menu', '菜单信息', 'element-icons el-icon-menu', '6', '/access/menu', 1, '菜单信息', 'access', 'menu', 'access', 0);
+INSERT INTO menu (id, menu_name, icon, sort, href, status, remark, type, code, pid, expand) VALUES ('access_permission', '权限信息', 'element-icons el-icon-permissions', '7', '/access/permissions', 1, '权限信息', 'access', 'permission', 'access', 0);
+INSERT INTO menu (id, menu_name, icon, sort, href, status, remark, type, code, pid, expand) VALUES ('blog_article_category', '文章分类', 'element-icons el-icon-category', '8', '/blog/article/category', 1, '文章分类', 'blog', 'category', 'blog', 0);
+INSERT INTO menu (id, menu_name, icon, sort, href, status, remark, type, code, pid, expand) VALUES ('blog_article_tag', '文章标签', 'element-icons el-icon-tag', '9', '/blog/article/tag', 1, '文章标签', 'blog', 'tag', 'blog', 0);
+INSERT INTO menu (id, menu_name, icon, sort, href, status, remark, type, code, pid, expand) VALUES ('afu', '阿福管理', 'element-icons el-icon-afu', '10', null, 1, '阿福管理', 'afu', 'afu_manage', 'root', 0);
+INSERT INTO menu (id, menu_name, icon, sort, href, status, remark, type, code, pid, expand) VALUES ('afu_list', '阿福信息', 'element-icons el-icon-afus', '11', '/afu', 1, '阿福管理', 'afu', 'afu', 'afu', 0);
+INSERT INTO menu (id, menu_name, icon, sort, href, status, remark, type, code, pid, expand) VALUES ('afu_type', '阿福类别', 'element-icons el-icon-type', '12', '/afu/type', 1, '阿福类别管理', 'afu', 'afu_type', 'afu', 0);
+
 -- ----------------------------
 -- Records of permission
 -- ----------------------------

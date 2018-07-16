@@ -9,32 +9,32 @@ import java.io.Serializable;
 public class ArticleTagBean extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
-	private Long articleId;
-	private Long tagId;
+	private String id;
+	private String articleId;
+	private String tagId;
 
 
-	public Long getId (){
+	public String getId (){
 		return id;
 	}
 
-	public void setId (Long id){
+	public void setId (String id){
 		this.id = id;
 	}
 
-	public Long getArticleId (){
+	public String getArticleId (){
 		return articleId;
 	}
 
-	public void setArticleId (Long articleId){
+	public void setArticleId (String articleId){
 		this.articleId = articleId;
 	}
 
-	public Long getTagId (){
+	public String getTagId (){
 		return tagId;
 	}
 
-	public void setTagId (Long tagId){
+	public void setTagId (String tagId){
 		this.tagId = tagId;
 	}
 }

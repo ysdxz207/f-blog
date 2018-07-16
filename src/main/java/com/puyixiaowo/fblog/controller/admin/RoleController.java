@@ -84,7 +84,7 @@ public class RoleController extends BaseController {
     public static Object setPermission(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
 
-        Long roleId = Long.parseLong(request.queryParams("roleId"));
+        String roleId = request.queryParams("roleId");
         String permissionIds = request.queryParams("permissionIds");
 
         Boolean data = Boolean.valueOf(request.params(":data"));

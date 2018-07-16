@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class UserBean extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
+	private String id;
 	@NotNull(message = "用户名不可为空")
 	private String loginname;
 	private String nickname;
@@ -22,7 +22,7 @@ public class UserBean extends Validatable implements Serializable {
 	private Integer status;
 	//////////////////////
 	@Transient
-	private Long roleId;
+	private String roleId;
 	@Transient
 	private String roleName;
 	@Transient
@@ -32,11 +32,11 @@ public class UserBean extends Validatable implements Serializable {
 	@Transient
 	private String token;
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId (String id) {
 		this.id = id;
 	}
 
@@ -88,11 +88,11 @@ public class UserBean extends Validatable implements Serializable {
 		this.status = status;
 	}
 
-	public Long getRoleId() {
+	public String getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(Long roleId) {
+	public void setRoleId(String roleId) {
 		this.roleId = roleId;
 	}
 

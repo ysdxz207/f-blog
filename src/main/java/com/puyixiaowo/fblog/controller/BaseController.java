@@ -22,14 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledExecutorService;
@@ -129,15 +122,15 @@ public class BaseController {
      */
     public static boolean verifySign(Request request) {
 
-        String idStr = request.queryParams("type");
+        String type = request.queryParams("type");
 
-        if (StringUtils.isBlank(idStr)) {
+        if (StringUtils.isBlank(type)) {
             return false;
         }
 
         AfuTypeBean afuTypeBean = null;
         try {
-            afuTypeBean = AfuTypeService.getAfuTypeById(Long.valueOf(idStr));
+            afuTypeBean = AfuTypeService.getAfuTypeById(type);
         } catch (Exception e) {
             return false;
         }
@@ -154,7 +147,7 @@ public class BaseController {
 
     @SuppressWarnings("unchecked")
     public static void saveAccessRecord(Request request,
-                                        Long articleId) {
+                                        String articleId) {
         ScheduledExecutorService exec = new ScheduledThreadPoolExecutor(1,
                 new BasicThreadFactory.Builder().namingPattern("saveAccessRecord-schedule-pool-%d")
                         .daemon(true).build());
@@ -175,7 +168,7 @@ public class BaseController {
 
             AccessRecordBean accessRecordBean = new AccessRecordBean();
 
-            accessRecordBean.setArticleId(articleId == null ? 0L : articleId);
+            accessRecordBean.setArticleId(articleId == null ? "0" : articleId);
             accessRecordBean.setLink(link);
             accessRecordBean.setIp(IpUtils.getIp(request));
             accessRecordBean.setAccessDate(DateUtils.getTodayZeroMiliseconds());

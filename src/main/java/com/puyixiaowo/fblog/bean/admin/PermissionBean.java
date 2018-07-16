@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class PermissionBean extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
+	private String id;
 	@NotNull(message = "需选择所属菜单")
 	private String menuId;
 	@NotNull(message = "权限名不能为空")
@@ -19,11 +19,11 @@ public class PermissionBean extends Validatable implements Serializable {
 	private String permission;
 
 
-	public Long getId (){
+	public String getId (){
 		return id;
 	}
 
-	public void setId (Long id){
+	public void setId (String id){
 		this.id = id;
 	}
 

@@ -2,7 +2,6 @@ package com.puyixiaowo.fblog.bean.admin.afu;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.puyixiaowo.core.entity.Validatable;
-import com.puyixiaowo.fblog.annotation.NotNull;
 import com.puyixiaowo.fblog.annotation.Table;
 import com.puyixiaowo.fblog.annotation.Transient;
 import com.puyixiaowo.generator.utils.CustomDateTimeSerializer;
@@ -13,9 +12,9 @@ import java.io.Serializable;
 public class AfuBean extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
+	private String id;
 	private String name;
-	private Long type;
+	private String type;
 	@JSONField(serializeUsing = CustomDateTimeSerializer.class)
 	private Long createTime;
 	private String content;
@@ -25,11 +24,11 @@ public class AfuBean extends Validatable implements Serializable {
 	private String typeName;
 
 
-	public Long getId (){
+	public String getId (){
 		return id;
 	}
 
-	public void setId (Long id){
+	public void setId (String id){
 		this.id = id;
 	}
 
@@ -41,11 +40,11 @@ public class AfuBean extends Validatable implements Serializable {
 		this.name = name;
 	}
 
-	public Long getType (){
+	public String getType (){
 		return type;
 	}
 
-	public void setType (Long type){
+	public void setType (String type){
 		this.type = type;
 	}
 

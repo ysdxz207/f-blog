@@ -110,7 +110,7 @@ public class LuceneIndexUtils {
                     continue;
                 }
                 ArticleBean bean = new ArticleBean();
-                bean.setId(Long.valueOf(doc.get("id")));
+                bean.setId(doc.get("id"));
                 bean.setTitle(doc.get("title"));
                 bean.setContext(doc.get("context"));
                 bean.setType(doc.get("type"));
@@ -147,10 +147,9 @@ public class LuceneIndexUtils {
         FileUtils.deleteDirectory(path.toFile());
     }
 
-    public static void deleteLuceneIndex(Long id) throws Exception {
+    public static void deleteLuceneIndex(String id) throws Exception {
 
-        if (id == null ||
-                id <= 0) {
+        if (id == null) {
             return;
         }
 

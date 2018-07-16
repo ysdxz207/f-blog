@@ -88,8 +88,8 @@ public class AfuTypeController extends BaseController {
                     ids);
             //删除对应阿福
             AfuBean afuBean = new AfuBean();
-            for (String idStr : ids.split(",")) {
-                afuBean.setType(Long.valueOf(idStr));
+            for (String id : ids.split(",")) {
+                afuBean.setType(id);
                 DBUtils.executeSql("delete from afu where type=:type", afuBean);
             }
 

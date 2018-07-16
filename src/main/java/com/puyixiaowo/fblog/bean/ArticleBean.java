@@ -13,14 +13,14 @@ import java.io.Serializable;
 public class ArticleBean extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
+	private String id;
 	private String creator;
 	@NotNull(message = "标题不能为空")
 	private String title;
 	@NotNull(message = "内容不能为空")
 	private String context;
 	@NotNull(message = "请选择分类")
-	private Long categoryId;
+	private String categoryId;
 	@JSONField(serializeUsing = CustomDateTimeSerializer.class)
 	private Long createDate;
 	@JSONField(serializeUsing = CustomDateTimeSerializer.class)
@@ -41,11 +41,11 @@ public class ArticleBean extends Validatable implements Serializable {
 	private Integer accessCountToday;
 
 
-	public Long getId (){
+	public String getId (){
 		return id;
 	}
 
-	public void setId (Long id){
+	public void setId (String id){
 		this.id = id;
 	}
 
@@ -73,11 +73,11 @@ public class ArticleBean extends Validatable implements Serializable {
 		this.context = context;
 	}
 
-	public Long getCategoryId (){
+	public String getCategoryId (){
 		return categoryId;
 	}
 
-	public void setCategoryId (Long categoryId){
+	public void setCategoryId (String categoryId){
 		this.categoryId = categoryId;
 	}
 

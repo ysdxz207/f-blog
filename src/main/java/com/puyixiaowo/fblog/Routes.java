@@ -98,6 +98,11 @@ public class Routes {
 
                 post("/delete", ((request, response) ->
                         MenuController.delete(request, response)));
+
+                get("/types", ((request, response) ->
+                        MenuController.typeList(request, response)));
+                post("/types", ((request, response) ->
+                        MenuController.typeList(request, response)));
             });
             /*
              * 用户组

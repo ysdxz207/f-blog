@@ -104,6 +104,19 @@ public class MenuController extends BaseController {
     }
 
     @RequiresPermissions(value = {"menu:view"})
+    public static String typeList(Request request, Response response) {
+        ResponseBean responseBean = new ResponseBean();
+
+        try {
+            responseBean.setData(MenuService.selectMenuTypeList());
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+
+        return responseBean.serialize();
+    }
+
+    @RequiresPermissions(value = {"menu:view"})
     public static String array(Request request, Response response) {
         String parent = request.params(":parent");
         List<MenuBean> list = DBUtils.selectList(MenuBean.class,
@@ -113,7 +126,7 @@ public class MenuController extends BaseController {
                 null);
 
         MenuBean bean = new MenuBean();
-        bean.setId(0L);
+        bean.setId("");
         bean.setMenuName("无");
         list.add(0, bean);
 

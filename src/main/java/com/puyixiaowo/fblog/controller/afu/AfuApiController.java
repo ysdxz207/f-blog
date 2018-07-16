@@ -99,11 +99,12 @@ public class AfuApiController extends BaseController {
         String id = request.queryParams("id");
         String name = request.queryParams("name");
         String typeStr = request.queryParams("type");
-        Long type = Long.valueOf(StringUtils.isBlank(typeStr) ? "0" : typeStr);
+        String type = StringUtils.isBlank(typeStr) ? "0" : typeStr;
         try {
             if (StringUtils.isNotBlank(id)) {
                 DBUtils.deleteByIds(AfuBean.class, id);
-            } else if (StringUtils.isNotBlank(name) && type > 0){
+            } else if (StringUtils.isNotBlank(name)
+                    && StringUtils.isNotBlank(type)){
                 AfuBean afuBean = new AfuBean();
                 afuBean.setName(name);
                 afuBean.setType(type);

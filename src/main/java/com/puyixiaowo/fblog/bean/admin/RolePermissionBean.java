@@ -9,32 +9,32 @@ import java.io.Serializable;
 public class RolePermissionBean extends Validatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
-	private Long roleId;
-	private Long permissionId;
+	private String id;
+	private String roleId;
+	private String permissionId;
 
 
-	public Long getId (){
+	public String getId (){
 		return id;
 	}
 
-	public void setId (Long id){
+	public void setId (String id){
 		this.id = id;
 	}
 
-	public Long getRoleId (){
+	public String getRoleId (){
 		return roleId;
 	}
 
-	public void setRoleId (Long roleId){
+	public void setRoleId (String roleId){
 		this.roleId = roleId;
 	}
 
-	public Long getPermissionId (){
+	public String getPermissionId (){
 		return permissionId;
 	}
 
-	public void setPermissionId (Long permissionId){
+	public void setPermissionId (String permissionId){
 		this.permissionId = permissionId;
 	}
 }
