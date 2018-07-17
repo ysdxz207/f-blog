@@ -87,7 +87,7 @@ public class LoginController extends BaseController {
         String rememberMeStr = request.queryParams("rememberMe");
 
         boolean rememberMe = StringUtils.isNotBlank(rememberMeStr)
-                && Boolean.valueOf(rememberMeStr);
+                && ("on".equalsIgnoreCase(rememberMeStr) || Boolean.valueOf(rememberMeStr));
 
         if (userBean != null) {
             if (!rememberMe) {
@@ -184,6 +184,8 @@ public class LoginController extends BaseController {
     public static void cookieLogin(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
         try {
+            //生成验证码
+            generateCaptcha(request);
             UserBean userBean = LoginService.cookieLogin(request.cookies(), request.session().attribute(Constants.KAPTCHA_SESSION_KEY));
             if (userBean == null) {
                 responseBean.error(LoginError.NO_AUTH_ERROR);

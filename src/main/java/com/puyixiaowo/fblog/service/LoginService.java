@@ -46,7 +46,6 @@ public class LoginService {
         if (userBean == null) {
             Throws.throwError(LoginError.WRONG_USERNAME_OR_PASSWORD_ERROR);
         }
-        userBean.setPassword(null);
         return userBean;
     }
 

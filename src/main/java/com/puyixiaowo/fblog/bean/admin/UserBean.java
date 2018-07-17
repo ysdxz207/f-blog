@@ -16,7 +16,7 @@ public class UserBean extends Validatable implements Serializable {
 	private String loginname;
 	private String nickname;
 	@NotNull(message = "密码不可为空")
-	private String password;
+	private transient String password;
 	private Long createTime;
 	private Long lastLoginTime;
 	private Integer status;

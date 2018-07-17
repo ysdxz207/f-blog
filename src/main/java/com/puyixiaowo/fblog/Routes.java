@@ -83,13 +83,11 @@ public class Routes {
              * 菜单组
              */
             path("/menu", () -> {
-                get("/menus/:type", ((request, response) ->
+                get("", ((request, response) ->
                         MenuController.navMenus(request, response)));
-                post("/menus/:type", ((request, response) ->
+                post("", ((request, response) ->
                         MenuController.navMenus(request, response)));
 
-                get("/:data", ((request, response) ->
-                        MenuController.menus(request, response)));
                 get("/array/:parent", ((request, response) ->
                         MenuController.array(request, response)));
 

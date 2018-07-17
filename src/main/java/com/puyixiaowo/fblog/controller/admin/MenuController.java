@@ -29,9 +29,9 @@ public class MenuController extends BaseController {
     public static Object navMenus(Request request, Response response) {
 
         ResponseBean responseBean = new ResponseBean();
-        String type = request.params(":type");
+        String type = request.queryParams("type");
         if (StringUtils.isBlank(type)) {
-            throw new MenuException("菜单类型不可为空");
+            return responseBean.errorMessage("菜单类型不可为空");
         }
 
         try {
@@ -44,29 +44,8 @@ public class MenuController extends BaseController {
     }
 
 
-    @RequiresPermissions(value = {"menu:view"})
-    public static String menus(Request request, Response response) {
-        Boolean data = Boolean.valueOf(request.params(":data"));
-
-        if (!data) {
-            return new FreeMarkerTemplateEngine()
-                    .render(new ModelAndView(null,
-                            "admin/menu/menu_list.html"));
-        }
-        PageBean pageBean = getPageBean(request);
-        try {
-            MenuBean menuBean = getParamsEntity(request, MenuBean.class, false);
-
-            pageBean = MenuService.selectMenuPageBean(menuBean, pageBean);
-        } catch (Exception e) {
-            pageBean.error(e);
-        }
-        return pageBean.serialize();
-    }
-
     @RequiresPermissions(value = {"menu:edit"})
     public static String edit(Request request, Response response) {
-        System.out.println("edit");
         ResponseBean responseBean = new ResponseBean();
         List<MenuBean> menuBeanList = getParamsEntityJson(request, MenuBean.class, true);
         try {

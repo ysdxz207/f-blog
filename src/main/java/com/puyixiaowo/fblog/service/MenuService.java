@@ -57,7 +57,7 @@ public class MenuService {
         for (MenuBean menuBean : parentMenuList) {
             List<MenuBean> childMenuList = selectNestedMenuList(menuBean.getId(), type);
             if (childMenuList.size() > 0) {
-                menuBean.setMenuBeanList(childMenuList);
+                menuBean.setChildren(childMenuList);
             }
         }
 

@@ -28,102 +28,102 @@ public class MenuBean extends Validatable implements Serializable {
 	private Integer expand;
 
 	///////////////////
-	private List<MenuBean> menuBeanList;
+	private List<MenuBean> children;
 
 
-	public String getId (){
+	public String getId() {
 		return id;
 	}
 
-	public void setId (String id){
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public String getMenuName (){
+	public String getMenuName() {
 		return menuName;
 	}
 
-	public void setMenuName (String menuName){
+	public void setMenuName(String menuName) {
 		this.menuName = menuName;
 	}
 
-	public String getIcon (){
+	public String getIcon() {
 		return icon;
 	}
 
-	public void setIcon (String icon){
+	public void setIcon(String icon) {
 		this.icon = icon;
 	}
 
-	public String getSort (){
+	public String getSort() {
 		return sort;
 	}
 
-	public void setSort (String sort){
+	public void setSort(String sort) {
 		this.sort = sort;
 	}
 
-	public String getHref (){
+	public String getHref() {
 		return href;
 	}
 
-	public void setHref (String href){
+	public void setHref(String href) {
 		this.href = href;
 	}
 
-	public Integer getStatus (){
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus (Integer status){
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 
-	public String getRemark (){
+	public String getRemark() {
 		return remark;
 	}
 
-	public void setRemark (String remark){
+	public void setRemark(String remark) {
 		this.remark = remark;
 	}
 
-	public String getType (){
+	public String getType() {
 		return type;
 	}
 
-	public void setType (String type){
+	public void setType(String type) {
 		this.type = type;
 	}
 
-	public String getCode (){
+	public String getCode() {
 		return code;
 	}
 
-	public void setCode (String code){
+	public void setCode(String code) {
 		this.code = code;
 	}
 
-	public String getPid (){
+	public String getPid() {
 		return pid;
 	}
 
-	public void setPid (String pid){
+	public void setPid(String pid) {
 		this.pid = pid;
 	}
 
-	public Integer getExpand (){
+	public Integer getExpand() {
 		return expand;
 	}
 
-	public void setExpand (Integer expand){
+	public void setExpand(Integer expand) {
 		this.expand = expand;
 	}
 
-	public List<MenuBean> getMenuBeanList() {
-		return menuBeanList;
+	public List<MenuBean> getChildren() {
+		return children;
 	}
 
-	public void setMenuBeanList(List<MenuBean> menuBeanList) {
-		this.menuBeanList = menuBeanList;
+	public void setChildren(List<MenuBean> children) {
+		this.children = children;
 	}
 }
