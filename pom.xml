@@ -9,8 +9,7 @@
     <version>1.0</version>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.jdk.version>1.8</project.jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -89,8 +88,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <source>${project.jdk.version}</source>
+                    <target>${project.jdk.version}</target>
                     <compilerArguments>
                         <d>${project.build.directory}/classes</d>
                     </compilerArguments>
@@ -139,18 +138,22 @@
                 <version>1.10</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <complianceLevel>1.8</complianceLevel>
+                    <complianceLevel>${project.jdk.version}</complianceLevel>
+                    <aspectLibraries>
+                        <aspectLibrary>
+                            <groupId>win.hupubao</groupId>
+                            <artifactId>hupubao-common</artifactId>
+                        </aspectLibrary>
+                    </aspectLibraries>
                 </configuration>
                 <executions>
                     <execution>
-                        <!-- Compile and weave aspects after all classes compiled by javac -->
-                        <phase>process-classes</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>
                         <configuration>
-                            <source>${maven.compiler.target}</source>
-                            <target>${maven.compiler.target}</target>
+                            <source>${project.jdk.version}</source>
+                            <target>${project.jdk.version}</target>
                         </configuration>
                     </execution>
                 </executions>

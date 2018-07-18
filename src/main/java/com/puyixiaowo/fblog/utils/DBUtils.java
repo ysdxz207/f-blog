@@ -5,17 +5,13 @@ import com.puyixiaowo.fblog.annotation.Id;
 import com.puyixiaowo.fblog.annotation.Transient;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
-import com.puyixiaowo.fblog.constants.Constants;
-import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.exception.DBException;
 import com.puyixiaowo.fblog.exception.DBObjectExistsException;
 import com.puyixiaowo.fblog.exception.DBSqlException;
 import org.sql2o.*;
 
 import javax.sql.DataSource;
-import java.io.File;
 import java.lang.reflect.Field;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -26,6 +22,7 @@ public class DBUtils {
 
     private static final int SQL_TYPE_INSERT = 1;//添加
     private static final int SQL_TYPE_UPDATE = 2;//更新
+    private static final String SERIAL_VERSION_UID = "serialVersionUID";
 
     private static Sql2o sql2o;
     private static Properties dbProperties = new Properties();
@@ -90,10 +87,6 @@ public class DBUtils {
         DataSource dataSource = new GenericDatasource(url, dbProperties);
 
         sql2o = new Sql2o(dataSource);
-        if (sql2o == null) {
-            throw new RuntimeException("数据库连接错误");
-        }
-
     }
 
 
@@ -109,9 +102,9 @@ public class DBUtils {
     }
 
     public static <E> E selectOne(String sql,
-                                  Object paramsObj) {
+                                  E entity) {
 
-        List<E> list = selectList(sql, paramsObj);
+        List<E> list = selectList(sql, entity);
         if (list.isEmpty()) {
             return null;
         }
@@ -122,32 +115,31 @@ public class DBUtils {
                                          String sql,
                                          Map<String, Object> params) {
 
-        setCamelMapping(clazz);
-        try (Connection conn = sql2o.open()) {
-            Query query = conn.createQuery(sql).throwOnMappingFailure(false);
-
-            if (params != null) {
-                for (Map.Entry<String, Object> entry :
-                        params.entrySet()) {
-                    try {
-                        query.addParameter(entry.getKey(), entry.getValue());
-                    } catch (Sql2oException e) {
-                        //ignore
-                    }
-                }
-            }
-
-
-            List<E> list = query.executeAndFetch(clazz);
-            return list;
-        }
+        E entity = JSON.toJavaObject(JSON.parseObject(JSON.toJSONString(params)), clazz);
+        return selectList(sql, entity);
     }
 
     public static <E> List<E> selectList(String sql,
-                                         Object params) {
-        Class<E> clazz = (Class<E>) params.getClass();
-        Map<String, Object> map = JSON.toJavaObject(JSON.parseObject(JSON.toJSONString(params)), Map.class);
-        return selectList(clazz, sql, map);
+                                         E entity) {
+        if (entity == null) {
+            throw new DBException("Paramater entity should not be null.");
+        }
+        Class clazz = entity.getClass();
+        setCamelMapping(clazz);
+        try (Connection conn = sql2o.open()) {
+            Query query = conn.createQuery(sql).throwOnMappingFailure(false);
+            Field[] filelds = clazz.getDeclaredFields();
+
+            for (Field field : filelds) {
+                if (field.getAnnotation(Transient.class) != null
+                        || SERIAL_VERSION_UID.equals(field.getName())) {
+                    continue;
+                }
+                query.addParameter(field.getName(), ReflectionUtils.getFieldValue(entity, field.getName()));
+            }
+
+            return query.executeAndFetch(clazz);
+        }
     }
 
     /**
@@ -165,7 +157,7 @@ public class DBUtils {
         for (Field field :
                 fields) {
 
-            if (!"serialVersionUID".equals(field.getName())
+            if (!SERIAL_VERSION_UID.equals(field.getName())
                     && CamelCaseUtils.checkIsCamelCase(field.getName())) {
                 mapping.put(CamelCaseUtils.toUnderlineName(field.getName()), field.getName());
             }
@@ -200,7 +192,7 @@ public class DBUtils {
                     primaryKey = queryInsert.executeUpdate().getKey();
                 } catch (Sql2oException e1) {
                     if (e1.getMessage() != null &&
-                            e1.getMessage().indexOf("SQLITE_CONSTRAINT_UNIQUE") != -1) {
+                            e1.getMessage().contains("SQLITE_CONSTRAINT_UNIQUE")) {
                         throw new DBObjectExistsException("重复插入对象");
                     } else {
                         throw new DBException(e1.getMessage());
@@ -244,8 +236,8 @@ public class DBUtils {
         StringBuilder sb_sql = new StringBuilder();
         StringBuilder sb1 = new StringBuilder();
         StringBuilder sb2 = new StringBuilder();
-        String sql_1 = "";
-        String sql_2 = "";
+        String sql_1;
+        String sql_2;
 
 
         switch (sqlType) {
@@ -269,7 +261,7 @@ public class DBUtils {
                         fieldValue = field.get(obj);
                     } catch (IllegalAccessException e) {
                     }
-                    if ("serialVersionUID".equals(columnName) ||
+                    if (SERIAL_VERSION_UID.equals(columnName) ||
                             fieldValue == null ||
                             StringUtils.isBlank(fieldValue)) {
                         continue;
@@ -285,13 +277,13 @@ public class DBUtils {
 
                 }
                 sql_1 = sb1.toString();
-                sb_sql.append(sql_1.substring(0, sql_1.length() - 1));
+                sb_sql.append(sql_1, 0, sql_1.length() - 1);
 
                 sb_sql.append(") ");
 
                 sb_sql.append("values(");
                 sql_2 = sb2.toString();
-                sb_sql.append(sql_2.substring(0, sql_2.length() - 1));
+                sb_sql.append(sql_2, 0, sql_2.length() - 1);
                 sb_sql.append(") ");
 
                 break;
@@ -315,7 +307,7 @@ public class DBUtils {
                         fieldValue = field.get(obj);
                     } catch (IllegalAccessException e) {
                     }
-                    if ("serialVersionUID".equals(columnName) ||
+                    if (SERIAL_VERSION_UID.equals(columnName) ||
                             (updateNull && fieldValue == null) ||
                             StringUtils.isBlank(fieldValue) ||
                             field.getAnnotation(Id.class) != null ||
@@ -331,7 +323,7 @@ public class DBUtils {
 
                 }
                 sql_1 = sb1.toString();
-                sb_sql.append(sql_1.substring(0, sql_1.length() - 1));
+                sb_sql.append(sql_1, 0, sql_1.length() - 1);
                 sb_sql.append(" where ");
 
                 Iterator<Map.Entry<String, Object>> it = primaryKeyValueMap.entrySet().iterator();
@@ -367,7 +359,7 @@ public class DBUtils {
         if (StringUtils.isBlank(sql)) {
             return 0;
         }
-        if (sql.toLowerCase().indexOf("limit") != -1) {
+        if (sql.toLowerCase().contains("limit")) {
             sql = sql.replaceAll("limit +\\d+, *\\d+", "");
         }
 
@@ -392,9 +384,7 @@ public class DBUtils {
             return 0;
         }
         List<String> list = Arrays.asList(ids.split(","));
-        if (list == null
-                || list.isEmpty()
-                || list.get(0) == null) {
+        if (list.isEmpty() || list.get(0) == null) {
             return 0;
         }
 

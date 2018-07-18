@@ -16,6 +16,7 @@ import win.hupubao.common.utils.Captcha;
 import win.hupubao.common.utils.DesUtils;
 import win.hupubao.common.utils.LoggerUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -50,31 +51,28 @@ public class LoginController extends BaseController {
 
     @LogReqResArgs
     public static ResponseBean login(Request request,
-                                     Response response) {
+                                     Response response,
+                                     HttpServletRequest req) throws Exception{
 
         ResponseBean responseBean = new ResponseBean();
 
-        try {
-            UserBean userBean = getParamsEntity(request, UserBean.class, true);
+        UserBean userBean = getParamsEntity(request, UserBean.class, true);
 
-            String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
-            userBean.setSessionCaptcha(sessionCaptcha);
+        String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
+        userBean.setSessionCaptcha(sessionCaptcha);
 
 
-            LoggerUtils.info("[{0}][登录验证码]：{1}[收到验证码]：{2}",
-                    request.session().id(),
-                    sessionCaptcha,
-                    captcha);
+        LoggerUtils.info("[{}][登录验证码]：{}[收到验证码]：{}",
+                request.session().id(),
+                sessionCaptcha,
+                captcha);
 
-            userBean = LoginService.login(userBean);
-            //登录成功
-            userBean.setToken(request.session().id());
-            responseBean.success(userBean);
-            request.session().attribute(Constants.SESSION_USER_KEY, userBean);
-            rememberMe(Constants.COOKIE_LOGIN_KEY_FBLOG, request, response, userBean);
-        } catch (Exception e) {
-            responseBean.error(e);
-        }
+        userBean = LoginService.login(userBean);
+        //登录成功
+        userBean.setToken(request.session().id());
+        responseBean.success(userBean);
+        request.session().attribute(Constants.SESSION_USER_KEY, userBean);
+        rememberMe(Constants.COOKIE_LOGIN_KEY_FBLOG, request, response, userBean);
 
         return responseBean;
     }
@@ -173,7 +171,7 @@ public class LoginController extends BaseController {
         Captcha.CaptchaImage captchaImage = captcha.generate();
         HttpSession session = request.session().raw();
 
-        LoggerUtils.info("[{0}][生成验证码]：{1}", session.getId(), captchaImage.getCaptchaCode());
+        LoggerUtils.info("[{}][生成验证码]：{}", session.getId(), captchaImage.getCaptchaCode());
 
         // store the text in the session
         session.setAttribute(Constants.KAPTCHA_SESSION_KEY, captchaImage.getCaptchaCode());

@@ -69,7 +69,7 @@ public class Routes {
             get("/loginPage", ((request, response) ->
                             LoginController.loginPage(request, response)));
             post("/login", ((request, response) ->
-                            LoginController.login(request, response)));
+                            LoginController.login(request, response, request.raw())));
 
             get("/logout", ((request, response) ->
                     LoginController.logout(request, response)));
