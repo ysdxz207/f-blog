@@ -1,12 +1,10 @@
 package com.puyixiaowo.fblog.bean.admin.afu;
 
-import com.puyixiaowo.core.entity.Validatable;
+import com.puyixiaowo.core.entity.Model;
 import com.puyixiaowo.fblog.annotation.Table;
 
-import java.io.Serializable;
-
 @Table("afu_type")
-public class AfuTypeBean extends Validatable implements Serializable {
+public class AfuTypeBean extends Model<AfuTypeBean> {
 	private static final long serialVersionUID = 1L;
 
 	private String id;

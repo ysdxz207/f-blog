@@ -5,7 +5,7 @@ import com.puyixiaowo.fblog.bean.admin.afu.AfuTypeBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.controller.BaseController;
-import com.puyixiaowo.fblog.exception.DBObjectExistsException;
+import com.puyixiaowo.fblog.exception.db.DBObjectExistsException;
 import com.puyixiaowo.fblog.service.AfuService;
 import com.puyixiaowo.fblog.service.AfuTypeService;
 import com.puyixiaowo.fblog.utils.DBUtils;

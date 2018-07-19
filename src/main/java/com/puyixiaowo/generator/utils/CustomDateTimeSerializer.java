@@ -10,7 +10,7 @@ import java.util.Date;
 
 /**
  * json格式日期自定义序列化
- * @author huangfeihong
+ * @author W.feihong
  * @date 2016年12月21日
  */
 public class CustomDateTimeSerializer implements ObjectSerializer {

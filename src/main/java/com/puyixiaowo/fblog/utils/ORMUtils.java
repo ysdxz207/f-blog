@@ -2,8 +2,7 @@ package com.puyixiaowo.fblog.utils;
 
 import com.puyixiaowo.fblog.annotation.Id;
 import com.puyixiaowo.fblog.annotation.Table;
-import com.puyixiaowo.fblog.bean.admin.UserBean;
-import com.puyixiaowo.fblog.exception.DBSqlException;
+import com.puyixiaowo.fblog.exception.db.DBSqlException;
 import spark.utils.Assert;
 
 import java.lang.reflect.Field;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author feihong
+ * @author W.feihong
  * @date 2017-08-11
  */
 public class ORMUtils {
@@ -118,17 +117,8 @@ public class ORMUtils {
     }
 
 
-    public static void setId(Object obj) {
-        ReflectionUtils.setFieldValue(obj, "id", IdUtils.generateId());
-    }
-
     public static Object getId(Object obj) {
         return ReflectionUtils.getFieldValue(obj, "id");
     }
 
-    public static void main(String[] args) {
-        UserBean userBean = new UserBean();
-        setId(userBean);
-        System.out.println(userBean.getId());
-    }
 }

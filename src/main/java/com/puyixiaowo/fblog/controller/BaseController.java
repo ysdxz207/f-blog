@@ -9,9 +9,12 @@ import com.puyixiaowo.fblog.bean.admin.afu.AfuTypeBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.exception.BaseControllerException;
-import com.puyixiaowo.fblog.exception.DBObjectExistsException;
+import com.puyixiaowo.fblog.exception.db.DBObjectExistsException;
 import com.puyixiaowo.fblog.service.AfuTypeService;
-import com.puyixiaowo.fblog.utils.*;
+import com.puyixiaowo.fblog.utils.DateUtils;
+import com.puyixiaowo.fblog.utils.IpUtils;
+import com.puyixiaowo.fblog.utils.ReflectionUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
 import com.puyixiaowo.fblog.utils.sign.SignUtils;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.beanutils.BeanUtils;
@@ -179,7 +182,7 @@ public class BaseController {
 
 
             try {
-                DBUtils.insertOrUpdate(accessRecordBean, false);
+                accessRecordBean.insertOrUpdate(false);
             } catch (DBObjectExistsException e) {
             } catch (Exception e) {
                 logger.error("[保存访问记录异常]:" + e.getMessage());

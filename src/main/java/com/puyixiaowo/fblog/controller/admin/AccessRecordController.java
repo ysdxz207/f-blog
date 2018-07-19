@@ -2,12 +2,13 @@ package com.puyixiaowo.fblog.controller.admin;
 
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.AccessRecordBean;
+import com.puyixiaowo.fblog.bean.ArticleBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.AccessRecordService;
-import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -44,17 +45,20 @@ public class AccessRecordController extends BaseController {
     }
 
     @RequiresPermissions(value = {"article:delete"})
-    public static String delete(Request request, Response response) {
+    public static ResponseBean delete(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
 
         try {
-            DBUtils.deleteByIds(AccessRecordBean.class,
-                    request.queryParams("id"));
+            String ids = request.queryParams("id");
+            if (StringUtils.isBlank(ids)) {
+                return responseBean.errorMessage("id不能为空");
+            }
+            new ArticleBean().deleteByIds(ids.split(","));
         } catch (Exception e) {
             responseBean.error(e);
         }
 
-        return responseBean.serialize();
+        return responseBean;
     }
 
 }

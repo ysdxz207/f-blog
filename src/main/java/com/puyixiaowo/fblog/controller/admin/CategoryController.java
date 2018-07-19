@@ -8,7 +8,6 @@ import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.CategoryService;
-import com.puyixiaowo.fblog.utils.DBUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -52,7 +51,7 @@ public class CategoryController extends BaseController {
 
             for (CategoryBean categoryBean :
                     categoryBeanList) {
-                DBUtils.insertOrUpdate(categoryBean, false);
+                categoryBean.insertOrUpdate(false);
             }
         } catch (Exception e) {
             responseBean.error(e);
@@ -65,8 +64,7 @@ public class CategoryController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
 
         try {
-            DBUtils.deleteByIds(CategoryBean.class,
-                    request.queryParams("id"));
+            new CategoryBean().deleteByIds(request.queryParams("id").split(","));
         } catch (Exception e) {
             responseBean.error(e);
         }
@@ -77,9 +75,7 @@ public class CategoryController extends BaseController {
 
     @RequiresPermissions(value = {"category:view"})
     public static String allArray(Request request) {
-        List<CategoryBean> list = DBUtils.selectList(CategoryBean.class,
-                "select * from category ",
-                null);
+        List<CategoryBean> list = new CategoryBean().selectList("select * from category ");
 
         CategoryBean categoryBean = new CategoryBean();
         categoryBean.setId("");

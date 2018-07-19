@@ -12,7 +12,6 @@ import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.ArticleService;
 import com.puyixiaowo.fblog.service.TagService;
-import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.DateUtils;
 import com.puyixiaowo.fblog.utils.LuceneIndexUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
@@ -65,12 +64,12 @@ public class ArticleController extends BaseController {
                 accessCountParams.setArticleId(articleBean.getId());
 
                 //总访问量
-                Integer accessCountAll = DBUtils.count(sqlAcccessCount, accessCountParams);
+                Integer accessCountAll = accessCountParams.count(sqlAcccessCount);
 
                 sqlAcccessCount += "and access_date=:accessDate";
                 accessCountParams.setAccessDate(DateUtils.getTodayZeroMiliseconds());
                 //今天访问量
-                Integer accessCountToday = DBUtils.count(sqlAcccessCount, accessCountParams);
+                Integer accessCountToday = accessCountParams.count(sqlAcccessCount);
                 articleBean.setAccessCountAll(accessCountAll);
                 articleBean.setAccessCountToday(accessCountToday);
             }
@@ -101,21 +100,20 @@ public class ArticleController extends BaseController {
             }
             if (articleBean.getId() != null) {
                 //编辑
-                articleBean = DBUtils.selectOne("select a.*,group_concat(t.name) as tags " +
+                articleBean.selectOne("select a.*,group_concat(t.name) as tags " +
                         "from article a " +
                         "left join article_tag at " +
                         "on a.id = at.article_id " +
                         "left join tag t " +
                         "on at.tag_id = t.id where a.id = :id " +
-                        "group by a.id", articleBean);
+                        "group by a.id");
                 String html = StringEscapeUtils.escapeHtml4(articleBean.getContext());
                 articleBean.setContext(html);
                 model.put("model", articleBean);
             }
 
             //分类列表
-            model.put("categoryList", DBUtils.selectList(CategoryBean.class,
-                    "select * from category", null));
+            model.put("categoryList", new CategoryBean().selectList("select * from category"));
 
             return new FreeMarkerTemplateEngine()
                     .render(new ModelAndView(model,
@@ -128,7 +126,7 @@ public class ArticleController extends BaseController {
             UserBean currentUser = request.session().attribute(Constants.SESSION_USER_KEY);
 
             if (StringUtils.isNotBlank(articleBean.getId())) {
-                ArticleBean bean = DBUtils.selectOne("select * from article where id=:id", articleBean);
+                ArticleBean bean = articleBean.selectOne("select * from article where id=:id");
                 if (bean == null) {
                     responseBean.errorMessage("文章不存在！");
                     return responseBean.serialize();
@@ -142,7 +140,7 @@ public class ArticleController extends BaseController {
             }
             articleBean.setLastUpdateDate(System.currentTimeMillis());
 
-            DBUtils.insertOrUpdate(articleBean, false);
+            articleBean.insertOrUpdate(false);
             //标签
             TagService.insertArticleTags(articleBean);
             //lucene搜索引擎
@@ -162,8 +160,7 @@ public class ArticleController extends BaseController {
         try {
             String ids = request.queryParams("id");
             if (StringUtils.isNotBlank(ids)) {
-                DBUtils.deleteByIds(ArticleBean.class,
-                        ids);
+                new ArticleBean().deleteByIds(ids.split(","));
                 //删除lucene索引
                 for (String id :
                         ids.split(",")) {

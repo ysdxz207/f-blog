@@ -1,10 +1,10 @@
 package com.puyixiaowo.fblog.controller.admin;
 
+import com.puyixiaowo.fblog.bean.AccessRecordBean;
+import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
-import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
-import com.puyixiaowo.fblog.utils.DBUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -35,19 +35,17 @@ public class MainController extends BaseController {
                 .render(new ModelAndView(model, "admin/index.html"));
     }
 
-    public static Object main(Request request, Response response) {
+    public static Object mainPage(Request request, Response response) {
 
         Map<String, Object> model = new HashMap<>();
 
-        Map<String, String> params = new HashMap<>();
 
-        Integer indexCount = DBUtils.count("select * from access_record " +
-                "where article_id = 0", params);
-
+        Integer indexCount = new AccessRecordBean().count("select * from access_record " +
+                "where article_id = 0");
 
         model.put("indexCount", indexCount);
         return new FreeMarkerTemplateEngine()
-                .render(new ModelAndView(model, "admin/main.html"));
+                .render(new ModelAndView(model, "admin/mainPage.html"));
     }
 
     /**

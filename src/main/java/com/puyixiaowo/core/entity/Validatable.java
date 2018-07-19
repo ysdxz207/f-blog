@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 
 /**
- * @author feihong
+ * @author W.feihong
  * @date 2017-08-10
  */
 public abstract class Validatable implements Serializable {

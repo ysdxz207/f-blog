@@ -1,7 +1,7 @@
 package com.puyixiaowo.fblog.utils;
 /**
  * 相似度工具
- * @author huangfeihong
+ * @author W.feihong
  * @date 2017-03-07
  */
 public class Levenshtein {

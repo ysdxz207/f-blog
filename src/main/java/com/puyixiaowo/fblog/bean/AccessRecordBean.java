@@ -1,14 +1,12 @@
 package com.puyixiaowo.fblog.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.puyixiaowo.core.entity.Validatable;
+import com.puyixiaowo.core.entity.Model;
 import com.puyixiaowo.fblog.annotation.Table;
 import com.puyixiaowo.generator.utils.CustomDateTimeSerializer;
 
-import java.io.Serializable;
-
 @Table("access_record")
-public class AccessRecordBean extends Validatable implements Serializable {
+public class AccessRecordBean extends Model<AccessRecordBean> {
     private static final long serialVersionUID = 1L;
 
     private String id;

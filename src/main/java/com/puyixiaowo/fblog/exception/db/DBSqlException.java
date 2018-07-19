@@ -1,7 +1,7 @@
-package com.puyixiaowo.fblog.exception;
+package com.puyixiaowo.fblog.exception.db;
 
 /**
- * @author feihong
+ * @author W.feihong
  * @date 2017-08-09
  */
 public class DBSqlException extends DBException {

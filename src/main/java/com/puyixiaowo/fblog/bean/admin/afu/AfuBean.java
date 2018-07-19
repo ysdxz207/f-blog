@@ -1,15 +1,13 @@
 package com.puyixiaowo.fblog.bean.admin.afu;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.puyixiaowo.core.entity.Validatable;
+import com.puyixiaowo.core.entity.Model;
 import com.puyixiaowo.fblog.annotation.Table;
 import com.puyixiaowo.fblog.annotation.Transient;
 import com.puyixiaowo.generator.utils.CustomDateTimeSerializer;
 
-import java.io.Serializable;
-
 @Table("afu")
-public class AfuBean extends Validatable implements Serializable {
+public class AfuBean extends Model<AfuBean> {
 	private static final long serialVersionUID = 1L;
 
 	private String id;

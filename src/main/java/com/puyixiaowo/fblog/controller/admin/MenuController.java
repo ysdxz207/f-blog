@@ -3,17 +3,12 @@ package com.puyixiaowo.fblog.controller.admin;
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.admin.MenuBean;
-import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
-import com.puyixiaowo.fblog.exception.MenuException;
-import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.MenuService;
-import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.RedisUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
-import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import win.hupubao.common.utils.LoggerUtils;
@@ -21,7 +16,7 @@ import win.hupubao.common.utils.LoggerUtils;
 import java.util.List;
 
 /**
- * @author feihong
+ * @author W.feihong
  * @date 2017-08-13
  */
 public class MenuController extends BaseController {
@@ -53,7 +48,7 @@ public class MenuController extends BaseController {
 
             for (MenuBean menuBean :
                     menuBeanList) {
-                DBUtils.insertOrUpdate(menuBean, false);
+                menuBean.insertOrUpdate(false);
             }
 
             //删除缓存，下次刷新
@@ -71,8 +66,7 @@ public class MenuController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
 
         try {
-            DBUtils.deleteByIds(MenuBean.class,
-                    request.queryParams("id"));
+            new MenuBean().deleteByIds(request.queryParams("id").split(","));
             //删除缓存，下次刷新
             RedisUtils.delete(EnumsRedisKey.REDIS_KEY_MENU_LIST.key + "*");
             responseBean.setMessage("操作成功，请手动刷新页面。");
@@ -100,13 +94,11 @@ public class MenuController extends BaseController {
     @RequiresPermissions(value = {"menu:view"})
     public static String array(Request request, Response response) {
         String parent = request.params(":parent");
-        List<MenuBean> list = DBUtils.selectList(MenuBean.class,
-                "select * from menu where pid "
-                        + ("yes".equals(parent) ? " = 0"
-                        : ("no".equals(parent) ? " > 0" : ">= 0")),
-                null);
-
         MenuBean bean = new MenuBean();
+        List<MenuBean> list = bean.selectList("select * from menu where pid "
+                + ("yes".equals(parent) ? " = 0"
+                : ("no".equals(parent) ? " > 0" : ">= 0")));
+
         bean.setId("");
         bean.setMenuName("无");
         list.add(0, bean);

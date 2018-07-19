@@ -1,7 +1,7 @@
 package com.puyixiaowo.fblog.utils;
 /**
  * 驼峰转换
- * @author huangfeihong
+ * @author W.feihong
  * @date 2017年1月13日
  */
 public class CamelCaseUtils {

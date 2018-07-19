@@ -11,7 +11,7 @@ import win.hupubao.common.utils.DesUtils;
 import java.util.Map;
 
 /**
- * @author feihong
+ * @author W.feihong
  * @date 2017-08-06
  */
 public class LoginService {

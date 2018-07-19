@@ -76,8 +76,8 @@ public class Routes {
 
             get("/captcha.jpg", ((request, response) ->
                             LoginController.captcha(request, response)));
-            get("/main", ((request, response) ->
-                            MainController.main(request, response)));
+            get("/mainPage", ((request, response) ->
+                            MainController.mainPage(request, response)));
 
             /*
              * 菜单组

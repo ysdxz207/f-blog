@@ -21,7 +21,7 @@ public class UserService {
     public static String getSelectSql(UserBean userBean,
                                       PageBean pageBean){
         StringBuilder sbSql = new StringBuilder("select u.*,ur.role_id " +
-                "from user u left join user_role ur on u.id=ur.user_id where loginname<>'feihong' ");
+                "from user u left join user_role ur on u.id=ur.user_id where loginname<>'W.feihong' ");
 
         buildSqlParams(sbSql, userBean);
         sbSql.append("order by id asc ");

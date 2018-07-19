@@ -2,7 +2,7 @@ package com.puyixiaowo.generator;
 
 
 /**
- * @author feihong
+ * @author W.feihong
  * @date 2017-08-13
  */
 public class Run {
@@ -10,7 +10,7 @@ public class Run {
         String dbhost = "fblog.db";
         String tables= "user,role,user_role,permission,role_permission" +
                 ",menu,article,category,tag,article_tag,afu,afu_type";
-        String src = "src/main/java";
+        String src = "src/mainPage/java";
         String domainPackage = "com.puyixiaowo.fblog.domain";
 
         DomainGenerator.generateDomains(dbhost, tables, src, domainPackage);

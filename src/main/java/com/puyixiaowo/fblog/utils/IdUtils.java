@@ -4,7 +4,7 @@ import java.util.UUID;
 
 /**
  * ID生成工具
- * @author feihong
+ * @author W.feihong
  * @date 2017-08-10
  */
 public class IdUtils {

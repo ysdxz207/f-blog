@@ -29,7 +29,7 @@ public class DomainGenerator {
      * <p>要生成的表名</p>
      * <p>多个用英文逗号分隔</p>
      * @param srcBase
-     * <p>要生成的实体类src目录，如：src/main/java</p>
+     * <p>要生成的实体类src目录，如：src/mainPage/java</p>
      * @param domainPackage
      * <p>要生成的实体类所在包名，如：com.puyixiaowo.yiyi.domain</p>
      */

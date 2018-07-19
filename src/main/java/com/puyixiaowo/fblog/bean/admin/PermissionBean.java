@@ -1,13 +1,11 @@
 package com.puyixiaowo.fblog.bean.admin;
 
-import com.puyixiaowo.core.entity.Validatable;
+import com.puyixiaowo.core.entity.Model;
 import com.puyixiaowo.fblog.annotation.NotNull;
 import com.puyixiaowo.fblog.annotation.Table;
 
-import java.io.Serializable;
-
 @Table("permission")
-public class PermissionBean extends Validatable implements Serializable {
+public class PermissionBean extends Model<PermissionBean> {
 	private static final long serialVersionUID = 1L;
 
 	private String id;

@@ -1,12 +1,10 @@
 package com.puyixiaowo.fblog.bean.admin;
 
-import com.puyixiaowo.core.entity.Validatable;
+import com.puyixiaowo.core.entity.Model;
 import com.puyixiaowo.fblog.annotation.Table;
 
-import java.io.Serializable;
-
 @Table("user_role")
-public class UserRoleBean extends Validatable implements Serializable {
+public class UserRoleBean extends Model<UserRoleBean> {
 	private static final long serialVersionUID = 1L;
 
 	private String id;

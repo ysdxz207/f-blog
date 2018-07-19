@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author huangfeihong
+ * @author W.feihong
  * @date 2016年12月8日 下午10:20:18
  */
 public class PageBean<T> extends ResponseBean{

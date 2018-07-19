@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import static java.util.regex.Pattern.compile;
 
 /**
- * @author feihong
+ * @author W.feihong
  * @date 2017-08-10
  */
 public class StringUtils {

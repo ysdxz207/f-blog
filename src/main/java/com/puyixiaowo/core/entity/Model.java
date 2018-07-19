@@ -1,15 +1,17 @@
 package com.puyixiaowo.core.entity;
 
-import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.annotation.Id;
 import com.puyixiaowo.fblog.annotation.Transient;
-import com.puyixiaowo.fblog.exception.DBException;
-import com.puyixiaowo.fblog.exception.DBObjectExistsException;
-import com.puyixiaowo.fblog.exception.DBSqlException;
-import com.puyixiaowo.fblog.utils.CamelCaseUtils;
+import com.puyixiaowo.fblog.exception.db.DBException;
+import com.puyixiaowo.fblog.exception.db.DBObjectExistsException;
+import com.puyixiaowo.fblog.exception.db.DBResultNotUniqueException;
+import com.puyixiaowo.fblog.exception.db.DBSqlException;
 import com.puyixiaowo.fblog.utils.ORMUtils;
+import com.puyixiaowo.fblog.utils.ReflectionUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 import org.sql2o.*;
+import win.hupubao.common.utils.CamelCaseUtils;
+import win.hupubao.common.utils.LoggerUtils;
 
 import javax.sql.DataSource;
 import java.io.Serializable;
@@ -17,8 +19,14 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 /**
- * @@author W.feihong
  * @param <E>
+ * @@author W.feihong
+ * jdbc.properties =>
+ * <p>
+ * url=xxx
+ * username=xxx
+ * password=xxx
+ * sql.prefix.count=select count(*)
  */
 public abstract class Model<E> extends Validatable implements Serializable {
 
@@ -30,16 +38,17 @@ public abstract class Model<E> extends Validatable implements Serializable {
     private static final int SQL_TYPE_INSERT = 1;//添加
     private static final int SQL_TYPE_UPDATE = 2;//更新
 
-    private static String COUNT_SQL_PREFIX = "select count(*) ";
+    private static String COUNT_SQL_PREFIX = "select count(*)";
     private static Sql2o sql2o;
+    private static String PRIMARY_KEY_NAME = "id";
 
     public Model() {
         initDB();
+        PRIMARY_KEY_NAME = getPrimaryKeyName();
     }
 
     /**
-     *
-     * @param whereSql eg:where username=:username and role_id=:roleId
+     * @param whereSql eg: username=:username and role_id=:roleId
      * @return
      */
     public List<E> where(String whereSql) {
@@ -73,62 +82,74 @@ public abstract class Model<E> extends Validatable implements Serializable {
             }
         }
 
-        return selectList(sqlStringBuilder.toString(), (E) this);
+        return selectList(sqlStringBuilder.toString());
     }
 
 
-    public List<E> selectList(String sql,
-                              E entity) {
-        if (entity == null) {
-            throw new DBException("Parameter entity should not be null.");
+    public List<E> selectList(String sql) {
+
+        Class clazz = this.getClass();
+        Field [] fields = clazz.getDeclaredFields();
+        Map<String, Object> params = new HashMap<>();
+        for (Field field : fields) {
+            if (isParameterField(field)) {
+                params.put(CamelCaseUtils.toUnderlineName(field.getName()), getFieldValue(field));
+            }
         }
-        Class clazz = entity.getClass();
-        setCamelMapping(clazz);
+        return selectList(sql, params);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<E> selectList(String sql,
+                              Map<String, Object> params) {
+        if (params == null
+                || !params.isEmpty()) {
+            throw new DBException("Parameter should not be null.");
+        }
+        Class clazz = this.getClass();
         try (Connection conn = sql2o.open()) {
             Query query = conn.createQuery(sql).throwOnMappingFailure(false);
-            Field[] filelds = clazz.getDeclaredFields();
 
-            for (Field field : filelds) {
-                if (!isParameterField(field)) {
-                    continue;
-                }
-                query.addParameter(field.getName(), getFieldValue(field));
-            }
+            addParameters(params, query);
 
             return query.executeAndFetch(clazz);
         }
     }
 
-    public E selectOne(String sql,
-                       E entity) {
 
-        List<E> list = selectList(sql, entity);
+    public E selectOne(String sql) {
+
+        List<E> list = selectList(sql);
         if (list.isEmpty()) {
             return null;
+        }
+        if (list.size() > 1) {
+            throw new DBResultNotUniqueException("Expected one result,but " + list.size());
         }
         return list.get(0);
     }
 
 
+    @SuppressWarnings("unchecked")
     public E insertOrUpdate(boolean updateNull) {
 
         String tableName = ORMUtils.getTableNameByClass(this.getClass());
 
         try (Connection conn = sql2o.beginTransaction(java.sql.Connection.TRANSACTION_SERIALIZABLE)) {
-            Object primaryKey = null;
             try {
                 String sql_update = assembleSql(SQL_TYPE_UPDATE, tableName, this, updateNull);
                 Query queryUpdate = conn.createQuery(sql_update).throwOnMappingFailure(false).bind(this);
+                queryUpdate.executeUpdate();
             } catch (Exception e) {
                 try {
-                    ORMUtils.setId(this);
                     String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, this, updateNull);
                     System.out.println(sql_insert);
                     Query queryInsert = conn.createQuery(sql_insert).throwOnMappingFailure(false).bind(this);
-                    primaryKey = queryInsert.executeUpdate().getKey();
+                    Object primaryKey = queryInsert.executeUpdate().getKey();
+                    ReflectionUtils.setFieldValue(this, PRIMARY_KEY_NAME, primaryKey);
                 } catch (Sql2oException e1) {
-                    if (e1.getMessage() != null &&
-                            e1.getMessage().contains("SQLITE_CONSTRAINT_UNIQUE")) {
+                    if (e1.getMessage() != null
+                            && e1.getMessage().contains("SQLITE_CONSTRAINT_UNIQUE")) {
                         throw new DBObjectExistsException("重复插入对象");
                     } else {
                         throw new DBException(e1.getMessage());
@@ -139,15 +160,30 @@ public abstract class Model<E> extends Validatable implements Serializable {
             }
 
             conn.commit();
-            return this;
+            return (E) this;
+        }
+    }
+
+    public int update(String sql,
+                      Map<String, Object> params) {
+        try (Connection conn = sql2o.beginTransaction(java.sql.Connection.TRANSACTION_SERIALIZABLE)) {
+            Query query = conn.createQuery(sql).throwOnMappingFailure(false).bind(this);
+            if (params != null
+                    && !params.isEmpty()) {
+                addParameters(params, query);
+            }
+            int rows = query.executeUpdate().getResult();
+            conn.commit();
+            return rows;
         }
     }
 
 
-    private static String assembleSql(int sqlType,
-                                      String tableName,
-                                      Object obj,
-                                      boolean updateNull) {
+
+    private String assembleSql(int sqlType,
+                               String tableName,
+                               Object obj,
+                               boolean updateNull) {
 
         //获取主键字段名和值map
         Map<String, Object> primaryKeyValueMap = ORMUtils.getPrimaryKeyValues(obj);
@@ -184,16 +220,11 @@ public abstract class Model<E> extends Validatable implements Serializable {
 
                 for (int i = 0; i < filelds.length; i++) {
                     Field field = filelds[i];
-                    if (field.getAnnotation(Transient.class) != null) {
+                    if (!isParameterField(field)) {
                         continue;
                     }
-                    field.setAccessible(true);
                     String columnName = ORMUtils.getFieldColumnName(field);
-                    Object fieldValue = "";
-                    try {
-                        fieldValue = field.get(obj);
-                    } catch (IllegalAccessException e) {
-                    }
+                    Object fieldValue = getFieldValue(field);
                     if (SERIAL_VERSION_UID.equals(columnName) ||
                             fieldValue == null ||
                             StringUtils.isBlank(fieldValue)) {
@@ -230,16 +261,12 @@ public abstract class Model<E> extends Validatable implements Serializable {
 
                 for (int i = 0; i < filelds.length; i++) {
                     Field field = filelds[i];
-                    if (field.getAnnotation(Transient.class) != null) {
+                    if (!isParameterField(field)) {
                         continue;
                     }
-                    field.setAccessible(true);
                     String columnName = ORMUtils.getFieldColumnName(field);
-                    Object fieldValue = "";
-                    try {
-                        fieldValue = field.get(obj);
-                    } catch (IllegalAccessException e) {
-                    }
+                    Object fieldValue = getFieldValue(field);
+
                     if (SERIAL_VERSION_UID.equals(columnName) ||
                             (updateNull && fieldValue == null) ||
                             StringUtils.isBlank(fieldValue) ||
@@ -287,42 +314,54 @@ public abstract class Model<E> extends Validatable implements Serializable {
     }
 
 
-    public static int count(String sql, Object paramObj) {
+    public int count(String whereSql) {
 
-        if (StringUtils.isBlank(sql)) {
+        if (StringUtils.isBlank(whereSql)) {
             return 0;
         }
-        if (sql.toLowerCase().contains("limit")) {
-            sql = sql.replaceAll("limit +\\d+, *\\d+", "");
+        if (whereSql.toLowerCase().contains("limit")) {
+            whereSql = whereSql.replaceAll("limit +\\d+, *\\d+", "");
         }
 
-        if (!sql.toLowerCase().replaceAll("\\s+", "").startsWith("selectcount(")) {
-            sql = "select count(*) from ("
-                    + (sql.endsWith(";") ? sql.substring(0, sql.length() - 1) : sql)
+        if (!whereSql.toLowerCase().replaceAll("\\s+", "").startsWith("selectcount")) {
+            whereSql = COUNT_SQL_PREFIX + " from ("
+                    + (whereSql.endsWith(";") ? whereSql.substring(0, whereSql.length() - 1) : whereSql)
                     + ")";
         }
 
         try (Connection conn = sql2o.open()) {
-            Query query = conn.createQuery(sql).throwOnMappingFailure(false).bind(paramObj);
+            Query query = conn.createQuery(whereSql).throwOnMappingFailure(false).bind(this);
             Integer count = query.executeScalar(Integer.class);
             if (count == null) {
-                System.out.println("统计sql可能不正确：" + sql);
+                LoggerUtils.warn("统计sql可能不正确：{}", whereSql);
             }
             return count == null ? 0 : count;
         }
     }
 
-    public static Integer deleteByIds(Class clazz, String ids) {
+    public int delete() {
+        Object primaryKeyValue = ReflectionUtils.getFieldValue(this, PRIMARY_KEY_NAME);
+        String tableName = ORMUtils.getTableNameByClass(this.getClass());
+        StringBuilder stringBuilderDeleteSql = new StringBuilder("delete from ");
+        stringBuilderDeleteSql.append(tableName);
+        stringBuilderDeleteSql.append(" where ");
+        stringBuilderDeleteSql.append(PRIMARY_KEY_NAME);
+        stringBuilderDeleteSql.append("=");
+        stringBuilderDeleteSql.append(primaryKeyValue);
+        return update(stringBuilderDeleteSql.toString(), new HashMap<>());
+    }
+
+    public int deleteByIds(String [] ids) {
         if (StringUtils.isBlank(ids)) {
             return 0;
         }
-        List<String> list = Arrays.asList(ids.split(","));
+        List<String> list = Arrays.asList(ids);
         if (list.isEmpty() || list.get(0) == null) {
             return 0;
         }
 
         StringBuilder sb_del_sql = new StringBuilder("delete from ");
-        String tableName = ORMUtils.getTableNameByClass(clazz);
+        String tableName = ORMUtils.getTableNameByClass(this.getClass());
 
         sb_del_sql.append("`");
         sb_del_sql.append(tableName);
@@ -382,7 +421,7 @@ public abstract class Model<E> extends Validatable implements Serializable {
      *
      * @param clazz
      */
-    private static void setCamelMapping(Class clazz) {
+    private void setCamelMapping(Class clazz) {
 
         if (String.class.equals(clazz)) {
             return;
@@ -419,6 +458,26 @@ public abstract class Model<E> extends Validatable implements Serializable {
             return false;
         }
         return true;
+    }
+
+    private String getPrimaryKeyName() {
+        for (Field field : this.getClass().getDeclaredFields()) {
+            if (field.getAnnotation(Id.class) != null) {
+                return CamelCaseUtils.toUnderlineName(field.getName());
+            }
+        }
+        return PRIMARY_KEY_NAME;
+    }
+
+    private void addParameters(Map<String, Object> params,
+                               Query query) {
+
+        for (Map.Entry entry : params.entrySet()) {
+            if (entry.getValue() == null) {
+                continue;
+            }
+            query.addParameter(entry.getKey().toString(), entry.getValue());
+        }
     }
 
 }

@@ -3,7 +3,6 @@ package com.puyixiaowo.fblog.service;
 import com.puyixiaowo.fblog.bean.admin.RoleBean;
 import com.puyixiaowo.fblog.bean.admin.RolePermissionBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
-import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.StringUtils;
 
 import java.util.HashMap;
