@@ -1,5 +1,7 @@
 package com.puyixiaowo.fblog.controller.admin;
 
+import com.alibaba.fastjson.JSON;
+import com.puyixiaowo.fblog.bean.admin.RoleBean;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.constants.Constants;
@@ -19,6 +21,8 @@ import win.hupubao.common.utils.LoggerUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.util.List;
 
 import static spark.Spark.halt;
 
@@ -52,28 +56,33 @@ public class LoginController extends BaseController {
     @LogReqResArgs
     public static ResponseBean login(Request request,
                                      Response response,
-                                     HttpServletRequest req) throws Exception{
+                                     HttpServletRequest req) {
 
         ResponseBean responseBean = new ResponseBean();
 
-        UserBean userBean = getParamsEntity(request, UserBean.class, true);
+        try {
+            UserBean userBean = getParamsEntity(request, UserBean.class, true);
 
-        String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
-        userBean.setSessionCaptcha(sessionCaptcha);
+            String sessionCaptcha = request.session().attribute(Constants.KAPTCHA_SESSION_KEY);
+            userBean.setSessionCaptcha(sessionCaptcha);
 
 
-        LoggerUtils.info("[{}][登录验证码]：{}[收到验证码]：{}",
-                request.session().id(),
-                sessionCaptcha,
-                captcha);
+            LoggerUtils.info("[{}][登录验证码]：{}[收到验证码]：{}",
+                    request.session().id(),
+                    sessionCaptcha,
+                    captcha);
 
-        userBean = LoginService.login(userBean);
-        //登录成功
-        userBean.setToken(request.session().id());
-        responseBean.success(userBean);
-        request.session().attribute(Constants.SESSION_USER_KEY, userBean);
-        rememberMe(Constants.COOKIE_LOGIN_KEY_FBLOG, request, response, userBean);
+            userBean = LoginService.login(userBean);
+            //登录成功
+            userBean.setToken(request.session().id());
+            responseBean.success(userBean);
+            request.session().attribute(Constants.SESSION_USER_KEY, userBean);
+            rememberMe(Constants.COOKIE_LOGIN_KEY_FBLOG, request, response, userBean);
 
+        } catch (Exception e) {
+            LoggerUtils.error("登录异常：", e);
+            responseBean.error(e);
+        }
         return responseBean;
     }
 
@@ -184,6 +193,10 @@ public class LoginController extends BaseController {
         try {
             //生成验证码
             generateCaptcha(request);
+            UserBean us = new UserBean();
+            us.setLoginname("feihong");
+            List<UserBean> list = us.where("loginname=:loginname");
+            System.out.println(JSON.toJSONString(us));
             UserBean userBean = LoginService.cookieLogin(request.cookies(), request.session().attribute(Constants.KAPTCHA_SESSION_KEY));
             if (userBean == null) {
                 responseBean.error(LoginError.NO_AUTH_ERROR);
@@ -192,6 +205,7 @@ public class LoginController extends BaseController {
             }
         } catch (Exception e) {
             responseBean.error(e);
+            LoggerUtils.error("cookie登录异常：", e);
         }
 
         halt(responseBean.serialize());

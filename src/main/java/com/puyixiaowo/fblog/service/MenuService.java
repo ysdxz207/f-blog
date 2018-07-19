@@ -157,7 +157,7 @@ public class MenuService {
     }
 
     public static List<String> selectMenuTypeList() {
-        return DBUtils.selectList(String.class, "select type from menu group bytype",null);
+        return DBUtils.selectList(String.class, "select type from menu group by type",null);
     }
 
 }

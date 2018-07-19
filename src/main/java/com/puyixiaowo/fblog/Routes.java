@@ -83,24 +83,17 @@ public class Routes {
              * 菜单组
              */
             path("/menu", () -> {
-                get("", ((request, response) ->
-                        MenuController.navMenus(request, response)));
-                post("", ((request, response) ->
-                        MenuController.navMenus(request, response)));
+                get("", (MenuController::navMenus));
+                post("", (MenuController::navMenus));
 
-                get("/array/:parent", ((request, response) ->
-                        MenuController.array(request, response)));
+                get("/array/:parent", (MenuController::array));
 
-                post("/edit", ((request, response) ->
-                        MenuController.edit(request, response)));
+                post("/edit", (MenuController::edit));
 
-                post("/delete", ((request, response) ->
-                        MenuController.delete(request, response)));
+                post("/delete", (MenuController::delete));
 
-                get("/types", ((request, response) ->
-                        MenuController.typeList(request, response)));
-                post("/types", ((request, response) ->
-                        MenuController.typeList(request, response)));
+                get("/types", (MenuController::typeList));
+                post("/types", (MenuController::typeList));
             });
             /*
              * 用户组

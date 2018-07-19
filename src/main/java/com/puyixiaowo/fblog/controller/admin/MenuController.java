@@ -16,6 +16,7 @@ import com.puyixiaowo.fblog.utils.StringUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import win.hupubao.common.utils.LoggerUtils;
 
 import java.util.List;
 
@@ -89,6 +90,7 @@ public class MenuController extends BaseController {
         try {
             responseBean.setData(MenuService.selectMenuTypeList());
         } catch (Exception e) {
+            LoggerUtils.error("菜单分类异常：", e);
             responseBean.error(e);
         }
 

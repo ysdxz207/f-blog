@@ -1,128 +1,86 @@
-package com.puyixiaowo.fblog.utils;
+package com.puyixiaowo.core.entity;
 
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.annotation.Id;
 import com.puyixiaowo.fblog.annotation.Transient;
-import com.puyixiaowo.fblog.bean.admin.UserBean;
-import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.exception.DBException;
 import com.puyixiaowo.fblog.exception.DBObjectExistsException;
 import com.puyixiaowo.fblog.exception.DBSqlException;
+import com.puyixiaowo.fblog.utils.CamelCaseUtils;
+import com.puyixiaowo.fblog.utils.ORMUtils;
+import com.puyixiaowo.fblog.utils.StringUtils;
 import org.sql2o.*;
 
 import javax.sql.DataSource;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
 
 /**
- * @author Moses
- * @date 2017-08-04
+ * @@author W.feihong
+ * @param <E>
  */
-public class DBUtils {
+public abstract class Model<E> extends Validatable implements Serializable {
 
+    private static final long serialVersionUID = 4922495587385402584L;
+
+    private static final Properties dbProperties = convertResourceBundleToProperties(ResourceBundle.getBundle("jdbc"));
+    private static final String SERIAL_VERSION_UID = "serialVersionUID";
+    private static final String JOINPOINT_STATICPART_TYPE_NAME = "org.aspectj.lang.JoinPoint$StaticPart";
     private static final int SQL_TYPE_INSERT = 1;//添加
     private static final int SQL_TYPE_UPDATE = 2;//更新
-    private static final String SERIAL_VERSION_UID = "serialVersionUID";
 
+    private static String COUNT_SQL_PREFIX = "select count(*) ";
     private static Sql2o sql2o;
-    private static Properties dbProperties = new Properties();
-    public static Sql2o getSql2o() {
-        return sql2o;
-    }
 
-    public static Properties getDbProperties() {
-        return dbProperties;
+    public Model() {
+        initDB();
     }
 
     /**
-     * 初始化DB
-     * @param jdbcPropertyFilePath
-     * @throws Exception
+     *
+     * @param whereSql eg:where username=:username and role_id=:roleId
+     * @return
      */
-    public static void initDB(String jdbcPropertyFilePath) throws Exception {
+    public List<E> where(String whereSql) {
 
-        dbProperties.load(DBUtils.class.getResourceAsStream("/" + jdbcPropertyFilePath));
+        StringBuilder sqlStringBuilder = new StringBuilder("select * from ");
 
-        initDB(dbProperties);
-    }
+        Class clazz = this.getClass();
+        sqlStringBuilder.append(ORMUtils.getTableNameByClass(clazz));
+        sqlStringBuilder.append(" where ");
 
-    /**
-     * 初始化DB
-     * @param url
-     *          包含端口号的数据库地址
-     * @param username
-     * @param password
-     * @throws Exception
-     */
-    public static void initDB(String url,
-                              String username,
-                              String password) throws Exception {
+        if (StringUtils.isNotBlank(whereSql)) {
+            sqlStringBuilder.append(whereSql);
+        } else {
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                String fieldName = field.getName();
+                field.setAccessible(true);
 
-        Properties properties = new Properties();
-        properties.setProperty("url", url);
-        properties.setProperty("user", username);
-        properties.setProperty("password", password);
-        initDB(properties);
-    }
+                if (!isParameterField(field)) {
+                    continue;
+                }
 
-    /**
-     * 初始化DB
-     * @param dbProperties
-     * @throws Exception
-     */
-    public static void initDB(Properties dbProperties) throws Exception {
-
-        String url = dbProperties.getProperty("url");
-        if (url == null
-                || "".equals(url.trim())
-                || "null".equals(url.trim())) {
-            throw new RuntimeException("数据库属性文件中属性[url]的值不正确");
+                String column = fieldName;
+                if (CamelCaseUtils.checkIsCamelCase(field.getName())) {
+                    column = CamelCaseUtils.toUnderlineName(column);
+                }
+                sqlStringBuilder.append(column);
+                sqlStringBuilder.append("=:");
+                sqlStringBuilder.append(fieldName);
+                sqlStringBuilder.append(" ");
+            }
         }
 
-        if (dbProperties.containsKey("username")) {
-            dbProperties.setProperty("user", dbProperties.getProperty("username"));
-            dbProperties.remove("username");
-        }
-
-        DataSource dataSource = new GenericDatasource(url, dbProperties);
-
-        sql2o = new Sql2o(dataSource);
+        return selectList(sqlStringBuilder.toString(), (E) this);
     }
 
 
-    public static <T> T selectOne(Class<T> clazz,
-                                  String sql,
-                                  Map<String, Object> params) {
-
-        List<T> list = selectList(clazz, sql, params);
-        if (list.isEmpty()) {
-            return null;
-        }
-        return list.get(0);
-    }
-
-    public static <E> E selectOne(String sql,
-                                  E entity) {
-
-        List<E> list = selectList(sql, entity);
-        if (list.isEmpty()) {
-            return null;
-        }
-        return list.get(0);
-    }
-
-    public static <E> List<E> selectList(Class<E> clazz,
-                                         String sql,
-                                         Map<String, Object> params) {
-
-        E entity = JSON.toJavaObject(JSON.parseObject(JSON.toJSONString(params)), clazz);
-        return selectList(sql, entity);
-    }
-
-    public static <E> List<E> selectList(String sql,
-                                         E entity) {
+    public List<E> selectList(String sql,
+                              E entity) {
         if (entity == null) {
-            throw new DBException("Paramater entity should not be null.");
+            throw new DBException("Parameter entity should not be null.");
         }
         Class clazz = entity.getClass();
         setCamelMapping(clazz);
@@ -131,66 +89,42 @@ public class DBUtils {
             Field[] filelds = clazz.getDeclaredFields();
 
             for (Field field : filelds) {
-                Object fieldValue = ReflectionUtils.getFieldValue(entity, field.getName());
-                if (field.getAnnotation(Transient.class) != null
-                        || SERIAL_VERSION_UID.equals(field.getName())
-                        || StringUtils.isBlank(fieldValue)) {
+                if (!isParameterField(field)) {
                     continue;
                 }
-                query.addParameter(field.getName(), fieldValue);
+                query.addParameter(field.getName(), getFieldValue(field));
             }
 
             return query.executeAndFetch(clazz);
         }
     }
 
-    /**
-     * 下划线映射为驼峰
-     *
-     * @param clazz
-     */
-    private static void setCamelMapping(Class clazz) {
+    public E selectOne(String sql,
+                       E entity) {
 
-        if (String.class.equals(clazz)) {
-            return;
+        List<E> list = selectList(sql, entity);
+        if (list.isEmpty()) {
+            return null;
         }
-        Field[] fields = ORMUtils.getFieldListByClass(clazz);
-        Map<String, String> mapping = new HashMap<>();
-        for (Field field :
-                fields) {
-
-            if (!SERIAL_VERSION_UID.equals(field.getName())
-                    && CamelCaseUtils.checkIsCamelCase(field.getName())) {
-                mapping.put(CamelCaseUtils.toUnderlineName(field.getName()), field.getName());
-            }
-        }
-        sql2o.setDefaultColumnMappings(mapping);
+        return list.get(0);
     }
 
-    /**
-     * insert or update
-     * @param obj The object to insert or update.
-     * @param updateNull
-     * @return
-     */
-    public static Object insertOrUpdate(Object obj,
-                                        boolean updateNull) {
 
-        String tableName = ORMUtils.getTableNameByClass(obj.getClass());
+    public E insertOrUpdate(boolean updateNull) {
+
+        String tableName = ORMUtils.getTableNameByClass(this.getClass());
 
         try (Connection conn = sql2o.beginTransaction(java.sql.Connection.TRANSACTION_SERIALIZABLE)) {
             Object primaryKey = null;
-            int lines = 0;
             try {
-                String sql_update = assembleSql(SQL_TYPE_UPDATE, tableName, obj, updateNull);
-                Query queryUpdate = conn.createQuery(sql_update).throwOnMappingFailure(false).bind(obj);
-                lines = queryUpdate.executeUpdate().getResult();
+                String sql_update = assembleSql(SQL_TYPE_UPDATE, tableName, this, updateNull);
+                Query queryUpdate = conn.createQuery(sql_update).throwOnMappingFailure(false).bind(this);
             } catch (Exception e) {
                 try {
-                    ORMUtils.setId(obj);
-                    String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, obj, updateNull);
+                    ORMUtils.setId(this);
+                    String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, this, updateNull);
                     System.out.println(sql_insert);
-                    Query queryInsert = conn.createQuery(sql_insert).throwOnMappingFailure(false).bind(obj);
+                    Query queryInsert = conn.createQuery(sql_insert).throwOnMappingFailure(false).bind(this);
                     primaryKey = queryInsert.executeUpdate().getKey();
                 } catch (Sql2oException e1) {
                     if (e1.getMessage() != null &&
@@ -205,10 +139,7 @@ public class DBUtils {
             }
 
             conn.commit();
-            if (primaryKey != null) {
-                return primaryKey;
-            }
-            return lines;
+            return this;
         }
     }
 
@@ -417,57 +348,77 @@ public class DBUtils {
         }
     }
 
-    public static Object executeSql(String sql, Map<String, Object> params) {
-        try (Connection conn = sql2o.beginTransaction(java.sql.Connection.TRANSACTION_SERIALIZABLE)) {
-            Query query = conn.createQuery(sql).throwOnMappingFailure(false);
+    private Object getFieldValue(Field field) {
+        try {
+            field.setAccessible(true);
+            return field.get(this);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-            if (params != null) {
-                for (Map.Entry<String, Object> entry :
-                        params.entrySet()) {
-                    query.addParameter(entry.getKey(), entry.getValue());
-                }
+
+    private void initDB() {
+        if (sql2o != null) {
+            return;
+        }
+
+        String url = dbProperties.getProperty("url");
+        if (dbProperties.containsKey("username")) {
+            dbProperties.setProperty("user", dbProperties.getProperty("username"));
+            dbProperties.remove("username");
+        }
+        COUNT_SQL_PREFIX = dbProperties.containsKey("sql.prefix.count") ?
+                dbProperties.getProperty("sql.prefix.count") : COUNT_SQL_PREFIX;
+
+        DataSource dataSource = new GenericDatasource(url, dbProperties);
+
+        sql2o = new Sql2o(dataSource);
+    }
+
+    /**
+     * 下划线映射为驼峰
+     *
+     * @param clazz
+     */
+    private static void setCamelMapping(Class clazz) {
+
+        if (String.class.equals(clazz)) {
+            return;
+        }
+        Field[] fields = ORMUtils.getFieldListByClass(clazz);
+        Map<String, String> mapping = new HashMap<>();
+        for (Field field :
+                fields) {
+
+            if (!SERIAL_VERSION_UID.equals(field.getName())
+                    && CamelCaseUtils.checkIsCamelCase(field.getName())) {
+                mapping.put(CamelCaseUtils.toUnderlineName(field.getName()), field.getName());
             }
-            int rows = query.executeUpdate().getResult();
-            conn.commit();
-            return rows;
         }
+        sql2o.setDefaultColumnMappings(mapping);
     }
 
-    public static Object executeSql(String sql, Object paramsObj) {
-        try (Connection conn = sql2o.beginTransaction(java.sql.Connection.TRANSACTION_SERIALIZABLE)) {
-            Query query = conn.createQuery(sql).throwOnMappingFailure(false).bind(paramsObj);
-            int rows = query.executeUpdate().getResult();
-            conn.commit();
-            return rows;
+    private static Properties convertResourceBundleToProperties(ResourceBundle resource) {
+        Properties properties = new Properties();
+        Enumeration<String> keys = resource.getKeys();
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement();
+            properties.put(key, resource.getString(key));
         }
+        return properties;
     }
 
-
-    public static PageBean selectPageBean(String sql,
-                                          Object paramObj,
-                                          PageBean pageBean) {
-        List<Object> list = selectList(sql, paramObj);
-        int count = count(sql, paramObj);
-        pageBean.setList(list);
-        pageBean.setTotalCount(count);
-        return pageBean;
+    private boolean isParameterField(Field field) {
+        String fieldName = field.getName();
+        if (SERIAL_VERSION_UID.equals(fieldName)
+                || field.getAnnotation(Transient.class) != null
+                || getFieldValue(field) == null
+                || JOINPOINT_STATICPART_TYPE_NAME.equals(field.getGenericType().getTypeName())) {
+            return false;
+        }
+        return true;
     }
 
-
-    public static void main(String[] args) throws Exception {
-
-        DBUtils.initDB("D:\\workspace\\idea\\f-blog\\f_blog.db");
-
-        UserBean userBean = new UserBean();
-        userBean.setLoginname("feihong");
-
-        List<UserBean> userList = DBUtils.selectList("select * from user " +
-                "where loginname =:loginname", userBean);
-        System.out.println(userList.get(0).getId());
-
-
-        Object obj = new PageBean();
-
-        System.out.println(obj.getClass().getName());
-    }
 }

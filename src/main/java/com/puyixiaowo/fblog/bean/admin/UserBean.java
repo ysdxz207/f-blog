@@ -1,14 +1,12 @@
 package com.puyixiaowo.fblog.bean.admin;
 
-import com.puyixiaowo.core.entity.Validatable;
+import com.puyixiaowo.core.entity.Model;
 import com.puyixiaowo.fblog.annotation.NotNull;
 import com.puyixiaowo.fblog.annotation.Table;
 import com.puyixiaowo.fblog.annotation.Transient;
 
-import java.io.Serializable;
-
 @Table("user")
-public class UserBean extends Validatable implements Serializable {
+public class UserBean extends Model<UserBean> {
 	private static final long serialVersionUID = 1L;
 
 	private String id;
