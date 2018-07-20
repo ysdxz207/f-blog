@@ -9,10 +9,7 @@ import com.puyixiaowo.fblog.service.LoginService;
 import spark.Request;
 import spark.Response;
 import win.hupubao.common.annotations.LogReqResArgs;
-import win.hupubao.common.utils.Captcha;
-import win.hupubao.common.utils.DesUtils;
-import win.hupubao.common.utils.LoggerUtils;
-import win.hupubao.common.utils.StringUtils;
+import win.hupubao.common.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,23 +48,22 @@ public class LoginController extends BaseController {
                     sessionCaptcha,
                     captcha);
 
+            userBean.setPassword(Md5Utils.md5(userBean.getPassword() + Constants.PASSWORD_MD5_SALT));
             userBean = LoginService.login(userBean);
             //登录成功
             userBean.setToken(request.session().id());
             responseBean.success(userBean);
             request.session().attribute(Constants.SESSION_USER_KEY, userBean);
-            rememberMe(Constants.COOKIE_LOGIN_KEY_FBLOG, request, response, userBean);
+            rememberMe(request, response, userBean);
 
         } catch (Exception e) {
-            LoggerUtils.error("登录异常：", e);
             responseBean.error(e);
         }
         return responseBean;
     }
 
 
-    public static UserBean rememberMe(String cookieKey,
-                                      Request request,
+    public static UserBean rememberMe(Request request,
                                       Response response,
                                       UserBean userBean) {
         String rememberMeStr = request.queryParams("rememberMe");
@@ -77,16 +73,19 @@ public class LoginController extends BaseController {
 
         if (userBean != null) {
             if (!rememberMe) {
+                //清理cookie
+                response.removeCookie("/admin", Constants.COOKIE_LOGIN_KEY_FBLOG);
+
                 return null;
             }
             String cookieStr = userBean.getLoginname() + "_" + userBean.getPassword();
-            response.cookie(cookieKey,
+            response.cookie(Constants.COOKIE_LOGIN_KEY_FBLOG,
                     DesUtils.encrypt(cookieStr, Constants.PASS_DES_KEY), 24 * 3600 * 365);
             return userBean;
         }
 
         userBean = new UserBean();
-        String str = request.cookie(cookieKey);
+        String str = request.cookie(Constants.COOKIE_LOGIN_KEY_FBLOG);
 
         if (StringUtils.isNotBlank(str)) {
             String[] strArr = DesUtils.decrypt(str, Constants.PASS_DES_KEY).split("_");
@@ -102,7 +101,7 @@ public class LoginController extends BaseController {
             }
             userBean.setLoginname(uname);
             if (StringUtils.isNotBlank(upass)) {
-                userBean.setPassword(DesUtils.encrypt(upass, Constants.PASS_DES_KEY));
+                userBean.setPassword(Md5Utils.md5(upass + Constants.PASSWORD_MD5_SALT));
             }
         }
         return userBean;
@@ -181,10 +180,15 @@ public class LoginController extends BaseController {
         if (userBean == null) {
             logout(request, response);
             responseBean.error(LoginError.NO_AUTH_ERROR);
+            halt(responseBean.serialize());
         } else {
+            //登录成功
+            userBean.setToken(request.session().id());
             responseBean.success(userBean);
+            request.session().attribute(Constants.SESSION_USER_KEY, userBean);
+            response.redirect(request.pathInfo());
         }
 
-        halt(responseBean.serialize());
+
     }
 }

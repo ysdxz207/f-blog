@@ -26,9 +26,6 @@ public class LoginService {
             Throws.throwError(LoginError.WRONG_CAPTCHA_ERROR);
         }
 
-        userBean.setPassword(DesUtils.encrypt(userBean.getPassword(),
-                Constants.PASS_DES_KEY));
-
         userBean = userBean.selectOne("SELECT\n" +
                 "  u.*,\n" +
                 "  r.id AS role_id\n" +

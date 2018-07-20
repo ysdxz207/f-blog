@@ -15,6 +15,7 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import win.hupubao.common.utils.DesUtils;
+import win.hupubao.common.utils.Md5Utils;
 import win.hupubao.common.utils.StringUtils;
 
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class UserController extends BaseController {
             pageBean = UserService.selectUserPageBean(params, pageBean);
             for (UserBean userBean :
                     pageBean.getList()) {
-                userBean.setPassword(DesUtils.decrypt(userBean.getPassword(), Constants.PASS_DES_KEY));
+                userBean.setPassword(Md5Utils.md5(userBean.getPassword() + Constants.PASSWORD_MD5_SALT));
             }
             pageBean.success();
         } catch (Exception e) {
@@ -75,7 +76,7 @@ public class UserController extends BaseController {
                     userBean.setNickname("大帅比");
                 }
 
-                userBean.setPassword(DesUtils.encrypt(userBean.getPassword(), Constants.PASS_DES_KEY));
+                userBean.setPassword(Md5Utils.md5(userBean.getPassword() + Constants.PASSWORD_MD5_SALT));
 
                 userBean.insertOrUpdate(false);
                 //用户角色
@@ -145,7 +146,7 @@ public class UserController extends BaseController {
 
             if (userBean.getId().equals(currentUserBean.getId())) {
                 if (StringUtils.isNotBlank(userBean.getPassword())) {
-                    userBean.setPassword(DesUtils.encrypt(userBean.getPassword(), Constants.PASS_DES_KEY));
+                    userBean.setPassword(Md5Utils.md5(userBean.getPassword() + Constants.PASSWORD_MD5_SALT));
                 }
                 userBean.insertOrUpdate(false);
             }
