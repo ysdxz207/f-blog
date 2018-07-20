@@ -2,7 +2,8 @@ package com.puyixiaowo.fblog.service;
 
 import com.puyixiaowo.fblog.bean.admin.PermissionBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
-import com.puyixiaowo.fblog.utils.DBUtils;
+
+import java.util.List;
 
 /**
  * @author Moses
@@ -25,8 +26,15 @@ public class PermissionService {
         return sbSql.toString();
     }
 
-    public static PageBean selectPermissionPageBean(PermissionBean permissionBean, PageBean pageBean){
-        return DBUtils.selectPageBean(getSelectSql(permissionBean, pageBean), permissionBean, pageBean);
+    public static PageBean<PermissionBean> selectPermissionPageBean(PermissionBean permissionBean,
+                                                                    PageBean<PermissionBean> pageBean){
+        String sql = getSelectSql(permissionBean, pageBean);
+        List<PermissionBean> list = permissionBean.selectList(sql);
+        int count = permissionBean.count(sql);
+        pageBean.setList(list);
+        pageBean.setTotalCount(count);
+
+        return pageBean;
     }
     public static void buildSqlParams(StringBuilder sbSql,
                                                PermissionBean permissionBean) {

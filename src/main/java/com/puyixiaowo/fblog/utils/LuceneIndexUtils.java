@@ -24,6 +24,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.lionsoul.jcseg.analyzer.JcsegAnalyzer;
 import org.lionsoul.jcseg.tokenizer.core.JcsegTaskConfig;
+import win.hupubao.common.utils.StringUtils;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -81,10 +82,8 @@ public class LuceneIndexUtils {
         writer.close(); // 关闭读写器
     }
 
-    public static void removeLuceneIndex() {
-    }
 
-    public static PageBean search(PageBean pageBean,
+    public static PageBean<ArticleBean> search(PageBean<ArticleBean> pageBean,
                               String queries, String type) throws Exception {
         List<ArticleBean> list = new ArrayList<>();
         Directory dir = FSDirectory.open(path);

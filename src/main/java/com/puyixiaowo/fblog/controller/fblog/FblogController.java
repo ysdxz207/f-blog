@@ -10,23 +10,19 @@ import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.ArticleService;
 import com.puyixiaowo.fblog.service.CategoryService;
 import com.puyixiaowo.fblog.service.TagService;
-import com.puyixiaowo.fblog.utils.DBUtils;
 import com.puyixiaowo.fblog.utils.LuceneIndexUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
+import win.hupubao.common.utils.LoggerUtils;
+import win.hupubao.common.utils.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class FblogController extends BaseController{
-
-    private static final Logger logger = LoggerFactory.getLogger(FblogController.class);
 
     /**
      * 首页
@@ -52,7 +48,7 @@ public class FblogController extends BaseController{
                 bean.setContext(StringUtils.delHTMLTag(html));
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            LoggerUtils.error(e);
         }
         model.put("pageBean", pageBean);
 
@@ -77,33 +73,30 @@ public class FblogController extends BaseController{
 
 
     public static Object articleDetail(Request request, Response response) {
-        Map<String, Object> model = new HashMap<>();
 
-        ArticleBean articleBean = null;
+        ResponseBean responseBean = new ResponseBean();
         try {
-            articleBean = getParamsEntity(request, ArticleBean.class, false);
+            ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
+            articleBean.setStatus(1);//发布状态
+            articleBean = articleBean.selectOne("select a.*,group_concat(t.name) as tags " +
+                    "from article a " +
+                    "left join article_tag at " +
+                    "on a.id = at.article_id " +
+                    "left join tag t " +
+                    "on at.tag_id = t.id where a.id = :id " +
+                    "group by a.id");
+
+            if (articleBean == null) {
+                Spark.halt("文章不存在");
+            }
+            articleBean.setContext(articleBean.getContext());
+            responseBean.success(articleBean);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            responseBean.error(e);
         }
-        articleBean.setStatus(1);//发布状态
-        articleBean = DBUtils.selectOne("select a.*,group_concat(t.name) as tags " +
-                "from article a " +
-                "left join article_tag at " +
-                "on a.id = at.article_id " +
-                "left join tag t " +
-                "on at.tag_id = t.id where a.id = :id " +
-                "group by a.id", articleBean);
 
-        if (articleBean == null) {
-            Spark.halt("文章不存在");
-        }
-        articleBean.setContext(articleBean.getContext());
 
-        model.put("model", articleBean);
-        saveAccessRecord(request, articleBean.getId());
-        return new FreeMarkerTemplateEngine().render(
-                new ModelAndView(model, "yiyi/index.html")
-        );
+        return responseBean;
     }
     /**
      * 分类
@@ -113,22 +106,23 @@ public class FblogController extends BaseController{
      */
     public static String categoryList(Request request, Response response) {
 
-        PageBean pageBean = getPageBean(request);
+        PageBean<CategoryBean> pageBean = getPageBean(request);
         try {
-            return CategoryService.selectCategoryPageBean(
+            CategoryService.selectCategoryPageBean(
                     getParamsEntity(request, CategoryBean.class, false), pageBean).serialize();
+            pageBean.success();
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            pageBean.error(e);
         }
 
-        return "";
+        return pageBean.serialize();
     }
 
     public static Object search(Request request, Response response){
         Map<String, Object> model = new HashMap<>();
 
         String words = request.queryParamOrDefault("search", "");
-        PageBean pageBean = getPageBean(request);
+        PageBean<ArticleBean> pageBean = getPageBean(request);
 
         try {
             pageBean = LuceneIndexUtils.search(pageBean, words, "yiyi");
@@ -138,15 +132,13 @@ public class FblogController extends BaseController{
 
         model.put("search", words);
         model.put("pageBean", pageBean);
-        return new FreeMarkerTemplateEngine().render(
-                new ModelAndView(model, "yiyi/index.html")
-        );
+        return model;
     }
 
     public static String articleTags(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
 
-        PageBean pageBean = new PageBean();
+        PageBean<TagBean> pageBean = new PageBean<>();
         try {
             TagBean tagBean = getParamsEntity(request, TagBean.class, false);
             pageBean = TagService.selectTagPageBean(tagBean, pageBean);

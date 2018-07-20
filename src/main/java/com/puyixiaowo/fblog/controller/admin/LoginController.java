@@ -1,26 +1,22 @@
 package com.puyixiaowo.fblog.controller.admin;
 
-import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.error.LoginError;
-import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.LoginService;
-import com.puyixiaowo.fblog.utils.StringUtils;
-import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import win.hupubao.common.annotations.LogReqResArgs;
 import win.hupubao.common.utils.Captcha;
 import win.hupubao.common.utils.DesUtils;
 import win.hupubao.common.utils.LoggerUtils;
+import win.hupubao.common.utils.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 import static spark.Spark.halt;
 
@@ -34,21 +30,6 @@ public class LoginController extends BaseController {
     private static final Captcha captcha = Captcha.getInstance()
             .height(40)
             .width(80);
-
-
-    /**
-     * 登录页面
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    public static Object loginPage(Request request, Response response) {
-
-
-        return new FreeMarkerTemplateEngine()
-                .render(new ModelAndView(null, "admin/login.html"));
-    }
 
 
     @LogReqResArgs
@@ -138,8 +119,6 @@ public class LoginController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
         request.session().removeAttribute(Constants.SESSION_USER_KEY);
 
-        String uri = request.uri();
-
         response.removeCookie("/admin", Constants.COOKIE_LOGIN_KEY_FBLOG);
         return responseBean;
     }
@@ -188,22 +167,22 @@ public class LoginController extends BaseController {
 
     public static void cookieLogin(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
+        UserBean userBean = null;
         try {
             //生成验证码
             generateCaptcha(request);
-            UserBean us = new UserBean();
-            us.setLoginname("feihong");
-            List<UserBean> list = us.where("loginname=:loginname");
-            System.out.println(JSON.toJSONString(us));
-            UserBean userBean = LoginService.cookieLogin(request.cookies(), request.session().attribute(Constants.KAPTCHA_SESSION_KEY));
-            if (userBean == null) {
-                responseBean.error(LoginError.NO_AUTH_ERROR);
-            } else {
-                responseBean.success(userBean);
-            }
+            userBean = LoginService.cookieLogin(request.cookies(), request.session().attribute(Constants.KAPTCHA_SESSION_KEY));
+
         } catch (Exception e) {
             responseBean.error(e);
-            LoggerUtils.error("cookie登录异常：", e);
+            e.printStackTrace();
+        }
+
+        if (userBean == null) {
+            logout(request, response);
+            responseBean.error(LoginError.NO_AUTH_ERROR);
+        } else {
+            responseBean.success(userBean);
         }
 
         halt(responseBean.serialize());

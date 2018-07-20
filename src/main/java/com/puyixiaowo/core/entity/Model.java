@@ -7,13 +7,14 @@ import com.puyixiaowo.fblog.exception.db.DBObjectExistsException;
 import com.puyixiaowo.fblog.exception.db.DBResultNotUniqueException;
 import com.puyixiaowo.fblog.exception.db.DBSqlException;
 import com.puyixiaowo.fblog.utils.ORMUtils;
-import com.puyixiaowo.fblog.utils.ReflectionUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
 import org.sql2o.*;
 import win.hupubao.common.utils.CamelCaseUtils;
 import win.hupubao.common.utils.LoggerUtils;
+import win.hupubao.common.utils.ReflectionUtils;
+import win.hupubao.common.utils.StringUtils;
 
 import javax.sql.DataSource;
+import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -28,19 +29,19 @@ import java.util.*;
  * password=xxx
  * sql.prefix.count=select count(*)
  */
-public abstract class Model<E> extends Validatable implements Serializable {
+public class Model<E> extends Validatable implements Serializable {
 
     private static final long serialVersionUID = 4922495587385402584L;
 
-    private static final Properties dbProperties = convertResourceBundleToProperties(ResourceBundle.getBundle("jdbc"));
-    private static final String SERIAL_VERSION_UID = "serialVersionUID";
-    private static final String JOINPOINT_STATICPART_TYPE_NAME = "org.aspectj.lang.JoinPoint$StaticPart";
-    private static final int SQL_TYPE_INSERT = 1;//添加
-    private static final int SQL_TYPE_UPDATE = 2;//更新
+    private transient static final Properties dbProperties = convertResourceBundleToProperties(ResourceBundle.getBundle("jdbc"));
+    private transient static final String SERIAL_VERSION_UID = "serialVersionUID";
+    private transient static final String JOINPOINT_STATICPART_TYPE_NAME = "org.aspectj.lang.JoinPoint$StaticPart";
+    private transient static final int SQL_TYPE_INSERT = 1;//添加
+    private transient static final int SQL_TYPE_UPDATE = 2;//更新
 
-    private static String COUNT_SQL_PREFIX = "select count(*)";
-    private static Sql2o sql2o;
-    private static String PRIMARY_KEY_NAME = "id";
+    private transient static String COUNT_SQL_PREFIX = "select count(*)";
+    private transient static Sql2o sql2o;
+    private transient static String PRIMARY_KEY_NAME = "id";
 
     public Model() {
         initDB();
@@ -88,29 +89,30 @@ public abstract class Model<E> extends Validatable implements Serializable {
 
     public List<E> selectList(String sql) {
 
-        Class clazz = this.getClass();
-        Field [] fields = clazz.getDeclaredFields();
-        Map<String, Object> params = new HashMap<>();
-        for (Field field : fields) {
-            if (isParameterField(field)) {
-                params.put(CamelCaseUtils.toUnderlineName(field.getName()), getFieldValue(field));
-            }
-        }
-        return selectList(sql, params);
+        return selectList(sql, buildParams());
     }
+
+
 
     @SuppressWarnings("unchecked")
     public List<E> selectList(String sql,
                               Map<String, Object> params) {
-        if (params == null
-                || !params.isEmpty()) {
-            throw new DBException("Parameter should not be null.");
-        }
-        Class clazz = this.getClass();
+        Class<E> clazz = (Class<E>) this.getClass();
+        return selectList(sql, params, clazz);
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public static <E> List<E> selectList(String sql,
+                                         Map<String, Object> params,
+                                         Class<E> clazz) {
+        Model<E> model = new Model<>();
+
+        model.setCamelMapping(clazz);
         try (Connection conn = sql2o.open()) {
             Query query = conn.createQuery(sql).throwOnMappingFailure(false);
 
-            addParameters(params, query);
+            model.addParameters(params, query);
 
             return query.executeAndFetch(clazz);
         }
@@ -164,8 +166,12 @@ public abstract class Model<E> extends Validatable implements Serializable {
         }
     }
 
-    public int update(String sql,
-                      Map<String, Object> params) {
+    public int deleteOrUpdate(String sql) {
+        return deleteOrUpdate(sql, buildParams());
+    }
+
+    public int deleteOrUpdate(String sql,
+                              Map<String, Object> params) {
         try (Connection conn = sql2o.beginTransaction(java.sql.Connection.TRANSACTION_SERIALIZABLE)) {
             Query query = conn.createQuery(sql).throwOnMappingFailure(false).bind(this);
             if (params != null
@@ -177,7 +183,6 @@ public abstract class Model<E> extends Validatable implements Serializable {
             return rows;
         }
     }
-
 
 
     private String assembleSql(int sqlType,
@@ -218,8 +223,7 @@ public abstract class Model<E> extends Validatable implements Serializable {
                 sb_sql.append("(");
 
 
-                for (int i = 0; i < filelds.length; i++) {
-                    Field field = filelds[i];
+                for (Field field : filelds) {
                     if (!isParameterField(field)) {
                         continue;
                     }
@@ -236,7 +240,8 @@ public abstract class Model<E> extends Validatable implements Serializable {
                     sb1.append(",");
 
                     //
-                    sb2.append(":" + field.getName());
+                    sb2.append(":")
+                            .append(field.getName());
                     sb2.append(",");
 
                 }
@@ -259,8 +264,7 @@ public abstract class Model<E> extends Validatable implements Serializable {
                 sb_sql.append(" set ");
 
 
-                for (int i = 0; i < filelds.length; i++) {
-                    Field field = filelds[i];
+                for (Field field : filelds) {
                     if (!isParameterField(field)) {
                         continue;
                     }
@@ -278,7 +282,8 @@ public abstract class Model<E> extends Validatable implements Serializable {
                     sb1.append(columnName);
                     sb1.append("`");
                     sb1.append("=");
-                    sb1.append(":" + field.getName());
+                    sb1.append(":");
+                    sb1.append(field.getName());
                     sb1.append(",");
 
                 }
@@ -342,13 +347,12 @@ public abstract class Model<E> extends Validatable implements Serializable {
     public int delete() {
         Object primaryKeyValue = ReflectionUtils.getFieldValue(this, PRIMARY_KEY_NAME);
         String tableName = ORMUtils.getTableNameByClass(this.getClass());
-        StringBuilder stringBuilderDeleteSql = new StringBuilder("delete from ");
-        stringBuilderDeleteSql.append(tableName);
-        stringBuilderDeleteSql.append(" where ");
-        stringBuilderDeleteSql.append(PRIMARY_KEY_NAME);
-        stringBuilderDeleteSql.append("=");
-        stringBuilderDeleteSql.append(primaryKeyValue);
-        return update(stringBuilderDeleteSql.toString(), new HashMap<>());
+        String stringBuilderDeleteSql = "delete from " + tableName +
+                " where " +
+                PRIMARY_KEY_NAME +
+                "=" +
+                primaryKeyValue;
+        return deleteOrUpdate(stringBuilderDeleteSql, new HashMap<>());
     }
 
     public int deleteByIds(String [] ids) {
@@ -404,6 +408,7 @@ public abstract class Model<E> extends Validatable implements Serializable {
         }
 
         String url = dbProperties.getProperty("url");
+
         if (dbProperties.containsKey("username")) {
             dbProperties.setProperty("user", dbProperties.getProperty("username"));
             dbProperties.remove("username");
@@ -414,6 +419,15 @@ public abstract class Model<E> extends Validatable implements Serializable {
         DataSource dataSource = new GenericDatasource(url, dbProperties);
 
         sql2o = new Sql2o(dataSource);
+
+        //设置临时目录路径
+        String sqliteTempDir = System.getProperty("user.dir") + "/sqlite_temp";
+        File tempFile = new File(sqliteTempDir);
+        if (!tempFile.exists()) {
+            tempFile.mkdirs();
+        }
+        System.setProperty("org.sqlite.tmpdir",
+                sqliteTempDir);
     }
 
     /**
@@ -421,7 +435,7 @@ public abstract class Model<E> extends Validatable implements Serializable {
      *
      * @param clazz
      */
-    private void setCamelMapping(Class clazz) {
+    private void setCamelMapping(Class<E> clazz) {
 
         if (String.class.equals(clazz)) {
             return;
@@ -451,13 +465,10 @@ public abstract class Model<E> extends Validatable implements Serializable {
 
     private boolean isParameterField(Field field) {
         String fieldName = field.getName();
-        if (SERIAL_VERSION_UID.equals(fieldName)
-                || field.getAnnotation(Transient.class) != null
-                || getFieldValue(field) == null
-                || JOINPOINT_STATICPART_TYPE_NAME.equals(field.getGenericType().getTypeName())) {
-            return false;
-        }
-        return true;
+        return !SERIAL_VERSION_UID.equals(fieldName)
+                && field.getAnnotation(Transient.class) == null
+                && getFieldValue(field) != null
+                && !JOINPOINT_STATICPART_TYPE_NAME.equals(field.getGenericType().getTypeName());
     }
 
     private String getPrimaryKeyName() {
@@ -472,12 +483,36 @@ public abstract class Model<E> extends Validatable implements Serializable {
     private void addParameters(Map<String, Object> params,
                                Query query) {
 
+        if (params == null
+                || params.isEmpty()) {
+            return;
+        }
         for (Map.Entry entry : params.entrySet()) {
-            if (entry.getValue() == null) {
+            if (entry.getKey() == null) {
                 continue;
             }
             query.addParameter(entry.getKey().toString(), entry.getValue());
         }
     }
 
+    private Map<String, Object> buildParams() {
+
+        Map<String, Object> params = new HashMap<>();
+        Class clazz = this.getClass();
+        if (Model.class.equals(clazz)) {
+            return params;
+        }
+        Field [] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            if (isParameterField(field)) {
+                params.put(CamelCaseUtils.toUnderlineName(field.getName()), getFieldValue(field));
+            }
+        }
+        return params;
+    }
+
+    //////////////
+    public Sql2o getSql2o() {
+        return sql2o;
+    }
 }

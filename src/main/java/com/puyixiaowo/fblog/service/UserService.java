@@ -1,12 +1,12 @@
 package com.puyixiaowo.fblog.service;
 
+import com.puyixiaowo.core.entity.Model;
 import com.puyixiaowo.fblog.annotation.admin.Logical;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.constants.Constants;
-import com.puyixiaowo.fblog.utils.DBUtils;
-import com.puyixiaowo.fblog.utils.ListUtils;
 import spark.Request;
+import win.hupubao.common.utils.ListUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,8 +32,16 @@ public class UserService {
         return sbSql.toString();
     }
 
-    public static PageBean selectUserPageBean(UserBean userBean, PageBean pageBean){
-        return DBUtils.selectPageBean(getSelectSql(userBean, pageBean), userBean, pageBean);
+    public static PageBean<UserBean> selectUserPageBean(UserBean userBean,
+                                                        PageBean<UserBean> pageBean){
+
+        String sql = getSelectSql(userBean, pageBean);
+        List<UserBean> list = userBean.selectList(sql);
+        int count = userBean.count(sql);
+        pageBean.setList(list);
+        pageBean.setTotalCount(count);
+
+        return pageBean;
     }
 
     public static void buildSqlParams(StringBuilder sbSql,
@@ -73,7 +81,7 @@ public class UserService {
             return false;
         }
 
-        if (userBean.getId().equals(20151106L)) {
+        if ("20151106".equals(userBean.getId())) {
             //超管
             return true;
         }
@@ -81,7 +89,7 @@ public class UserService {
                 "left join permission p " +
                 "on rp.permission_id = p.id where role_id = :roleId";
 
-        List<String> permissionList = DBUtils.selectList(String.class, sql,
+        List<String> permissionList = new Model<String>().selectList(sql,
                 new HashMap<String, Object>(){
                     {
                         put("roleId", userBean.getRoleId());

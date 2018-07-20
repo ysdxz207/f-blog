@@ -1,14 +1,11 @@
 package com.puyixiaowo.fblog.controller.admin;
 
-import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.admin.CategoryBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.controller.BaseController;
-import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.CategoryService;
-import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
@@ -24,22 +21,17 @@ public class CategoryController extends BaseController {
 
     @RequiresPermissions(value = {"category:view"})
     public static String categorys(Request request, Response response) {
-        Boolean data = Boolean.valueOf(request.params(":data"));
-
-        if (!data) {
-            return new FreeMarkerTemplateEngine()
-                    .render(new ModelAndView(null,
-                            "admin/category/category_list.html"));
-        }
         PageBean pageBean = getPageBean(request);
 
         try {
-            return CategoryService.selectCategoryPageBean(
+            CategoryService.selectCategoryPageBean(
                     getParamsEntity(request, CategoryBean.class, false), pageBean).serialize();
+            pageBean.success();
         } catch (Exception e) {
             e.printStackTrace();
+            pageBean.error(e);
         }
-        return "";
+        return pageBean.serialize();
     }
 
 
@@ -53,6 +45,7 @@ public class CategoryController extends BaseController {
                     categoryBeanList) {
                 categoryBean.insertOrUpdate(false);
             }
+            responseBean.success();
         } catch (Exception e) {
             responseBean.error(e);
         }
@@ -65,23 +58,12 @@ public class CategoryController extends BaseController {
 
         try {
             new CategoryBean().deleteByIds(request.queryParams("id").split(","));
+            responseBean.success();
         } catch (Exception e) {
             responseBean.error(e);
         }
 
         return responseBean.serialize();
-    }
-
-
-    @RequiresPermissions(value = {"category:view"})
-    public static String allArray(Request request) {
-        List<CategoryBean> list = new CategoryBean().selectList("select * from category ");
-
-        CategoryBean categoryBean = new CategoryBean();
-        categoryBean.setId("");
-        categoryBean.setName("默认分类");
-        list.add(0, categoryBean);
-        return JSON.toJSONString(list);
     }
 
 }

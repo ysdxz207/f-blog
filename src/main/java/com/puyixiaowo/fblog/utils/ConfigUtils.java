@@ -1,12 +1,17 @@
 package com.puyixiaowo.fblog.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.puyixiaowo.core.entity.Model;
 import com.puyixiaowo.core.timer.TimerBackupDB;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.error.ErrorHandler;
 import org.sql2o.Connection;
+import org.sql2o.GenericDatasource;
 import org.yaml.snakeyaml.Yaml;
+import win.hupubao.common.utils.RedisUtils;
+import win.hupubao.common.utils.ResourceUtils;
+import win.hupubao.common.utils.StringUtils;
 
 import java.io.File;
 import java.util.List;
@@ -37,35 +42,22 @@ public class ConfigUtils {
         ErrorHandler.init();
 
         new TimerBackupDB().start();//启动备数据库份
-//        new TimerFetchNews().start();//启动新闻获取定时器
     }
 
     /**
      * 初始化数据库
      */
     public static void initDB() {
-        //设置临时目录路径
-        String sqliteTempDir = System.getProperty("user.dir") + "/sqlite_temp";
-        File tempFile = new File(sqliteTempDir);
-        if (!tempFile.exists()) {
-            tempFile.mkdirs();
-        }
-        System.setProperty("org.sqlite.tmpdir",
-                sqliteTempDir);
 
-        try {
-            DBUtils.initDB(PATH_JDBC_PROPERTIES);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Model model = new Model<>();
 
-        String url = DBUtils.getDbProperties().getProperty("url");
+        String url = ((GenericDatasource) model.getSql2o().getDataSource()).getUrl();
 
         DB_FILE_NAME = url.substring(url.lastIndexOf(":") + 1);
 
         if (!new File(DB_FILE_NAME).exists()) {
             //创建数据库文件
-            try (Connection conn = DBUtils.getSql2o().open()) {
+            try (Connection conn = model.getSql2o().open()) {
 
                 String[] filenames = ResourceUtils.getResourceFolderFiles(FOLDER_SQL);
                 FileUtils.runResourcesSql(conn, FOLDER_SQL, filenames);
@@ -81,7 +73,7 @@ public class ConfigUtils {
     }
 
     /**
-     * chu初始化后台登录链接配置以及密钥配置
+     * 初始化后台登录链接配置以及密钥配置
      */
     private static void initAdminConf() {
         Yaml yaml = new Yaml();

@@ -2,7 +2,8 @@ package com.puyixiaowo.fblog.service;
 
 import com.puyixiaowo.fblog.bean.admin.afu.AfuBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
-import com.puyixiaowo.fblog.utils.DBUtils;
+
+import java.util.List;
 
 /**
  * 
@@ -28,8 +29,13 @@ public class AfuService {
         sbSql.append(pageBean.getRowBounds().getLimit());
         return sbSql.toString();
     }
-    public static PageBean selectAfuPageBean(AfuBean afuBean, PageBean pageBean){
-        return DBUtils.selectPageBean(getSelectSql(afuBean, pageBean), afuBean, pageBean);
+    public static PageBean<AfuBean> selectAfuPageBean(AfuBean afuBean, PageBean<AfuBean> pageBean){
+        String sql = getSelectSql(afuBean, pageBean);
+        List<AfuBean> list = afuBean.selectList(sql);
+        int count = afuBean.count(sql);
+        pageBean.setList(list);
+        pageBean.setTotalCount(count);
+        return pageBean;
     }
     public static void buildSqlParams(StringBuilder sbSql,
                                                AfuBean afuBean) {

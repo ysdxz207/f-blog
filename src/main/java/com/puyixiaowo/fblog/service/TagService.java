@@ -1,12 +1,12 @@
 package com.puyixiaowo.fblog.service;
 
 import com.alibaba.fastjson.JSON;
+import com.puyixiaowo.core.entity.Model;
 import com.puyixiaowo.fblog.bean.ArticleBean;
 import com.puyixiaowo.fblog.bean.admin.ArticleTagBean;
 import com.puyixiaowo.fblog.bean.admin.TagBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
-import com.puyixiaowo.fblog.utils.DBUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
+import win.hupubao.common.utils.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,17 +31,16 @@ public class TagService {
 
         //删除文章关联的已存在的标签
         if (articleBean.getId() != null) {
-            DBUtils.executeSql("delete from article_tag " +
-                    "where article_id = :id",
-                    articleBean);
+            articleBean.deleteOrUpdate("delete from article_tag " +
+                    "where article_id = :id");
         }
         //创建并关联标签
         for (String tagName : tagNameList) {
             TagBean tagBean = new TagBean();
             tagBean.setName(tagName);
-            TagBean tagDb = DBUtils.selectOne("select * from tag where name=:name", tagBean);
+            TagBean tagDb = tagBean.selectOne("select * from tag where name=:name");
             if (tagDb == null) {
-                DBUtils.insertOrUpdate(tagBean, false);
+                tagBean.insertOrUpdate(false);
             } else {
                 tagBean = tagDb;
             }
@@ -49,7 +48,7 @@ public class TagService {
             ArticleTagBean articleTagBean = new ArticleTagBean();
             articleTagBean.setArticleId(articleBean.getId());
             articleTagBean.setTagId(tagBean.getId());
-            DBUtils.insertOrUpdate(articleTagBean, false);
+            articleTagBean.insertOrUpdate(false);
         }
     }
 
@@ -70,8 +69,16 @@ public class TagService {
         sbSql.append(pageBean.getRowBounds().getLimit());
         return sbSql.toString();
     }
-    public static PageBean selectTagPageBean(TagBean tagBean, PageBean pageBean){
-        return DBUtils.selectPageBean(getSelectSql(tagBean, pageBean), tagBean, pageBean);
+    public static PageBean<TagBean> selectTagPageBean(TagBean tagBean,
+                                                      PageBean<TagBean> pageBean){
+
+        String sql = getSelectSql(tagBean, pageBean);
+        List<TagBean> list = tagBean.selectList(sql);
+        int count = tagBean.count(sql);
+        pageBean.setList(list);
+        pageBean.setTotalCount(count);
+
+        return pageBean;
     }
     public static void buildSqlParams(StringBuilder sbSql,
                                                TagBean tagBean) {
@@ -106,11 +113,10 @@ public class TagService {
 
         sql += "limit " + (num == null ? 10 : num);
         if (isBean) {
-            List<TagBean> list = DBUtils.selectList(TagBean.class, sql, params);
+            List<TagBean> list = new TagBean().selectList(sql, params);
             return JSON.toJSONString(list);
         }
-        List<String> list = DBUtils.selectList(String.class,
-                sql, params);
+        List<String> list = new Model<String>().selectList(sql, params);
         return JSON.toJSONString(list);
     }
 }

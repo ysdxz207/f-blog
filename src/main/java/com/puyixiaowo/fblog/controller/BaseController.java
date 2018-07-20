@@ -11,19 +11,18 @@ import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.exception.BaseControllerException;
 import com.puyixiaowo.fblog.exception.db.DBObjectExistsException;
 import com.puyixiaowo.fblog.service.AfuTypeService;
-import com.puyixiaowo.fblog.utils.DateUtils;
 import com.puyixiaowo.fblog.utils.IpUtils;
-import com.puyixiaowo.fblog.utils.ReflectionUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
-import com.puyixiaowo.fblog.utils.sign.SignUtils;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import spark.Request;
+import win.hupubao.common.utils.DateUtils;
+import win.hupubao.common.utils.LoggerUtils;
+import win.hupubao.common.utils.ReflectionUtils;
+import win.hupubao.common.utils.StringUtils;
+import win.hupubao.common.utils.rsa.RSA;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -32,7 +31,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 public class BaseController {
-    private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
 
     /**
@@ -98,7 +96,7 @@ public class BaseController {
      * @param request
      * @return
      */
-    public static PageBean getPageBean(Request request) {
+    public static <T> PageBean<T> getPageBean(Request request) {
 
         String pageCurrentStr = request.queryParams("pageCurrent");
         String pageSizeStr = request.queryParams("pageSize");
@@ -113,7 +111,7 @@ public class BaseController {
         if (StringUtils.isNotBlank(pageSizeStr)) {
             pageSize = Integer.valueOf(pageSizeStr);
         }
-        return new PageBean(pageCurrent, pageSize, order, reverse);
+        return new PageBean<>(pageCurrent, pageSize, order, reverse);
     }
 
 
@@ -144,7 +142,8 @@ public class BaseController {
         }
         String sign = request.queryParams("sign");
         Map<String, String> params = getParamsMap(request);
-        return SignUtils.verify(params, sign, afuTypeBean.getPublicKey());
+        RSA.RSAKey rsaKey = new RSA.RSAKey(afuTypeBean.getPrivateKey(), afuTypeBean.getPublicKey());
+        return RSA.getInstance().rsaKey(rsaKey).verify(params, sign, RSA.SignType.RSA);
     }
 
 
@@ -174,7 +173,7 @@ public class BaseController {
             accessRecordBean.setArticleId(articleId == null ? "0" : articleId);
             accessRecordBean.setLink(link);
             accessRecordBean.setIp(IpUtils.getIp(request));
-            accessRecordBean.setAccessDate(DateUtils.getTodayZeroMiliseconds());
+            accessRecordBean.setAccessDate(DateUtils.getZeroClockByDate(new Date()).getTime());
             accessRecordBean.setCreateDate(System.currentTimeMillis());
             accessRecordBean.setUserAgent(userAgentString == null ? "未知" : userAgentString);
             accessRecordBean.setOs(os == null ? "未知" : os);
@@ -185,7 +184,7 @@ public class BaseController {
                 accessRecordBean.insertOrUpdate(false);
             } catch (DBObjectExistsException e) {
             } catch (Exception e) {
-                logger.error("[保存访问记录异常]:" + e.getMessage());
+                LoggerUtils.error("[保存访问记录异常]:", e);
             }
             return null;
         });

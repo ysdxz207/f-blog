@@ -1,17 +1,16 @@
 package com.puyixiaowo.fblog.controller.admin;
 
-import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.admin.MenuBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
 import com.puyixiaowo.fblog.service.MenuService;
-import com.puyixiaowo.fblog.utils.RedisUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
 import spark.Request;
 import spark.Response;
 import win.hupubao.common.utils.LoggerUtils;
+import win.hupubao.common.utils.RedisUtils;
+import win.hupubao.common.utils.StringUtils;
 
 import java.util.List;
 
@@ -53,7 +52,7 @@ public class MenuController extends BaseController {
 
             //删除缓存，下次刷新
             RedisUtils.delete(EnumsRedisKey.REDIS_KEY_MENU_LIST.key + "*");
-            responseBean.setMessage("操作成功，请手动刷新页面。");
+            responseBean.success();
 
         } catch (Exception e) {
             responseBean.error(e);
@@ -69,7 +68,7 @@ public class MenuController extends BaseController {
             new MenuBean().deleteByIds(request.queryParams("id").split(","));
             //删除缓存，下次刷新
             RedisUtils.delete(EnumsRedisKey.REDIS_KEY_MENU_LIST.key + "*");
-            responseBean.setMessage("操作成功，请手动刷新页面。");
+            responseBean.success();
         } catch (Exception e) {
             responseBean.error(e);
         }
@@ -82,7 +81,7 @@ public class MenuController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
 
         try {
-            responseBean.setData(MenuService.selectMenuTypeList());
+            responseBean.success(MenuService.selectMenuTypeList());
         } catch (Exception e) {
             LoggerUtils.error("菜单分类异常：", e);
             responseBean.error(e);
@@ -90,21 +89,4 @@ public class MenuController extends BaseController {
 
         return responseBean.serialize();
     }
-
-    @RequiresPermissions(value = {"menu:view"})
-    public static String array(Request request, Response response) {
-        String parent = request.params(":parent");
-        MenuBean bean = new MenuBean();
-        List<MenuBean> list = bean.selectList("select * from menu where pid "
-                + ("yes".equals(parent) ? " = 0"
-                : ("no".equals(parent) ? " > 0" : ">= 0")));
-
-        bean.setId("");
-        bean.setMenuName("无");
-        list.add(0, bean);
-
-        return JSON.toJSONString(list);
-    }
-
-
 }

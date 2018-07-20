@@ -4,12 +4,12 @@ import com.puyixiaowo.fblog.annotation.admin.Logical;
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.exception.NoPermissionsException;
 import com.puyixiaowo.fblog.service.UserService;
-import com.puyixiaowo.fblog.utils.Assert;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import spark.Request;
+import win.hupubao.common.utils.Assert;
 
 /**
  * @author Moses

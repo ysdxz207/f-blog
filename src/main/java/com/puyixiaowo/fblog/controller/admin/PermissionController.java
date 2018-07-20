@@ -7,7 +7,6 @@ import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.PermissionService;
-import com.puyixiaowo.fblog.utils.DBUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -22,17 +21,11 @@ public class PermissionController extends BaseController {
 
     @RequiresPermissions(value = {"permission:view"})
     public static String permissions(Request request, Response response) {
-        Boolean data = Boolean.valueOf(request.params(":data"));
-
-        if (!data) {
-            return new FreeMarkerTemplateEngine()
-                    .render(new ModelAndView(null,
-                            "admin/permission/permission_list.html"));
-        }
-        PageBean pageBean = getPageBean(request);
+        PageBean<PermissionBean> pageBean = getPageBean(request);
         try {
             PermissionBean permissionBean = getParamsEntity(request, PermissionBean.class, false);
             PermissionService.selectPermissionPageBean(permissionBean, pageBean);
+            pageBean.success();
         } catch (Exception e) {
             pageBean.error(e);
         }
@@ -48,8 +41,9 @@ public class PermissionController extends BaseController {
 
             for (PermissionBean permissionBean :
                     permissionBeanList) {
-                DBUtils.insertOrUpdate(permissionBean, false);
+                permissionBean.insertOrUpdate(false);
             }
+            responseBean.success();
         } catch (Exception e) {
             responseBean.error(e);
         }
@@ -61,8 +55,8 @@ public class PermissionController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
 
         try {
-            DBUtils.deleteByIds(PermissionBean.class,
-                    request.queryParams("id"));
+            new PermissionBean().deleteByIds(request.queryParams("id").split(","));
+            responseBean.success();
         } catch (Exception e) {
             responseBean.error(e);
         }

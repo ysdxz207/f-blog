@@ -61,7 +61,7 @@ INSERT INTO `permission` VALUES ('37', '11', '查看阿福类别', 'afuType:dele
 -- ----------------------------
 -- Records of role
 -- ----------------------------
-INSERT INTO `role` VALUES ('1', '管理员', 'admin');
+INSERT INTO `role` VALUES ('1', '大当家', 'admin');
 
 
 

@@ -1,8 +1,8 @@
 package com.puyixiaowo.fblog.bean.admin.other;
 
-import java.io.Serializable;
+import com.puyixiaowo.core.entity.Model;
 
-public class MenuPermissionBean implements Serializable {
+public class MenuPermissionBean extends Model<MenuPermissionBean> {
 	private static final long serialVersionUID = 1L;
 	private String id;
 	private String menuName;

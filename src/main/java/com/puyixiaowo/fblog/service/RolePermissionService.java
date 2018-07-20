@@ -1,6 +1,6 @@
 package com.puyixiaowo.fblog.service;
 
-import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.bean.admin.RolePermissionBean;
 
 import java.util.HashMap;
 
@@ -12,7 +12,7 @@ public class RolePermissionService {
 
     public static Object deleteByRoleIds(String roleIds) {
         String sql = "delete from role_permission where role_id in (:roleIds)";
-        return DBUtils.executeSql(sql, new HashMap<String, Object>() {
+        return new RolePermissionBean().deleteOrUpdate(sql, new HashMap<String, Object>() {
             {
                 put("roleIds", roleIds);
             }
@@ -23,7 +23,7 @@ public class RolePermissionService {
         String sql = "delete from role_permission " +
                 "where role_id in " +
                 "(select role_id from user_role where user_id in (:userIds))";
-        return DBUtils.executeSql(sql, new HashMap<String, Object>() {
+        return new RolePermissionBean().deleteOrUpdate(sql, new HashMap<String, Object>() {
             {
                 put("userIds", userIds);
             }

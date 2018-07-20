@@ -2,9 +2,8 @@
 
 # AdminAuthFilter过滤器忽略路径列表[无需登录路径列表]
 ignore_list:
-  - /admin/loginPage
   - /admin/login
   - /admin/logout
-  - /admin/captcha.jpg
+  - /admin/captcha
 # password des key
 pass_des_key: '20151106'

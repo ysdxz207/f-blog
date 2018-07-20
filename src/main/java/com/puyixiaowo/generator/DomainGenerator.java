@@ -3,8 +3,8 @@ package com.puyixiaowo.generator;
 import com.puyixiaowo.generator.enums.TypeEnums;
 import com.puyixiaowo.generator.model.GField;
 import com.puyixiaowo.generator.utils.FileUtils;
-import com.puyixiaowo.fblog.utils.CamelCaseUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
+import win.hupubao.common.utils.CamelCaseUtils;
+import win.hupubao.common.utils.StringUtils;
 
 import java.io.File;
 import java.io.IOException;

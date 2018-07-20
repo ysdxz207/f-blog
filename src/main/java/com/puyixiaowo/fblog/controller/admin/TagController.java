@@ -5,10 +5,7 @@ import com.puyixiaowo.fblog.bean.admin.TagBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.controller.BaseController;
-import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.TagService;
-import com.puyixiaowo.fblog.utils.DBUtils;
-import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
@@ -24,17 +21,12 @@ public class TagController extends BaseController {
 
     @RequiresPermissions(value = {"tag:view"})
     public static String tags(Request request, Response response) {
-        Boolean data = Boolean.valueOf(request.params(":data"));
-
-        if (!data) {
-            return new FreeMarkerTemplateEngine()
-                    .render(new ModelAndView(null,
-                            "admin/tag/tag_list.html"));
-        }
         PageBean pageBean = getPageBean(request);
         try {
             TagBean tagBean = getParamsEntity(request, TagBean.class, false);
             pageBean = TagService.selectTagPageBean(tagBean, pageBean);
+
+            pageBean.success();
         } catch (Exception e) {
             pageBean.error(e);
         }
@@ -50,8 +42,9 @@ public class TagController extends BaseController {
 
             for (TagBean tagBean :
                     tagBeanList) {
-                DBUtils.insertOrUpdate(tagBean, false);
+                tagBean.insertOrUpdate(false);
             }
+            responseBean.success();
         } catch (Exception e) {
             responseBean.error(e);
         }
@@ -63,20 +56,12 @@ public class TagController extends BaseController {
         ResponseBean responseBean = new ResponseBean();
 
         try {
-            DBUtils.deleteByIds(TagBean.class,
-                    request.queryParams("id"));
+            new TagBean().deleteByIds(request.queryParams("id").split(","));
+            responseBean.success();
         } catch (Exception e) {
             responseBean.error(e);
         }
 
         return responseBean.serialize();
     }
-
-    @RequiresPermissions(value = {"tag:view"})
-    public static String topArray(Request request) {
-        String tagName = request.queryParams("tagName");
-        Integer num = Integer.valueOf(request.queryParamOrDefault("num", "10"));
-        return TagService.tagTop(tagName, num, false);
-    }
-
 }

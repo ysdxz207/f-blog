@@ -1,24 +1,16 @@
 package com.puyixiaowo.fblog.controller.admin.afu;
 
-import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.admin.afu.AfuBean;
 import com.puyixiaowo.fblog.bean.admin.afu.AfuTypeBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.controller.BaseController;
-import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.AfuTypeService;
-import com.puyixiaowo.fblog.utils.DBUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
-import com.puyixiaowo.fblog.utils.sign.RSAKeyUtils;
-import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import win.hupubao.common.utils.StringUtils;
+import win.hupubao.common.utils.rsa.RSA;
 
 /**
  * @author Moses
@@ -28,50 +20,49 @@ public class AfuTypeController extends BaseController {
 
     @RequiresPermissions(value = {"afuType:view"})
     public static String afuTypes(Request request, Response response) {
-        Boolean data = Boolean.valueOf(request.params(":data"));
-
-        if (!data) {
-            return new FreeMarkerTemplateEngine()
-                    .render(new ModelAndView(null,
-                            "admin/afu/type/afu_type_list.html"));
-        }
-        PageBean pageBean = getPageBean(request);
+        PageBean<AfuTypeBean> pageBean = getPageBean(request);
 
         try {
             pageBean = AfuTypeService.selectAfuTypePageBean(
                     getParamsEntity(request, AfuTypeBean.class, false), pageBean);
+            pageBean.success();
         } catch (Exception e) {
-            pageBean.errorMessage(e.getMessage());
+            pageBean.error(e);
         }
         return pageBean.serialize();
+    }
+
+    @RequiresPermissions(value = {"afuType:edit"})
+    public static String detail(Request request, Response response) {
+
+        ResponseBean responseBean = new ResponseBean();
+        try {
+            AfuTypeBean afuTypeBean = getParamsEntity(request, AfuTypeBean.class, false);
+            if (afuTypeBean.getId() == null) {
+                responseBean.errorMessage("id不可为空");
+            }
+            afuTypeBean = afuTypeBean.selectOne("select * from afu_type where id=:id");
+            responseBean.success(afuTypeBean);
+        } catch (Exception e) {
+            responseBean.error(e);
+        }
+        return responseBean.serialize();
     }
 
 
     @RequiresPermissions(value = {"afuType:edit"})
     public static String edit(Request request, Response response) {
 
-        Boolean data = Boolean.valueOf(request.params(":data"));
-
-        if (!data) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", request.queryParams("id"));
-            AfuTypeBean afuTypeBean = DBUtils.selectOne(AfuTypeBean.class, "select * from afu_type where id=:id", map);
-            map.clear();
-            map.put("model", afuTypeBean);
-            return new FreeMarkerTemplateEngine()
-                    .render(new ModelAndView(map,
-                            "admin/afu/type/afu_type_edit.html"));
-        }
-
         ResponseBean responseBean = new ResponseBean();
         try {
             AfuTypeBean afuTypeBean = getParamsEntity(request, AfuTypeBean.class, false);
             if (afuTypeBean.getId() == null) {
-                RSAKeyUtils.RSAKey key = RSAKeyUtils.generateRSAKey();
+                RSA.RSAKey key = new RSA().generateRSAKey();
                 afuTypeBean.setPrivateKey(StringUtils.replaceBlank(key.getPrivateKey()));
                 afuTypeBean.setPublicKey(StringUtils.replaceBlank(key.getPublicKey()));
             }
-            DBUtils.insertOrUpdate(afuTypeBean, false);
+            afuTypeBean.insertOrUpdate(false);
+            responseBean.success();
         } catch (Exception e) {
             responseBean.error(e);
         }
@@ -84,30 +75,20 @@ public class AfuTypeController extends BaseController {
 
         try {
             String ids = request.queryParams("id");
-            DBUtils.deleteByIds(AfuTypeBean.class,
-                    ids);
+            new AfuTypeBean().deleteByIds(ids.split(","));
             //删除对应阿福
             AfuBean afuBean = new AfuBean();
             for (String id : ids.split(",")) {
                 afuBean.setType(id);
-                DBUtils.executeSql("delete from afu where type=:type", afuBean);
+                afuBean.deleteOrUpdate("delete from afu where type=:type");
             }
 
+            responseBean.success();
         } catch (Exception e) {
             responseBean.error(e);
         }
 
         return responseBean.serialize();
-    }
-
-
-    @RequiresPermissions(value = {"afuType:view"})
-    public static String allArray(Request request) {
-        List<AfuTypeBean> list = DBUtils.selectList(AfuTypeBean.class,
-                "select * from afu_type ",
-                null);
-
-        return JSON.toJSONString(list);
     }
 
 }

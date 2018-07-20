@@ -2,7 +2,6 @@ package com.puyixiaowo.fblog.service;
 
 import com.puyixiaowo.fblog.bean.admin.CategoryBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
-import com.puyixiaowo.fblog.utils.DBUtils;
 
 import java.util.List;
 
@@ -31,13 +30,18 @@ public class CategoryService {
                                                       PageBean pageBean) {
 
 
-        return DBUtils.selectList(getSelectSql(categoryBean, pageBean), categoryBean);
+        return categoryBean.selectList(getSelectSql(categoryBean, pageBean));
     }
 
-    public static PageBean selectCategoryPageBean (CategoryBean categoryBean,
-                                                   PageBean pageBean) {
-        return DBUtils.selectPageBean(getSelectSql(categoryBean, pageBean),
-                categoryBean, pageBean);
+    public static PageBean<CategoryBean> selectCategoryPageBean (CategoryBean categoryBean,
+                                                   PageBean<CategoryBean> pageBean) {
+
+        String sql = getSelectSql(categoryBean, pageBean);
+        List<CategoryBean> list = categoryBean.selectList(sql);
+        int count = categoryBean.count(sql);
+        pageBean.setList(list);
+        pageBean.setTotalCount(count);
+        return pageBean;
     }
 
     public static void buildSqlParams(StringBuilder sbSql,

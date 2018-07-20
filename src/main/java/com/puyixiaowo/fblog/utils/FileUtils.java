@@ -7,6 +7,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.sql2o.Connection;
 import org.sql2o.Query;
+import win.hupubao.common.utils.ResourceUtils;
+import win.hupubao.common.utils.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

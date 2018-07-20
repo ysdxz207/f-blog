@@ -3,7 +3,7 @@ package com.puyixiaowo.core.entity;
 import com.alibaba.fastjson.JSON;
 import com.puyixiaowo.core.exceptions.ValidationException;
 import com.puyixiaowo.fblog.annotation.NotNull;
-import com.puyixiaowo.fblog.utils.StringUtils;
+import win.hupubao.common.utils.StringUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;

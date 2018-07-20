@@ -8,12 +8,9 @@ import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.exception.db.DBObjectExistsException;
 import com.puyixiaowo.fblog.service.AfuService;
 import com.puyixiaowo.fblog.service.AfuTypeService;
-import com.puyixiaowo.fblog.utils.DBUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
+import win.hupubao.common.utils.StringUtils;
 
 /**
  * @author Moses
@@ -21,11 +18,9 @@ import spark.Response;
  */
 public class AfuApiController extends BaseController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AfuApiController.class);
-
     public static String apiAfus(Request request, Response response) {
 
-        PageBean pageBean = getPageBean(request);
+        PageBean<AfuBean> pageBean = getPageBean(request);
 
         //验签
         if (!verifySign(request)) {
@@ -33,12 +28,12 @@ public class AfuApiController extends BaseController {
             return pageBean.serialize();
         }
 
-        AfuBean afuBean = null;
         try {
-            afuBean = getParamsEntity(request, AfuBean.class, false);
+            AfuBean afuBean = getParamsEntity(request, AfuBean.class, false);
             pageBean = AfuService.selectAfuPageBean(afuBean, pageBean);
+            pageBean.success();
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            pageBean.error(e);
         }
         return pageBean.serialize();
     }
@@ -53,12 +48,11 @@ public class AfuApiController extends BaseController {
             return responseBean.serialize();
         }
 
-        AfuBean afuBean = null;
         try {
-            afuBean = getParamsEntity(request, AfuBean.class, true);
+            AfuBean afuBean = getParamsEntity(request, AfuBean.class, true);
 
             //可以根据名称修改
-            AfuBean afuBeanDB = DBUtils.selectOne("select * from afu where name=:name", afuBean);
+            AfuBean afuBeanDB = afuBean.selectOne("select * from afu where name=:name");
 
             if (afuBeanDB != null) {
                 afuBeanDB.setContent(afuBean.getContent());
@@ -70,17 +64,18 @@ public class AfuApiController extends BaseController {
 
             if (afuTypeBean == null) {
                 responseBean.errorMessage("类别不存在");
-            } if (afuTypeBean.getStatus() == 0) {
+            } else if (afuTypeBean.getStatus() == 0) {
                 responseBean.errorMessage("当前类别已失效");
             } else {
                 afuBean.setType(afuTypeBean.getId());
                 afuBean.setCreateTime(System.currentTimeMillis());
-                DBUtils.insertOrUpdate(afuBean, false);
+                afuBean.insertOrUpdate(false);
             }
+            responseBean.success();
         } catch (DBObjectExistsException e) {
             responseBean.errorMessage("当前类别下已存在此阿福");
         } catch (Exception e) {
-            responseBean.errorMessage(e.getMessage());
+            responseBean.error(e);
         }
 
         return responseBean.serialize();
@@ -101,17 +96,19 @@ public class AfuApiController extends BaseController {
         String typeStr = request.queryParams("type");
         String type = StringUtils.isBlank(typeStr) ? "0" : typeStr;
         try {
+                AfuBean afuBean = new AfuBean();
             if (StringUtils.isNotBlank(id)) {
-                DBUtils.deleteByIds(AfuBean.class, id);
+                afuBean.setId(id);
+                afuBean.delete();
             } else if (StringUtils.isNotBlank(name)
                     && StringUtils.isNotBlank(type)){
-                AfuBean afuBean = new AfuBean();
                 afuBean.setName(name);
                 afuBean.setType(type);
-                DBUtils.executeSql("delete from afu where name = :name and type=:type", afuBean);
+                afuBean.deleteOrUpdate("delete from afu where name = :name and type=:type");
             }
+            responseBean.success();
         } catch (Exception e) {
-            responseBean.errorMessage(e.getMessage());
+            responseBean.error(e);
         }
 
         return responseBean.serialize();

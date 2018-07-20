@@ -1,6 +1,6 @@
 package com.puyixiaowo.fblog.service;
 
-import com.puyixiaowo.fblog.utils.DBUtils;
+import com.puyixiaowo.fblog.bean.admin.UserBean;
 
 import java.util.HashMap;
 
@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class UserRoleService {
 
     public static Object deleteByUserIds(String userIds) {
-        return DBUtils.executeSql("delete from user_role where user_id in (:userIds)",
+        return new UserBean().deleteOrUpdate("delete from user_role where user_id in (:userIds)",
                 new HashMap<String, Object>(){
                     {
                         put("userIds", userIds);

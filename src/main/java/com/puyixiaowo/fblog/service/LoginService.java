@@ -3,10 +3,9 @@ package com.puyixiaowo.fblog.service;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.error.LoginError;
-import com.puyixiaowo.fblog.utils.DBUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
 import win.hupubao.common.error.Throws;
 import win.hupubao.common.utils.DesUtils;
+import win.hupubao.common.utils.StringUtils;
 
 import java.util.Map;
 
@@ -30,18 +29,17 @@ public class LoginService {
         userBean.setPassword(DesUtils.encrypt(userBean.getPassword(),
                 Constants.PASS_DES_KEY));
 
-        userBean = DBUtils.selectOne("SELECT\n" +
-                        "  u.*,\n" +
-                        "  r.id AS role_id\n" +
-                        "FROM user u\n" +
-                        "  LEFT JOIN user_role ur\n" +
-                        "    ON u.id = ur.user_id\n" +
-                        "  LEFT JOIN role r\n" +
-                        "    ON r.id = ur.role_id\n" +
-                        "WHERE loginname = :loginname\n" +
-                        "      AND password = :password\n" +
-                        "      AND status = 1;",
-                userBean);
+        userBean = userBean.selectOne("SELECT\n" +
+                "  u.*,\n" +
+                "  r.id AS role_id\n" +
+                "FROM user u\n" +
+                "  LEFT JOIN user_role ur\n" +
+                "    ON u.id = ur.user_id\n" +
+                "  LEFT JOIN role r\n" +
+                "    ON r.id = ur.role_id\n" +
+                "WHERE loginname = :loginname\n" +
+                "      AND password = :password\n" +
+                "      AND status = 1;");
 
         if (userBean == null) {
             Throws.throwError(LoginError.WRONG_USERNAME_OR_PASSWORD_ERROR);
@@ -64,6 +62,8 @@ public class LoginService {
             userBean.setSessionCaptcha(sessionCaptcha);
             userBean = login(userBean);
         }
+
+
         return userBean;
     }
 }

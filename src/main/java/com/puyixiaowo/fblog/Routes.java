@@ -66,15 +66,13 @@ public class Routes {
 
             get("/", ((request, response) ->
                             MainController.index(request, response)));
-            get("/loginPage", ((request, response) ->
-                            LoginController.loginPage(request, response)));
             post("/login", ((request, response) ->
                             LoginController.login(request, response, request.raw())));
 
             get("/logout", ((request, response) ->
                     LoginController.logout(request, response)));
 
-            get("/captcha.jpg", ((request, response) ->
+            get("/captcha", ((request, response) ->
                             LoginController.captcha(request, response)));
             get("/mainPage", ((request, response) ->
                             MainController.mainPage(request, response)));
@@ -85,8 +83,6 @@ public class Routes {
             path("/menu", () -> {
                 get("", (MenuController::navMenus));
                 post("", (MenuController::navMenus));
-
-                get("/array/:parent", (MenuController::array));
 
                 post("/edit", (MenuController::edit));
 
@@ -100,127 +96,91 @@ public class Routes {
              */
             path("/user", () -> {
 
-                get("/:data", ((request, response) ->
-                        UserController.users(request, response)));
+                get("", (UserController::users));
 
-                post("/edit", ((request, response) ->
-                        UserController.edit(request, response)));
+                post("/edit", (UserController::edit));
 
-                post("/delete", ((request, response) ->
-                        UserController.delete(request, response)));
-                get("/current/edit/:data", ((request, response) ->
-                        UserController.currentEdit(request, response)));
-                post("/current/edit/:data", ((request, response) ->
-                        UserController.currentEdit(request, response)));
+                post("/delete", (UserController::delete));
+                get("/current/edit/:data", (UserController::currentEdit));
+                post("/current/edit/:data", (UserController::currentEdit));
             });
             /*
              * 权限组
              */
             path("/permission", () -> {
 
-                get("/:data", ((request, response) ->
-                        PermissionController.permissions(request, response)));
+                get("", (PermissionController::permissions));
 
-                post("/edit", ((request, response) ->
-                        PermissionController.edit(request, response)));
+                post("/edit", (PermissionController::edit));
 
-                post("/delete", ((request, response) ->
-                        PermissionController.delete(request, response)));
+                post("/delete", (PermissionController::delete));
             });
 
             /*
              * 角色组
              */
             path("/role", () -> {
-                get("/:data", ((request, response) ->
-                        RoleController.roles(request, response)));
+                get("", (RoleController::roles));
 
-                post("/edit", ((request, response) ->
-                        RoleController.edit(request, response)));
+                post("/edit", (RoleController::edit));
 
-                post("/delete", ((request, response) ->
-                        RoleController.delete(request, response)));
+                post("/delete", (RoleController::delete));
 
-                get("/setPermission/:data", ((request, response) ->
-                        RoleController.setPermission(request, response)));
+                get("/permissions", (RoleController::rolePermissionList));
 
-                get("/all/array", (request, response) ->
-                        RoleController.allArray(request));
+                post("/setPermission", (RoleController::setPermission));
+
             });
 
             //博客组
             path("/article", () -> {
 
-                get("/:data", ((request, response) ->
-                        ArticleController.articles(request, response)));
+                get("", (ArticleController::articles));
 
-                post("/edit/:data", ((request, response) ->
-                        ArticleController.edit(request, response)));
+                post("/detail", (ArticleController::detail));
 
-                post("/delete", ((request, response) ->
-                        ArticleController.delete(request, response)));
+                post("/edit", (ArticleController::edit));
 
-                get("/lucene/reindex", ((request, response) ->
-                        ArticleController.luceneReindex(request, response)));
+                post("/delete", (ArticleController::delete));
+
+                get("/lucene/reindex", (ArticleController::luceneReindex));
             });
 
             //博客分类组
             path("/category", () -> {
 
-                get("/:data", ((request, response) ->
-                        CategoryController.categorys(request, response)));
+                get("", (CategoryController::categorys));
 
-                post("/edit/:data", ((request, response) ->
-                        CategoryController.edit(request, response)));
+                post("/edit", (CategoryController::edit));
 
-                post("/delete", ((request, response) ->
-                        CategoryController.delete(request, response)));
-
-                get("/all/array", (request, response) ->
-                        CategoryController.allArray(request));
+                post("/delete", (CategoryController::delete));
             });
 
             //博客标签组
             path("/tag", () -> {
 
-                get("/:data", ((request, response) ->
-                        TagController.tags(request, response)));
+                get("", (TagController::tags));
 
-                post("/edit/:data", ((request, response) ->
-                        TagController.edit(request, response)));
+                post("/edit", (TagController::edit));
 
-                post("/delete", ((request, response) ->
-                        TagController.delete(request, response)));
-
-                get("/top/array", (request, response) ->
-                        TagController.topArray(request));
+                post("/delete", (TagController::delete));
             });
 
             //afu组
             path("/afu", () -> {
-                get("/:data", ((request, response) ->
-                        AfuController.afus(request, response)));
-                post("/edit/:data", ((request, response) ->
-                        AfuController.edit(request, response)));
-                post("/delete", ((request, response) ->
-                        AfuController.delete(request, response)));
+                get("", (AfuController::afus));
+                post("/edit", (AfuController::edit));
+                post("/detail", (AfuController::detail));
+                post("/delete", (AfuController::delete));
 
-                post("/text", ((request, response) ->
-                        AfuController.text(request, response)));
+                post("/text", (AfuController::text));
 
                 path("/type", () -> {
 
-                    get("/:data", ((request, response) ->
-                            AfuTypeController.afuTypes(request, response)));
-                    post("/edit/:data", ((request, response) ->
-                            AfuTypeController.edit(request, response)));
-                    post("/delete", ((request, response) ->
-                            AfuTypeController.delete(request, response)));
-
-                    get("/all/array", ((request, response) ->
-                            AfuTypeController.allArray(request)));
-
-
+                    get("", (AfuTypeController::afuTypes));
+                    post("/detail", (AfuTypeController::detail));
+                    post("/edit", (AfuTypeController::edit));
+                    post("/delete", (AfuTypeController::delete));
                 });
             });
         });
@@ -228,12 +188,9 @@ public class Routes {
         //afu
         path("/api", () -> {
             path("/afu", () -> {
-                post("/list", ((request, response) ->
-                        AfuApiController.apiAfus(request, response)));
-                post("/edit", ((request, response) ->
-                        AfuApiController.apiAfusEdit(request, response)));
-                post("/delete", ((request, response) ->
-                        AfuApiController.apiAfusDelete(request, response)));
+                post("/list", (AfuApiController::apiAfus));
+                post("/edit", (AfuApiController::apiAfusEdit));
+                post("/delete", (AfuApiController::apiAfusDelete));
             });
         });
 

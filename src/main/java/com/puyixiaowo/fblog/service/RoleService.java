@@ -3,9 +3,9 @@ package com.puyixiaowo.fblog.service;
 import com.puyixiaowo.fblog.bean.admin.RoleBean;
 import com.puyixiaowo.fblog.bean.admin.RolePermissionBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
-import com.puyixiaowo.fblog.utils.StringUtils;
+import win.hupubao.common.utils.StringUtils;
 
-import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Moses
@@ -41,14 +41,11 @@ public class RoleService {
 
     }
 
-    public static RoleBean selectByPrimaryKey(Object roleId) {
+    public static RoleBean selectByPrimaryKey(String roleId) {
 
-        return DBUtils.selectOne(RoleBean.class, "select * from role where id=:id",
-                new HashMap<String, Object>(){
-                    {
-                        put("id", roleId);
-                    }
-                });
+        RoleBean roleBean = new RoleBean();
+        roleBean.setId(roleId);
+        return roleBean.selectOne("select * from role where id=:id");
     }
 
     public static void setPermission(String roleId, String permissionIds) {
@@ -58,7 +55,7 @@ public class RoleService {
         }
 
         //删除角色权限
-        RolePermissionService.deleteByRoleIds(roleId.toString());
+        RolePermissionService.deleteByRoleIds(roleId);
 
         String [] ids = permissionIds.split(",");
 
@@ -67,11 +64,19 @@ public class RoleService {
             RolePermissionBean bean = new RolePermissionBean();
             bean.setRoleId(roleId);
             bean.setPermissionId(permissionId);
-            DBUtils.insertOrUpdate(bean, false);
+            bean.insertOrUpdate(false);
         }
     }
 
-    public static PageBean selectRolePageBean(RoleBean roleBean, PageBean pageBean) {
-        return DBUtils.selectPageBean(getSelectSql(roleBean, pageBean), roleBean, pageBean);
+    public static PageBean<RoleBean> selectRolePageBean(RoleBean roleBean,
+                                              PageBean<RoleBean> pageBean) {
+
+        String sql = getSelectSql(roleBean, pageBean);
+        List<RoleBean> list = roleBean.selectList(sql);
+        int count = roleBean.count(sql);
+        pageBean.setList(list);
+        pageBean.setTotalCount(count);
+
+        return pageBean;
     }
 }

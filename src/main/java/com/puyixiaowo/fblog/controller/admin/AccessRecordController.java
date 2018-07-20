@@ -8,10 +8,10 @@ import com.puyixiaowo.fblog.bean.sys.ResponseBean;
 import com.puyixiaowo.fblog.controller.BaseController;
 import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.AccessRecordService;
-import com.puyixiaowo.fblog.utils.StringUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import win.hupubao.common.utils.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class AccessRecordController extends BaseController {
                     .render(new ModelAndView(model,
                             "admin/accessrecord/access_record_list.html"));
         }
-        PageBean pageBean = getPageBean(request);
+        PageBean<AccessRecordBean> pageBean = getPageBean(request);
 
         try {
             return AccessRecordService.selectAccessRecordPageBean(

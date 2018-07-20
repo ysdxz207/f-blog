@@ -1,6 +1,6 @@
 package com.puyixiaowo.generator.enums;
 
-import com.puyixiaowo.fblog.utils.StringUtils;
+import win.hupubao.common.utils.StringUtils;
 
 /**
  * @author Moses

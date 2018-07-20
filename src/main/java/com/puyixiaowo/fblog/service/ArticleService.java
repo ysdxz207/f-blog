@@ -2,7 +2,6 @@ package com.puyixiaowo.fblog.service;
 
 import com.puyixiaowo.fblog.bean.ArticleBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
-import com.puyixiaowo.fblog.utils.DBUtils;
 
 import java.util.List;
 
@@ -35,14 +34,17 @@ public class ArticleService {
 
     public static List<ArticleBean> selectArticleList(ArticleBean articleBean,
                                                       PageBean pageBean) {
-        return DBUtils.selectList(getSelectSql(articleBean, pageBean),
-                articleBean);
+        return articleBean.selectList(getSelectSql(articleBean, pageBean));
     }
 
-    public static PageBean selectArticlePageBean(ArticleBean articleBean,
-                                                      PageBean pageBean) {
+    public static PageBean<ArticleBean> selectArticlePageBean(ArticleBean articleBean,
+                                                      PageBean<ArticleBean> pageBean) {
         String sql = getSelectSql(articleBean, pageBean);
-        return DBUtils.selectPageBean(sql, articleBean, pageBean);
+        List<ArticleBean> list = articleBean.selectList(sql);
+        int count = articleBean.count(sql);
+        pageBean.setList(list);
+        pageBean.setTotalCount(count);
+        return pageBean;
     }
 
     public static void buildSqlParams(StringBuilder sbSql,

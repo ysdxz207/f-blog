@@ -1,14 +1,14 @@
 package com.puyixiaowo.fblog.service;
 
 import com.alibaba.fastjson.JSON;
+import com.puyixiaowo.core.entity.Model;
 import com.puyixiaowo.fblog.bean.admin.MenuBean;
 import com.puyixiaowo.fblog.bean.admin.other.MenuPermissionBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.constants.Constants;
 import com.puyixiaowo.fblog.enums.EnumsRedisKey;
-import com.puyixiaowo.fblog.utils.DBUtils;
-import com.puyixiaowo.fblog.utils.RedisUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
+import win.hupubao.common.utils.RedisUtils;
+import win.hupubao.common.utils.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,12 +33,10 @@ public class MenuService {
                 "and type = :type and status = 1 " +
                 "order by sort asc";
 
-        List<MenuBean> menuBeanList = DBUtils.selectList(MenuBean.class, sql, new HashMap<String, Object>(){
-            {
-                put("pid", pid);
-                put("type", type);
-            }
-        });
+        MenuBean menuBean = new MenuBean();
+        menuBean.setPid(pid);
+        menuBean.setType(type);
+        List<MenuBean> menuBeanList = menuBean.selectList(sql);
 
         if (!menuBeanList.isEmpty()) {
             //更新redis
@@ -81,9 +79,7 @@ public class MenuService {
         sbSql.append(pageBean.getRowBounds().getLimit());
         return sbSql.toString();
     }
-    public static PageBean selectMenuPageBean(MenuBean menuBean, PageBean pageBean) {
-        return DBUtils.selectPageBean(getSelectSql(menuBean, pageBean), menuBean, pageBean);
-    }
+
     public static void buildSqlParams(StringBuilder sbSql,
                                                MenuBean menuBean) {
         if (menuBean.getPid() != null) {
@@ -148,16 +144,15 @@ public class MenuService {
                 "     ) t;\n" +
                 "\n";
 
-        return DBUtils.selectList(MenuPermissionBean.class, sql,
-                new HashMap<String, Object>(){
-                    {
-                        put("roleId", roleId);
-                    }
-                });
+        return new MenuPermissionBean().selectList(sql, new HashMap<String, Object>() {
+            {
+                put("roleId", roleId);
+            }
+        });
     }
 
-    public static List<String> selectMenuTypeList() {
-        return DBUtils.selectList(String.class, "select type from menu group by type",null);
+    public static List<MenuBean> selectMenuTypeList() {
+        return Model.selectList("select * from menu where pid='root' group by type", null, MenuBean.class);
     }
 
 }

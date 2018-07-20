@@ -11,12 +11,11 @@ import com.puyixiaowo.fblog.freemarker.FreeMarkerTemplateEngine;
 import com.puyixiaowo.fblog.service.RolePermissionService;
 import com.puyixiaowo.fblog.service.UserRoleService;
 import com.puyixiaowo.fblog.service.UserService;
-import com.puyixiaowo.fblog.utils.DBUtils;
-import com.puyixiaowo.fblog.utils.StringUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import win.hupubao.common.utils.DesUtils;
+import win.hupubao.common.utils.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,20 +24,12 @@ import java.util.List;
  * @author Moses
  * @date 2017-08-10
  */
-public class UserController extends BaseController{
+public class UserController extends BaseController {
 
 
     @RequiresPermissions(value = {"user:view"})
     public static String users(Request request,
-                                       Response response){
-
-        Boolean data = Boolean.valueOf(request.params(":data"));
-
-        if (!data) {
-            return new FreeMarkerTemplateEngine()
-                    .render(new ModelAndView(null,
-                            "admin/user/user_list.html"));
-        }
+                               Response response) {
 
         PageBean<UserBean> pageBean = getPageBean(request);
         try {
@@ -48,13 +39,16 @@ public class UserController extends BaseController{
                     pageBean.getList()) {
                 userBean.setPassword(DesUtils.decrypt(userBean.getPassword(), Constants.PASS_DES_KEY));
             }
+            pageBean.success();
         } catch (Exception e) {
             pageBean.error(e);
         }
         return pageBean.serialize();
     }
+
     /**
      * 添加或修改用户
+     *
      * @param request
      * @param response
      * @return
@@ -69,7 +63,7 @@ public class UserController extends BaseController{
                     userBeanList) {
                 if (userBean.getId() == null) {
                     //是否已存在用户
-                    int count = DBUtils.count("select count(*) from user where `loginname` = :loginname", userBean);
+                    int count = userBean.count("select count(*) from user where `loginname` = :loginname");
                     if (count > 0) {
                         responseBean.errorMessage("用户名已存在");
                         return responseBean.serialize();
@@ -83,13 +77,14 @@ public class UserController extends BaseController{
 
                 userBean.setPassword(DesUtils.encrypt(userBean.getPassword(), Constants.PASS_DES_KEY));
 
-                DBUtils.insertOrUpdate(userBean, false);
+                userBean.insertOrUpdate(false);
                 //用户角色
                 UserRoleBean userRoleBean = new UserRoleBean();
                 userRoleBean.setRoleId(userBean.getRoleId());
                 userRoleBean.setUserId(userBean.getId());
-                DBUtils.executeSql("delete from user_role where user_id = :userId", userRoleBean);
-                DBUtils.insertOrUpdate(userRoleBean, false);
+                userRoleBean.deleteOrUpdate("delete from user_role where user_id = :userId", new HashMap<>());
+                userRoleBean.insertOrUpdate(false);
+                responseBean.success();
             }
         } catch (Exception e) {
             responseBean.errorMessage(e.getMessage());
@@ -99,18 +94,17 @@ public class UserController extends BaseController{
     }
 
     @RequiresPermissions(value = {"user:delete"})
-    public static String delete(Request request, Response response){
+    public static String delete(Request request, Response response) {
         ResponseBean responseBean = new ResponseBean();
 
         try {
             String ids = request.queryParams("id");
-            DBUtils.deleteByIds(UserBean.class,
-                    ids);
-
+            new UserBean().deleteByIds(ids.split(","));
             //删除user_role
             UserRoleService.deleteByUserIds(ids);
             //删除role_permission
             RolePermissionService.deleteByUserIds(ids);
+            responseBean.success();
         } catch (Exception e) {
             responseBean.error(e);
         }
@@ -120,6 +114,7 @@ public class UserController extends BaseController{
 
     /**
      * 添加或修改用户
+     *
      * @param request
      * @param response
      * @return
@@ -152,7 +147,7 @@ public class UserController extends BaseController{
                 if (StringUtils.isNotBlank(userBean.getPassword())) {
                     userBean.setPassword(DesUtils.encrypt(userBean.getPassword(), Constants.PASS_DES_KEY));
                 }
-                DBUtils.insertOrUpdate(userBean, false);
+                userBean.insertOrUpdate(false);
             }
 
         } catch (Exception e) {

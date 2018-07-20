@@ -2,7 +2,8 @@ package com.puyixiaowo.fblog.service;
 
 import com.puyixiaowo.fblog.bean.admin.afu.AfuTypeBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
-import com.puyixiaowo.fblog.utils.DBUtils;
+
+import java.util.List;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class AfuTypeService {
     public static AfuTypeBean getAfuTypeById(String id) {
         AfuTypeBean afuTypeBean = new AfuTypeBean();
         afuTypeBean.setId(id);
-        return DBUtils.selectOne("select * from afu_type where id=:id", afuTypeBean);
+        return afuTypeBean.selectOne("select * from afu_type where id=:id");
     }
 
     public static String getSelectSql(AfuTypeBean afuTypeBean,
@@ -32,8 +33,15 @@ public class AfuTypeService {
         sbSql.append(pageBean.getRowBounds().getLimit());
         return sbSql.toString();
     }
-    public static PageBean selectAfuTypePageBean(AfuTypeBean afuTypeBean, PageBean pageBean){
-        return DBUtils.selectPageBean(getSelectSql(afuTypeBean, pageBean), afuTypeBean, pageBean);
+    public static PageBean<AfuTypeBean> selectAfuTypePageBean(AfuTypeBean afuTypeBean,
+                                                              PageBean<AfuTypeBean> pageBean){
+
+        String sql = getSelectSql(afuTypeBean, pageBean);
+        List<AfuTypeBean> list = afuTypeBean.selectList(sql);
+        int count = afuTypeBean.count(sql);
+        pageBean.setList(list);
+        pageBean.setTotalCount(count);
+        return pageBean;
     }
     public static void buildSqlParams(StringBuilder sbSql,
                                                AfuTypeBean afuTypeBean) {

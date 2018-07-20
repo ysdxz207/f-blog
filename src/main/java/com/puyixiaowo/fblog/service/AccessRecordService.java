@@ -2,7 +2,6 @@ package com.puyixiaowo.fblog.service;
 
 import com.puyixiaowo.fblog.bean.AccessRecordBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
-import com.puyixiaowo.fblog.utils.DBUtils;
 
 import java.util.List;
 
@@ -30,9 +29,13 @@ public class AccessRecordService {
     }
 
     public static PageBean selectAccessRecordPageBean (AccessRecordBean accessRecordBean,
-                                                   PageBean pageBean) {
-        return DBUtils.selectPageBean(getSelectSql(accessRecordBean, pageBean),
-                accessRecordBean, pageBean);
+                                                   PageBean<AccessRecordBean> pageBean) {
+        String sql = getSelectSql(accessRecordBean, pageBean);
+        List<AccessRecordBean> list = accessRecordBean.selectList(sql);
+        int count = accessRecordBean.count(sql);
+        pageBean.setList(list);
+        pageBean.setTotalCount(count);
+        return pageBean;
     }
 
     public static void buildSqlParams(StringBuilder sbSql,

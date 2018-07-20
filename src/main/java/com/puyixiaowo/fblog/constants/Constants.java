@@ -1,6 +1,7 @@
 package com.puyixiaowo.fblog.constants;
 
-import com.puyixiaowo.fblog.utils.ResourceUtils;
+
+import win.hupubao.common.utils.ResourceUtils;
 
 public class Constants {
 
