@@ -136,6 +136,7 @@ public class Routes {
             path("/article", () -> {
 
                 get("", (ArticleController::articles));
+                post("", (ArticleController::articles));
 
                 post("/detail", (ArticleController::detail));
 
@@ -150,6 +151,7 @@ public class Routes {
             path("/category", () -> {
 
                 get("", (CategoryController::categorys));
+                post("", (CategoryController::categorys));
 
                 post("/edit", (CategoryController::edit));
 
@@ -160,6 +162,7 @@ public class Routes {
             path("/tag", () -> {
 
                 get("", (TagController::tags));
+                post("", (TagController::tags));
 
                 post("/edit", (TagController::edit));
 

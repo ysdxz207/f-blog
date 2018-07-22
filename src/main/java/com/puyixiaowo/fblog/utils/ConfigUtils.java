@@ -49,7 +49,7 @@ public class ConfigUtils {
      */
     public static void initDB() {
 
-        Model model = new Model<>();
+        Model model = new Model<>(IdUtils.class, "generateId");
 
         String url = ((GenericDatasource) model.getSql2o().getDataSource()).getUrl();
 

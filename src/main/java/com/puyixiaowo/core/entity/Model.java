@@ -8,6 +8,7 @@ import com.puyixiaowo.fblog.exception.db.DBResultNotUniqueException;
 import com.puyixiaowo.fblog.exception.db.DBSqlException;
 import com.puyixiaowo.fblog.utils.ORMUtils;
 import org.sql2o.*;
+import spark.utils.Assert;
 import win.hupubao.common.utils.CamelCaseUtils;
 import win.hupubao.common.utils.LoggerUtils;
 import win.hupubao.common.utils.ReflectionUtils;
@@ -17,6 +18,8 @@ import javax.sql.DataSource;
 import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -42,10 +45,19 @@ public class Model<E> extends Validatable implements Serializable {
     private transient static String COUNT_SQL_PREFIX = "select count(*)";
     private transient static Sql2o sql2o;
     private transient static String PRIMARY_KEY_NAME = "id";
+    private transient static Class ID_GENERATER_CLASS = null;
+    private transient static String ID_GENERATER_METHOD = "";
 
     public Model() {
         initDB();
         PRIMARY_KEY_NAME = getPrimaryKeyName();
+    }
+
+    public Model(Class clazz,
+                 String methodName) {
+        this();
+        ID_GENERATER_CLASS = clazz;
+        ID_GENERATER_METHOD = methodName;
     }
 
     /**
@@ -144,11 +156,13 @@ public class Model<E> extends Validatable implements Serializable {
                 queryUpdate.executeUpdate();
             } catch (Exception e) {
                 try {
+
+                    ReflectionUtils.setFieldValue(this, PRIMARY_KEY_NAME, generateId());
                     String sql_insert = assembleSql(SQL_TYPE_INSERT, tableName, this, updateNull);
                     System.out.println(sql_insert);
-                    Query queryInsert = conn.createQuery(sql_insert).throwOnMappingFailure(false).bind(this);
-                    Object primaryKey = queryInsert.executeUpdate().getKey();
-                    ReflectionUtils.setFieldValue(this, PRIMARY_KEY_NAME, primaryKey);
+                    conn.createQuery(sql_insert).throwOnMappingFailure(false).bind(this);
+//                    Query queryInsert = conn.createQuery(sql_insert).throwOnMappingFailure(false).bind(this);
+//                    Object primaryKey = queryInsert.executeUpdate().getKey();
                 } catch (Sql2oException e1) {
                     if (e1.getMessage() != null
                             && e1.getMessage().contains("SQLITE_CONSTRAINT_UNIQUE")) {
@@ -509,6 +523,31 @@ public class Model<E> extends Validatable implements Serializable {
             }
         }
         return params;
+    }
+
+    @SuppressWarnings("unchecked")
+    private String generateId() {
+        Class clazz = ID_GENERATER_CLASS;
+
+        Assert.notNull(clazz, "Constructor argument idGeneraterClass should not be null.");
+        Method method = null;
+
+        try {
+            method = clazz.getDeclaredMethod(ID_GENERATER_METHOD);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        Assert.notNull(method, "Can not get generate id method.");
+
+
+        try {
+            return (String) method.invoke(null);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
     //////////////

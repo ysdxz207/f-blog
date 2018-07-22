@@ -60,8 +60,8 @@ public class ArticleController extends BaseController {
                 Integer accessCountToday = accessCountParams.count(sqlAcccessCount);
                 articleBean.setAccessCountAll(accessCountAll);
                 articleBean.setAccessCountToday(accessCountToday);
-                pageBean.success();
             }
+            pageBean.success();
         } catch (Exception e) {
             pageBean.error(e);
         }

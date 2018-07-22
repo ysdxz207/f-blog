@@ -1,6 +1,8 @@
 package com.puyixiaowo.fblog.utils;
 
-import java.util.UUID;
+import org.apache.commons.lang3.time.DateFormatUtils;
+
+import java.util.Date;
 
 /**
  * ID生成工具
@@ -8,26 +10,11 @@ import java.util.UUID;
  * @date 2017-08-10
  */
 public class IdUtils {
-   private static SnowflakeIdWorker idWorker;
 
-    static {
-        idWorker = new SnowflakeIdWorker(0, 0);
-    }
+    public static String generateId() {
 
-    public static Long generateId(){
-
-        return idWorker.nextId();
-    }
-
-    public static String generateUUId(){
-
-        UUID uuid = UUID.randomUUID();
-
-        return uuid.toString().replaceAll("-", "");
-    }
-
-    public static void main(String[] args) {
-        System.out.println(generateId());
-        System.out.println(generateUUId());
+        return DateFormatUtils.format(new Date(),
+                "yyyyMMddHHmmssSSS")
+                + System.nanoTime();
     }
 }

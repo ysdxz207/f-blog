@@ -52,7 +52,7 @@ public class QrcodeController {
         }
 
         HttpServletRequest req = request.raw();
-        String id = IdUtils.generateId() + "";
+        String id = IdUtils.generateId();
         String scheme = req.getScheme();
         String serverName = req.getServerName();
         if ("localhost".equalsIgnoreCase(serverName)) {
