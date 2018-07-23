@@ -3,6 +3,7 @@ package com.puyixiaowo.fblog.controller.admin;
 import com.puyixiaowo.fblog.annotation.admin.RequiresPermissions;
 import com.puyixiaowo.fblog.bean.AccessRecordBean;
 import com.puyixiaowo.fblog.bean.ArticleBean;
+import com.puyixiaowo.fblog.bean.admin.TagBean;
 import com.puyixiaowo.fblog.bean.admin.UserBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import com.puyixiaowo.fblog.bean.sys.ResponseBean;
@@ -46,8 +47,14 @@ public class ArticleController extends BaseController {
             ArticleBean params = getParamsEntity(request, ArticleBean.class, false);
             pageBean = ArticleService.selectArticlePageBean(params, pageBean);
             for (Object obj : pageBean.getList()) {
-                String sqlAcccessCount = "select * from access_record where article_id=:articleId ";
                 ArticleBean articleBean = (ArticleBean) obj;
+                //标签列表
+                TagBean tagParams = new TagBean();
+                tagParams.setArticleId(articleBean.getId());
+                List<TagBean> tagList = tagParams.selectList("select * from tag t left join article_tag at on t.id=at.tag_id where at.article_id=:articleId");
+                articleBean.setTagList(tagList);
+
+                String sqlAcccessCount = "select * from access_record where article_id=:articleId ";
                 AccessRecordBean accessCountParams = new AccessRecordBean();
                 accessCountParams.setArticleId(articleBean.getId());
 
@@ -77,15 +84,15 @@ public class ArticleController extends BaseController {
         try {
             ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
             if (articleBean.getId() != null) {
-                articleBean.selectOne("select a.*,t.* " +
+                articleBean = articleBean.selectOne("select a.* " +
                         "from article a " +
-                        "left join article_tag at " +
-                        "on a.id = at.article_id " +
-                        "left join tag t " +
-                        "on at.tag_id = t.id where a.id = :id " +
-                        "group by a.id");
+                        " where a.id = :id ");
                 String html = StringEscapeUtils.escapeHtml4(articleBean.getContext());
                 articleBean.setContext(html);
+                TagBean tagParams = new TagBean();
+                tagParams.setArticleId(articleBean.getId());
+                List<TagBean> tagList = tagParams.selectList("select * from tag t left join article_tag at on t.id=at.tag_id where at.article_id=:articleId");
+                articleBean.setTagList(tagList);
                 responseBean.success(articleBean);
             }
         } catch (Exception e) {

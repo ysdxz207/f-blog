@@ -14,7 +14,7 @@ public class ArticleService {
 
     public static String getSelectSql(ArticleBean articleBean,
                                       PageBean pageBean) {
-        StringBuilder sbSql = new StringBuilder("select a.*,c.name as category,t.* " +
+        StringBuilder sbSql = new StringBuilder("select a.*,c.name as category " +
                 "from article a " +
                 "left join category c " +
                 "on a.category_id = c.id " +

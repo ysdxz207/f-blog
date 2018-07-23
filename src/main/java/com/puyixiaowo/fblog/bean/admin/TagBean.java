@@ -15,7 +15,7 @@ public class TagBean extends Model<TagBean> {
 
 	///////////////
 	@Transient
-	private Long articleId;
+	private String articleId;
 
 	public String getId (){
 		return id;
@@ -33,11 +33,11 @@ public class TagBean extends Model<TagBean> {
 		this.name = name;
 	}
 
-	public Long getArticleId() {
+	public String getArticleId() {
 		return articleId;
 	}
 
-	public void setArticleId(Long articleId) {
+	public void setArticleId(String articleId) {
 		this.articleId = articleId;
 	}
 }
