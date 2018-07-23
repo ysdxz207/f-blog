@@ -5,7 +5,10 @@ import com.puyixiaowo.core.entity.Model;
 import com.puyixiaowo.fblog.annotation.NotNull;
 import com.puyixiaowo.fblog.annotation.Table;
 import com.puyixiaowo.fblog.annotation.Transient;
+import com.puyixiaowo.fblog.bean.admin.TagBean;
 import com.puyixiaowo.generator.utils.CustomDateTimeSerializer;
+
+import java.util.List;
 
 @Table("article")
 public class ArticleBean extends Model<ArticleBean> {
@@ -32,7 +35,9 @@ public class ArticleBean extends Model<ArticleBean> {
 	@Transient
 	private String category;
 	@Transient
-	private String tags;
+	private List<TagBean> tagList;
+	@Transient
+	private String tagId;//搜索用
 	@Transient
 	private Integer accessCountAll;
 	@Transient
@@ -111,12 +116,12 @@ public class ArticleBean extends Model<ArticleBean> {
 		this.category = category;
 	}
 
-	public String getTags() {
-		return tags;
+	public List<TagBean> getTagList() {
+		return tagList;
 	}
 
-	public void setTags(String tags) {
-		this.tags = tags;
+	public void setTagList(List<TagBean> tagList) {
+		this.tagList = tagList;
 	}
 
 	public String getType() {
@@ -125,6 +130,14 @@ public class ArticleBean extends Model<ArticleBean> {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getTagId() {
+		return tagId;
+	}
+
+	public void setTagId(String tagId) {
+		this.tagId = tagId;
 	}
 
 	public Integer getAccessCountAll() {

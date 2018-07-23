@@ -80,7 +80,7 @@ public class Model<E> extends Validatable implements Serializable {
                 String fieldName = field.getName();
                 field.setAccessible(true);
 
-                if (!isParameterField(field)) {
+                if (!isParameter(field)) {
                     continue;
                 }
 
@@ -238,7 +238,7 @@ public class Model<E> extends Validatable implements Serializable {
 
 
                 for (Field field : filelds) {
-                    if (!isParameterField(field)) {
+                    if (!isField(field)) {
                         continue;
                     }
                     String columnName = ORMUtils.getFieldColumnName(field);
@@ -279,7 +279,7 @@ public class Model<E> extends Validatable implements Serializable {
 
 
                 for (Field field : filelds) {
-                    if (!isParameterField(field)) {
+                    if (!isField(field)) {
                         continue;
                     }
                     String columnName = ORMUtils.getFieldColumnName(field);
@@ -477,10 +477,13 @@ public class Model<E> extends Validatable implements Serializable {
         return properties;
     }
 
-    private boolean isParameterField(Field field) {
+    private boolean isField(Field field) {
+        return isParameter(field) && field.getAnnotation(Transient.class) == null;
+    }
+
+    private boolean isParameter(Field field) {
         String fieldName = field.getName();
         return !SERIAL_VERSION_UID.equals(fieldName)
-                && field.getAnnotation(Transient.class) == null
                 && getFieldValue(field) != null
                 && !JOINPOINT_STATICPART_TYPE_NAME.equals(field.getGenericType().getTypeName());
     }
@@ -505,7 +508,11 @@ public class Model<E> extends Validatable implements Serializable {
             if (entry.getKey() == null) {
                 continue;
             }
-            query.addParameter(entry.getKey().toString(), entry.getValue());
+            try {
+                query.addParameter(entry.getKey().toString(), entry.getValue());
+            } catch (Exception ignored) {
+
+            }
         }
     }
 
@@ -518,8 +525,8 @@ public class Model<E> extends Validatable implements Serializable {
         }
         Field [] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
-            if (isParameterField(field)) {
-                params.put(CamelCaseUtils.toUnderlineName(field.getName()), getFieldValue(field));
+            if (isParameter(field)) {
+                params.put(field.getName(), getFieldValue(field));
             }
         }
         return params;

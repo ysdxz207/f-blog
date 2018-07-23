@@ -8,7 +8,6 @@ import com.puyixiaowo.fblog.bean.admin.TagBean;
 import com.puyixiaowo.fblog.bean.sys.PageBean;
 import win.hupubao.common.utils.StringUtils;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,11 +22,12 @@ public class TagService {
 
     public static void insertArticleTags(ArticleBean articleBean) {
         if(articleBean == null ||
-                StringUtils.isBlank(articleBean.getTags())) {
+                articleBean.getTagList() == null
+                || articleBean.getTagList().isEmpty()) {
             return;
         }
 
-        List<String> tagNameList = Arrays.asList(articleBean.getTags().split(","));
+        List<TagBean> tagNameList = articleBean.getTagList();
 
         //删除文章关联的已存在的标签
         if (articleBean.getId() != null) {
@@ -35,9 +35,8 @@ public class TagService {
                     "where article_id = :id");
         }
         //创建并关联标签
-        for (String tagName : tagNameList) {
-            TagBean tagBean = new TagBean();
-            tagBean.setName(tagName);
+        for (TagBean tagBean : tagNameList) {
+
             TagBean tagDb = tagBean.selectOne("select * from tag where name=:name");
             if (tagDb == null) {
                 tagBean.insertOrUpdate(false);

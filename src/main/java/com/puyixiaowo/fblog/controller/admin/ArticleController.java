@@ -64,6 +64,7 @@ public class ArticleController extends BaseController {
             pageBean.success();
         } catch (Exception e) {
             pageBean.error(e);
+            e.printStackTrace();
         }
         return pageBean.serialize();
     }
@@ -76,7 +77,7 @@ public class ArticleController extends BaseController {
         try {
             ArticleBean articleBean = getParamsEntity(request, ArticleBean.class, false);
             if (articleBean.getId() != null) {
-                articleBean.selectOne("select a.*,group_concat(t.name) as tags " +
+                articleBean.selectOne("select a.*,t.* " +
                         "from article a " +
                         "left join article_tag at " +
                         "on a.id = at.article_id " +
